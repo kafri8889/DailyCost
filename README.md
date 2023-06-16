@@ -4,6 +4,10 @@ Discord: https://discord.gg/j5VN6vyda7
 
 Web: https://dailycost-fe-app.vercel.app/login
 
+FE: https://github.com/fikrimln16/dailycost-fe-app
+
+BE: https://github.com/fikrimln16/DAILYCOST-BACKEND
+
 # Info
 Compose Version: 1.5.0-beta02
 
@@ -19,8 +23,10 @@ Java Version: 17
 │   ├── datasource/
 │   │   ├── local
 │   │   └── remote
+│   ├── di
 │   ├── model
-│   └── repository
+│   ├── repository
+│   └── serializer
 ├── domain/
 │   ├── repository
 │   └── use_case
