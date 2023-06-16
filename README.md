@@ -19,8 +19,10 @@ Java Version: 17
 │   ├── datasource/
 │   │   ├── local
 │   │   └── remote
+│   ├── di
 │   ├── model
-│   └── repository
+│   ├── repository
+│   └── serializer
 ├── domain/
 │   ├── repository
 │   └── use_case
