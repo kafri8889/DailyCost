@@ -10,6 +10,13 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/**
+ *  kelas dasar (base class) untuk view model.
+ *  Ini berarti kelas ini memberikan kerangka dasar untuk view model
+ *  yang akan diturunkan (derived) oleh kelas-kelas lain.
+ *
+ *  @author kafri8889
+ */
 abstract class BaseViewModel<STATE, ACTION, EVENT: UiEvent>: ViewModel() {
 	
 	private val _state = MutableStateFlow(this.defaultState())

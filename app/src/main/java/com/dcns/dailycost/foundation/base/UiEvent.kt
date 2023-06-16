@@ -4,6 +4,11 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.material3.SnackbarDuration
 
+/**
+ * UI event, digunakan ketika ingin menampilkan snackbar, toast, dll
+ *
+ * @author kafri8889
+ */
 interface UiEvent {
 	
 	open class ShowSnackbar(

@@ -11,6 +11,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 
+/**
+ * Kerangka dasar untuk screen
+ *
+ * @author kafri8889
+ */
 @Composable
 fun <STATE, ACTION, EVENT: UiEvent> BaseScreenWrapper(
 	viewModel: BaseViewModel<STATE, ACTION, EVENT>,
