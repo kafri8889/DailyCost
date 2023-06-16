@@ -1,0 +1,17 @@
+data
+  datasource
+    local
+    remote
+  model
+  repository
+domain
+  repository
+  use_case
+foundation
+  base
+  extension
+  uicomponent
+theme
+ui
+
+https://tree.nathanfriend.io/
