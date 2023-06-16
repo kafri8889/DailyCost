@@ -2,8 +2,10 @@ data
   datasource
     local
     remote
+  di
   model
   repository
+  serializer
 domain
   repository
   use_case
