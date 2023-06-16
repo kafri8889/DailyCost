@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">DailyCost</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="re_password">Re-Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="by_registering_txt">By registering, you are agreeing to our %1$s and %2$s</string>
+    <string name="terms_of_use">Terms of use</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="email_not_valid">Email not valid</string>
+    <string name="digit_missing_exception_msg">Password must contain at least 1 digit</string>
+    <string name="below_min_length_exception_msg">Password must be at least 8 characters long</string>
+    <string name="lowercase_missing_exception_msg">Password must contain at least 1 lowercase letter</string>
+    <string name="uppercase_missing_exception_msg">Password must contain at least 1 uppercase letter</string>
+    <string name="email_cant_be_empty">Email can\'t be empty</string>
+    <string name="password_cant_be_empty">Password can\'t be empty</string>
+    <string name="password_does_not_match">Passwords doesn\'t match</string>
 </resources>
