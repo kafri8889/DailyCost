@@ -1,5 +1,7 @@
 Aplikasi sederhana *DailyCost* untuk mengelola keuangan
 
+Discord: https://discord.gg/j5VN6vyda7
+
 # Info
 Compose Version: 1.5.0-beta02
 
