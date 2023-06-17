@@ -12,6 +12,18 @@ class SettingViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository
 ): BaseViewModel<SettingState, SettingAction, SettingUiEvent>() {
 
+    init {
+        viewModelScope.launch {
+            userCredentialRepository.getUserCredential.collect { cred ->
+                updateState {
+                    copy(
+                        userCredential = cred
+                    )
+                }
+            }
+        }
+    }
+
     override fun defaultState(): SettingState = SettingState()
 
     override fun onAction(action: SettingAction) {
