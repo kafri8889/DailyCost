@@ -64,6 +64,7 @@ import com.dcns.dailycost.R
 import com.dcns.dailycost.data.LoginRegisterType
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.Status
+import com.dcns.dailycost.data.model.networking.response.LoginResponse
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.extension.toast
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
@@ -97,10 +98,13 @@ fun LoginRegisterScreen(
     LaunchedEffect(state.resource) {
         when (state.resource?.status) {
             Status.Success -> {
-                Timber.i("Login success")
+                Timber.i("Login or register success")
 
-                // TODO: Navigate ke dashboard screen
-                "lojin sukses".toast(context)
+                if (state.resource?.data is LoginResponse) {
+                    // TODO: Navigate ke dashboard screen
+
+                    context.getString(R.string.login_success).toast(context)
+                } else context.getString(R.string.registration_success).toast(context)
 
                 useCaseState.hide()
             }

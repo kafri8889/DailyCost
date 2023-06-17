@@ -202,6 +202,14 @@ class LoginRegisterViewModel @Inject constructor(
                                                     setPassword(mState.password)
                                                 }
                                             }
+                                        } else {
+                                            updateState {
+                                                copy(
+                                                    username = "",
+                                                    passwordRe = "",
+                                                    loginRegisterType = LoginRegisterType.Login
+                                                )
+                                            }
                                         }
 
                                         Resource.success(response.body())
