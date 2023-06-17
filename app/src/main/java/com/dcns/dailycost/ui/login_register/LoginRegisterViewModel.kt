@@ -190,25 +190,30 @@ class LoginRegisterViewModel @Inject constructor(
                             updateState {
                                 copy(
                                     resource = if (response.isSuccessful) {
-                                        if (mState.loginRegisterType == LoginRegisterType.Login) {
-                                            val body = response.body() as LoginResponse
+                                        when (mState.loginRegisterType) {
+                                            LoginRegisterType.Login -> {
+                                                if (mState.rememberMe) {
+                                                    val body = response.body() as LoginResponse
 
-                                            launch {
-                                                with(userCredentialRepository) {
-                                                    setId(body.data.id)
-                                                    setName(body.data.nama)
-                                                    setToken(body.token)
-                                                    setEmail(mState.email)
-                                                    setPassword(mState.password)
+                                                    launch {
+                                                        with(userCredentialRepository) {
+                                                            setId(body.data.id)
+                                                            setName(body.data.nama)
+                                                            setToken(body.token)
+                                                            setEmail(mState.email)
+                                                            setPassword(mState.password)
+                                                        }
+                                                    }
                                                 }
                                             }
-                                        } else {
-                                            updateState {
-                                                copy(
-                                                    username = "",
-                                                    passwordRe = "",
-                                                    loginRegisterType = LoginRegisterType.Login
-                                                )
+                                            LoginRegisterType.Register -> {
+                                                updateState {
+                                                    copy(
+                                                        username = "",
+                                                        passwordRe = "",
+                                                        loginRegisterType = LoginRegisterType.Login
+                                                    )
+                                                }
                                             }
                                         }
 
