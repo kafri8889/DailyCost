@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -53,14 +54,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.composable
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.LoginRegisterType
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.TopLevelDestinations
+import com.dcns.dailycost.ui.login_register.data.LoginRegisterType
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.dcns.dailycost.data.Status
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.extension.toast
@@ -609,4 +617,19 @@ private fun BottomContent(
             )
         }
     }
+}
+
+@Preview("Login Screen")
+@Composable
+fun CenterContent() {
+    val navController = rememberNavController()
+
+    val viewModel = hiltViewModel<LoginRegisterViewModel>()
+    val navActions = remember(navController) {
+        NavigationActions(navController)
+    }
+    LoginRegisterScreen(
+        viewModel = viewModel,
+        navigationActions = navActions
+    )
 }
