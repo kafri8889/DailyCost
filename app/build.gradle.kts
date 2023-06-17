@@ -7,6 +7,7 @@ plugins {
     id("kotlin-parcelize")
     id("com.squareup.wire")
     id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -101,6 +102,8 @@ dependencies {
     val accompanist_version by extra("0.31.3-beta")
 
 //    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
