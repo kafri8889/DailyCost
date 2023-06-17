@@ -1,4 +1,4 @@
-package com.dcns.dailycost.ui.login_register.data
+package com.dcns.dailycost.data
 
 enum class LoginRegisterType {
     Login,

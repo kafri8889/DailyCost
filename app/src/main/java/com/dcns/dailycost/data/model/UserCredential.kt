@@ -3,6 +3,9 @@ package com.dcns.dailycost.data.model
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Class ini digunakan untuk menyimpan informasi login pengguna
+ */
 @Parcelize
 data class UserCredential(
     val name: String,
