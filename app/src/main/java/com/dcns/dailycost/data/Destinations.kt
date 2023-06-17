@@ -5,6 +5,8 @@ import androidx.navigation.NavHostController
 
 object DestinationRoute {
     const val LOGIN_REGISTER = "login_register"
+    const val DASHBOARD = "dashboard"
+    const val SPLASH = "splash"
 }
 
 /**
@@ -66,6 +68,13 @@ object TopLevelDestinations {
     object Home {
         const val ROOT_ROUTE = "root_home"
 
+        val dashboard = TopLevelDestination(
+            route = DestinationRoute.DASHBOARD
+        )
     }
+
+    val splash = TopLevelDestination(
+        route = DestinationRoute.SPLASH
+    )
 
 }

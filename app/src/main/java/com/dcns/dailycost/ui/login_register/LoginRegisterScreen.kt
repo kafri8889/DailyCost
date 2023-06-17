@@ -64,6 +64,7 @@ import com.dcns.dailycost.R
 import com.dcns.dailycost.data.LoginRegisterType
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.Status
+import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.model.networking.response.LoginResponse
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.extension.toast
@@ -101,7 +102,7 @@ fun LoginRegisterScreen(
                 Timber.i("Login or register success")
 
                 if (state.resource?.data is LoginResponse) {
-                    // TODO: Navigate ke dashboard screen
+                    navigationActions.navigateTo(TopLevelDestinations.Home.dashboard)
 
                     context.getString(R.string.login_success).toast(context)
                 } else context.getString(R.string.registration_success).toast(context)
