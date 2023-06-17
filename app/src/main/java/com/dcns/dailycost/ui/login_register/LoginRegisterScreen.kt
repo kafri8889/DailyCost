@@ -369,7 +369,7 @@ private fun CenterContent(
             isError = passwordError != null,
             singleLine = true,
             onValueChange = onPasswordChanged,
-            visualTransformation = if (showPassword) PasswordVisualTransformation()
+            visualTransformation = if (!showPassword) PasswordVisualTransformation()
             else VisualTransformation.None,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
@@ -431,7 +431,7 @@ private fun CenterContent(
                 value = passwordRe,
                 singleLine = true,
                 onValueChange = onPasswordReChanged,
-                visualTransformation = if (showPassword) PasswordVisualTransformation()
+                visualTransformation = if (!showPassword) PasswordVisualTransformation()
                 else VisualTransformation.None,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
