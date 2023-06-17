@@ -1,4 +1,4 @@
-package com.dcns.dailycost.ui.dashboard
+package com.dcns.dailycost.ui.setting
 
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,8 +17,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen(
-    viewModel: DashboardViewModel,
+fun SettingScreen(
+    viewModel: SettingViewModel,
     navigationActions: NavigationActions
 ) {
 
@@ -31,7 +31,7 @@ fun DashboardScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(stringResource(id = R.string.dashboard))
+                    Text(stringResource(id = R.string.setting))
                 },
                 navigationIcon = {
                     IconButton(
@@ -49,7 +49,7 @@ fun DashboardScreen(
                 }
             )
         }
-    ) { scaffoldPadding ->
+    ) {
 
     }
 }

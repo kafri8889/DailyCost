@@ -1,11 +1,16 @@
 package com.dcns.dailycost.data
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
+import com.dcns.dailycost.R
 
 object DestinationRoute {
     const val LOGIN_REGISTER = "login_register"
     const val DASHBOARD = "dashboard"
+    const val SETTING = "setting"
     const val SPLASH = "splash"
 }
 
@@ -18,7 +23,9 @@ object DestinationArgument {
 
 data class TopLevelDestination(
     val route: String,
-    val arguments: List<NamedNavArgument> = emptyList()
+    val arguments: List<NamedNavArgument> = emptyList(),
+    @StringRes val name: Int? = null,
+    @DrawableRes val icon: Int? = null
 ) {
     /**
      * @param value {key: value}
@@ -38,20 +45,43 @@ class NavigationActions(private val navController: NavHostController) {
 
     fun popBackStack() = navController.popBackStack()
 
-    fun navigateTo(destination: TopLevelDestination) {
-        navController.navigate(destination.route) {
+    fun popBackStack(
+        destinationId: Int,
+        inclusive: Boolean = false
+    ) = navController.popBackStack(
+        destinationId,
+        inclusive
+    )
+
+    fun popBackStack(
+        destinationId: Int,
+        inclusive: Boolean = false,
+        saveState: Boolean = false
+    ) = navController.popBackStack(
+        destinationId,
+        inclusive,
+        saveState
+    )
+
+    fun navigateTo(
+        destination: TopLevelDestination,
+        inclusivePopUpTo: Boolean = false,
+        builder: NavOptionsBuilder.() -> Unit = {
             // Pop up to the start destination of the graph to
             // avoid building up a large stack of destinations
             // on the back stack as users select items
-//			popUpTo(navController.graph.findStartDestination().id) {
-//				saveState = true
-//			}
+            popUpTo(navController.graph.startDestinationId) {
+                saveState = true
+                inclusive = inclusivePopUpTo
+            }
             // Avoid multiple copies of the same destination when
             // re-selecting the same item
             launchSingleTop = true
             // Restore state when re-selecting a previously selected item
             restoreState = true
         }
+    ) {
+        navController.navigate(destination.route, builder)
     }
 }
 
@@ -69,7 +99,15 @@ object TopLevelDestinations {
         const val ROOT_ROUTE = "root_home"
 
         val dashboard = TopLevelDestination(
-            route = DestinationRoute.DASHBOARD
+            route = DestinationRoute.DASHBOARD,
+            icon = R.drawable.ic_dashboard,
+            name = R.string.dashboard
+        )
+
+        val setting = TopLevelDestination(
+            route = DestinationRoute.SETTING,
+            icon = R.drawable.ic_setting,
+            name = R.string.setting
         )
     }
 
@@ -78,3 +116,8 @@ object TopLevelDestinations {
     )
 
 }
+
+val drawerDestinations = arrayOf(
+    TopLevelDestinations.Home.dashboard,
+    TopLevelDestinations.Home.setting,
+)

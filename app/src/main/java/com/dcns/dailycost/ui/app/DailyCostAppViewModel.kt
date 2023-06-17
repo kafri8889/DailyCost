@@ -12,7 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DailyCostAppViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository
-): BaseViewModel<DailyCostAppState, Unit, UiEvent>() {
+): BaseViewModel<DailyCostAppState, DailyCostAppAction, UiEvent>() {
 
     init {
         viewModelScope.launch {
@@ -30,5 +30,17 @@ class DailyCostAppViewModel @Inject constructor(
 
     override fun defaultState(): DailyCostAppState = DailyCostAppState()
 
-    override fun onAction(action: Unit) {}
+    override fun onAction(action: DailyCostAppAction) {
+        when (action) {
+            is DailyCostAppAction.UpdateCurrentDestinationRoute -> {
+                viewModelScope.launch {
+                    updateState {
+                        copy(
+                            currentDestinationRoute = action.route
+                        )
+                    }
+                }
+            }
+        }
+    }
 }

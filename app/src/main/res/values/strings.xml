@@ -25,4 +25,6 @@
     <string name="internet_connection_not_available">Internet connection not available</string>
     <string name="registration_success">Registration success</string>
     <string name="login_success">Login success</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="setting">Setting</string>
 </resources>
