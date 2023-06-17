@@ -36,10 +36,14 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+
+            buildConfigField("String", "API_BASE_URL", "\"https://dailycost.my.id/\"")
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
             kotlinOptions {
                 freeCompilerArgs += listOf(
                     "-Xopt-in=kotlin.RequiresOptIn",
@@ -50,6 +54,9 @@ android {
         debug {
             isMinifyEnabled = false
             isDebuggable = true
+
+            buildConfigField("String", "API_BASE_URL", "\"https://dailycost.my.id/\"")
+
             kotlinOptions {
                 freeCompilerArgs += listOf(
                     "-Xopt-in=kotlin.RequiresOptIn",
@@ -67,6 +74,7 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -167,10 +175,16 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:${extra["accompanist_version"]}")
     implementation("com.google.accompanist:accompanist-systemuicontroller:${extra["accompanist_version"]}")
 
+    // Networking
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.6.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.5.0")
+
     // Other
     implementation("com.google.code.gson:gson:2.9.0")
     implementation("com.jakewharton.timber:timber:5.0.1")
     implementation("com.squareup.wire:wire-runtime:4.4.3")
+    implementation("com.maxkeppeler.sheets-compose-dialogs:state:1.2.0")
 
     implementation("commons-io:commons-io:2.11.0")
     implementation("androidx.test.ext:junit-ktx:1.1.5")
