@@ -8,6 +8,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,7 +33,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -59,16 +59,10 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.composable
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.LoginRegisterType
 import com.dcns.dailycost.data.NavigationActions
-import com.dcns.dailycost.data.TopLevelDestinations
-import com.dcns.dailycost.ui.login_register.data.LoginRegisterType
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.dcns.dailycost.data.Status
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.extension.toast
@@ -99,6 +93,88 @@ fun LoginRegisterScreen(
         "Wait a moment",
         ProgressIndicator.Circular()
     )
+
+    LaunchedEffect(state.resource) {
+        when (state.resource?.status) {
+            Status.Success -> {
+                Timber.i("Login success")
+
+                // TODO: Navigate ke dashboard screen
+                "lojin sukses".toast(context)
+
+                useCaseState.hide()
+            }
+            Status.Error -> {
+                Timber.i("Login error: ${state.resource?.message}")
+
+                state.resource?.message.toast(context, Toast.LENGTH_LONG)
+
+                useCaseState.hide()
+            }
+            Status.Loading -> {
+                useCaseState.show()
+            }
+            else -> {}
+        }
+    }
+
+    StateDialog(
+        state = useCaseState,
+        config = StateConfig(
+            state = stateDialogState
+        )
+    )
+
+    BaseScreenWrapper(viewModel) { scaffoldPadding ->
+        LoginScreenContent(
+            state = state,
+            onShowPasswordCheckedChanged = { show ->
+                viewModel.onAction(LoginRegisterAction.UpdateShowPassword(show))
+            },
+            onRememberMeCheckedChanged = { remember ->
+                viewModel.onAction(LoginRegisterAction.UpdateRememberMe(remember))
+            },
+            onEmailChanged = { s ->
+                viewModel.onAction(LoginRegisterAction.UpdateEmail(s))
+            },
+            onPasswordChanged = { s ->
+                viewModel.onAction(LoginRegisterAction.UpdatePassword(s))
+            },
+            onUsernameChanged = { s ->
+                viewModel.onAction(LoginRegisterAction.UpdateUsername(s))
+            },
+            onPasswordReChanged = { s ->
+                viewModel.onAction(LoginRegisterAction.UpdatePasswordRe(s))
+            },
+            onSignUpOrLoginClicked = {
+                viewModel.onAction(
+                    LoginRegisterAction.UpdateLoginRegisterType(
+                        if (state.loginRegisterType == LoginRegisterType.Login) {
+                            LoginRegisterType.Register
+                        } else LoginRegisterType.Login
+                    )
+                )
+            },
+            onLogin = {
+                viewModel.onAction(LoginRegisterAction.Login(context))
+            }
+        )
+    }
+}
+
+@Composable
+private fun LoginScreenContent(
+    state: LoginRegisterState,
+    paddingValues: PaddingValues = PaddingValues(),
+    onShowPasswordCheckedChanged: (Boolean) -> Unit = {},
+    onRememberMeCheckedChanged: (Boolean) -> Unit = {},
+    onPasswordReChanged: (String) -> Unit = {},
+    onUsernameChanged: (String) -> Unit = {},
+    onPasswordChanged: (String) -> Unit = {},
+    onEmailChanged: (String) -> Unit = {},
+    onSignUpOrLoginClicked: () -> Unit = {},
+    onLogin: () -> Unit = {}
+) {
 
     val constraintSet = ConstraintSet {
         val (
@@ -133,107 +209,52 @@ fun LoginRegisterScreen(
         }
     }
 
-    LaunchedEffect(state.resource) {
-        when (state.resource?.status) {
-            Status.Success -> {
-                Timber.i("Login success")
-
-                // TODO: Navigate ke dashboard screen
-                "lojin sukses".toast(context)
-
-                useCaseState.hide()
-            }
-            Status.Error -> {
-                Timber.i("Login error: ${state.resource?.message}")
-
-                state.resource?.message.toast(context, Toast.LENGTH_LONG)
-
-                useCaseState.hide()
-            }
-            Status.Loading -> {
-                useCaseState.show()
-            }
-            else -> {}
-        }
-    }
-
-    StateDialog(
-        state = useCaseState,
-        config = StateConfig(
-            state = stateDialogState
-        )
-    )
-
-    BaseScreenWrapper(viewModel) { scaffoldPadding ->
-        ConstraintLayout(
-            constraintSet = constraintSet,
+    ConstraintLayout(
+        constraintSet = constraintSet,
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        Image(
+            painter = ColorPainter(Color.Gray),
+            contentDescription = null,
             modifier = Modifier
-                .padding(scaffoldPadding)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ) {
-            Image(
-                painter = ColorPainter(Color.Gray),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(96.dp)
-                    .clip(RoundedCornerShape(25))
-                    .layoutId("topContent")
-            )
+                .size(96.dp)
+                .clip(RoundedCornerShape(25))
+                .layoutId("topContent")
+        )
 
-            CenterContent(
-                username = state.username,
-                email = state.email,
-                emailError = state.emailError,
-                password = state.password,
-                passwordRe = state.passwordRe,
-                passwordError = state.passwordError,
-                showPassword = state.showPassword,
-                rememberMe = state.rememberMe,
-                loginRegisterType = state.loginRegisterType,
-                onShowPasswordCheckedChanged = { show ->
-                    viewModel.onAction(LoginRegisterAction.UpdateShowPassword(show))
-                },
-                onRememberMeCheckedChanged = { remember ->
-                    viewModel.onAction(LoginRegisterAction.UpdateRememberMe(remember))
-                },
-                onEmailChanged = { s ->
-                    viewModel.onAction(LoginRegisterAction.UpdateEmail(s))
-                },
-                onPasswordChanged = { s ->
-                    viewModel.onAction(LoginRegisterAction.UpdatePassword(s))
-                },
-                onUsernameChanged = { s ->
-                    viewModel.onAction(LoginRegisterAction.UpdateUsername(s))
-                },
-                onPasswordReChanged = { s ->
-                    viewModel.onAction(LoginRegisterAction.UpdatePasswordRe(s))
-                },
-                modifier = Modifier
-                    .fillMaxWidth(0.92f)
-                    .wrapContentHeight()
-                    .layoutId("centerContent")
-            )
+        CenterContent(
+            username = state.username,
+            email = state.email,
+            emailError = state.emailError,
+            password = state.password,
+            passwordRe = state.passwordRe,
+            passwordError = state.passwordError,
+            showPassword = state.showPassword,
+            rememberMe = state.rememberMe,
+            loginRegisterType = state.loginRegisterType,
+            onShowPasswordCheckedChanged = onShowPasswordCheckedChanged,
+            onRememberMeCheckedChanged = onRememberMeCheckedChanged,
+            onEmailChanged = onEmailChanged,
+            onPasswordChanged = onPasswordChanged,
+            onUsernameChanged = onUsernameChanged,
+            onPasswordReChanged = onPasswordReChanged,
+            modifier = Modifier
+                .fillMaxWidth(0.92f)
+                .wrapContentHeight()
+                .layoutId("centerContent")
+        )
 
-            BottomContent(
-                loginRegisterType = state.loginRegisterType,
-                onSignUpOrLoginClicked = {
-                    viewModel.onAction(
-                        LoginRegisterAction.UpdateLoginRegisterType(
-                            if (state.loginRegisterType == LoginRegisterType.Login) {
-                                LoginRegisterType.Register
-                            } else LoginRegisterType.Login
-                        )
-                    )
-                },
-                onLogin = {
-                    viewModel.onAction(LoginRegisterAction.Login(context))
-                },
-                modifier = Modifier
-                    .fillMaxWidth(0.92f)
-                    .layoutId("bottomContent")
-            )
-        }
+        BottomContent(
+            loginRegisterType = state.loginRegisterType,
+            onSignUpOrLoginClicked = onSignUpOrLoginClicked,
+            onLogin = onLogin,
+            modifier = Modifier
+                .fillMaxWidth(0.92f)
+                .layoutId("bottomContent")
+        )
     }
 }
 
@@ -619,17 +640,11 @@ private fun BottomContent(
     }
 }
 
-@Preview("Login Screen")
+@Preview("Login Screen", showBackground = true)
 @Composable
-fun CenterContent() {
-    val navController = rememberNavController()
+fun LoginScreenContentPreview() {
 
-    val viewModel = hiltViewModel<LoginRegisterViewModel>()
-    val navActions = remember(navController) {
-        NavigationActions(navController)
-    }
-    LoginRegisterScreen(
-        viewModel = viewModel,
-        navigationActions = navActions
+    LoginScreenContent(
+        state = LoginRegisterState()
     )
 }
