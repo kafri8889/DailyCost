@@ -61,6 +61,7 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
+import com.dcns.dailycost.data.Constant
 import com.dcns.dailycost.data.LoginRegisterType
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.Status
@@ -521,14 +522,14 @@ private fun CenterContent(
 
                 addStringAnnotation(
                     tag = "tou",
-                    annotation = "https://kafri8889.github.io/",
+                    annotation = Constant.TERMS_OF_USE_URL,
                     start = startTou,
                     end = endTou
                 )
 
                 addStringAnnotation(
                     tag = "pp",
-                    annotation = "https://github.com/kafri8889/",
+                    annotation = Constant.PRIVACY_POLICY_URL,
                     start = startPp,
                     end = endPp
                 )
