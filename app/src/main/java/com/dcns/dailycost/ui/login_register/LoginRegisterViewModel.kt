@@ -8,6 +8,7 @@ import com.dcns.dailycost.data.Resource
 import com.dcns.dailycost.data.model.networking.request_body.LoginRequestBody
 import com.dcns.dailycost.data.model.networking.request_body.RegisterRequestBody
 import com.dcns.dailycost.data.model.networking.response.ErrorResponse
+import com.dcns.dailycost.data.model.networking.response.LoginResponse
 import com.dcns.dailycost.data.repository.UserCredentialRepository
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCase
 import com.dcns.dailycost.foundation.base.BaseViewModel
@@ -189,7 +190,19 @@ class LoginRegisterViewModel @Inject constructor(
                             updateState {
                                 copy(
                                     resource = if (response.isSuccessful) {
-                                        // TODO: Update user credentials
+                                        if (mState.loginRegisterType == LoginRegisterType.Login) {
+                                            val body = response.body() as LoginResponse
+
+                                            launch {
+                                                with(userCredentialRepository) {
+                                                    setId(body.data.id)
+                                                    setName(body.data.nama)
+                                                    setToken(body.token)
+                                                    setEmail(mState.email)
+                                                    setPassword(mState.password)
+                                                }
+                                            }
+                                        }
 
                                         Resource.success(response.body())
                                     } else {

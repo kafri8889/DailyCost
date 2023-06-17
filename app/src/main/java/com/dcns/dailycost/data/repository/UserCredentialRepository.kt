@@ -18,6 +18,14 @@ class UserCredentialRepository @Inject constructor(
         get() = userCredentialDataStore.data
             .map { it.toUserCredential() }
 
+    override suspend fun setId(id: Int) {
+        userCredentialDataStore.updateData { cred ->
+            cred.copy(
+                id = id
+            )
+        }
+    }
+
     override suspend fun setName(name: String) {
         userCredentialDataStore.updateData { cred ->
             cred.copy(
@@ -30,6 +38,14 @@ class UserCredentialRepository @Inject constructor(
         userCredentialDataStore.updateData { cred ->
             cred.copy(
                 email = email
+            )
+        }
+    }
+
+    override suspend fun setToken(token: String) {
+        userCredentialDataStore.updateData { cred ->
+            cred.copy(
+                token = token
             )
         }
     }

@@ -8,8 +8,10 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class UserCredential(
+    val id: Int,
     val name: String,
     val email: String,
+    val token: String,
     val password: String
 ): Parcelable {
 
