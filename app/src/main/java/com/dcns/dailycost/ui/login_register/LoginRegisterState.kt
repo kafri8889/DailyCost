@@ -1,6 +1,6 @@
 package com.dcns.dailycost.ui.login_register
 
-import com.dcns.dailycost.ui.login_register.data.LoginRegisterType
+import com.dcns.dailycost.data.LoginRegisterType
 
 data class LoginRegisterState(
     val loginRegisterType: LoginRegisterType = LoginRegisterType.Login,

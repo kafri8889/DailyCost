@@ -122,6 +122,8 @@ class LoginRegisterViewModel @Inject constructor(
                     }
                 }
 
+                // Jika emailErrorMessage dan passwordErrorMessage null
+                // Berarti tidak ada error, langsung login ke api
                 if (emailErrorMessage != null && passwordErrorMessage != null) {
                     // TODO: Login ke api
                 }

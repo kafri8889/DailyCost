@@ -55,8 +55,8 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
+import com.dcns.dailycost.data.LoginRegisterType
 import com.dcns.dailycost.data.NavigationActions
-import com.dcns.dailycost.ui.login_register.data.LoginRegisterType
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

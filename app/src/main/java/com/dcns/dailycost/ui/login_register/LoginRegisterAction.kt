@@ -1,7 +1,7 @@
 package com.dcns.dailycost.ui.login_register
 
 import android.content.Context
-import com.dcns.dailycost.ui.login_register.data.LoginRegisterType
+import com.dcns.dailycost.data.LoginRegisterType
 
 sealed interface LoginRegisterAction {
 
