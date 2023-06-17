@@ -6,6 +6,7 @@ import com.dcns.dailycost.foundation.common.IResponse
 
 data class LoginRegisterState(
     val loginRegisterType: LoginRegisterType = LoginRegisterType.Login,
+    val internetConnectionAvailable: Boolean = true,
     val resource: Resource<IResponse?>? = null,
     val showPassword: Boolean = false,
     val rememberMe: Boolean = false,

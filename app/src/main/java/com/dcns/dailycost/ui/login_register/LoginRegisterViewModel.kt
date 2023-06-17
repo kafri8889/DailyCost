@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.login_register
 
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.LoginRegisterType
@@ -10,18 +11,40 @@ import com.dcns.dailycost.data.model.networking.response.ErrorResponse
 import com.dcns.dailycost.data.repository.UserCredentialRepository
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCase
 import com.dcns.dailycost.foundation.base.BaseViewModel
+import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.EmailValidator
 import com.dcns.dailycost.foundation.common.PasswordValidator
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginRegisterViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
-    private val loginRegisterUseCase: LoginRegisterUseCase
+    private val loginRegisterUseCase: LoginRegisterUseCase,
+    private val connectivityManager: ConnectivityManager
 ): BaseViewModel<LoginRegisterState, LoginRegisterAction, LoginRegisterUiEvent>() {
+
+    private val internetObserver = Observer<Boolean> { have ->
+        Timber.i("have internet: $have")
+
+        updateState {
+            copy(
+                internetConnectionAvailable = have
+            )
+        }
+
+        // Kalo ga ada koneksi internet, show snackbar
+        if (!have) {
+            sendEvent(LoginRegisterUiEvent.NoInternetConnection())
+        }
+    }
+
+    init {
+        connectivityManager.isNetworkAvailable.observeForever(internetObserver)
+    }
 
     override fun defaultState(): LoginRegisterState = LoginRegisterState()
 
@@ -101,6 +124,13 @@ class LoginRegisterViewModel @Inject constructor(
             is LoginRegisterAction.Login -> {
                 viewModelScope.launch {
                     val mState = state.value
+
+                    // Kalo ga ada koneksi internet, show snackbar
+                    if (!mState.internetConnectionAvailable) {
+                        sendEvent(LoginRegisterUiEvent.NoInternetConnection())
+                        return@launch
+                    }
+
                     val isValidEmail = EmailValidator.validate(mState.email)
                     val isValidPassword = PasswordValidator.validate(mState.password)
 
@@ -175,4 +205,11 @@ class LoginRegisterViewModel @Inject constructor(
             }
         }
     }
+
+    override fun onCleared() {
+        connectivityManager.isNetworkAvailable.removeObserver(internetObserver)
+
+        super.onCleared()
+    }
+
 }

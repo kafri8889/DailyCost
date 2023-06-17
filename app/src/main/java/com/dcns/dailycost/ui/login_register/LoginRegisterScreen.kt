@@ -128,6 +128,7 @@ fun LoginRegisterScreen(
     BaseScreenWrapper(viewModel) { scaffoldPadding ->
         LoginScreenContent(
             state = state,
+            paddingValues = scaffoldPadding,
             onShowPasswordCheckedChanged = { show ->
                 viewModel.onAction(LoginRegisterAction.UpdateShowPassword(show))
             },

@@ -22,4 +22,5 @@
     <string name="email_cant_be_empty">Email can\'t be empty</string>
     <string name="password_cant_be_empty">Password can\'t be empty</string>
     <string name="password_does_not_match">Passwords doesn\'t match</string>
+    <string name="internet_connection_not_available">Internet connection not available</string>
 </resources>
