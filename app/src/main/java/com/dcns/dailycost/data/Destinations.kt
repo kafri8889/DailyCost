@@ -63,14 +63,47 @@ class NavigationActions(private val navController: NavHostController) {
         saveState
     )
 
+    fun popBackStack(
+        route: String,
+        inclusive: Boolean = false,
+        saveState: Boolean = false
+    ) = navController.popBackStack(
+        route,
+        inclusive,
+        saveState
+    )
+
     fun navigateTo(
         destination: TopLevelDestination,
+        popTo: Int = navController.graph.startDestinationId,
         inclusivePopUpTo: Boolean = false,
         builder: NavOptionsBuilder.() -> Unit = {
             // Pop up to the start destination of the graph to
             // avoid building up a large stack of destinations
             // on the back stack as users select items
-            popUpTo(navController.graph.startDestinationId) {
+            popUpTo(popTo) {
+                saveState = true
+                inclusive = inclusivePopUpTo
+            }
+            // Avoid multiple copies of the same destination when
+            // re-selecting the same item
+            launchSingleTop = true
+            // Restore state when re-selecting a previously selected item
+            restoreState = true
+        }
+    ) {
+        navController.navigate(destination.route, builder)
+    }
+
+    fun navigateTo(
+        destination: TopLevelDestination,
+        popTo: String,
+        inclusivePopUpTo: Boolean = false,
+        builder: NavOptionsBuilder.() -> Unit = {
+            // Pop up to the start destination of the graph to
+            // avoid building up a large stack of destinations
+            // on the back stack as users select items
+            popUpTo(popTo) {
                 saveState = true
                 inclusive = inclusivePopUpTo
             }

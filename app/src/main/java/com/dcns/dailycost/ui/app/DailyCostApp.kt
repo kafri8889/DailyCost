@@ -39,7 +39,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
@@ -136,23 +135,9 @@ fun DailyCostApp(
                     CompositionLocalProvider(
                         LocalDrawerState provides drawerState
                     ) {
-                        BackHandler {
-                            when {
-                                drawerState.isOpen -> {
-                                    scope.launch {
-                                        drawerState.close()
-                                    }
-                                }
-                                else -> {
-                                    // TODO: fix multiple back stack
-                                    val previousDestination = navController.previousBackStackEntry?.destination?.id
-
-                                    if (previousDestination != null) {
-                                        navActions.popBackStack(previousDestination)
-                                    } else {
-                                        (context as MainActivity).finishAndRemoveTask()
-                                    }
-                                }
+                        BackHandler(drawerState.isOpen) {
+                            scope.launch {
+                                drawerState.close()
                             }
                         }
 

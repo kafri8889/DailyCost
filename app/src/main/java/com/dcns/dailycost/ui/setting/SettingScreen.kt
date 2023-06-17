@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.setting
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -38,6 +39,10 @@ fun SettingScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
+
+    BackHandler {
+        navigationActions.popBackStack(TopLevelDestinations.Home.dashboard.route)
+    }
 
     BaseScreenWrapper(
         viewModel = viewModel,
