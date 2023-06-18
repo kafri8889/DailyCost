@@ -3,13 +3,13 @@ package com.dcns.dailycost.domain.di
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 import com.dcns.dailycost.domain.repository.ILoginRegisterRepository
 import com.dcns.dailycost.domain.repository.IShoppingRepository
-import com.dcns.dailycost.domain.use_case.balance.BalanceUseCases
+import com.dcns.dailycost.domain.use_case.BalanceUseCases
+import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
+import com.dcns.dailycost.domain.use_case.ShoppingUseCases
 import com.dcns.dailycost.domain.use_case.balance.GetBalanceUseCase
-import com.dcns.dailycost.domain.use_case.login_register.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.login_register.UserLoginUseCase
 import com.dcns.dailycost.domain.use_case.login_register.UserRegisterUseCase
 import com.dcns.dailycost.domain.use_case.shopping.PostShoppingUseCase
-import com.dcns.dailycost.domain.use_case.shopping.ShoppingUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

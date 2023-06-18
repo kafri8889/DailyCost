@@ -10,7 +10,7 @@ import com.dcns.dailycost.data.model.networking.request_body.RegisterRequestBody
 import com.dcns.dailycost.data.model.networking.response.ErrorResponse
 import com.dcns.dailycost.data.model.networking.response.LoginResponse
 import com.dcns.dailycost.data.repository.UserCredentialRepository
-import com.dcns.dailycost.domain.use_case.login_register.LoginRegisterUseCases
+import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.EmailValidator
