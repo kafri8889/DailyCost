@@ -7,10 +7,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
@@ -28,6 +31,8 @@ fun DashboardScreen(
     val context = LocalContext.current
     val drawerState = LocalDrawerState.current
 
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     val scope = rememberCoroutineScope()
 
     // Exit app
@@ -40,7 +45,13 @@ fun DashboardScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(stringResource(id = R.string.dashboard))
+                    Text(
+                        overflow = TextOverflow.Ellipsis,
+                        text = stringResource(
+                            id = R.string.hello_welcome_x,
+                            state.credential.name
+                        )
+                    )
                 },
                 navigationIcon = {
                     IconButton(
