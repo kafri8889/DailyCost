@@ -4,13 +4,17 @@ import com.dcns.dailycost.BuildConfig
 import com.dcns.dailycost.data.datasource.remote.BalanceHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.DepoHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.LoginRegisterHandlerImpl
+import com.dcns.dailycost.data.datasource.remote.NoteHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.ShoppingHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.handlers.BalanceHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.DepoHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.LoginRegisterHandler
+import com.dcns.dailycost.data.datasource.remote.handlers.NoteHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.ShoppingHandler
 import com.dcns.dailycost.data.datasource.remote.services.BalanceService
+import com.dcns.dailycost.data.datasource.remote.services.DepoService
 import com.dcns.dailycost.data.datasource.remote.services.LoginRegisterService
+import com.dcns.dailycost.data.datasource.remote.services.NoteService
 import com.dcns.dailycost.data.datasource.remote.services.ShoppingService
 import dagger.Module
 import dagger.Provides
@@ -80,6 +84,18 @@ class RemoteModule {
 
     @Provides
     @Singleton
+    fun provideDepoService(
+        retrofit: Retrofit
+    ): DepoService = retrofit.create(DepoService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideNoteService(
+        retrofit: Retrofit
+    ): NoteService = retrofit.create(NoteService::class.java)
+
+    @Provides
+    @Singleton
     fun provideLoginRegisterHandler(
         impl: LoginRegisterHandlerImpl
     ): LoginRegisterHandler = impl
@@ -101,5 +117,11 @@ class RemoteModule {
     fun provideDepoHandler(
         impl: DepoHandlerImpl
     ): DepoHandler = impl
+
+    @Provides
+    @Singleton
+    fun provideNoteHandler(
+        impl: NoteHandlerImpl
+    ): NoteHandler = impl
 
 }
