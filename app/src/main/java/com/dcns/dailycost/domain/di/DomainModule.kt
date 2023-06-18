@@ -1,7 +1,10 @@
 package com.dcns.dailycost.domain.di
 
+import com.dcns.dailycost.domain.repository.IBalanceRepository
 import com.dcns.dailycost.domain.repository.ILoginRegisterRepository
 import com.dcns.dailycost.domain.repository.IShoppingRepository
+import com.dcns.dailycost.domain.use_case.balance.BalanceUseCases
+import com.dcns.dailycost.domain.use_case.balance.GetBalanceUseCase
 import com.dcns.dailycost.domain.use_case.login_register.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.login_register.UserLoginUseCase
 import com.dcns.dailycost.domain.use_case.login_register.UserRegisterUseCase
@@ -38,6 +41,14 @@ class DomainModule {
         postShoppingUseCase = PostShoppingUseCase(
             shoppingRepository = shoppingRepository
         )
+    )
+
+    @Provides
+    @Singleton
+    fun provideBalanceUseCases(
+        balanceRepository: IBalanceRepository
+    ): BalanceUseCases = BalanceUseCases(
+        getBalanceUseCase = GetBalanceUseCase(balanceRepository)
     )
 
 }

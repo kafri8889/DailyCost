@@ -1,10 +1,13 @@
 package com.dcns.dailycost.data.datasource.remote.di
 
 import com.dcns.dailycost.BuildConfig
+import com.dcns.dailycost.data.datasource.remote.BalanceHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.LoginRegisterHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.ShoppingHandlerImpl
+import com.dcns.dailycost.data.datasource.remote.handlers.BalanceHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.LoginRegisterHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.ShoppingHandler
+import com.dcns.dailycost.data.datasource.remote.services.BalanceService
 import com.dcns.dailycost.data.datasource.remote.services.LoginRegisterService
 import com.dcns.dailycost.data.datasource.remote.services.ShoppingService
 import dagger.Module
@@ -69,6 +72,12 @@ class RemoteModule {
 
     @Provides
     @Singleton
+    fun provideBalanceService(
+        retrofit: Retrofit
+    ): BalanceService = retrofit.create(BalanceService::class.java)
+
+    @Provides
+    @Singleton
     fun provideLoginRegisterHandler(
         impl: LoginRegisterHandlerImpl
     ): LoginRegisterHandler = impl
@@ -78,5 +87,11 @@ class RemoteModule {
     fun provideShoppingHandler(
         impl: ShoppingHandlerImpl
     ): ShoppingHandler = impl
+
+    @Provides
+    @Singleton
+    fun provideBalanceHandler(
+        impl: BalanceHandlerImpl
+    ): BalanceHandler = impl
 
 }

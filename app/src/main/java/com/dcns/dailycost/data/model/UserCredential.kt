@@ -23,4 +23,11 @@ data class UserCredential(
                 token.isNotBlank() &&
                 password.isNotBlank()
 
+    /**
+     * Get token for Authorization
+     */
+    fun getToken(): String {
+        return "Bearer $token"
+    }
+
 }
