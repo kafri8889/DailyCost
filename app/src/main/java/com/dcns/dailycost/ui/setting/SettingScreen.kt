@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,6 +24,7 @@ import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.LocalDrawerState
+import com.dcns.dailycost.foundation.extension.toast
 import com.dcns.dailycost.foundation.uicomponent.BasicPreference
 import kotlinx.coroutines.launch
 
@@ -33,6 +35,7 @@ fun SettingScreen(
     navigationActions: NavigationActions
 ) {
 
+    val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
     val drawerState = LocalDrawerState.current
 
@@ -118,7 +121,7 @@ fun SettingScreen(
                     },
                     onClick = {
                         viewModel.onAction(SettingAction.Logout)
-                        navigationActions.navigateTo(TopLevelDestinations.LoginRegister.loginRegister)
+                        context.getString(R.string.logout_success).toast(context)
                     }
                 )
             }

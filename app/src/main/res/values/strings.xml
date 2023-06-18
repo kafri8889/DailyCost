@@ -28,4 +28,5 @@
     <string name="dashboard">Dashboard</string>
     <string name="setting">Setting</string>
     <string name="logout">Logout</string>
+    <string name="logout_success">Logout success</string>
 </resources>
