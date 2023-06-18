@@ -1,12 +1,17 @@
 package com.dcns.dailycost.domain.di
 
 import com.dcns.dailycost.domain.repository.IBalanceRepository
+import com.dcns.dailycost.domain.repository.IDepoRepository
 import com.dcns.dailycost.domain.repository.ILoginRegisterRepository
 import com.dcns.dailycost.domain.repository.IShoppingRepository
 import com.dcns.dailycost.domain.use_case.BalanceUseCases
+import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.ShoppingUseCases
 import com.dcns.dailycost.domain.use_case.balance.GetBalanceUseCase
+import com.dcns.dailycost.domain.use_case.depo.AddDepoUseCase
+import com.dcns.dailycost.domain.use_case.depo.EditDepoUseCase
+import com.dcns.dailycost.domain.use_case.depo.TopUpDepoUseCase
 import com.dcns.dailycost.domain.use_case.login_register.UserLoginUseCase
 import com.dcns.dailycost.domain.use_case.login_register.UserRegisterUseCase
 import com.dcns.dailycost.domain.use_case.shopping.PostShoppingUseCase
@@ -49,6 +54,22 @@ class DomainModule {
         balanceRepository: IBalanceRepository
     ): BalanceUseCases = BalanceUseCases(
         getBalanceUseCase = GetBalanceUseCase(balanceRepository)
+    )
+
+    @Provides
+    @Singleton
+    fun provideDepoUseCases(
+        depoRepository: IDepoRepository
+    ): DepoUseCases = DepoUseCases(
+        editDepoUseCase = EditDepoUseCase(
+            depoRepository = depoRepository
+        ),
+        addDepoUseCase = AddDepoUseCase(
+            depoRepository = depoRepository
+        ),
+        topUpDepoUseCase = TopUpDepoUseCase(
+            depoRepository = depoRepository
+        )
     )
 
 }
