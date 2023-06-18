@@ -8,6 +8,8 @@ FE: https://github.com/fikrimln16/dailycost-fe-app
 
 BE: https://github.com/fikrimln16/DAILYCOST-BACKEND
 
+Kalo ada yg bingung tanya aja di discord, nanti penjelasannya di tambahin ke Wiki
+
 # Info
 Compose Version: 1.5.0-beta02
 
