@@ -164,65 +164,90 @@ class LoginRegisterViewModel @Inject constructor(
                     // Jika emailErrorMessage dan passwordErrorMessage null
                     // Berarti tidak ada error, langsung login ke api
                     if (emailErrorMessage == null && passwordErrorMessage == null) {
-                        val requestBody = if (mState.loginRegisterType == LoginRegisterType.Login) {
-                            LoginRequestBody(
-                                email = mState.email,
-                                password = mState.password
-                            ).toRequestBody()
-                        } else {
-                            RegisterRequestBody(
-                                name = mState.username,
-                                email = mState.email,
-                                password = mState.password
-                            ).toRequestBody()
-                        }
-
                         updateState {
                             copy(
                                 resource = Resource.loading(null)
                             )
                         }
 
-                        loginRegisterUseCases.fetchAPILoginRegisterUseCase(
-                            type = mState.loginRegisterType,
-                            body = requestBody
+                        if (mState.loginRegisterType == LoginRegisterType.Login) {
+                            loginRegisterUseCases.userLoginUseCase(
+                                LoginRequestBody(
+                                    email = mState.email,
+                                    password = mState.password
+                                ).toRequestBody()
+                            ).let { response ->
+                               if (response.isSuccessful) {
+                                   if (mState.rememberMe) {
+                                       val body = response.body() as LoginResponse
+
+                                       launch {
+                                           with(userCredentialRepository) {
+                                               setId(body.data.id.toString())
+                                               setName(body.data.name)
+                                               setToken(body.token)
+                                               setEmail(mState.email)
+                                               setPassword(mState.password)
+                                           }
+                                       }
+                                   }
+
+                                   updateState {
+                                       copy(
+                                           resource = Resource.success(response.body())
+                                       )
+                                   }
+
+                                   return@launch
+                               }
+
+                                // Response not success
+
+                                val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ErrorResponse::class.java)
+
+                                updateState {
+                                    copy(
+                                        resource = Resource.error(errorResponse.message, errorResponse)
+                                    )
+                                }
+                            }
+
+                            return@launch
+                        }
+
+                        // loginRegisterType == LoginRegisterType.Register
+                        loginRegisterUseCases.userRegisterUseCase(
+                            RegisterRequestBody(
+                                name = mState.username,
+                                email = mState.email,
+                                password = mState.password
+                            ).toRequestBody()
                         ).let { response ->
+                            if (response.isSuccessful) {
+                                updateState {
+                                    copy(
+                                        username = "",
+                                        passwordRe = "",
+                                        loginRegisterType = LoginRegisterType.Login
+                                    )
+                                }
+
+                                updateState {
+                                    copy(
+                                        resource = Resource.success(response.body())
+                                    )
+                                }
+
+                                return@launch
+                            }
+
+                            // Response not success
+
+                            val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ErrorResponse::class.java)
+
                             updateState {
                                 copy(
-                                    resource = if (response.isSuccessful) {
-                                        when (mState.loginRegisterType) {
-                                            LoginRegisterType.Login -> {
-                                                if (mState.rememberMe) {
-                                                    val body = response.body() as LoginResponse
-
-                                                    launch {
-                                                        with(userCredentialRepository) {
-                                                            setId(body.data.id.toString())
-                                                            setName(body.data.name)
-                                                            setToken(body.token)
-                                                            setEmail(mState.email)
-                                                            setPassword(mState.password)
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            LoginRegisterType.Register -> {
-                                                updateState {
-                                                    copy(
-                                                        username = "",
-                                                        passwordRe = "",
-                                                        loginRegisterType = LoginRegisterType.Login
-                                                    )
-                                                }
-                                            }
-                                        }
-
-                                        Resource.success(response.body())
-                                    } else {
-                                        val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ErrorResponse::class.java)
-
-                                        Resource.error(errorResponse.message, errorResponse)
-                                    }
+                                    resource = Resource.error(errorResponse.message, errorResponse)
                                 )
                             }
                         }
