@@ -1,4 +1,4 @@
-package com.dcns.dailycost.data.model.networking.response
+package com.dcns.dailycost.data.model.remote.response
 
 import com.dcns.dailycost.foundation.common.IResponse
 

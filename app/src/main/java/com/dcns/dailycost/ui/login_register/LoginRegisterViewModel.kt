@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.LoginRegisterType
 import com.dcns.dailycost.data.Resource
-import com.dcns.dailycost.data.model.networking.request_body.LoginRequestBody
-import com.dcns.dailycost.data.model.networking.request_body.RegisterRequestBody
-import com.dcns.dailycost.data.model.networking.response.ErrorResponse
-import com.dcns.dailycost.data.model.networking.response.LoginResponse
+import com.dcns.dailycost.data.model.remote.request_body.LoginRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.RegisterRequestBody
+import com.dcns.dailycost.data.model.remote.response.ErrorResponse
+import com.dcns.dailycost.data.model.remote.response.LoginResponse
 import com.dcns.dailycost.data.repository.UserCredentialRepository
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel

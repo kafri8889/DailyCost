@@ -2,7 +2,7 @@ package com.dcns.dailycost.data.datasource.remote
 
 import com.dcns.dailycost.data.datasource.remote.handlers.DepoHandler
 import com.dcns.dailycost.data.datasource.remote.services.DepoService
-import com.dcns.dailycost.data.model.networking.response.DepoResponse
+import com.dcns.dailycost.data.model.remote.response.DepoResponse
 import okhttp3.RequestBody
 import retrofit2.Response
 import javax.inject.Inject

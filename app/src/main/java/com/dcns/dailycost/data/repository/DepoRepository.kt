@@ -1,7 +1,7 @@
 package com.dcns.dailycost.data.repository
 
 import com.dcns.dailycost.data.datasource.remote.handlers.DepoHandler
-import com.dcns.dailycost.data.model.networking.response.DepoResponse
+import com.dcns.dailycost.data.model.remote.response.DepoResponse
 import com.dcns.dailycost.domain.repository.IDepoRepository
 import okhttp3.RequestBody
 import retrofit2.Response

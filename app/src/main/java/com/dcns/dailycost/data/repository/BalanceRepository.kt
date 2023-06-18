@@ -1,7 +1,7 @@
 package com.dcns.dailycost.data.repository
 
 import com.dcns.dailycost.data.datasource.remote.handlers.BalanceHandler
-import com.dcns.dailycost.data.model.networking.response.BalanceResponse
+import com.dcns.dailycost.data.model.remote.response.BalanceResponse
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 import retrofit2.Response
 import javax.inject.Inject

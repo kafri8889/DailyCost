@@ -1,4 +1,4 @@
-package com.dcns.dailycost.data.model.networking
+package com.dcns.dailycost.data.model.remote
 
 import com.google.gson.annotations.SerializedName
 

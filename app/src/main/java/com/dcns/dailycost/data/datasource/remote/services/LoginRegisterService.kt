@@ -1,7 +1,7 @@
 package com.dcns.dailycost.data.datasource.remote.services
 
-import com.dcns.dailycost.data.model.networking.response.LoginResponse
-import com.dcns.dailycost.data.model.networking.response.RegisterResponse
+import com.dcns.dailycost.data.model.remote.response.LoginResponse
+import com.dcns.dailycost.data.model.remote.response.RegisterResponse
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body

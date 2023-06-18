@@ -1,7 +1,7 @@
 package com.dcns.dailycost.data.datasource.remote.services
 
-import com.dcns.dailycost.data.model.networking.response.NoteResponse
-import com.dcns.dailycost.data.model.networking.response.UploadImageResponse
+import com.dcns.dailycost.data.model.remote.response.NoteResponse
+import com.dcns.dailycost.data.model.remote.response.UploadImageResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response

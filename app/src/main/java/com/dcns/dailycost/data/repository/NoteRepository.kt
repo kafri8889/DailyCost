@@ -1,8 +1,8 @@
 package com.dcns.dailycost.data.repository
 
 import com.dcns.dailycost.data.datasource.remote.handlers.NoteHandler
-import com.dcns.dailycost.data.model.networking.response.NoteResponse
-import com.dcns.dailycost.data.model.networking.response.UploadImageResponse
+import com.dcns.dailycost.data.model.remote.response.NoteResponse
+import com.dcns.dailycost.data.model.remote.response.UploadImageResponse
 import com.dcns.dailycost.domain.repository.INoteRepository
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

@@ -1,4 +1,4 @@
-package com.dcns.dailycost.data.model.networking.request_body
+package com.dcns.dailycost.data.model.remote.request_body
 
 import com.dcns.dailycost.foundation.common.RetrofitRequestBody
 import com.google.gson.annotations.SerializedName

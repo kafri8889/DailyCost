@@ -65,7 +65,7 @@ import com.dcns.dailycost.data.Constant
 import com.dcns.dailycost.data.LoginRegisterType
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.Status
-import com.dcns.dailycost.data.model.networking.response.LoginResponse
+import com.dcns.dailycost.data.model.remote.response.LoginResponse
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.extension.toast
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState

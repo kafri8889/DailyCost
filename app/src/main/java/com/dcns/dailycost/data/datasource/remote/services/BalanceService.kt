@@ -1,6 +1,6 @@
 package com.dcns.dailycost.data.datasource.remote.services
 
-import com.dcns.dailycost.data.model.networking.response.BalanceResponse
+import com.dcns.dailycost.data.model.remote.response.BalanceResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
