@@ -1,8 +1,9 @@
 package com.dcns.dailycost.domain.di
 
-import com.dcns.dailycost.data.repository.LoginRegisterRepository
+import com.dcns.dailycost.domain.repository.ILoginRegisterRepository
 import com.dcns.dailycost.domain.repository.IShoppingRepository
-import com.dcns.dailycost.domain.use_case.LoginRegisterUseCase
+import com.dcns.dailycost.domain.use_case.login_register.FetchAPILoginRegisterUseCase
+import com.dcns.dailycost.domain.use_case.login_register.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.shopping.FetchAPIShoppingUseCase
 import com.dcns.dailycost.domain.use_case.shopping.ShoppingUseCases
 import dagger.Module
@@ -18,9 +19,11 @@ class DomainModule {
     @Provides
     @Singleton
     fun provideLoginRegisterUseCase(
-        loginRegisterRepository: LoginRegisterRepository
-    ): LoginRegisterUseCase = LoginRegisterUseCase(
-        loginRegisterRepository = loginRegisterRepository
+        loginRegisterRepository: ILoginRegisterRepository
+    ): LoginRegisterUseCases = LoginRegisterUseCases(
+        fetchAPILoginRegisterUseCase = FetchAPILoginRegisterUseCase(
+            loginRegisterRepository = loginRegisterRepository
+        )
     )
 
     @Provides

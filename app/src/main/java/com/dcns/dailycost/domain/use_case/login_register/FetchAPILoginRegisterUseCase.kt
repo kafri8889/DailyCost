@@ -1,15 +1,15 @@
-package com.dcns.dailycost.domain.use_case
+package com.dcns.dailycost.domain.use_case.login_register
 
 import com.dcns.dailycost.data.LoginRegisterType
 import com.dcns.dailycost.data.model.networking.response.LoginResponse
-import com.dcns.dailycost.data.repository.LoginRegisterRepository
+import com.dcns.dailycost.domain.repository.ILoginRegisterRepository
 import com.dcns.dailycost.foundation.common.IResponse
 import okhttp3.RequestBody
 import retrofit2.Response
 import javax.inject.Inject
 
-class LoginRegisterUseCase @Inject constructor(
-    private val loginRegisterRepository: LoginRegisterRepository
+class FetchAPILoginRegisterUseCase @Inject constructor(
+    private val loginRegisterRepository: ILoginRegisterRepository
 ) {
 
     /**

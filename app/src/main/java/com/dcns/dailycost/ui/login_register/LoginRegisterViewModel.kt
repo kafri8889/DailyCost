@@ -10,7 +10,7 @@ import com.dcns.dailycost.data.model.networking.request_body.RegisterRequestBody
 import com.dcns.dailycost.data.model.networking.response.ErrorResponse
 import com.dcns.dailycost.data.model.networking.response.LoginResponse
 import com.dcns.dailycost.data.repository.UserCredentialRepository
-import com.dcns.dailycost.domain.use_case.LoginRegisterUseCase
+import com.dcns.dailycost.domain.use_case.login_register.LoginRegisterUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.EmailValidator
@@ -24,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginRegisterViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
-    private val loginRegisterUseCase: LoginRegisterUseCase,
+    private val loginRegisterUseCases: LoginRegisterUseCases,
     private val connectivityManager: ConnectivityManager
 ): BaseViewModel<LoginRegisterState, LoginRegisterAction, LoginRegisterUiEvent>() {
 
@@ -183,7 +183,7 @@ class LoginRegisterViewModel @Inject constructor(
                             )
                         }
 
-                        loginRegisterUseCase(
+                        loginRegisterUseCases.fetchAPILoginRegisterUseCase(
                             type = mState.loginRegisterType,
                             body = requestBody
                         ).let { response ->
@@ -198,7 +198,7 @@ class LoginRegisterViewModel @Inject constructor(
                                                     launch {
                                                         with(userCredentialRepository) {
                                                             setId(body.data.id.toString())
-                                                            setName(body.data.nama)
+                                                            setName(body.data.name)
                                                             setToken(body.token)
                                                             setEmail(mState.email)
                                                             setPassword(mState.password)
