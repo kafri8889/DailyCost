@@ -114,7 +114,13 @@ class NavigationActions(private val navController: NavHostController) {
             restoreState = true
         }
     ) {
-        navController.navigate(destination.route, builder)
+        val currentDestination = navController.currentDestination?.route
+        
+        // If current destination is different with target destination, navigate it
+        // Otherwise don't navigate
+        if (currentDestination != destination.route) {
+            navController.navigate(destination.route, builder)
+        }
     }
 }
 

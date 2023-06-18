@@ -197,7 +197,7 @@ class LoginRegisterViewModel @Inject constructor(
 
                                                     launch {
                                                         with(userCredentialRepository) {
-                                                            setId(body.data.id)
+                                                            setId(body.data.id.toString())
                                                             setName(body.data.nama)
                                                             setToken(body.token)
                                                             setEmail(mState.email)

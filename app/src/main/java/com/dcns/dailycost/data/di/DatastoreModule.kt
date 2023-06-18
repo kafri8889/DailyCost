@@ -8,6 +8,7 @@ import com.dcns.dailycost.ProtoUserCredential
 import com.dcns.dailycost.data.Constant
 import com.dcns.dailycost.data.repository.UserCredentialRepository
 import com.dcns.dailycost.data.serializer.UserCredentialSerializer
+import com.dcns.dailycost.foundation.common.EncryptionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,9 +23,10 @@ class DatastoreModule {
     @Provides
     @Singleton
     fun provideUserCredentialDataStore(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
+        encryptionManager: EncryptionManager
     ): DataStore<ProtoUserCredential> = DataStoreFactory.create(
-        serializer = UserCredentialSerializer,
+        serializer = UserCredentialSerializer(encryptionManager),
         corruptionHandler = UserCredentialRepository.corruptionHandler,
         produceFile = { context.dataStoreFile(Constant.USER_CREDENTIAL) }
     )

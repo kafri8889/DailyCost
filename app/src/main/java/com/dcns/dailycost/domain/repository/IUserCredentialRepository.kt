@@ -7,7 +7,7 @@ interface IUserCredentialRepository {
 
     val getUserCredential: Flow<UserCredential>
 
-    suspend fun setId(id: Int)
+    suspend fun setId(id: String)
 
     suspend fun setName(name: String)
 

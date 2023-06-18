@@ -18,7 +18,7 @@ class UserCredentialRepository @Inject constructor(
         get() = userCredentialDataStore.data
             .map { it.toUserCredential() }
 
-    override suspend fun setId(id: Int) {
+    override suspend fun setId(id: String) {
         userCredentialDataStore.updateData { cred ->
             cred.copy(
                 id = id

@@ -31,7 +31,7 @@ class SettingViewModel @Inject constructor(
             SettingAction.Logout -> {
                 viewModelScope.launch {
                     with(userCredentialRepository) {
-                        setId(-1)
+                        setId("")
                         setName("")
                         setEmail("")
                         setToken("")

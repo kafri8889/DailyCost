@@ -7,7 +7,7 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:8.2.0-alpha08")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
-        classpath("org.jetbrains.kotlin:kotlin-serialization:1.9.0-Beta")
+        classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlin_version")
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.44.2")
         classpath("com.squareup.wire:wire-gradle-plugin:4.4.3")
     }
