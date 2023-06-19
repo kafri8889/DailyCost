@@ -31,4 +31,5 @@
     <string name="logout_success">Logout success</string>
     <string name="hello_welcome_x">Hello, Welcome %1$s</string>
     <string name="recent_notes">Recent notes</string>
+    <string name="notes">Notes</string>
 </resources>
