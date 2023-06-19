@@ -26,7 +26,7 @@ data class UserCredential(
     /**
      * Get token for Authorization
      */
-    fun getToken(): String {
+    fun getAuthToken(): String {
         return "Bearer $token"
     }
 
