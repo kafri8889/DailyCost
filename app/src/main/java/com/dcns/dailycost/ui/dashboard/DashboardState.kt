@@ -5,5 +5,6 @@ import com.dcns.dailycost.data.model.UserCredential
 import com.dcns.dailycost.foundation.extension.toUserCredential
 
 data class DashboardState(
-    val credential: UserCredential = ProtoUserCredential().toUserCredential()
+    val credential: UserCredential = ProtoUserCredential().toUserCredential(),
+    val isRefreshing: Boolean = false
 )
