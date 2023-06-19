@@ -12,7 +12,7 @@ data class NoteDb(
     @PrimaryKey
     @ColumnInfo(name = "id_note") val id: String,
     @ColumnInfo(name = "body_note") val body: String,
-    @ColumnInfo(name = "date_note") val date: Long,
+    @ColumnInfo(name = "createdAt_note") val createdAt: Long,
     @ColumnInfo(name = "imageUrl_note") val imageUrl: String,
     @ColumnInfo(name = "title_note") val title: String,
     @ColumnInfo(name = "userId_note") val userId: String,

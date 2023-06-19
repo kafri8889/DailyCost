@@ -16,9 +16,10 @@ import com.dcns.dailycost.domain.use_case.depo.EditDepoUseCase
 import com.dcns.dailycost.domain.use_case.depo.TopUpDepoUseCase
 import com.dcns.dailycost.domain.use_case.login_register.UserLoginUseCase
 import com.dcns.dailycost.domain.use_case.login_register.UserRegisterUseCase
-import com.dcns.dailycost.domain.use_case.note.AddNoteUseCase
+import com.dcns.dailycost.domain.use_case.note.AddRemoteNoteUseCase
 import com.dcns.dailycost.domain.use_case.note.GetLocalNoteUseCase
 import com.dcns.dailycost.domain.use_case.note.GetRemoteNoteUseCase
+import com.dcns.dailycost.domain.use_case.note.UpsertLocalNoteUseCase
 import com.dcns.dailycost.domain.use_case.shopping.PostShoppingUseCase
 import dagger.Module
 import dagger.Provides
@@ -72,7 +73,8 @@ class DomainModule {
     ): NoteUseCases = NoteUseCases(
         getRemoteNoteUseCase = GetRemoteNoteUseCase(noteRepository),
         getLocalNoteUseCase = GetLocalNoteUseCase(noteRepository),
-        addNoteUseCase = AddNoteUseCase(noteRepository)
+        addRemoteNoteUseCase = AddRemoteNoteUseCase(noteRepository),
+        upsertLocalNoteUseCase = UpsertLocalNoteUseCase(noteRepository)
     )
 
 }

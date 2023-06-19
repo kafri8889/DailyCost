@@ -4,9 +4,9 @@ import com.dcns.dailycost.data.model.Note
 import com.dcns.dailycost.data.model.local.NoteDb
 
 fun NoteDb.toNote(): Note {
-    return Note(id, body, date, imageUrl, title, userId)
+    return Note(id, body, createdAt, imageUrl, title, userId)
 }
 
 fun Note.toNoteDb(): NoteDb {
-    return NoteDb(id, body, date, imageUrl, title, userId)
+    return NoteDb(id, body, createdAt, imageUrl, title, userId)
 }
