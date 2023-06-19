@@ -75,7 +75,7 @@ fun NoteItem(
     var isLoading by remember { mutableStateOf(true) }
 
     val date = remember(note) {
-        DateFormat.getDateInstance(DateFormat.MEDIUM).format(note.date)
+        DateFormat.getDateInstance(DateFormat.MEDIUM).format(note.createdAt)
     }
 
     val imageRequest = remember(note.imageUrl) {

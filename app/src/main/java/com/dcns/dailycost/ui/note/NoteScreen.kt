@@ -1,11 +1,16 @@
 package com.dcns.dailycost.ui.note
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -74,6 +79,9 @@ fun NoteScreen(
     ) { scaffoldPadding ->
         NoteScreenContent(
             state = state,
+            onRefresh = {
+                viewModel.onAction(NoteAction.Refresh)
+            },
             modifier = Modifier
                 .fillMaxSize()
                 .padding(scaffoldPadding)
@@ -81,28 +89,48 @@ fun NoteScreen(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun NoteScreenContent(
     state: NoteState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRefresh: () -> Unit
 ) {
 
-    LazyColumn(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        items(
-            items = state.notes,
-            key = { note -> note.id }
-        ) { note ->
-            NoteItem(
-                note = note,
-                onClick = {
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = state.isRefreshing,
+        onRefresh = onRefresh
+    )
 
-                },
-                modifier = Modifier
-                    .fillMaxWidth(0.96f)
-            )
+    Box(
+        modifier = modifier
+            .pullRefresh(pullRefreshState)
+    ) {
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            items(
+                items = state.notes,
+                key = { note -> note.id }
+            ) { note ->
+                NoteItem(
+                    note = note,
+                    onClick = {
+
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(0.96f)
+                )
+            }
         }
+
+        PullRefreshIndicator(
+            refreshing = state.isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+        )
     }
 }

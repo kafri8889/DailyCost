@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class Note(
     val id: String,
     val body: String,
-    val date: Long,
+    val createdAt: Long,
     val imageUrl: String,
     val title: String,
     val userId: String,
