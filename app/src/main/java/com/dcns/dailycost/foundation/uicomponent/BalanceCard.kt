@@ -80,21 +80,21 @@ fun BalanceCard(
                 text = "$totalBalance",
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
-                            .weight(1f)
-                            // Rendering to an offscreen buffer is required to get the faded edges' alpha to be
-                            // applied only to the text, and not whatever is drawn below this composable (e.g. the
-                            // window).
-                            .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
-                            .drawWithContent {
-                                drawContent()
-                                drawFadedEdge(
-                                    edgeWidth = 8.dp,
-                                    leftEdge = false
-                                )
-                            }
-                            .basicMarquee(
-                                delayMillis = 2000
-                            )
+                    .fillMaxWidth()
+                    // Rendering to an offscreen buffer is required to get the faded edges' alpha to be
+                    // applied only to the text, and not whatever is drawn below this composable (e.g. the
+                    // window).
+                    .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+                    .drawWithContent {
+                        drawContent()
+                        drawFadedEdge(
+                            edgeWidth = 8.dp,
+                            leftEdge = false
+                        )
+                    }
+                    .basicMarquee(
+                        delayMillis = 2000
+                    )
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -189,21 +189,21 @@ private fun BalanceItem(
                 text = "$amount",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
-                            .weight(1f)
-                            // Rendering to an offscreen buffer is required to get the faded edges' alpha to be
-                            // applied only to the text, and not whatever is drawn below this composable (e.g. the
-                            // window).
-                            .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
-                            .drawWithContent {
-                                drawContent()
-                                drawFadedEdge(
-                                    edgeWidth = 8.dp,
-                                    leftEdge = false
-                                )
-                            }
-                            .basicMarquee(
-                                delayMillis = 2000
-                            )
+                    .fillMaxWidth()
+                    // Rendering to an offscreen buffer is required to get the faded edges' alpha to be
+                    // applied only to the text, and not whatever is drawn below this composable (e.g. the
+                    // window).
+                    .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+                    .drawWithContent {
+                        drawContent()
+                        drawFadedEdge(
+                            edgeWidth = 8.dp,
+                            leftEdge = false
+                        )
+                    }
+                    .basicMarquee(
+                        delayMillis = 2000
+                    )
             )
         }
     }
