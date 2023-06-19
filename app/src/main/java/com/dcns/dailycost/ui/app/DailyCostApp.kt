@@ -49,6 +49,8 @@ import com.dcns.dailycost.ui.dashboard.DashboardScreen
 import com.dcns.dailycost.ui.dashboard.DashboardViewModel
 import com.dcns.dailycost.ui.login_register.LoginRegisterScreen
 import com.dcns.dailycost.ui.login_register.LoginRegisterViewModel
+import com.dcns.dailycost.ui.note.NoteScreen
+import com.dcns.dailycost.ui.note.NoteViewModel
 import com.dcns.dailycost.ui.setting.SettingScreen
 import com.dcns.dailycost.ui.setting.SettingViewModel
 import com.dcns.dailycost.ui.splash.SplashScreen
@@ -175,6 +177,17 @@ fun DailyCostApp(
                                     val mViewModel = hiltViewModel<DashboardViewModel>(backEntry)
 
                                     DashboardScreen(
+                                        viewModel = mViewModel,
+                                        navigationActions = navActions
+                                    )
+                                }
+
+                                composable(
+                                    route = TopLevelDestinations.Home.note.route
+                                ) { backEntry ->
+                                    val mViewModel = hiltViewModel<NoteViewModel>(backEntry)
+
+                                    NoteScreen(
                                         viewModel = mViewModel,
                                         navigationActions = navActions
                                     )

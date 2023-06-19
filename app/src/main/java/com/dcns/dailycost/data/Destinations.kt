@@ -12,6 +12,7 @@ object DestinationRoute {
     const val DASHBOARD = "dashboard"
     const val SETTING = "setting"
     const val SPLASH = "splash"
+    const val NOTE = "note"
 }
 
 /**
@@ -148,6 +149,12 @@ object TopLevelDestinations {
             icon = R.drawable.ic_setting,
             name = R.string.setting
         )
+
+        val note = TopLevelDestination(
+            route = DestinationRoute.NOTE,
+            icon = R.drawable.ic_notes,
+            name = R.string.notes
+        )
     }
 
     val splash = TopLevelDestination(
@@ -158,5 +165,6 @@ object TopLevelDestinations {
 
 val drawerDestinations = arrayOf(
     TopLevelDestinations.Home.dashboard,
+    TopLevelDestinations.Home.note,
     TopLevelDestinations.Home.setting,
 )
