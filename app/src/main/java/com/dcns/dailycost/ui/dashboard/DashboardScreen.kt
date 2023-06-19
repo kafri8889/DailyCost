@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.datasource.local.LocalNoteDataProvider
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.LocalDrawerState
 import com.dcns.dailycost.foundation.uicomponent.NoteItem
@@ -114,13 +115,14 @@ private fun DashboardScreenContent(
             .pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .fillMaxSize()
                 .pullRefresh(pullRefreshState)
         ) {
             items(
-                items = state.notes,
+                items = LocalNoteDataProvider.notes,
                 key = { note -> note.id }
             ) { note ->
                 NoteItem(
@@ -129,7 +131,7 @@ private fun DashboardScreenContent(
 
                     },
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(0.96f)
                 )
             }
         }
