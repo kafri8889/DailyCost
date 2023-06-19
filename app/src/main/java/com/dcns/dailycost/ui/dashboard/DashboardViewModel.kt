@@ -1,6 +1,7 @@
 package com.dcns.dailycost.ui.dashboard
 
 import androidx.lifecycle.viewModelScope
+import com.dcns.dailycost.data.repository.UserBalanceRepository
 import com.dcns.dailycost.data.repository.UserCredentialRepository
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,10 +12,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val userCredentialRepository: UserCredentialRepository
+    private val userCredentialRepository: UserCredentialRepository,
+    private val userBalanceRepository: UserBalanceRepository
 ): BaseViewModel<DashboardState, DashboardAction, DashboardUiEvent>() {
 
     init {
+        viewModelScope.launch {
+            userBalanceRepository.getUserBalance.collect { balance ->
+                updateState {
+                    copy(
+                        balance = balance
+                    )
+                }
+            }
+        }
+
         viewModelScope.launch {
             userCredentialRepository.getUserCredential.collect { cred ->
                 updateState {

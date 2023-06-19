@@ -32,4 +32,8 @@
     <string name="hello_welcome_x">Hello, Welcome %1$s</string>
     <string name="recent_notes">Recent notes</string>
     <string name="notes">Notes</string>
+    <string name="total_balance">Total balance</string>
+    <string name="cash">Cash</string>
+    <string name="e_wallet">E-wallet</string>
+    <string name="bank_account">Bank account</string>
 </resources>

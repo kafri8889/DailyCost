@@ -190,6 +190,7 @@ dependencies {
     implementation("com.squareup.wire:wire-runtime:4.4.3")
     implementation("com.maxkeppeler.sheets-compose-dialogs:state:1.2.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("com.tbuonomo:dotsindicator:5.0")
 
     implementation("commons-io:commons-io:2.11.0")
     implementation("androidx.test.ext:junit-ktx:1.1.5")

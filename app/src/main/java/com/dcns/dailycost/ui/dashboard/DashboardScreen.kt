@@ -39,6 +39,7 @@ import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.datasource.local.LocalNoteDataProvider
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.LocalDrawerState
+import com.dcns.dailycost.foundation.uicomponent.BalanceCard
 import com.dcns.dailycost.foundation.uicomponent.NoteItem
 import kotlinx.coroutines.launch
 
@@ -126,6 +127,14 @@ private fun DashboardScreenContent(
                 .fillMaxSize()
                 .pullRefresh(pullRefreshState)
         ) {
+            item {
+                BalanceCard(
+                    balance = state.balance,
+                    modifier = Modifier
+                        .fillMaxWidth(0.96f)
+                )
+            }
+
             item { 
                 AnimatedVisibility(
                     visible = true,
