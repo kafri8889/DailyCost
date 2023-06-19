@@ -8,5 +8,5 @@ import com.dcns.dailycost.foundation.extension.toUserCredential
 data class DashboardState(
     val credential: UserCredential = ProtoUserCredential().toUserCredential(),
     val isRefreshing: Boolean = false,
-    val notes: List<Note> = emptyList()
+    val recentNotes: List<Note> = emptyList()
 )
