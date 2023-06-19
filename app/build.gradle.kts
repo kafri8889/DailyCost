@@ -172,6 +172,7 @@ dependencies {
     // Accompanist
     implementation("com.google.accompanist:accompanist-pager:${extra["accompanist_version"]}")
     implementation("com.google.accompanist:accompanist-adaptive:${extra["accompanist_version"]}")
+    implementation("com.google.accompanist:accompanist-placeholder:${extra["accompanist_version"]}")
     implementation("com.google.accompanist:accompanist-navigation-material:${extra["accompanist_version"]}")
     implementation("com.google.accompanist:accompanist-navigation-animation:${extra["accompanist_version"]}")
     implementation("com.google.accompanist:accompanist-flowlayout:${extra["accompanist_version"]}")
