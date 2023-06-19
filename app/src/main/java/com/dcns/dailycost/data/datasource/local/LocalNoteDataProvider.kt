@@ -9,7 +9,7 @@ object LocalNoteDataProvider {
         title = "Lorem ipsum",
         body = "Loerem Ipsum dolor sit amet, consectetur adipiscing elit sed diam nonum nib tempor",
         date = System.currentTimeMillis(),
-        imageUrl = "https://github.com/kafri8889/resources/blob/main/wonyoung3.jpg",
+        imageUrl = "https://raw.githubusercontent.com/kafri8889/resources/main/wonyoung3.jpg",
         userId = "73"
     )
 
@@ -18,7 +18,7 @@ object LocalNoteDataProvider {
         title = "Loerem Ipsum dolor sit amet, consectetur adipiscing elit sed diam nonum nib tempor",
         body = "Loerem Ipsum dolor sit amet, consectetur adipiscing elit sed diam nonum nib tempor dolore magna aliqu Lorem ipsum dolor sit amet, consectetur adip iscing elit sed diam nonum nib tempor dolore magna al Vivamus consequ tempor",
         date = System.currentTimeMillis(),
-        imageUrl = "https://github.com/kafri8889/resources/blob/main/yunjin1.jpg",
+        imageUrl = "https://raw.githubusercontent.com/kafri8889/resources/main/yunjin1.jpeg",
         userId = "73"
     )
 
