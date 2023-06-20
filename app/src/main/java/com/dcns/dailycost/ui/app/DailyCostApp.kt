@@ -56,6 +56,8 @@ import com.dcns.dailycost.ui.note.NoteViewModel
 import com.dcns.dailycost.ui.setting.SettingScreen
 import com.dcns.dailycost.ui.setting.SettingViewModel
 import com.dcns.dailycost.ui.splash.SplashScreen
+import com.dcns.dailycost.ui.top_up.TopUpScreen
+import com.dcns.dailycost.ui.top_up.TopUpViewModel
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
@@ -221,6 +223,15 @@ fun DailyCostApp(
                                     val mViewModel = hiltViewModel<ChangeLanguageViewModel>(backEntry)
 
                                     ChangeLanguageScreen(
+                                        viewModel = mViewModel,
+                                        navigationActions = navActions
+                                    )
+                                }
+
+                                bottomSheet(TopLevelDestinations.Home.topUp.route) { backEntry ->
+                                    val mViewModel = hiltViewModel<TopUpViewModel>(backEntry)
+
+                                    TopUpScreen(
                                         viewModel = mViewModel,
                                         navigationActions = navActions
                                     )

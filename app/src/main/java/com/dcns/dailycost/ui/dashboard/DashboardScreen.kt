@@ -36,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.datasource.local.LocalNoteDataProvider
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.LocalDrawerState
@@ -95,7 +96,7 @@ fun DashboardScreen(
         DashboardScreenContent(
             state = state,
             onTopUpClicked = {
-                navigationActions
+                navigationActions.navigateTo(TopLevelDestinations.Home.topUp)
             },
             onRefresh = {
                 viewModel.onAction(DashboardAction.Refresh)

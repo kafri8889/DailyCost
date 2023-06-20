@@ -40,4 +40,5 @@
     <string name="you_have_no_balance">You have no balance</string>
     <string name="language">Language</string>
     <string name="top_up">Top up</string>
+    <string name="amount">Amount</string>
 </resources>
