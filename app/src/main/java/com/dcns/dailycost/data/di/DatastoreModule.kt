@@ -7,7 +7,7 @@ import androidx.datastore.dataStoreFile
 import com.dcns.dailycost.ProtoUserBalance
 import com.dcns.dailycost.ProtoUserCredential
 import com.dcns.dailycost.data.Constant
-import com.dcns.dailycost.data.repository.UserBalanceRepository
+import com.dcns.dailycost.data.repository.BalanceRepository
 import com.dcns.dailycost.data.repository.UserCredentialRepository
 import com.dcns.dailycost.data.serializer.UserBalanceSerializer
 import com.dcns.dailycost.data.serializer.UserCredentialSerializer
@@ -40,7 +40,7 @@ class DatastoreModule {
         @ApplicationContext context: Context
     ): DataStore<ProtoUserBalance> = DataStoreFactory.create(
         serializer = UserBalanceSerializer,
-        corruptionHandler = UserBalanceRepository.corruptionHandler,
+        corruptionHandler = BalanceRepository.corruptionHandler,
         produceFile = { context.dataStoreFile(Constant.USER_BALANCE) }
     )
 

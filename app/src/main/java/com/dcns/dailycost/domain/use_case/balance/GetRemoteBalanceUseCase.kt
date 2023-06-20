@@ -4,7 +4,7 @@ import com.dcns.dailycost.data.model.remote.response.BalanceResponse
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 import retrofit2.Response
 
-class GetBalanceUseCase(
+class GetRemoteBalanceUseCase(
     private val balanceRepository: IBalanceRepository
 ) {
 
@@ -12,7 +12,7 @@ class GetBalanceUseCase(
         userId: Int,
         token: String
     ): Response<BalanceResponse> {
-        return balanceRepository.getBalance(userId, token)
+        return balanceRepository.getRemoteBalance(userId, token)
     }
 
 }

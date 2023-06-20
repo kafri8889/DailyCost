@@ -1,6 +1,7 @@
 package com.dcns.dailycost.data.repository.di
 
 import androidx.datastore.core.DataStore
+import com.dcns.dailycost.ProtoUserBalance
 import com.dcns.dailycost.ProtoUserCredential
 import com.dcns.dailycost.data.datasource.local.dao.NoteDao
 import com.dcns.dailycost.data.datasource.remote.handlers.BalanceHandler
@@ -57,9 +58,11 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideBalanceRepository(
-        balanceHandler: BalanceHandler
+        balanceHandler: BalanceHandler,
+        balanceDataStore: DataStore<ProtoUserBalance>
     ): IBalanceRepository = BalanceRepository(
-        balanceHandler = balanceHandler
+        balanceHandler = balanceHandler,
+        balanceDataStore = balanceDataStore
     )
 
     @Provides

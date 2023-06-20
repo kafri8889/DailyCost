@@ -1,8 +1,9 @@
 package com.dcns.dailycost.ui.dashboard
 
 import androidx.lifecycle.viewModelScope
-import com.dcns.dailycost.data.repository.UserBalanceRepository
 import com.dcns.dailycost.data.repository.UserCredentialRepository
+import com.dcns.dailycost.domain.use_case.BalanceUseCases
+import com.dcns.dailycost.domain.use_case.NoteUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -13,12 +14,23 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
-    private val userBalanceRepository: UserBalanceRepository
+    private val balanceUseCases: BalanceUseCases,
+    private val noteUseCases: NoteUseCases
 ): BaseViewModel<DashboardState, DashboardAction, DashboardUiEvent>() {
 
     init {
         viewModelScope.launch {
-            userBalanceRepository.getUserBalance.collect { balance ->
+            noteUseCases.getLocalNoteUseCase().collect { notes ->
+                updateState {
+                    copy(
+                        recentNotes = notes.take(2)
+                    )
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            balanceUseCases.getLocalBalanceUseCase().collect { balance ->
                 updateState {
                     copy(
                         balance = balance
