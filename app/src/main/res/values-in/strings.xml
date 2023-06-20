@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="email">Email</string>
+    <string name="password">Kata sandi</string>
+    <string name="username">Nama pengguna</string>
+    <string name="re_password">Ulangi kata sandi</string>
+    <string name="login">Masuk</string>
+    <string name="register">Daftar</string>
+    <string name="dont_have_an_account">Tidak mempunyai akun?</string>
+    <string name="sign_up">Daftar</string>
+    <string name="remember_me">Ingat saya</string>
+    <string name="forgot_password">Lupa kata sandi</string>
+    <string name="already_have_an_account">Sudah mempunyai akun?</string>
+    <string name="by_registering_txt">Dengan mendaftar, Anda menyetujui %1$s dan %2$s kami</string>
+    <string name="terms_of_use">Syarat Penggunaan</string>
+    <string name="privacy_policy">Kebijakan Pribadi</string>
+    <string name="email_not_valid">Email tidak valid</string>
+    <string name="digit_missing_exception_msg">Kata sandi harus berisi minimal 1 angka</string>
+    <string name="below_min_length_exception_msg">Kata sandi harus berisi minimal 8 karakter</string>
+    <string name="lowercase_missing_exception_msg">Kata sandi harus berisi minimal 1 huruf kecil</string>
+    <string name="uppercase_missing_exception_msg">Kata sandi harus berisi minimal 1 huruf besar</string>
+    <string name="email_cant_be_empty">Email tidak boleh kosong</string>
+    <string name="password_cant_be_empty">Kata sandi tidak boleh kosong</string>
+    <string name="password_does_not_match">Kata sandi tidak cocok</string>
+    <string name="internet_connection_not_available">Koneksi internet tidak tersedia</string>
+    <string name="registration_success">Pendaftaran berhasil</string>
+    <string name="login_success">Berhasil masuk</string>
+    <string name="dashboard">Dasbor</string>
+    <string name="setting">Pengaturan</string>
+    <string name="logout">Keluar</string>
+    <string name="logout_success">Berhasil keluar</string>
+    <string name="hello_welcome_x">Halo, Selamat datang %1$s</string>
+    <string name="recent_notes">Catatan terbaru</string>
+    <string name="notes">Catatan</string>
+    <string name="total_balance">Total saldo</string>
+    <string name="cash">Cash</string>
+    <string name="e_wallet">E-wallet</string>
+    <string name="bank_account">Rekening</string>
+    <string name="you_have_no_balance">Kamu tidak mempunyai uang</string>
+</resources>
