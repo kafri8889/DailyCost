@@ -118,7 +118,7 @@ fun DailyCostApp(
         }
     }
 
-    LaunchedEffect(viewModel.uiEvent) {
+    LaunchedEffect(viewModel) {
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is DailyCostAppUiEvent.LanguageChanged -> {
