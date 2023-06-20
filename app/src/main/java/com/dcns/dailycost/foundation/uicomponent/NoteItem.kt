@@ -8,6 +8,7 @@ import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,11 +33,13 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.dcns.dailycost.R
 import com.dcns.dailycost.data.datasource.local.LocalNoteDataProvider
 import com.dcns.dailycost.data.model.Note
 import com.dcns.dailycost.foundation.extension.drawFadedEdge
@@ -67,7 +71,7 @@ fun NoteItem(
     onClick: () -> Unit
 ) {
 
-    val secondaryColor = MaterialTheme.colorScheme.secondary
+    val secondaryColor = MaterialTheme.colorScheme.tertiaryContainer
 
     val context = LocalContext.current
 
@@ -120,20 +124,29 @@ fun NoteItem(
                 enter = expandHorizontally(tween(512)),
                 exit = shrinkHorizontally(tween(512)),
             ) {
-                AsyncImage(
-                    model = imageRequest,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(96.dp)
-                        .placeholder(
-                            visible = isLoading,
-                            color = MaterialTheme.colorScheme.outline,
-                            highlight = PlaceholderHighlight.shimmer(
-                                highlightColor = Color.White
+                Box(contentAlignment = Alignment.Center) {
+                    AsyncImage(
+                        model = imageRequest,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(96.dp)
+                            .placeholder(
+                                visible = isLoading,
+                                color = MaterialTheme.colorScheme.outline,
+                                highlight = PlaceholderHighlight.shimmer(
+                                    highlightColor = Color.White
+                                )
                             )
+                    )
+
+                    if (isError) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_danger),
+                            contentDescription = null
                         )
-                )
+                    }
+                }
             }
 
             Column(
