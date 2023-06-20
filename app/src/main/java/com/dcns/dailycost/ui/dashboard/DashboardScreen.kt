@@ -94,6 +94,9 @@ fun DashboardScreen(
     ) { scaffoldPadding ->
         DashboardScreenContent(
             state = state,
+            onTopUpClicked = {
+                navigationActions
+            },
             onRefresh = {
                 viewModel.onAction(DashboardAction.Refresh)
             },
@@ -108,6 +111,7 @@ fun DashboardScreen(
 private fun DashboardScreenContent(
     state: DashboardState,
     modifier: Modifier = Modifier,
+    onTopUpClicked: () -> Unit,
     onRefresh: () -> Unit
 ) {
 
@@ -130,6 +134,7 @@ private fun DashboardScreenContent(
             item {
                 BalanceCard(
                     balance = state.balance,
+                    onTopUpClicked = onTopUpClicked,
                     modifier = Modifier
                         .fillMaxWidth(0.96f)
                 )

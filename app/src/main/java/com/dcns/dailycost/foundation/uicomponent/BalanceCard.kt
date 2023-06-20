@@ -1,9 +1,11 @@
 package com.dcns.dailycost.foundation.uicomponent
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,6 +14,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +26,7 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,7 +50,8 @@ private fun BalanceCardPreview() {
                 cash = 90_000.0,
                 eWallet = 0.0,
                 bankAccount = 1_000_000_000_000_000_000_000_000.0
-            )
+            ),
+            onTopUpClicked = {}
         )
     }
 }
@@ -54,7 +60,8 @@ private fun BalanceCardPreview() {
 @Composable
 fun BalanceCard(
     balance: UserBalance,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onTopUpClicked: () -> Unit
 ) {
 
     val currency = LocalCurrency.current
@@ -78,33 +85,44 @@ fun BalanceCard(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Text(
-                text = stringResource(id = R.string.total_balance),
-                style = MaterialTheme.typography.bodySmall
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            AnimatedTextByChar(
-                text = totalBalance,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    // Rendering to an offscreen buffer is required to get the faded edges' alpha to be
-                    // applied only to the text, and not whatever is drawn below this composable (e.g. the
-                    // window).
-                    .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
-                    .drawWithContent {
-                        drawContent()
-                        drawFadedEdge(
-                            edgeWidth = 8.dp,
-                            leftEdge = false
-                        )
-                    }
-                    .basicMarquee(
-                        delayMillis = 2000
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.total_balance),
+                        style = MaterialTheme.typography.bodySmall
                     )
-            )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    AnimatedTextByChar(
+                        text = totalBalance,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            // Rendering to an offscreen buffer is required to get the faded edges' alpha to be
+                            // applied only to the text, and not whatever is drawn below this composable (e.g. the
+                            // window).
+                            .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+                            .drawWithContent {
+                                drawContent()
+                                drawFadedEdge(
+                                    edgeWidth = 8.dp,
+                                    leftEdge = false
+                                )
+                            }
+                            .basicMarquee(
+                                delayMillis = 2000
+                            )
+                    )
+                }
+                
+                FilledTonalButton(onClick = onTopUpClicked) {
+                    Text(stringResource(id = R.string.top_up))
+                }
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -138,17 +156,20 @@ private fun BalancePager(
             when (page) {
                 0 -> BalanceItem(
                     name = stringResource(id = R.string.cash),
-                    amount = balance.cash
+                    amount = balance.cash,
+                    icon = R.drawable.ic_money_3
                 )
 
                 1 -> BalanceItem(
                     name = stringResource(id = R.string.e_wallet),
-                    amount = balance.eWallet
+                    amount = balance.eWallet,
+                    icon = R.drawable.ic_bitcoin_card
                 )
 
                 2 -> BalanceItem(
                     name = stringResource(id = R.string.bank_account),
-                    amount = balance.bankAccount
+                    amount = balance.bankAccount,
+                    icon = R.drawable.ic_card
                 )
             }
         }
@@ -176,6 +197,7 @@ private fun BalancePager(
 @Composable
 private fun BalanceItem(
     name: String,
+    @DrawableRes icon: Int,
     amount: Double,
     modifier: Modifier = Modifier
 ) {
@@ -193,37 +215,45 @@ private fun BalanceItem(
     Card(
         modifier = modifier
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Text(
-                text = name,
-                style = MaterialTheme.typography.bodySmall
+            Icon(
+                painter = painterResource(icon),
+                contentDescription = null
             )
 
-            AnimatedTextByChar(
-                text = balance,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    // Rendering to an offscreen buffer is required to get the faded edges' alpha to be
-                    // applied only to the text, and not whatever is drawn below this composable (e.g. the
-                    // window).
-                    .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
-                    .drawWithContent {
-                        drawContent()
-                        drawFadedEdge(
-                            edgeWidth = 8.dp,
-                            leftEdge = false
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.bodySmall
+                )
+
+                AnimatedTextByChar(
+                    text = balance,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        // Rendering to an offscreen buffer is required to get the faded edges' alpha to be
+                        // applied only to the text, and not whatever is drawn below this composable (e.g. the
+                        // window).
+                        .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+                        .drawWithContent {
+                            drawContent()
+                            drawFadedEdge(
+                                edgeWidth = 8.dp,
+                                leftEdge = false
+                            )
+                        }
+                        .basicMarquee(
+                            delayMillis = 2000
                         )
-                    }
-                    .basicMarquee(
-                        delayMillis = 2000
-                    )
-            )
+                )
+            }
         }
     }
 }
