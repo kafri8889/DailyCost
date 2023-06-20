@@ -27,6 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.model.UserBalance
+import com.dcns.dailycost.foundation.common.CurrencyFormatter
+import com.dcns.dailycost.foundation.common.LocalCurrency
+import com.dcns.dailycost.foundation.common.primarySystemLocale
 import com.dcns.dailycost.foundation.extension.drawFadedEdge
 import com.dcns.dailycost.theme.DailyCostTheme
 import com.tbuonomo.viewpagerdotsindicator.compose.DotsIndicator
@@ -41,7 +44,7 @@ private fun BalanceCardPreview() {
             balance = UserBalance(
                 cash = 90_000.0,
                 eWallet = 0.0,
-                bankAccount = 1_000_000_000_000.0
+                bankAccount = 1_000_000_000_000_000_000_000_000.0
             )
         )
     }
@@ -53,8 +56,15 @@ fun BalanceCard(
     balance: UserBalance,
     modifier: Modifier = Modifier
 ) {
+
+    val currency = LocalCurrency.current
+
     val totalBalance = remember(balance) {
-        balance.cash + balance.eWallet + balance.bankAccount
+        CurrencyFormatter.format(
+            locale = primarySystemLocale,
+            amount = balance.cash + balance.eWallet + balance.bankAccount,
+            countryCode = currency.countryCode
+        )
     }
 
     Card(
@@ -75,9 +85,8 @@ fun BalanceCard(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // TODO: Format ke rupiah
-            Text(
-                text = "$totalBalance",
+            AnimatedTextByChar(
+                text = totalBalance,
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -170,6 +179,17 @@ private fun BalanceItem(
     amount: Double,
     modifier: Modifier = Modifier
 ) {
+
+    val currency = LocalCurrency.current
+
+    val balance = remember(amount) {
+        CurrencyFormatter.format(
+            locale = primarySystemLocale,
+            amount = amount,
+            countryCode = currency.countryCode
+        )
+    }
+
     Card(
         modifier = modifier
     ) {
@@ -184,9 +204,8 @@ private fun BalanceItem(
                 style = MaterialTheme.typography.bodySmall
             )
 
-            // TODO: Format ke rupiah
-            Text(
-                text = "$amount",
+            AnimatedTextByChar(
+                text = balance,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .fillMaxWidth()
