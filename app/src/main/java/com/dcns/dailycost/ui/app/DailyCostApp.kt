@@ -116,6 +116,16 @@ fun DailyCostApp(
         }
     }
 
+    LaunchedEffect(viewModel.uiEvent) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is DailyCostAppUiEvent.LanguageChanged -> {
+                    navActions.navigateTo(TopLevelDestinations.Home.dashboard)
+                }
+            }
+        }
+    }
+
     DailyCostTheme(darkTheme) {
 
         SideEffect {
