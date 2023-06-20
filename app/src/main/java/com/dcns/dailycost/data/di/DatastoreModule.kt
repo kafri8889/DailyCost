@@ -6,11 +6,14 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import com.dcns.dailycost.ProtoUserBalance
 import com.dcns.dailycost.ProtoUserCredential
+import com.dcns.dailycost.ProtoUserPreference
 import com.dcns.dailycost.data.Constant
 import com.dcns.dailycost.data.repository.BalanceRepository
 import com.dcns.dailycost.data.repository.UserCredentialRepository
+import com.dcns.dailycost.data.repository.UserPreferenceRepository
 import com.dcns.dailycost.data.serializer.UserBalanceSerializer
 import com.dcns.dailycost.data.serializer.UserCredentialSerializer
+import com.dcns.dailycost.data.serializer.UserPreferenceSerializer
 import com.dcns.dailycost.foundation.common.EncryptionManager
 import dagger.Module
 import dagger.Provides
@@ -32,6 +35,16 @@ class DatastoreModule {
         serializer = UserCredentialSerializer(encryptionManager),
         corruptionHandler = UserCredentialRepository.corruptionHandler,
         produceFile = { context.dataStoreFile(Constant.USER_CREDENTIAL) }
+    )
+
+    @Provides
+    @Singleton
+    fun provideUserPreferenceDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<ProtoUserPreference> = DataStoreFactory.create(
+        serializer = UserPreferenceSerializer,
+        corruptionHandler = UserPreferenceRepository.corruptionHandler,
+        produceFile = { context.dataStoreFile(Constant.USER_PREFERENCE) }
     )
 
     @Provides

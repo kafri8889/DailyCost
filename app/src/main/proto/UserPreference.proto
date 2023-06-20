@@ -1,0 +1,8 @@
+syntax = "proto3";
+option java_package = "com.dcns.dailycost";
+option java_generate_equals_and_hash = true;
+option java_multiple_files = true;
+
+message ProtoUserPreference {
+  int32 language = 1;
+}

@@ -3,6 +3,7 @@ package com.dcns.dailycost.data.repository.di
 import androidx.datastore.core.DataStore
 import com.dcns.dailycost.ProtoUserBalance
 import com.dcns.dailycost.ProtoUserCredential
+import com.dcns.dailycost.ProtoUserPreference
 import com.dcns.dailycost.data.datasource.local.dao.NoteDao
 import com.dcns.dailycost.data.datasource.remote.handlers.BalanceHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.DepoHandler
@@ -15,12 +16,14 @@ import com.dcns.dailycost.data.repository.LoginRegisterRepository
 import com.dcns.dailycost.data.repository.NoteRepository
 import com.dcns.dailycost.data.repository.ShoppingRepository
 import com.dcns.dailycost.data.repository.UserCredentialRepository
+import com.dcns.dailycost.data.repository.UserPreferenceRepository
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 import com.dcns.dailycost.domain.repository.IDepoRepository
 import com.dcns.dailycost.domain.repository.ILoginRegisterRepository
 import com.dcns.dailycost.domain.repository.INoteRepository
 import com.dcns.dailycost.domain.repository.IShoppingRepository
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
+import com.dcns.dailycost.domain.repository.IUserPreferenceRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,6 +40,14 @@ class RepositoryModule {
         userCredentialDataStore: DataStore<ProtoUserCredential>
     ): IUserCredentialRepository = UserCredentialRepository(
         userCredentialDataStore = userCredentialDataStore
+    )
+
+    @Provides
+    @Singleton
+    fun provideUserPreferenceRepository(
+        userPreferenceDataStore: DataStore<ProtoUserPreference>
+    ): IUserPreferenceRepository = UserPreferenceRepository(
+        userPreferenceDataStore = userPreferenceDataStore
     )
 
     @Provides
