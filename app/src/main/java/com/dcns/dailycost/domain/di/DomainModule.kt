@@ -12,6 +12,7 @@ import com.dcns.dailycost.domain.use_case.NoteUseCases
 import com.dcns.dailycost.domain.use_case.ShoppingUseCases
 import com.dcns.dailycost.domain.use_case.balance.GetLocalBalanceUseCase
 import com.dcns.dailycost.domain.use_case.balance.GetRemoteBalanceUseCase
+import com.dcns.dailycost.domain.use_case.balance.UpdateLocalBalanceUseCase
 import com.dcns.dailycost.domain.use_case.depo.AddDepoUseCase
 import com.dcns.dailycost.domain.use_case.depo.EditDepoUseCase
 import com.dcns.dailycost.domain.use_case.depo.TopUpDepoUseCase
@@ -54,6 +55,7 @@ class DomainModule {
     fun provideBalanceUseCases(
         balanceRepository: IBalanceRepository
     ): BalanceUseCases = BalanceUseCases(
+        updateLocalBalanceUseCase = UpdateLocalBalanceUseCase(balanceRepository),
         getRemoteBalanceUseCase = GetRemoteBalanceUseCase(balanceRepository),
         getLocalBalanceUseCase = GetLocalBalanceUseCase(balanceRepository)
     )

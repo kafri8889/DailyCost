@@ -1,14 +1,21 @@
 package com.dcns.dailycost.ui.dashboard
 
 import androidx.lifecycle.viewModelScope
+import com.dcns.dailycost.R
+import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.data.repository.UserCredentialRepository
 import com.dcns.dailycost.domain.use_case.BalanceUseCases
 import com.dcns.dailycost.domain.use_case.NoteUseCases
+import com.dcns.dailycost.domain.util.GetNoteBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
+import com.dcns.dailycost.foundation.base.UiEvent
+import com.dcns.dailycost.foundation.extension.toNote
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,6 +57,78 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
+    private suspend fun getRemoteNote() {
+        val mState = state.value
+
+        noteUseCases.getRemoteNoteUseCase(
+            token = mState.credential.getAuthToken(),
+            getNoteBy = GetNoteBy.UserID(mState.credential.id.toInt())
+        ).let { response ->
+            if (response.isSuccessful) {
+                val noteResponse = response.body()
+
+                noteResponse?.let {
+                    Timber.i("upserting notes to db...")
+                    withContext(Dispatchers.IO) {
+                        noteUseCases.upsertLocalNoteUseCase(
+                            *noteResponse.data
+                                .map { it.toNote() }
+                                .toTypedArray()
+                        )
+                    }
+                }
+
+                Timber.i("get remote note success")
+
+                return
+            }
+
+            val errorResponse = Gson().fromJson(
+                response.errorBody()?.charStream(),
+                ErrorResponse::class.java
+            )
+
+            sendEvent(DashboardUiEvent.GetRemoteNoteFailed(errorResponse.message))
+        }
+    }
+
+    private suspend fun getRemoteBalance() {
+        val mState = state.value
+
+        balanceUseCases.getRemoteBalanceUseCase(
+            token = mState.credential.getAuthToken(),
+            userId = mState.credential.id.toInt()
+        ).let { response ->
+            if (response.isSuccessful) {
+                val balanceResponseData = response.body()?.data
+
+                balanceResponseData?.let {
+                    balanceUseCases.updateLocalBalanceUseCase(
+                        cash = balanceResponseData.cash.toDouble(),
+                        eWallet = balanceResponseData.eWallet.toDouble(),
+                        bankAccount = balanceResponseData.bankAccount.toDouble()
+                    )
+                }
+
+                Timber.i("get remote balance success")
+
+                return
+            }
+
+            val errorResponse = Gson().fromJson(
+                response.errorBody()?.charStream(),
+                ErrorResponse::class.java
+            )
+
+            sendEvent(
+                DashboardUiEvent.GetRemoteBalanceFailed(
+                    message = if (response.code() == 404) UiEvent.ShowSnackbar.asStringResource(R.string.you_have_no_balance)
+                    else errorResponse.message
+                )
+            )
+        }
+    }
+
     override fun defaultState(): DashboardState = DashboardState()
 
     override fun onAction(action: DashboardAction) {
@@ -61,14 +140,13 @@ class DashboardViewModel @Inject constructor(
                     )
                 }
 
-                // Simulate a refresh
-                launch(Dispatchers.IO) {
-                    delay(2000)
-                    updateState {
-                        copy(
-                            isRefreshing = false
-                        )
-                    }
+                getRemoteNote()
+                getRemoteBalance()
+
+                updateState {
+                    copy(
+                        isRefreshing = false
+                    )
                 }
             }
         }

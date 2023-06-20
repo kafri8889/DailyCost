@@ -36,4 +36,5 @@
     <string name="cash">Cash</string>
     <string name="e_wallet">E-wallet</string>
     <string name="bank_account">Bank account</string>
+    <string name="you_have_no_balance">You have no balance</string>
 </resources>
