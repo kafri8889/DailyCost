@@ -90,7 +90,7 @@ fun SettingScreen(
                         )
                     },
                     onClick = {
-
+                        navigationActions.navigateTo(TopLevelDestinations.Home.changeLanguage)
                     }
                 )
             }

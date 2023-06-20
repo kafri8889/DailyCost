@@ -8,6 +8,7 @@ import androidx.navigation.NavOptionsBuilder
 import com.dcns.dailycost.R
 
 object DestinationRoute {
+    const val CHANGE_LANGUAGE = "change_language"
     const val LOGIN_REGISTER = "login_register"
     const val DASHBOARD = "dashboard"
     const val SETTING = "setting"
@@ -137,6 +138,10 @@ object TopLevelDestinations {
 
     object Home {
         const val ROOT_ROUTE = "root_home"
+
+        val changeLanguage = TopLevelDestination(
+            route = DestinationRoute.CHANGE_LANGUAGE
+        )
 
         val dashboard = TopLevelDestination(
             route = DestinationRoute.DASHBOARD,

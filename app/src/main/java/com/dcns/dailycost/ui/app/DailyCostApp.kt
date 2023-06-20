@@ -45,6 +45,8 @@ import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.drawerDestinations
 import com.dcns.dailycost.foundation.common.LocalDrawerState
 import com.dcns.dailycost.theme.DailyCostTheme
+import com.dcns.dailycost.ui.change_language.ChangeLanguageScreen
+import com.dcns.dailycost.ui.change_language.ChangeLanguageViewModel
 import com.dcns.dailycost.ui.dashboard.DashboardScreen
 import com.dcns.dailycost.ui.dashboard.DashboardViewModel
 import com.dcns.dailycost.ui.login_register.LoginRegisterScreen
@@ -57,6 +59,7 @@ import com.dcns.dailycost.ui.splash.SplashScreen
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import com.google.accompanist.navigation.material.bottomSheet
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
@@ -199,6 +202,15 @@ fun DailyCostApp(
                                     val mViewModel = hiltViewModel<SettingViewModel>(backEntry)
 
                                     SettingScreen(
+                                        viewModel = mViewModel,
+                                        navigationActions = navActions
+                                    )
+                                }
+
+                                bottomSheet(TopLevelDestinations.Home.changeLanguage.route) { backEntry ->
+                                    val mViewModel = hiltViewModel<ChangeLanguageViewModel>(backEntry)
+
+                                    ChangeLanguageScreen(
                                         viewModel = mViewModel,
                                         navigationActions = navActions
                                     )
