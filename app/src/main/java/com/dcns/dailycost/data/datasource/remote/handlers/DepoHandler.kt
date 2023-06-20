@@ -7,15 +7,18 @@ import retrofit2.Response
 interface DepoHandler {
 
     suspend fun editDepo(
-        body: RequestBody
+        body: RequestBody,
+        token: String
     ): Response<DepoResponse>
 
     suspend fun addDepo(
-        body: RequestBody
+        body: RequestBody,
+        token: String
     ): Response<DepoResponse>
 
     suspend fun topup(
-        body: RequestBody
+        body: RequestBody,
+        token: String
     ): Response<DepoResponse>
 
 }

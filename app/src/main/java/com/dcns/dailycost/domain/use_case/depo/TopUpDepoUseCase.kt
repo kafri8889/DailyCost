@@ -10,9 +10,10 @@ class TopUpDepoUseCase(
 ) {
 
     suspend operator fun invoke(
-        body: RequestBody
+        body: RequestBody,
+        token: String
     ): Response<DepoResponse> {
-        return depoRepository.topup(body)
+        return depoRepository.topup(body, token)
     }
 
 }

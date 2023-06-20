@@ -11,15 +11,15 @@ class DepoHandlerImpl @Inject constructor(
     private val depoService: DepoService
 ): DepoHandler {
 
-    override suspend fun editDepo(body: RequestBody): Response<DepoResponse> {
-        return depoService.editDepo(body)
+    override suspend fun editDepo(body: RequestBody, token: String): Response<DepoResponse> {
+        return depoService.editDepo(body, token)
     }
 
-    override suspend fun addDepo(body: RequestBody): Response<DepoResponse> {
-        return depoService.addDepo(body)
+    override suspend fun addDepo(body: RequestBody, token: String): Response<DepoResponse> {
+        return depoService.addDepo(body, token)
     }
 
-    override suspend fun topup(body: RequestBody): Response<DepoResponse> {
-        return depoService.topup(body)
+    override suspend fun topup(body: RequestBody, token: String): Response<DepoResponse> {
+        return depoService.topup(body, token)
     }
 }
