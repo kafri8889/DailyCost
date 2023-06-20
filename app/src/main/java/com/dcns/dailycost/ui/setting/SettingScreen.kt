@@ -78,6 +78,26 @@ fun SettingScreen(
             item {
                 BasicPreference(
                     title = {
+                        Text(stringResource(id = R.string.language))
+                    },
+                    summary = { _, _ ->
+                        Text(state.language.name)
+                    },
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_global),
+                            contentDescription = null
+                        )
+                    },
+                    onClick = {
+
+                    }
+                )
+            }
+
+            item {
+                BasicPreference(
+                    title = {
                         Text(stringResource(id = R.string.terms_of_use))
                     },
                     onClick = {

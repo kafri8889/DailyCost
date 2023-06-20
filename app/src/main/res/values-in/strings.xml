@@ -37,4 +37,5 @@
     <string name="e_wallet">E-wallet</string>
     <string name="bank_account">Rekening</string>
     <string name="you_have_no_balance">Kamu tidak mempunyai uang</string>
+    <string name="language">Bahasa</string>
 </resources>
