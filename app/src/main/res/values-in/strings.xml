@@ -40,4 +40,6 @@
     <string name="language">Bahasa</string>
     <string name="top_up">Top up</string>
     <string name="amount">Jumlah</string>
+    <string name="loading">Memuat</string>
+    <string name="top_up_success">Top up berhasil</string>
 </resources>

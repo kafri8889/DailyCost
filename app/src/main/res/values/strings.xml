@@ -41,4 +41,6 @@
     <string name="language">Language</string>
     <string name="top_up">Top up</string>
     <string name="amount">Amount</string>
+    <string name="loading">Loading</string>
+    <string name="top_up_success">Top up success</string>
 </resources>

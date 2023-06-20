@@ -2,21 +2,35 @@ package com.dcns.dailycost.ui.top_up
 
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.WalletType
+import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
+import com.dcns.dailycost.data.model.remote.response.DepoResponse
+import com.dcns.dailycost.data.model.remote.response.ErrorResponse
+import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.use_case.BalanceUseCases
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
-import com.dcns.dailycost.foundation.base.UiEvent
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TopUpViewModel @Inject constructor(
+    private val userCredentialRepository: IUserCredentialRepository,
     private val balanceUseCases: BalanceUseCases,
     private val depoUseCases: DepoUseCases
-): BaseViewModel<TopUpState, TopUpAction, UiEvent>() {
+): BaseViewModel<TopUpState, TopUpAction, TopUpUiEvent>() {
 
     init {
+        viewModelScope.launch {
+            userCredentialRepository.getUserCredential.collect { cred ->
+                updateState {
+                    copy(
+                        credential = cred
+                    )
+                }
+            }
+        }
         viewModelScope.launch {
             balanceUseCases.getLocalBalanceUseCase().collect { balance ->
                 updateState {
@@ -57,7 +71,68 @@ class TopUpViewModel @Inject constructor(
             }
             is TopUpAction.TopUp -> {
                 viewModelScope.launch {
+                    val mState = state.value
 
+                    updateState {
+                        copy(
+                            isLoading = true
+                        )
+                    }
+
+                    val cash = if (mState.selectedWalletType == WalletType.Cash) {
+                        mState.amount
+                    } else mState.balance.cash
+
+                    val eWallet = if (mState.selectedWalletType == WalletType.EWallet) {
+                        mState.amount
+                    } else mState.balance.eWallet
+
+                    val bankAccount = if (mState.selectedWalletType == WalletType.BankAccount) {
+                        mState.amount
+                    } else mState.balance.bankAccount
+
+                    depoUseCases.topUpDepoUseCase(
+                        token = mState.credential.getAuthToken(),
+                        body = DepoRequestBody(
+                            id = mState.credential.id.toInt(),
+                            cash = cash.toInt(),
+                            eWallet = eWallet.toInt(),
+                            bankAccount = bankAccount.toInt()
+                        ).toRequestBody()
+                    ).let { response ->
+                        if (response.isSuccessful) {
+                            val body = response.body() as DepoResponse
+
+                            balanceUseCases.updateLocalBalanceUseCase(
+                                cash = body.data.cash.toDouble(),
+                                eWallet = body.data.eWallet.toDouble(),
+                                bankAccount = body.data.bankAccount.toDouble()
+                            )
+
+                            sendEvent(TopUpUiEvent.TopUpSuccess)
+
+                            updateState {
+                                copy(
+                                    isLoading = false
+                                )
+                            }
+
+                            return@launch
+                        }
+
+                        val errorResponse = Gson().fromJson(
+                            response.errorBody()?.charStream(),
+                            ErrorResponse::class.java
+                        )
+
+                        sendEvent(TopUpUiEvent.TopUpFailed(errorResponse.message))
+
+                        updateState {
+                            copy(
+                                isLoading = false
+                            )
+                        }
+                    }
                 }
             }
         }
