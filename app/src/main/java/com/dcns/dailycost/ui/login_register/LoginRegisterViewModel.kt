@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.LoginRegisterType
 import com.dcns.dailycost.data.Resource
+import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.LoginRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.RegisterRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.data.model.remote.response.LoginResponse
 import com.dcns.dailycost.data.repository.UserCredentialRepository
+import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
@@ -25,7 +27,8 @@ import javax.inject.Inject
 class LoginRegisterViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
     private val loginRegisterUseCases: LoginRegisterUseCases,
-    private val connectivityManager: ConnectivityManager
+    private val connectivityManager: ConnectivityManager,
+    private val depoUseCases: DepoUseCases
 ): BaseViewModel<LoginRegisterState, LoginRegisterAction, LoginRegisterUiEvent>() {
 
     private val internetObserver = Observer<Boolean> { have ->
@@ -178,9 +181,9 @@ class LoginRegisterViewModel @Inject constructor(
                                 ).toRequestBody()
                             ).let { response ->
                                if (response.isSuccessful) {
-                                   if (mState.rememberMe) {
-                                       val body = response.body() as LoginResponse
+                                   val body = response.body() as LoginResponse
 
+                                   if (mState.rememberMe) {
                                        launch {
                                            with(userCredentialRepository) {
                                                setId(body.data.id.toString())
@@ -191,6 +194,16 @@ class LoginRegisterViewModel @Inject constructor(
                                            }
                                        }
                                    }
+
+                                   depoUseCases.addDepoUseCase(
+                                       token = "Bearer ${body.token}",
+                                       body = DepoRequestBody(
+                                           id = body.data.id,
+                                           cash = 0,
+                                           eWallet = 0,
+                                           bankAccount = 0
+                                       ).toRequestBody()
+                                   )
 
                                    updateState {
                                        copy(
