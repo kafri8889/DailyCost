@@ -122,7 +122,7 @@ class DashboardViewModel @Inject constructor(
 
             sendEvent(
                 DashboardUiEvent.GetRemoteBalanceFailed(
-                    message = if (response.code() == 404) UiEvent.ShowSnackbar.asStringResource(R.string.you_have_no_balance)
+                    message = if (response.code() == 404) UiEvent.asStringResource(R.string.you_have_no_balance)
                     else errorResponse.message
                 )
             )
