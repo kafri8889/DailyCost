@@ -96,6 +96,7 @@ fun DashboardScreen(
         DashboardScreenContent(
             state = state,
             onTopUpClicked = {
+                // TODO: cek internet koneksi
                 navigationActions.navigateTo(TopLevelDestinations.Home.topUp)
             },
             onRefresh = {
