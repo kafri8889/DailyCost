@@ -2,8 +2,8 @@ package com.dcns.dailycost.foundation.common
 
 import okhttp3.RequestBody
 
-interface RetrofitRequestBody {
+abstract class RetrofitRequestBody: Jsonable() {
 
-    fun toRequestBody(): RequestBody
+    abstract fun toRequestBody(): RequestBody
 
 }

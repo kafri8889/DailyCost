@@ -1,15 +1,19 @@
 package com.dcns.dailycost.ui.login_register
 
-import androidx.lifecycle.Observer
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.LoginRegisterType
 import com.dcns.dailycost.data.Resource
+import com.dcns.dailycost.data.datasource.local.AppDatabase
+import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.LoginRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.RegisterRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.data.model.remote.response.LoginResponse
-import com.dcns.dailycost.data.repository.UserCredentialRepository
+import com.dcns.dailycost.domain.repository.IBalanceRepository
+import com.dcns.dailycost.domain.repository.IUserCredentialRepository
+import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
@@ -17,34 +21,38 @@ import com.dcns.dailycost.foundation.common.EmailValidator
 import com.dcns.dailycost.foundation.common.PasswordValidator
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginRegisterViewModel @Inject constructor(
-    private val userCredentialRepository: UserCredentialRepository,
+    private val userCredentialRepository: IUserCredentialRepository,
+    private val userBalanceRepository: IBalanceRepository,
     private val loginRegisterUseCases: LoginRegisterUseCases,
-    private val connectivityManager: ConnectivityManager
+    private val connectivityManager: ConnectivityManager,
+    private val depoUseCases: DepoUseCases,
+    private val appDatabase: AppDatabase
 ): BaseViewModel<LoginRegisterState, LoginRegisterAction, LoginRegisterUiEvent>() {
 
-    private val internetObserver = Observer<Boolean> { have ->
-        Timber.i("have internet: $have")
-
-        updateState {
-            copy(
-                internetConnectionAvailable = have
-            )
-        }
-
-        // Kalo ga ada koneksi internet, show snackbar
-        if (!have) {
-            sendEvent(LoginRegisterUiEvent.NoInternetConnection())
-        }
-    }
-
     init {
-        connectivityManager.isNetworkAvailable.observeForever(internetObserver)
+        viewModelScope.launch {
+            connectivityManager.isNetworkAvailable.asFlow().collect { have ->
+                Timber.i("have internet: $have")
+
+                updateState {
+                    copy(
+                        internetConnectionAvailable = have
+                    )
+                }
+
+                // Kalo ga ada koneksi internet, show snackbar
+                if (!have) {
+                    sendEvent(LoginRegisterUiEvent.NoInternetConnection())
+                }
+            }
+        }
     }
 
     override fun defaultState(): LoginRegisterState = LoginRegisterState()
@@ -122,6 +130,31 @@ class LoginRegisterViewModel @Inject constructor(
                     }
                 }
             }
+            is LoginRegisterAction.ClearData -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    // Clear database
+                    appDatabase.clearAllTables()
+
+                    // Clear cache
+                    action.context.cacheDir.deleteRecursively()
+
+                    // Clear balance
+                    with(userBalanceRepository) {
+                        setCash(0.0)
+                        setEWallet(0.0)
+                        setBankAccount(0.0)
+                    }
+
+                    // Clear credential
+                    with(userCredentialRepository) {
+                        setId("")
+                        setName("")
+                        setEmail("")
+                        setToken("")
+                        setPassword("")
+                    }
+                }
+            }
             is LoginRegisterAction.Login -> {
                 viewModelScope.launch {
                     val mState = state.value
@@ -178,19 +211,32 @@ class LoginRegisterViewModel @Inject constructor(
                                 ).toRequestBody()
                             ).let { response ->
                                if (response.isSuccessful) {
-                                   if (mState.rememberMe) {
-                                       val body = response.body() as LoginResponse
+                                   val body = response.body() as LoginResponse
 
+                                   if (mState.rememberMe) {
                                        launch {
                                            with(userCredentialRepository) {
-                                               setId(body.data.id.toString())
                                                setName(body.data.name)
-                                               setToken(body.token)
                                                setEmail(mState.email)
                                                setPassword(mState.password)
                                            }
                                        }
                                    }
+
+                                   with(userCredentialRepository) {
+                                       setId(body.data.id.toString())
+                                       setToken(body.token)
+                                   }
+
+                                   depoUseCases.addDepoUseCase(
+                                       token = "Bearer ${body.token}",
+                                       body = DepoRequestBody(
+                                           id = body.data.id,
+                                           cash = 0,
+                                           eWallet = 0,
+                                           bankAccount = 0
+                                       ).toRequestBody()
+                                   )
 
                                    updateState {
                                        copy(
@@ -256,11 +302,4 @@ class LoginRegisterViewModel @Inject constructor(
             }
         }
     }
-
-    override fun onCleared() {
-        connectivityManager.isNetworkAvailable.removeObserver(internetObserver)
-
-        super.onCleared()
-    }
-
 }

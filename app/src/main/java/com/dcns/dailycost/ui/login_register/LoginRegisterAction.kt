@@ -12,6 +12,7 @@ sealed interface LoginRegisterAction {
     data class UpdateUsername(val username: String): LoginRegisterAction
     data class UpdatePassword(val password: String): LoginRegisterAction
     data class UpdateEmail(val email: String): LoginRegisterAction
+    data class ClearData(val context: Context): LoginRegisterAction
     data class Login(val context: Context): LoginRegisterAction
 
 }

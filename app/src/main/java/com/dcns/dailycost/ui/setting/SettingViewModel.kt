@@ -11,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
-    private val userPreferenceRepository: UserPreferenceRepository
+    private val userPreferenceRepository: UserPreferenceRepository,
 ): BaseViewModel<SettingState, SettingAction, SettingUiEvent>() {
 
     init {
@@ -38,19 +38,5 @@ class SettingViewModel @Inject constructor(
 
     override fun defaultState(): SettingState = SettingState()
 
-    override fun onAction(action: SettingAction) {
-        when (action) {
-            SettingAction.Logout -> {
-                viewModelScope.launch {
-                    with(userCredentialRepository) {
-                        setId("")
-                        setName("")
-                        setEmail("")
-                        setToken("")
-                        setPassword("")
-                    }
-                }
-            }
-        }
-    }
+    override fun onAction(action: SettingAction) {}
 }

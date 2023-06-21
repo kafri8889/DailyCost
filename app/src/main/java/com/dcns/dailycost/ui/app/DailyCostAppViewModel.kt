@@ -1,6 +1,7 @@
 package com.dcns.dailycost.ui.app
 
 import androidx.lifecycle.viewModelScope
+import com.dcns.dailycost.data.repository.BalanceRepository
 import com.dcns.dailycost.data.repository.UserCredentialRepository
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,10 +11,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DailyCostAppViewModel @Inject constructor(
-    private val userCredentialRepository: UserCredentialRepository
+    private val userCredentialRepository: UserCredentialRepository,
+    private val userBalanceRepository: BalanceRepository
 ): BaseViewModel<DailyCostAppState, DailyCostAppAction, DailyCostAppUiEvent>() {
 
     init {
+        viewModelScope.launch {
+            userBalanceRepository.getUserBalance.collect { balance ->
+                updateState {
+                    copy(
+                        userBalance = balance
+                    )
+                }
+            }
+        }
+
         viewModelScope.launch {
             userCredentialRepository.getUserCredential.collect { cred ->
                 Timber.i("credential: $cred | ${cred.isLoggedIn}")

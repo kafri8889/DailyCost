@@ -10,16 +10,16 @@ import org.json.JSONObject
 data class DepoRequestBody(
     @SerializedName("id") val id: Int,
     @SerializedName("uang_cash") val cash: Int,
-    @SerializedName("uang_gopay") val gopay: Int,
+    @SerializedName("uang_gopay") val eWallet: Int,
     @SerializedName("uang_rekening") val bankAccount: Int
-): RetrofitRequestBody {
+): RetrofitRequestBody() {
 
     override fun toRequestBody(): RequestBody {
         val body = JSONObject(
             mapOf(
                 "id" to id,
                 "uang_cash" to cash,
-                "uang_gopay" to gopay,
+                "uang_gopay" to eWallet,
                 "uang_rekening" to bankAccount,
             )
         )

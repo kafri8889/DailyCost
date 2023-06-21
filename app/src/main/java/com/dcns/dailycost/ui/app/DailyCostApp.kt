@@ -120,11 +120,13 @@ fun DailyCostApp(
         }
     }
 
-    LaunchedEffect(viewModel.uiEvent) {
+    LaunchedEffect(viewModel) {
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is DailyCostAppUiEvent.LanguageChanged -> {
-                    navActions.navigateTo(TopLevelDestinations.Home.dashboard)
+                    if (state.userCredential?.isLoggedIn == true) {
+                        navActions.navigateTo(TopLevelDestinations.Home.dashboard)
+                    }
                 }
             }
         }

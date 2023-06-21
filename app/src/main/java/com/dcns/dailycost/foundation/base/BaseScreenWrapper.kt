@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import com.dcns.dailycost.foundation.extension.toast
 
 /**
  * Kerangka dasar untuk screen
@@ -49,6 +50,9 @@ fun <STATE, ACTION, EVENT: UiEvent> BaseScreenWrapper(
 								ActionPerformed -> UiEventResult.ActionPerformed(event)
 							}
 						)
+					}
+					is UiEvent.ShowToast -> {
+						event.message.toast(context, event.length)
 					}
 				}
 			}

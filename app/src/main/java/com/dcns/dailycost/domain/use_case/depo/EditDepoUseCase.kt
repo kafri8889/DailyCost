@@ -10,9 +10,10 @@ class EditDepoUseCase(
 ) {
 
     suspend operator fun invoke(
-        body: RequestBody
+        body: RequestBody,
+        token: String
     ): Response<DepoResponse> {
-        return depoRepository.editDepo(body)
+        return depoRepository.editDepo(body, token)
     }
 
 }

@@ -9,7 +9,7 @@ import org.json.JSONObject
 data class LoginRequestBody(
     val email: String,
     val password: String
-): RetrofitRequestBody {
+): RetrofitRequestBody() {
 
     override fun toRequestBody(): RequestBody {
         val body = JSONObject(
