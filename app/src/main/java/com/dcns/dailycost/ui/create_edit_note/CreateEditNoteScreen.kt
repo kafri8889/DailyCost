@@ -62,7 +62,6 @@ import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
-import com.dcns.dailycost.foundation.common.LocalDrawerState
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -77,11 +76,8 @@ fun CreateEditNoteScreen(
 ) {
 
     val context = LocalContext.current
-    val drawerState = LocalDrawerState.current
 
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-    val scope = rememberCoroutineScope()
 
     BackHandler {
         navigationActions.navigateTo(
@@ -100,13 +96,14 @@ fun CreateEditNoteScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            scope.launch {
-                                drawerState.open()
-                            }
+                            navigationActions.navigateTo(
+                                destination = TopLevelDestinations.Home.dashboard,
+                                inclusivePopUpTo = true
+                            )
                         }
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_menu),
+                            painter = painterResource(id = R.drawable.ic_arrow_left),
                             contentDescription = null
                         )
                     }

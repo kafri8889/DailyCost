@@ -24,7 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,24 +38,20 @@ import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.datasource.local.LocalNoteDataProvider
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
-import com.dcns.dailycost.foundation.common.LocalDrawerState
 import com.dcns.dailycost.foundation.uicomponent.BalanceCard
 import com.dcns.dailycost.foundation.uicomponent.NoteItem
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     viewModel: DashboardViewModel,
-    navigationActions: NavigationActions
+    navigationActions: NavigationActions,
+    onNavigationIconClicked: () -> Unit
 ) {
 
     val context = LocalContext.current
-    val drawerState = LocalDrawerState.current
 
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-    val scope = rememberCoroutineScope()
 
     // Exit app
     BackHandler {
@@ -77,13 +72,7 @@ fun DashboardScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                drawerState.open()
-                            }
-                        }
-                    ) {
+                    IconButton(onClick = onNavigationIconClicked) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_menu),
                             contentDescription = null

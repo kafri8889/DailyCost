@@ -19,7 +19,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -31,22 +30,17 @@ import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
-import com.dcns.dailycost.foundation.common.LocalDrawerState
 import com.dcns.dailycost.foundation.uicomponent.NoteItem
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteScreen(
     viewModel: NoteViewModel,
-    navigationActions: NavigationActions
+    navigationActions: NavigationActions,
+    onNavigationIconClicked: () -> Unit
 ) {
 
-    val drawerState = LocalDrawerState.current
-
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-    val scope = rememberCoroutineScope()
 
     BackHandler {
         navigationActions.navigateTo(TopLevelDestinations.Home.dashboard)
@@ -63,13 +57,7 @@ fun NoteScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                drawerState.open()
-                            }
-                        }
-                    ) {
+                    IconButton(onClick = onNavigationIconClicked) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_menu),
                             contentDescription = null
@@ -128,7 +116,7 @@ private fun NoteScreenContent(
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
         ) {
             items(
                 items = state.notes,

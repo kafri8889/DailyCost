@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -34,36 +33,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.drawerDestinations
-import com.dcns.dailycost.foundation.common.LocalDrawerState
+import com.dcns.dailycost.navigation.HomeNavHost
+import com.dcns.dailycost.navigation.LoginRegisterNavHost
+import com.dcns.dailycost.navigation.home.ChangeLanguageNavigation
+import com.dcns.dailycost.navigation.home.CreateEditNoteNavigation
+import com.dcns.dailycost.navigation.home.DashboardNavigation
+import com.dcns.dailycost.navigation.home.NoteNavigation
+import com.dcns.dailycost.navigation.home.SettingNavigation
+import com.dcns.dailycost.navigation.home.SplashNavigation
+import com.dcns.dailycost.navigation.home.TopUpNavigation
+import com.dcns.dailycost.navigation.login_register.LoginRegisterNavigation
 import com.dcns.dailycost.theme.DailyCostTheme
-import com.dcns.dailycost.ui.change_language.ChangeLanguageScreen
-import com.dcns.dailycost.ui.change_language.ChangeLanguageViewModel
-import com.dcns.dailycost.ui.create_edit_note.CreateEditNoteScreen
-import com.dcns.dailycost.ui.create_edit_note.CreateEditNoteViewModel
-import com.dcns.dailycost.ui.dashboard.DashboardScreen
-import com.dcns.dailycost.ui.dashboard.DashboardViewModel
-import com.dcns.dailycost.ui.login_register.LoginRegisterScreen
-import com.dcns.dailycost.ui.login_register.LoginRegisterViewModel
-import com.dcns.dailycost.ui.note.NoteScreen
-import com.dcns.dailycost.ui.note.NoteViewModel
-import com.dcns.dailycost.ui.setting.SettingScreen
-import com.dcns.dailycost.ui.setting.SettingViewModel
-import com.dcns.dailycost.ui.splash.SplashScreen
-import com.dcns.dailycost.ui.top_up.TopUpScreen
-import com.dcns.dailycost.ui.top_up.TopUpViewModel
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
-import com.google.accompanist.navigation.material.bottomSheet
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
@@ -81,9 +72,6 @@ fun DailyCostApp(
 
     val scope = rememberCoroutineScope()
     val systemUiController = rememberSystemUiController()
-    val drawerState = rememberDrawerState(
-        initialValue = DrawerValue.Closed
-    )
 
     val bottomSheetNavigator = remember {
         BottomSheetNavigator(
@@ -142,6 +130,24 @@ fun DailyCostApp(
         }
 
         Surface(color = MaterialTheme.colorScheme.background) {
+
+            val drawerState = rememberDrawerState(
+                initialValue = DrawerValue.Closed
+            )
+
+            val onNavigationIconClicked: () -> Unit = {
+                scope.launch {
+                    if (drawerState.isOpen) drawerState.close()
+                    else drawerState.open()
+                }
+            }
+
+            BackHandler(drawerState.isOpen) {
+                scope.launch {
+                    drawerState.close()
+                }
+            }
+
             DailyCostDrawer(
                 state = drawerState,
                 selectedDestinationRoute = state.currentDestinationRoute,
@@ -153,116 +159,58 @@ fun DailyCostApp(
                 }
             ) {
                 DailyCostBottomSheetLayout(bottomSheetNavigator) {
-                    CompositionLocalProvider(
-                        LocalDrawerState provides drawerState
-                    ) {
-                        BackHandler(drawerState.isOpen) {
-                            scope.launch {
-                                drawerState.close()
-                            }
-                        }
-
-                        NavHost(
-                            navController = navController,
-                            startDestination = TopLevelDestinations.splash.route
-                        ) {
-
-                            // Nested navigasi untuk login atau register
-                            navigation(
-                                startDestination = TopLevelDestinations.LoginRegister.loginRegister.route,
-                                route = TopLevelDestinations.LoginRegister.ROOT_ROUTE
-                            ) {
-                                composable(
-                                    route = TopLevelDestinations.LoginRegister.loginRegister.route
-                                ) { backEntry ->
-                                    val mViewModel =
-                                        hiltViewModel<LoginRegisterViewModel>(backEntry)
-
-                                    LoginRegisterScreen(
-                                        viewModel = mViewModel,
-                                        navigationActions = navActions
-                                    )
-                                }
-                            }
-
-                            // Nested navigasi untuk dashboard (ketika user berhasil login)
-                            navigation(
-                                startDestination = TopLevelDestinations.Home.dashboard.route,
-                                route = TopLevelDestinations.Home.ROOT_ROUTE
-                            ) {
-                                composable(
-                                    route = TopLevelDestinations.Home.dashboard.route
-                                ) { backEntry ->
-                                    val mViewModel = hiltViewModel<DashboardViewModel>(backEntry)
-
-                                    DashboardScreen(
-                                        viewModel = mViewModel,
-                                        navigationActions = navActions
-                                    )
-                                }
-
-                                composable(
-                                    route = TopLevelDestinations.Home.note.route
-                                ) { backEntry ->
-                                    val mViewModel = hiltViewModel<NoteViewModel>(backEntry)
-
-                                    NoteScreen(
-                                        viewModel = mViewModel,
-                                        navigationActions = navActions
-                                    )
-                                }
-
-                                composable(
-                                    route = TopLevelDestinations.Home.createEditNote.route
-                                ) { backEntry ->
-                                    val mViewModel = hiltViewModel<CreateEditNoteViewModel>(backEntry)
-
-                                    CreateEditNoteScreen(
-                                        viewModel = mViewModel,
-                                        navigationActions = navActions
-                                    )
-                                }
-
-                                composable(
-                                    route = TopLevelDestinations.Home.setting.route
-                                ) { backEntry ->
-                                    val mViewModel = hiltViewModel<SettingViewModel>(backEntry)
-
-                                    SettingScreen(
-                                        viewModel = mViewModel,
-                                        navigationActions = navActions
-                                    )
-                                }
-
-                                bottomSheet(TopLevelDestinations.Home.changeLanguage.route) { backEntry ->
-                                    val mViewModel = hiltViewModel<ChangeLanguageViewModel>(backEntry)
-
-                                    ChangeLanguageScreen(
-                                        viewModel = mViewModel,
-                                        navigationActions = navActions
-                                    )
-                                }
-
-                                bottomSheet(TopLevelDestinations.Home.topUp.route) { backEntry ->
-                                    val mViewModel = hiltViewModel<TopUpViewModel>(backEntry)
-
-                                    TopUpScreen(
-                                        viewModel = mViewModel,
-                                        navigationActions = navActions
-                                    )
-                                }
-                            }
-
-                            composable(TopLevelDestinations.splash.route) {
-                                SplashScreen()
-                            }
-                        }
-                    }
+                    DailyCostNavHost(
+                        navController = navController,
+                        navActions = navActions,
+                        onNavigationIconClicked = onNavigationIconClicked
+                    )
                 }
             }
         }
     }
 
+}
+
+@Composable
+private fun DailyCostNavHost(
+    navController: NavHostController,
+    navActions: NavigationActions,
+    onNavigationIconClicked: () -> Unit
+) {
+
+    NavHost(
+        navController = navController,
+        startDestination = TopLevelDestinations.splash.route
+    ) {
+        SplashNavigation()
+
+        // Nested navigasi untuk login atau register
+        LoginRegisterNavHost {
+            LoginRegisterNavigation(navActions)
+        }
+
+        // Nested navigasi untuk dashboard (ketika user berhasil login)
+        HomeNavHost {
+            TopUpNavigation(navActions)
+            ChangeLanguageNavigation(navActions)
+            CreateEditNoteNavigation(navActions)
+
+            DashboardNavigation(
+                navigationActions = navActions,
+                onNavigationIconClicked = onNavigationIconClicked
+            )
+
+            NoteNavigation(
+                navigationActions = navActions,
+                onNavigationIconClicked = onNavigationIconClicked
+            )
+
+            SettingNavigation(
+                navigationActions = navActions,
+                onNavigationIconClicked = onNavigationIconClicked
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
@@ -308,7 +256,10 @@ private fun DailyCostDrawerContent(
 ) {
     ModalDrawerSheet {
         LazyColumn {
-            items(drawerDestinations) { destination ->
+            items(
+                items = drawerDestinations,
+                key = { dest -> dest.route }
+            ) { destination ->
                 NavigationDrawerItem(
                     selected = selectedDestinationRoute == destination.route,
                     label = {

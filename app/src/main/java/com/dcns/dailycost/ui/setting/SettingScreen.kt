@@ -23,21 +23,19 @@ import com.dcns.dailycost.data.Constant
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
-import com.dcns.dailycost.foundation.common.LocalDrawerState
 import com.dcns.dailycost.foundation.extension.toast
 import com.dcns.dailycost.foundation.uicomponent.BasicPreference
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
     viewModel: SettingViewModel,
-    navigationActions: NavigationActions
+    navigationActions: NavigationActions,
+    onNavigationIconClicked: () -> Unit
 ) {
 
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
-    val drawerState = LocalDrawerState.current
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -55,13 +53,7 @@ fun SettingScreen(
                     Text(stringResource(id = R.string.setting))
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                drawerState.open()
-                            }
-                        }
-                    ) {
+                    IconButton(onClick = onNavigationIconClicked) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_menu),
                             contentDescription = null
