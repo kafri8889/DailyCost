@@ -29,14 +29,19 @@ class DailyCostAppViewModel @Inject constructor(
         if (have) {
             val mState = state.value
 
-            if (mState.userCredential != null && mState.userCredential.isLoggedIn) {
+            val userIsLoggedIn = mState.userCredential != null && mState.userCredential.isLoggedIn
+            // TODO: Psot ke api kalo datanya berubah aja (bikin datastore baru)
+            val anyDataHasChanged = true
+
+            // if user has logged in, and there is data that has changed (from offline mode)
+            // post local data to server
+            if (userIsLoggedIn && anyDataHasChanged) {
                 viewModelScope.launch {
-                    // TODO: Psot ke api kalo datanya berubah aja (bikin datastore baru)
                     launch {
                         try {
                             // TODO: Jangan topup, pake yg put
                             depoUseCases.topUpDepoUseCase(
-                                token = mState.userCredential.getAuthToken(),
+                                token = mState.userCredential!!.getAuthToken(),
                                 body = DepoRequestBody(
                                     id = mState.userCredential.id.toInt(),
                                     cash = mState.userBalance.cash.toInt(),

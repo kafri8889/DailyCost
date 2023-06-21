@@ -98,6 +98,7 @@ fun LoginRegisterScreen(
     )
 
     LaunchedEffect(Unit) {
+        // called on first recomposition
         viewModel.onAction(LoginRegisterAction.ClearData(context))
     }
 
