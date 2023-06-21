@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.dashboard
 
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
@@ -9,6 +10,7 @@ import com.dcns.dailycost.domain.use_case.NoteUseCases
 import com.dcns.dailycost.domain.util.GetNoteBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.base.UiEvent
+import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.extension.toNote
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,11 +23,29 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
+    private val connectivityManager: ConnectivityManager,
     private val balanceUseCases: BalanceUseCases,
     private val noteUseCases: NoteUseCases
 ): BaseViewModel<DashboardState, DashboardAction, DashboardUiEvent>() {
 
+    private val internetObserver = Observer<Boolean> { have ->
+        Timber.i("have internet: $have")
+
+        updateState {
+            copy(
+                internetConnectionAvailable = have
+            )
+        }
+
+        // Kalo ga ada koneksi internet, show snackbar
+        if (!have) {
+            sendEvent(DashboardUiEvent.NoInternetConnection())
+        }
+    }
+
     init {
+        connectivityManager.isNetworkAvailable.observeForever(internetObserver)
+
         viewModelScope.launch {
             noteUseCases.getLocalNoteUseCase().collect { notes ->
                 updateState {
@@ -134,6 +154,12 @@ class DashboardViewModel @Inject constructor(
     override fun onAction(action: DashboardAction) {
         when (action) {
             DashboardAction.Refresh -> viewModelScope.launch {
+                // Kalo ga ada koneksi internet, show snackbar
+                if (!state.value.internetConnectionAvailable) {
+                    sendEvent(DashboardUiEvent.NoInternetConnection())
+                    return@launch
+                }
+
                 updateState {
                     copy(
                         isRefreshing = true
@@ -150,5 +176,11 @@ class DashboardViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        connectivityManager.isNetworkAvailable.removeObserver(internetObserver)
+
+        super.onCleared()
     }
 }
