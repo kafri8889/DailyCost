@@ -10,6 +10,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
+import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.text.SimpleDateFormat
@@ -27,7 +28,9 @@ class AddRemoteNoteUseCase(
         note: Note
     ): Response<NoteResponse> {
         noteRepository.upsertNote(note.toNoteDb())
-
+        Timber.d("NOTE ${note.toString()}")
+        Timber.d("FILE ${image.toString()}")
+        Timber.d("TOKEN ${token}")
         val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
 
         if (image.exists()) {

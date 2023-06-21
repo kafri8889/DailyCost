@@ -40,4 +40,8 @@
     <string name="language">Bahasa</string>
     <string name="top_up">Top up</string>
     <string name="amount">Jumlah</string>
+    <string name="notes_title">Judul</string>
+    <string name="notes_body">Deskripsi</string>
+    <string name="submit">Kirim</string>
+    <string name="date">Tanggal</string>
 </resources>

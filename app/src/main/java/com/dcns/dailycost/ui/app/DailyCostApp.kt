@@ -47,8 +47,8 @@ import com.dcns.dailycost.foundation.common.LocalDrawerState
 import com.dcns.dailycost.theme.DailyCostTheme
 import com.dcns.dailycost.ui.change_language.ChangeLanguageScreen
 import com.dcns.dailycost.ui.change_language.ChangeLanguageViewModel
-import com.dcns.dailycost.ui.create_note.CreateEditNoteScreen
-import com.dcns.dailycost.ui.create_note.CreateEditNoteViewModel
+import com.dcns.dailycost.ui.create_edit_note.CreateEditNoteScreen
+import com.dcns.dailycost.ui.create_edit_note.CreateEditNoteViewModel
 import com.dcns.dailycost.ui.dashboard.DashboardScreen
 import com.dcns.dailycost.ui.dashboard.DashboardViewModel
 import com.dcns.dailycost.ui.login_register.LoginRegisterScreen

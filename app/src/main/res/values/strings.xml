@@ -41,4 +41,8 @@
     <string name="language">Language</string>
     <string name="top_up">Top up</string>
     <string name="amount">Amount</string>
+    <string name="notes_title">Title</string>
+    <string name="notes_body">Description</string>
+    <string name="date">Date</string>
+    <string name="submit">Submit</string>
 </resources>
