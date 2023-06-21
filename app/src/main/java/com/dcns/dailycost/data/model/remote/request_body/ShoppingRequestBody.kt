@@ -13,7 +13,7 @@ data class ShoppingRequestBody(
     @SerializedName("pembayaran") val payment: String,
     @SerializedName("tanggal") val date: String,
     @SerializedName("user_id") val userId: Int,
-): RetrofitRequestBody {
+): RetrofitRequestBody() {
 
     override fun toRequestBody(): RequestBody {
         val body = JSONObject(

@@ -12,7 +12,7 @@ data class DepoRequestBody(
     @SerializedName("uang_cash") val cash: Int,
     @SerializedName("uang_gopay") val eWallet: Int,
     @SerializedName("uang_rekening") val bankAccount: Int
-): RetrofitRequestBody {
+): RetrofitRequestBody() {
 
     override fun toRequestBody(): RequestBody {
         val body = JSONObject(
