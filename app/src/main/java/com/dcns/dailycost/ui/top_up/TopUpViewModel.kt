@@ -3,15 +3,11 @@ package com.dcns.dailycost.ui.top_up
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.WalletType
-import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
-import com.dcns.dailycost.data.model.remote.response.DepoResponse
-import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.use_case.BalanceUseCases
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -119,52 +115,7 @@ class TopUpViewModel @Inject constructor(
                         mState.amount
                     } else mState.balance.bankAccount
 
-                    if (mState.internetConnectionAvailable) {
-                        depoUseCases.topUpDepoUseCase(
-                            token = mState.credential.getAuthToken(),
-                            body = DepoRequestBody(
-                                id = mState.credential.id.toInt(),
-                                cash = cash.toInt(),
-                                eWallet = eWallet.toInt(),
-                                bankAccount = bankAccount.toInt()
-                            ).toRequestBody()
-                        ).let { response ->
-                            if (response.isSuccessful) {
-                                val body = response.body() as DepoResponse
-
-                                updateLocalBalance(
-                                    cash = body.data.cash.toDouble(),
-                                    eWallet = body.data.eWallet.toDouble(),
-                                    bankAccount = body.data.bankAccount.toDouble()
-                                )
-
-                                sendEvent(TopUpUiEvent.TopUpSuccess)
-
-                                updateState {
-                                    copy(
-                                        isLoading = false
-                                    )
-                                }
-
-                                return@launch
-                            }
-
-                            val errorResponse = Gson().fromJson(
-                                response.errorBody()?.charStream(),
-                                ErrorResponse::class.java
-                            )
-
-                            sendEvent(TopUpUiEvent.TopUpFailed(errorResponse.message))
-
-                            updateState {
-                                copy(
-                                    isLoading = false
-                                )
-                            }
-                        }
-
-                        return@launch
-                    }
+                    // TODO: Update data changed
 
                     updateLocalBalance(
                         cash = cash,

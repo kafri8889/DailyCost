@@ -43,11 +43,15 @@ class MainActivity: LocalizedActivity() {
         })
 
         lifecycleScope.launch {
-            connectivityManager.isNetworkAvailable.asFlow().collect { have ->
-                val credential = userCredentialRepository.getUserCredential.firstOrNull()
-                val balance = balanceUseCases.getLocalBalanceUseCase().firstOrNull()
+            val credential = userCredentialRepository.getUserCredential.firstOrNull()
+            val balance = balanceUseCases.getLocalBalanceUseCase().firstOrNull()
 
-                if (credential == null || balance == null) return@collect
+            connectivityManager.isNetworkAvailable.asFlow().collect { have ->
+
+                // TODO: Psot ke api kalo datanya berubah aja (bikin datastore baru)
+                val anyDataHasChanged = true
+
+                if (credential == null || balance == null || !anyDataHasChanged) return@collect
 
                 Workers.uploadBalanceWorker(
                     body = DepoRequestBody(
@@ -57,6 +61,8 @@ class MainActivity: LocalizedActivity() {
                         bankAccount = balance.bankAccount.toInt()
                     )
                 ).enqueue(this@MainActivity)
+
+                // TODO: Post note, dll
             }
         }
 
