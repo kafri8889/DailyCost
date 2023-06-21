@@ -1,6 +1,6 @@
 package com.dcns.dailycost.ui.top_up
 
-import androidx.lifecycle.Observer
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.WalletType
 import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
@@ -25,18 +25,18 @@ class TopUpViewModel @Inject constructor(
     private val depoUseCases: DepoUseCases
 ): BaseViewModel<TopUpState, TopUpAction, TopUpUiEvent>() {
 
-    private val internetObserver = Observer<Boolean> { have ->
-        Timber.i("have internet: $have")
-
-        updateState {
-            copy(
-                internetConnectionAvailable = have
-            )
-        }
-    }
-
     init {
-        connectivityManager.isNetworkAvailable.observeForever(internetObserver)
+        viewModelScope.launch {
+            connectivityManager.isNetworkAvailable.asFlow().collect { have ->
+                Timber.i("have internet: $have")
+
+                updateState {
+                    copy(
+                        internetConnectionAvailable = have
+                    )
+                }
+            }
+        }
 
         viewModelScope.launch {
             userCredentialRepository.getUserCredential.collect { cred ->
@@ -182,11 +182,5 @@ class TopUpViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    override fun onCleared() {
-        connectivityManager.isNetworkAvailable.removeObserver(internetObserver)
-
-        super.onCleared()
     }
 }
