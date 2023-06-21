@@ -6,6 +6,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.workDataOf
 import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
+import com.dcns.dailycost.foundation.worker.SyncWorker
 import com.dcns.dailycost.foundation.worker.UploadBalanceWorker
 
 object Workers {
@@ -24,6 +25,16 @@ object Workers {
             .setInputData(
                 workDataOf(
                     ARG_DATA_REQUEST_BODY to body.toJson()
+                )
+            )
+            .build()
+    }
+
+    fun syncWorker(): OneTimeWorkRequest {
+        return OneTimeWorkRequestBuilder<SyncWorker>()
+            .setConstraints(
+                Constraints(
+                    requiredNetworkType = NetworkType.CONNECTED
                 )
             )
             .build()

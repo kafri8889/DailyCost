@@ -4,9 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
-import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.use_case.BalanceUseCases
 import com.dcns.dailycost.foundation.common.ConnectivityManager
@@ -46,24 +44,24 @@ class MainActivity: LocalizedActivity() {
             val credential = userCredentialRepository.getUserCredential.firstOrNull()
             val balance = balanceUseCases.getLocalBalanceUseCase().firstOrNull()
 
-            connectivityManager.isNetworkAvailable.asFlow().collect { have ->
-
-                // TODO: Psot ke api kalo datanya berubah aja (bikin datastore baru)
-                val anyDataHasChanged = true
-
-                if (credential == null || balance == null || !anyDataHasChanged) return@collect
-
-                Workers.uploadBalanceWorker(
-                    body = DepoRequestBody(
-                        id = credential.id.toInt(),
-                        cash = balance.cash.toInt(),
-                        eWallet = balance.eWallet.toInt(),
-                        bankAccount = balance.bankAccount.toInt()
-                    )
-                ).enqueue(this@MainActivity)
-
-                // TODO: Post note, dll
-            }
+//            connectivityManager.isNetworkAvailable.asFlow().collect { have ->
+//
+//                // TODO: Psot ke api kalo datanya berubah aja (bikin datastore baru)
+//                val anyDataHasChanged = true
+//
+//                if (credential == null || balance == null || !anyDataHasChanged) return@collect
+//
+//                Workers.uploadBalanceWorker(
+//                    body = DepoRequestBody(
+//                        id = credential.id.toInt(),
+//                        cash = balance.cash.toInt(),
+//                        eWallet = balance.eWallet.toInt(),
+//                        bankAccount = balance.bankAccount.toInt()
+//                    )
+//                ).enqueue(this@MainActivity)
+//
+//                // TODO: Post note, dll
+//            }
         }
 
         setContent {
@@ -75,6 +73,8 @@ class MainActivity: LocalizedActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        Workers.syncWorker().enqueue(this)
 
         connectivityManager.registerConnectionObserver(this)
     }
