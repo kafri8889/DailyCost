@@ -16,6 +16,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DailyCost"
         tools:targetApi="31">
+        
+        <service
+            android:name="androidx.work.multiprocess.RemoteWorkerService"
+            android:exported="false"/>
+
+        <provider
+            android:exported="false"
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:multiprocess="true"
+            tools:node="remove">
+            <!-- If you are using androidx.startup to initialize other components -->
+            <meta-data
+                android:name="androidx.work.impl.WorkManagerInitializer"
+                android:value="${applicationId}.androidx.startup"
+                tools:node="remove" />
+        </provider>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

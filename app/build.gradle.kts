@@ -113,6 +113,11 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.6.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
+    // Work Manager
+    implementation("androidx.hilt:hilt-work:1.0.0")
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
+    implementation("androidx.work:work-multiprocess:2.8.1")
+
     // Compose Common
     implementation("androidx.compose.ui:ui:${extra["compose_version"]}")
     implementation("androidx.compose.ui:ui-tooling-preview:${extra["compose_version"]}")
