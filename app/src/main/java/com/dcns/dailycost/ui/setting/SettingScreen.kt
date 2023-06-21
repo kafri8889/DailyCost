@@ -140,7 +140,7 @@ fun SettingScreen(
                         )
                     },
                     onClick = {
-                        viewModel.onAction(SettingAction.Logout)
+                        viewModel.onAction(SettingAction.Logout(context))
                         context.getString(R.string.logout_success).toast(context)
                     }
                 )
