@@ -51,7 +51,7 @@ fun TopUpScreen(
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is TopUpUiEvent.TopUpSuccess -> {
-                    context.getString(R.string.top_up_success).toast(context)
+                    if (state.internetConnectionAvailable) context.getString(R.string.top_up_success).toast(context)
                     navigationActions.popBackStack()
                 }
                 is TopUpUiEvent.TopUpFailed -> {
@@ -115,6 +115,16 @@ fun TopUpScreen(
                 label = {
                     Text(stringResource(id = R.string.amount))
                 },
+                supportingText = if (!state.internetConnectionAvailable) {
+                    {
+                        Text(
+                            stringResource(
+                                id = R.string.no_internet_connection_x_to_server,
+                                context.getString(R.string.top_up)
+                            )
+                        )
+                    }
+                } else null,
                 onValueChange = { n ->
                     val updatedAmount = n
                         .ifEmpty { "0" }

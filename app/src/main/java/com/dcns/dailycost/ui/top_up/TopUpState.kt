@@ -12,6 +12,7 @@ data class TopUpState(
     val balance: UserBalance = ProtoUserBalance().toUserBalance(),
     val credential: UserCredential = ProtoUserCredential().toUserCredential(),
     val selectedWalletType: WalletType = WalletType.Cash,
+    val internetConnectionAvailable: Boolean = true,
     val isLoading: Boolean = false,
     val amount: Double = 0.0
 )
