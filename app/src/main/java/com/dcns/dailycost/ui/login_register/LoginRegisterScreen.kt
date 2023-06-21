@@ -65,6 +65,7 @@ import com.dcns.dailycost.data.Constant
 import com.dcns.dailycost.data.LoginRegisterType
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.Status
+import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.model.remote.response.LoginResponse
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.extension.toast
@@ -96,6 +97,10 @@ fun LoginRegisterScreen(
         ProgressIndicator.Circular()
     )
 
+    LaunchedEffect(Unit) {
+        viewModel.onAction(LoginRegisterAction.ClearData(context))
+    }
+
     LaunchedEffect(state.resource) {
         when (state.resource?.status) {
             Status.Success -> {
@@ -106,6 +111,10 @@ fun LoginRegisterScreen(
                 } else context.getString(R.string.registration_success).toast(context)
 
                 useCaseState.hide()
+
+                if (!state.rememberMe) {
+                    navigationActions.navigateTo(TopLevelDestinations.Home.dashboard)
+                }
             }
             Status.Error -> {
                 Timber.i("Login error: ${state.resource?.message}")

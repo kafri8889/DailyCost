@@ -29,27 +29,33 @@ class DailyCostAppViewModel @Inject constructor(
         if (have) {
             val mState = state.value
 
-            mState.userCredential?.let { credential ->
+            if (mState.userCredential != null && mState.userCredential.isLoggedIn) {
                 viewModelScope.launch {
-                    depoUseCases.topUpDepoUseCase(
-                        token = credential.getAuthToken(),
-                        body = DepoRequestBody(
-                            id = credential.id.toInt(),
-                            cash = mState.userBalance.cash.toInt(),
-                            eWallet = mState.userBalance.eWallet.toInt(),
-                            bankAccount = mState.userBalance.bankAccount.toInt()
-                        ).toRequestBody()
-                    ).let { response ->
-                        if (response.isSuccessful) {
-                            Timber.i("Update balance successfully")
-                        } else {
-                            val errorResponse = Gson().fromJson(
-                                response.errorBody()?.charStream(),
-                                ErrorResponse::class.java
-                            )
+                    // TODO: Psot ke api kalo datanya berubah aja (bikin datastore baru)
+                    launch {
+                        try {
+                            // TODO: Jangan topup, pake yg put
+                            depoUseCases.topUpDepoUseCase(
+                                token = mState.userCredential.getAuthToken(),
+                                body = DepoRequestBody(
+                                    id = mState.userCredential.id.toInt(),
+                                    cash = mState.userBalance.cash.toInt(),
+                                    eWallet = mState.userBalance.eWallet.toInt(),
+                                    bankAccount = mState.userBalance.bankAccount.toInt()
+                                ).toRequestBody()
+                            ).let { response ->
+                                if (response.isSuccessful) {
+                                    Timber.i("Update balance successfully")
+                                } else {
+                                    val errorResponse = Gson().fromJson(
+                                        response.errorBody()?.charStream(),
+                                        ErrorResponse::class.java
+                                    )
 
-                            Timber.e(errorResponse.message)
-                        }
+                                    Timber.e(errorResponse.message)
+                                }
+                            }
+                        } catch (e: Exception) { Timber.e(e) }
                     }
 
                     // TODO: Post note, dll
