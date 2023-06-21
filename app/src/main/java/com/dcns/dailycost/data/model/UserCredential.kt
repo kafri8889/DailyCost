@@ -18,7 +18,8 @@ data class UserCredential(
 ): Parcelable {
 
     val isLoggedIn: Boolean
-        get() = name.isNotBlank() &&
+        get() = id.isNotBlank() &&
+                name.isNotBlank() &&
                 email.isNotBlank() &&
                 token.isNotBlank() &&
                 password.isNotBlank()
