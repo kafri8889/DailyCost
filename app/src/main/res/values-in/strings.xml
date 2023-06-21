@@ -47,4 +47,5 @@
     <string name="loading">Memuat</string>
     <string name="top_up_success">Top up berhasil</string>
     <string name="no_internet_connection_x_to_server">Tidak ada koneksi internet, %1$s akan dilakukan saat koneksi tersedia</string>
+    <string name="add_note">Tambah catatan</string>
 </resources>

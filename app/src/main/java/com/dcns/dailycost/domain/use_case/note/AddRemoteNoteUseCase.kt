@@ -28,9 +28,11 @@ class AddRemoteNoteUseCase(
         note: Note
     ): Response<NoteResponse> {
         noteRepository.upsertNote(note.toNoteDb())
-        Timber.d("NOTE ${note.toString()}")
-        Timber.d("FILE ${image.toString()}")
-        Timber.d("TOKEN ${token}")
+
+        Timber.d("NOTE $note")
+        Timber.d("FILE $image")
+        Timber.d("TOKEN $token")
+
         val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
 
         if (image.exists()) {

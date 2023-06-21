@@ -1,6 +1,5 @@
 package com.dcns.dailycost.ui.create_edit_note
 
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.model.Note
 import com.dcns.dailycost.data.repository.UserCredentialRepository
@@ -22,7 +21,7 @@ class CreateEditNoteViewModel @Inject constructor(
     }
 
     override fun defaultState(): CreateEditNoteState = CreateEditNoteState()
-    @OptIn(ExperimentalMaterial3Api::class)
+
     override fun onAction(action: CreateEditNoteAction) {
         when(action) {
             is CreateEditNoteAction.UpdateTitle -> {

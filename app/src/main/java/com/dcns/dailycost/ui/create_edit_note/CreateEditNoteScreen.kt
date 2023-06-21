@@ -12,7 +12,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,16 +52,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.LocalDrawerState
 import kotlinx.coroutines.launch
@@ -85,9 +83,11 @@ fun CreateEditNoteScreen(
 
     val scope = rememberCoroutineScope()
 
-    // Exit app
     BackHandler {
-        (context as MainActivity).finishAndRemoveTask()
+        navigationActions.navigateTo(
+            destination = TopLevelDestinations.Home.dashboard,
+            inclusivePopUpTo = true
+        )
     }
 
     BaseScreenWrapper(
@@ -95,10 +95,7 @@ fun CreateEditNoteScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(
-                        overflow = TextOverflow.Ellipsis,
-                        text = "Tambah Catatan"
-                    )
+                    Text(stringResource(id = R.string.add_note))
                 },
                 navigationIcon = {
                     IconButton(
@@ -181,6 +178,7 @@ private fun CreateEditNoteForm(
             bottom.linkTo(parent.bottom)
         }
     }
+
     val openDialog = remember { mutableStateOf(false) }
     val date = state.date?.let { Date(it) }
     val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
