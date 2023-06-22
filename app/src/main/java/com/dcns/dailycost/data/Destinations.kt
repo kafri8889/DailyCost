@@ -14,7 +14,7 @@ object DestinationRoute {
     const val SETTING = "setting"
     const val TOP_UP = "top_up"
     const val SPLASH = "splash"
-    const val NOTE = "note"
+    const val NOTES = "notes"
     const val CREATE_EDIT_NOTE = "create_edit_note"
 }
 
@@ -157,8 +157,8 @@ object TopLevelDestinations {
             name = R.string.setting
         )
 
-        val note = TopLevelDestination(
-            route = DestinationRoute.NOTE,
+        val notes = TopLevelDestination(
+            route = DestinationRoute.NOTES,
             icon = R.drawable.ic_notes,
             name = R.string.notes
         )
@@ -182,6 +182,6 @@ object TopLevelDestinations {
 
 val drawerDestinations = arrayOf(
     TopLevelDestinations.Home.dashboard,
-    TopLevelDestinations.Home.note,
+    TopLevelDestinations.Home.notes,
     TopLevelDestinations.Home.setting,
 )

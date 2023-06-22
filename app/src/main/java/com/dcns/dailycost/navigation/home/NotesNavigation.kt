@@ -5,17 +5,17 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
-import com.dcns.dailycost.ui.note.NoteScreen
-import com.dcns.dailycost.ui.note.NoteViewModel
+import com.dcns.dailycost.ui.notes.NoteScreen
+import com.dcns.dailycost.ui.notes.NotesViewModel
 
 fun NavGraphBuilder.NoteNavigation(
     navigationActions: NavigationActions,
     onNavigationIconClicked: () -> Unit
 ) {
     composable(
-        route = TopLevelDestinations.Home.note.route
+        route = TopLevelDestinations.Home.notes.route
     ) { backEntry ->
-        val mViewModel = hiltViewModel<NoteViewModel>(backEntry)
+        val mViewModel = hiltViewModel<NotesViewModel>(backEntry)
 
         NoteScreen(
             viewModel = mViewModel,

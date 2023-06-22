@@ -1,9 +1,9 @@
-package com.dcns.dailycost.ui.note
+package com.dcns.dailycost.ui.notes
 
 import androidx.compose.material3.SnackbarDuration
 import com.dcns.dailycost.foundation.base.UiEvent
 
-sealed class NoteUiEvent: UiEvent() {
+sealed class NotesUiEvent: UiEvent() {
 
     class GetRemoteNoteFailed(
         override val message: String = "",

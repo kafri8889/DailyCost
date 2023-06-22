@@ -1,4 +1,4 @@
-package com.dcns.dailycost.ui.note
+package com.dcns.dailycost.ui.notes
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +36,7 @@ import com.dcns.dailycost.foundation.uicomponent.NoteItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteScreen(
-    viewModel: NoteViewModel,
+    viewModel: NotesViewModel,
     navigationActions: NavigationActions,
     onNavigationIconClicked: () -> Unit
 ) {
@@ -85,10 +85,10 @@ fun NoteScreen(
             }
         }
     ) { scaffoldPadding ->
-        NoteScreenContent(
+        NotesScreenContent(
             state = state,
             onRefresh = {
-                viewModel.onAction(NoteAction.Refresh)
+                viewModel.onAction(NotesAction.Refresh)
             },
             modifier = Modifier
                 .fillMaxSize()
@@ -99,8 +99,8 @@ fun NoteScreen(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun NoteScreenContent(
-    state: NoteState,
+private fun NotesScreenContent(
+    state: NotesState,
     modifier: Modifier = Modifier,
     onRefresh: () -> Unit
 ) {

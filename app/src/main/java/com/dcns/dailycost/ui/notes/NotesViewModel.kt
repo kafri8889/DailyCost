@@ -1,4 +1,4 @@
-package com.dcns.dailycost.ui.note
+package com.dcns.dailycost.ui.notes
 
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
@@ -15,10 +15,10 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class NoteViewModel @Inject constructor(
+class NotesViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
     private val noteUseCases: NoteUseCases
-): BaseViewModel<NoteState, NoteAction>() {
+): BaseViewModel<NotesState, NotesAction>() {
 
     init {
         viewModelScope.launch {
@@ -42,11 +42,11 @@ class NoteViewModel @Inject constructor(
         }
     }
 
-    override fun defaultState(): NoteState = NoteState()
+    override fun defaultState(): NotesState = NotesState()
 
-    override fun onAction(action: NoteAction) {
+    override fun onAction(action: NotesAction) {
         when (action) {
-            NoteAction.Refresh -> {
+            NotesAction.Refresh -> {
                 viewModelScope.launch {
                     val mState = state.value
 
@@ -89,7 +89,7 @@ class NoteViewModel @Inject constructor(
                             ErrorResponse::class.java
                         )
 
-                        sendEvent(NoteUiEvent.GetRemoteNoteFailed(errorResponse.message))
+                        sendEvent(NotesUiEvent.GetRemoteNoteFailed(errorResponse.message))
 
                         updateState {
                             copy(

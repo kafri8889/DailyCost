@@ -243,7 +243,7 @@ private fun DashboardFloatingActionButton(
             ) {
                 ClickableText(
                     text = buildAnnotatedString {
-                        append(stringResource(id = R.string.notes))
+                        append(stringResource(id = R.string.note))
                     },
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -295,7 +295,7 @@ private fun DashboardFloatingActionButton(
                     }
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_notes),
+                        painter = painterResource(id = R.drawable.ic_shopping_bag),
                         contentDescription = null
                     )
                 }

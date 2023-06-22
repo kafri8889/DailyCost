@@ -51,4 +51,5 @@
     <string name="no_internet_connection">No internet connection</string>
     <string name="add">Add</string>
     <string name="shopping">Shopping</string>
+    <string name="note">Note</string>
 </resources>
