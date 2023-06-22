@@ -21,6 +21,10 @@ class NetworkConnectivity(
     private val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
     private val validNetworks: MutableSet<Network> = HashSet()
 
+    fun initialize() {
+        checkValidNetworks()
+    }
+
     private fun checkValidNetworks() {
         Timber.i("has internet? -> ${validNetworks.size > 0}")
         postValue(validNetworks.size > 0)

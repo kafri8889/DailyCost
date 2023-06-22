@@ -17,6 +17,10 @@ class ConnectivityManager @Inject constructor(
     private val _isNetworkAvailable = MutableLiveData(true)
     val isNetworkAvailable: LiveData<Boolean> = _isNetworkAvailable
 
+    fun initialize() {
+        connectionLiveData.initialize()
+    }
+
     fun registerConnectionObserver(lifecycleOwner: LifecycleOwner){
         connectionLiveData.observe(lifecycleOwner) { isConnected ->
             Timber.i("is connected: $isConnected")

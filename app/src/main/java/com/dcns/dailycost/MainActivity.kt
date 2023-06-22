@@ -38,6 +38,8 @@ class MainActivity: LocalizedActivity() {
 
         workManager = WorkManager.getInstance(this@MainActivity)
 
+        connectivityManager.initialize()
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setListener(object : OnLocaleChangedListener {
