@@ -48,4 +48,6 @@
     <string name="top_up_success">Top up berhasil</string>
     <string name="add_note">Tambah catatan</string>
     <string name="no_internet_connection">Tidak ada koneksi internet</string>
+    <string name="add">Tambah</string>
+    <string name="shopping">Belanja</string>
 </resources>
