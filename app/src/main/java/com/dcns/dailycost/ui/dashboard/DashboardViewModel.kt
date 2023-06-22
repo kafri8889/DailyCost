@@ -11,10 +11,12 @@ import com.dcns.dailycost.domain.util.GetNoteBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.base.UiEvent
 import com.dcns.dailycost.foundation.common.ConnectivityManager
+import com.dcns.dailycost.foundation.common.SharedUiEvent
 import com.dcns.dailycost.foundation.extension.toNote
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -25,10 +27,19 @@ class DashboardViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
     private val connectivityManager: ConnectivityManager,
     private val balanceUseCases: BalanceUseCases,
+    private val sharedUiEvent: SharedUiEvent,
     private val noteUseCases: NoteUseCases
 ): BaseViewModel<DashboardState, DashboardAction, DashboardUiEvent>() {
 
     init {
+        viewModelScope.launch {
+            sharedUiEvent.uiEvent.filterNotNull().collect { event ->
+                when (event) {
+                    is DashboardUiEvent.TopUpSuccess -> sendEvent(event)
+                }
+            }
+        }
+
         viewModelScope.launch {
             connectivityManager.isNetworkAvailable.asFlow().collect { have ->
                 Timber.i("have internet: $have")

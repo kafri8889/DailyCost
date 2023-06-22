@@ -7,6 +7,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.work.WorkManager
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.use_case.BalanceUseCases
 import com.dcns.dailycost.foundation.common.ConnectivityManager
@@ -30,8 +31,12 @@ class MainActivity: LocalizedActivity() {
 
     private val dailyCostAppViewModel: DailyCostAppViewModel by viewModels()
 
+    private lateinit var workManager: WorkManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        workManager = WorkManager.getInstance(this@MainActivity)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 

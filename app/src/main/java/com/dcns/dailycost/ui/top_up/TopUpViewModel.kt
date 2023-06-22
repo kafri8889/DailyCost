@@ -3,11 +3,16 @@ package com.dcns.dailycost.ui.top_up
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.WalletType
+import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.use_case.BalanceUseCases
-import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
+import com.dcns.dailycost.foundation.base.UiEvent
 import com.dcns.dailycost.foundation.common.ConnectivityManager
+import com.dcns.dailycost.foundation.common.SharedUiEvent
+import com.dcns.dailycost.foundation.common.Workers
+import com.dcns.dailycost.foundation.extension.enqueue
+import com.dcns.dailycost.ui.dashboard.DashboardUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -18,8 +23,8 @@ class TopUpViewModel @Inject constructor(
     private val userCredentialRepository: IUserCredentialRepository,
     private val connectivityManager: ConnectivityManager,
     private val balanceUseCases: BalanceUseCases,
-    private val depoUseCases: DepoUseCases
-): BaseViewModel<TopUpState, TopUpAction, TopUpUiEvent>() {
+    private val sharedUiEvent: SharedUiEvent
+): BaseViewModel<TopUpState, TopUpAction, UiEvent>() {
 
     init {
         viewModelScope.launch {
@@ -59,18 +64,6 @@ class TopUpViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateLocalBalance(
-        cash: Double,
-        eWallet: Double,
-        bankAccount: Double
-    ) {
-        balanceUseCases.updateLocalBalanceUseCase(
-            cash = cash,
-            eWallet = eWallet,
-            bankAccount = bankAccount
-        )
-    }
-
     override fun defaultState(): TopUpState = TopUpState()
 
     override fun onAction(action: TopUpAction) {
@@ -97,12 +90,6 @@ class TopUpViewModel @Inject constructor(
                 viewModelScope.launch {
                     val mState = state.value
 
-                    updateState {
-                        copy(
-                            isLoading = true
-                        )
-                    }
-
                     val cash = if (mState.selectedWalletType == WalletType.Cash) {
                         mState.amount
                     } else mState.balance.cash
@@ -115,21 +102,16 @@ class TopUpViewModel @Inject constructor(
                         mState.amount
                     } else mState.balance.bankAccount
 
-                    // TODO: Update data changed
-
-                    updateLocalBalance(
-                        cash = cash,
-                        eWallet = eWallet,
-                        bankAccount = bankAccount
-                    )
-
-                    sendEvent(TopUpUiEvent.TopUpSuccess)
-
-                    updateState {
-                        copy(
-                            isLoading = false
+                    Workers.uploadBalanceWorker(
+                        DepoRequestBody(
+                            id = mState.credential.id.toInt(),
+                            cash = cash.toInt(),
+                            eWallet = eWallet.toInt(),
+                            bankAccount = bankAccount.toInt()
                         )
-                    }
+                    ).enqueue(action.context)
+
+                    sharedUiEvent.sendUiEvent(DashboardUiEvent.TopUpSuccess())
                 }
             }
         }

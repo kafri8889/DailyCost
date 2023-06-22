@@ -11,9 +11,13 @@ import com.dcns.dailycost.foundation.worker.UploadBalanceWorker
 
 object Workers {
 
+    const val ARG_WORKER_IS_SUCCESS_KEY = "worker_is_success"
     const val ARG_WORKER_MESSAGE_KEY = "worker_message"
 
     const val ARG_DATA_REQUEST_BODY = "data_request_body"
+
+    const val TAG_UPLOAD_WORKER = "worker_tag_upload_balance"
+    const val TAG_SYNC_WORKER = "worker_tag_sync_balance"
 
     fun uploadBalanceWorker(body: DepoRequestBody): OneTimeWorkRequest {
         return OneTimeWorkRequestBuilder<UploadBalanceWorker>()
@@ -27,6 +31,7 @@ object Workers {
                     ARG_DATA_REQUEST_BODY to body.toJson()
                 )
             )
+            .addTag(TAG_UPLOAD_WORKER)
             .build()
     }
 
@@ -37,6 +42,7 @@ object Workers {
                     requiredNetworkType = NetworkType.CONNECTED
                 )
             )
+            .addTag(TAG_SYNC_WORKER)
             .build()
     }
 
