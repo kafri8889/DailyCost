@@ -12,12 +12,12 @@ plugins {
 
 android {
     namespace = "com.dcns.dailycost"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.dcns.dailycost"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"
 
@@ -139,7 +139,7 @@ dependencies {
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.compose.material:material:1.4.3")
     implementation("androidx.compose.material:material-icons-extended:1.4.3")
-    implementation("androidx.compose.material3:material3-android:1.2.0-alpha02")
+    implementation("androidx.compose.material3:material3-android:1.2.0-alpha03")
     implementation("androidx.compose.material3:material3-window-size-class:1.1.0")
 
     // Large screen support
