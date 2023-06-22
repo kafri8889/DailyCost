@@ -4,23 +4,23 @@ import androidx.compose.material3.SnackbarDuration
 import com.dcns.dailycost.R
 import com.dcns.dailycost.foundation.base.UiEvent
 
-sealed class DashboardUiEvent: UiEvent {
+sealed class DashboardUiEvent: UiEvent() {
 
     class TopUpSuccess(
-        override val message: String = UiEvent.asStringResource(R.string.top_up_success),
+        override val message: String = asStringResource(R.string.top_up_success),
         override val actionLabel: String? = null,
         override val withDismissAction: Boolean = true,
         override val duration: SnackbarDuration = SnackbarDuration.Short,
         override val data: Any? = null,
-    ): UiEvent.ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
+    ): ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
 
     class NoInternetConnection(
-        override val message: String = UiEvent.asStringResource(R.string.internet_connection_not_available),
+        override val message: String = asStringResource(R.string.internet_connection_not_available),
         override val actionLabel: String? = null,
         override val withDismissAction: Boolean = true,
         override val duration: SnackbarDuration = SnackbarDuration.Short,
         override val data: Any? = null,
-    ): UiEvent.ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
+    ): ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
 
     class GetRemoteNoteFailed(
         override val message: String = "",
@@ -28,7 +28,7 @@ sealed class DashboardUiEvent: UiEvent {
         override val withDismissAction: Boolean = true,
         override val duration: SnackbarDuration = SnackbarDuration.Short,
         override val data: Any? = null,
-    ): UiEvent.ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
+    ): ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
 
     class GetRemoteBalanceFailed(
         override val message: String = "",
@@ -36,7 +36,6 @@ sealed class DashboardUiEvent: UiEvent {
         override val withDismissAction: Boolean = true,
         override val duration: SnackbarDuration = SnackbarDuration.Short,
         override val data: Any? = null,
-    ): UiEvent.ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
-
+    ): ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
 
 }

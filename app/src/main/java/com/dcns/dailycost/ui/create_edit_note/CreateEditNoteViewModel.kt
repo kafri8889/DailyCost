@@ -15,7 +15,7 @@ import javax.inject.Inject
 class CreateEditNoteViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
     private val noteUseCases: NoteUseCases
-): BaseViewModel<CreateEditNoteState, CreateEditNoteAction, CreateEditNoteUiEvent>() {
+): BaseViewModel<CreateEditNoteState, CreateEditNoteAction>() {
 
     init {
     }

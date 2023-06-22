@@ -7,7 +7,6 @@ import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.use_case.BalanceUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
-import com.dcns.dailycost.foundation.base.UiEvent
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.SharedUiEvent
 import com.dcns.dailycost.foundation.common.Workers
@@ -24,7 +23,7 @@ class TopUpViewModel @Inject constructor(
     private val connectivityManager: ConnectivityManager,
     private val balanceUseCases: BalanceUseCases,
     private val sharedUiEvent: SharedUiEvent
-): BaseViewModel<TopUpState, TopUpAction, UiEvent>() {
+): BaseViewModel<TopUpState, TopUpAction>() {
 
     init {
         viewModelScope.launch {

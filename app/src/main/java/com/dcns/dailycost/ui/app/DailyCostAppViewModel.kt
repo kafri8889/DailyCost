@@ -13,7 +13,7 @@ import javax.inject.Inject
 class DailyCostAppViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
     private val userBalanceRepository: BalanceRepository
-): BaseViewModel<DailyCostAppState, DailyCostAppAction, DailyCostAppUiEvent>() {
+): BaseViewModel<DailyCostAppState, DailyCostAppAction>() {
 
     init {
         viewModelScope.launch {

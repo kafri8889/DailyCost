@@ -36,7 +36,7 @@ class LoginRegisterViewModel @Inject constructor(
     private val connectivityManager: ConnectivityManager,
     private val depoUseCases: DepoUseCases,
     private val appDatabase: AppDatabase
-): BaseViewModel<LoginRegisterState, LoginRegisterAction, LoginRegisterUiEvent>() {
+): BaseViewModel<LoginRegisterState, LoginRegisterAction>() {
 
     init {
         viewModelScope.launch {

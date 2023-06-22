@@ -18,8 +18,8 @@ import com.dcns.dailycost.foundation.extension.toast
  * @author kafri8889
  */
 @Composable
-fun <STATE, ACTION, EVENT: UiEvent> BaseScreenWrapper(
-	viewModel: BaseViewModel<STATE, ACTION, EVENT>,
+fun <STATE, ACTION> BaseScreenWrapper(
+	viewModel: BaseViewModel<STATE, ACTION>,
 	topBar: @Composable () -> Unit = {},
 	bottomBar: @Composable () -> Unit = {},
 	floatingActionButton: @Composable () -> Unit = {},

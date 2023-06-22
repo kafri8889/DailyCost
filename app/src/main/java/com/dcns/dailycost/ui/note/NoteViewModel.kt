@@ -18,7 +18,7 @@ import javax.inject.Inject
 class NoteViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
     private val noteUseCases: NoteUseCases
-): BaseViewModel<NoteState, NoteAction, NoteUiEvent>() {
+): BaseViewModel<NoteState, NoteAction>() {
 
     init {
         viewModelScope.launch {

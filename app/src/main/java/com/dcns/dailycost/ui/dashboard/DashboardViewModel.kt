@@ -29,7 +29,7 @@ class DashboardViewModel @Inject constructor(
     private val balanceUseCases: BalanceUseCases,
     private val sharedUiEvent: SharedUiEvent,
     private val noteUseCases: NoteUseCases
-): BaseViewModel<DashboardState, DashboardAction, DashboardUiEvent>() {
+): BaseViewModel<DashboardState, DashboardAction>() {
 
     init {
         viewModelScope.launch {

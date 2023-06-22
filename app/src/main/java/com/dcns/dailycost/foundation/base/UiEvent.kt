@@ -10,12 +10,12 @@ import androidx.compose.material3.SnackbarDuration
  *
  * @author kafri8889
  */
-interface UiEvent {
+open class UiEvent {
 	
 	open class ShowToast(
 		open val message: String,
 		open val length: Int = Toast.LENGTH_SHORT
-	): UiEvent {
+	): UiEvent() {
 		fun getMessage(context: Context): String {
 			return if (message.contains(AS_STRING_RES_ID)) {
 				val split = message.split('|')
@@ -32,7 +32,7 @@ interface UiEvent {
 		open val withDismissAction: Boolean,
 		open val duration: SnackbarDuration,
 		open val data: Any?
-	): UiEvent {
+	): UiEvent() {
 		fun getMessage(context: Context): String {
 			return if (message.contains(AS_STRING_RES_ID)) {
 				val split = message.split('|')

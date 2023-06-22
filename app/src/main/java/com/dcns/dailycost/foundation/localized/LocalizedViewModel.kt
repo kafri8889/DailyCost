@@ -10,7 +10,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LocalizedViewModel @Inject constructor(
 	private val userPreferenceRepository: UserPreferenceRepository
-): BaseViewModel<LocalizedState, LocalizedAction, LocalizedUiEvent>() {
+): BaseViewModel<LocalizedState, LocalizedAction>() {
 	
 	init {
 		viewModelScope.launch {

@@ -12,7 +12,7 @@ import javax.inject.Inject
 class SettingViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
     private val userPreferenceRepository: UserPreferenceRepository,
-): BaseViewModel<SettingState, SettingAction, SettingUiEvent>() {
+): BaseViewModel<SettingState, SettingAction>() {
 
     init {
         viewModelScope.launch {

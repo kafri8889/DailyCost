@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
  *
  *  @author kafri8889
  */
-abstract class BaseViewModel<STATE, ACTION, EVENT: UiEvent>: ViewModel() {
+abstract class BaseViewModel<STATE, ACTION>: ViewModel() {
 	
 	private val _state = MutableStateFlow(this.defaultState())
 	val state: StateFlow<STATE> = _state

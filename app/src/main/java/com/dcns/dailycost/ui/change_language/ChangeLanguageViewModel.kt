@@ -3,7 +3,6 @@ package com.dcns.dailycost.ui.change_language
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.repository.UserPreferenceRepository
 import com.dcns.dailycost.foundation.base.BaseViewModel
-import com.dcns.dailycost.foundation.base.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -11,7 +10,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChangeLanguageViewModel @Inject constructor(
     private val userPreferenceRepository: UserPreferenceRepository
-): BaseViewModel<ChangeLanguageState, ChangeLanguageAction, UiEvent>() {
+): BaseViewModel<ChangeLanguageState, ChangeLanguageAction>() {
 
     init {
         viewModelScope.launch {
