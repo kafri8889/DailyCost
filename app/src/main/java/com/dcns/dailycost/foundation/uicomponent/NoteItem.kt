@@ -79,7 +79,9 @@ fun NoteItem(
     var isLoading by remember { mutableStateOf(true) }
 
     val date = remember(note) {
-        DateFormat.getDateInstance(DateFormat.MEDIUM).format(note.createdAt)
+        DateFormat
+            .getDateInstance(DateFormat.MEDIUM)
+            .format(note.createdAt * 1000) // convert to epoch milli
     }
 
     val imageRequest = remember(note.imageUrl) {
