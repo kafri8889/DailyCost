@@ -1,10 +1,6 @@
 package com.dcns.dailycost.data.model.remote.request_body
 
 import com.dcns.dailycost.foundation.common.RetrofitRequestBody
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
 
 data class RegisterRequestBody(
     val name: String,
@@ -12,17 +8,11 @@ data class RegisterRequestBody(
     val password: String
 ): RetrofitRequestBody() {
 
-    override fun toRequestBody(): RequestBody {
-        val body = JSONObject(
-            mapOf(
-                "name" to name,
-                "email" to email,
-                "password" to password
-            )
+    override fun getBody(): Map<String, Any> {
+        return mapOf(
+            "name" to name,
+            "email" to email,
+            "password" to password
         )
-
-        return body
-            .toString()
-            .toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
     }
 }
