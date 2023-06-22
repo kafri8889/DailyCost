@@ -6,7 +6,7 @@ Web: https://dailycost-fe-app.vercel.app/login
 
 FE: https://github.com/fikrimln16/dailycost-fe-app
 
-BE: https://github.com/fikrimln16/DAILYCOST-BACKEND
+BE: https://github.com/fikrimln16/dailycost-be-app
 
 Kalo ada yg bingung tanya aja di discord, nanti penjelasannya di tambahin ke Wiki
 
