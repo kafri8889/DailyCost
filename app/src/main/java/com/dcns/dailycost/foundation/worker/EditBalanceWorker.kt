@@ -21,7 +21,7 @@ import okhttp3.RequestBody
 import timber.log.Timber
 
 @HiltWorker
-class UploadBalanceWorker @AssistedInject constructor(
+class EditBalanceWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted params: WorkerParameters,
     private val depoUseCases: DepoUseCases,
@@ -35,7 +35,7 @@ class UploadBalanceWorker @AssistedInject constructor(
         requestBody?.let { json ->
             val body = json.fromJson(DepoRequestBody::class.java)
 
-            return uploadBalance(body.toRequestBody())
+            return editBalance(body.toRequestBody())
         }
 
         return Result.failure(
@@ -58,7 +58,7 @@ class UploadBalanceWorker @AssistedInject constructor(
 //        }.build()
 //    }
 
-    private suspend fun uploadBalance(requestBody: RequestBody): Result {
+    private suspend fun editBalance(requestBody: RequestBody): Result {
         val token = userCredentialRepository.getUserCredential.firstOrNull()?.getAuthToken()
 
         if (token != null) {
@@ -73,7 +73,7 @@ class UploadBalanceWorker @AssistedInject constructor(
                         bankAccount = body.data.bankAccount.toDouble(),
                     )
 
-                    Timber.i("upload finished")
+                    Timber.i("edit finished")
 
                     return Result.success(
                         workDataOf(

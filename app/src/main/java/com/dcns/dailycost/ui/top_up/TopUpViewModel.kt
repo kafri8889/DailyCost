@@ -52,12 +52,7 @@ class TopUpViewModel @Inject constructor(
             balanceUseCases.getLocalBalanceUseCase().collect { balance ->
                 updateState {
                     copy(
-                        balance = balance,
-                        amount = when (selectedWalletType) {
-                            WalletType.Cash -> balance.cash
-                            WalletType.EWallet -> balance.eWallet
-                            WalletType.BankAccount -> balance.bankAccount
-                        }
+                        balance = balance
                     )
                 }
             }
@@ -92,17 +87,17 @@ class TopUpViewModel @Inject constructor(
 
                     val cash = if (mState.selectedWalletType == WalletType.Cash) {
                         mState.amount
-                    } else mState.balance.cash
+                    } else 0.0
 
                     val eWallet = if (mState.selectedWalletType == WalletType.EWallet) {
                         mState.amount
-                    } else mState.balance.eWallet
+                    } else 0.0
 
                     val bankAccount = if (mState.selectedWalletType == WalletType.BankAccount) {
                         mState.amount
-                    } else mState.balance.bankAccount
+                    } else 0.0
 
-                    Workers.uploadBalanceWorker(
+                    Workers.topUpBalanceWorker(
                         DepoRequestBody(
                             id = mState.credential.id.toInt(),
                             cash = cash.toInt(),
