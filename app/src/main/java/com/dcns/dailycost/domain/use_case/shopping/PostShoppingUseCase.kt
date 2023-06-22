@@ -10,9 +10,10 @@ class PostShoppingUseCase(
 ) {
 
     suspend operator fun invoke(
-        body: RequestBody
+        body: RequestBody,
+        token: String
     ): Response<ShoppingResponse> {
-        return shoppingRepository.shopping(body)
+        return shoppingRepository.shopping(body, token)
     }
 
 }

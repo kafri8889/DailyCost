@@ -11,7 +11,7 @@ class ShoppingHandlerImpl @Inject constructor(
     private val shoppingService: ShoppingService
 ): ShoppingHandler {
 
-    override suspend fun shopping(body: RequestBody): Response<ShoppingResponse> {
-        return shoppingService.shopping(body)
+    override suspend fun shopping(body: RequestBody, token: String): Response<ShoppingResponse> {
+        return shoppingService.shopping(body, token)
     }
 }

@@ -6,6 +6,6 @@ import retrofit2.Response
 
 interface ShoppingHandler {
 
-    suspend fun shopping(body: RequestBody): Response<ShoppingResponse>
+    suspend fun shopping(body: RequestBody, token: String): Response<ShoppingResponse>
 
 }
