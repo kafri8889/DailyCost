@@ -19,6 +19,8 @@ import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.EmailValidator
 import com.dcns.dailycost.foundation.common.PasswordValidator
+import com.dcns.dailycost.foundation.common.Workers
+import com.dcns.dailycost.foundation.extension.enqueue
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -243,6 +245,8 @@ class LoginRegisterViewModel @Inject constructor(
                                            resource = Resource.success(response.body())
                                        )
                                    }
+
+                                   Workers.syncWorker().enqueue(action.context)
 
                                    return@launch
                                }
