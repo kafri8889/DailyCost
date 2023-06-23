@@ -8,7 +8,7 @@ class GetLocalBalanceUseCase(
     private val balanceRepository: IBalanceRepository
 ) {
 
-    suspend operator fun invoke(): Flow<UserBalance> {
+    operator fun invoke(): Flow<UserBalance> {
         return balanceRepository.getUserBalance
     }
 
