@@ -37,10 +37,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.drawerDestinations
+import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
 import com.dcns.dailycost.navigation.HomeNavHost
 import com.dcns.dailycost.navigation.LoginRegisterNavHost
 import com.dcns.dailycost.navigation.home.ChangeLanguageNavigation
@@ -62,7 +64,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun DailyCostApp(
     darkTheme: Boolean = false,
-    viewModel: DailyCostAppViewModel = hiltViewModel()
+    viewModel: DailyCostAppViewModel = hiltViewModel(),
+    biometricManager: DailyCostBiometricManager
 ) {
 
     val context = LocalContext.current
@@ -94,6 +97,20 @@ fun DailyCostApp(
     LaunchedEffect(navBackStackEntry) {
         navBackStackEntry?.destination?.route?.let { route ->
             viewModel.onAction(DailyCostAppAction.UpdateCurrentDestinationRoute(route))
+        }
+    }
+
+    LaunchedEffect(state.isSecureAppEnabled) {
+        // TODO: cek kalo pake pola, sandi, face id
+        val canAuth = DailyCostBiometricManager.canAuthenticateWithAuthenticators(context)
+
+        if (state.isSecureAppEnabled && canAuth) {
+            biometricManager.showAuthentication(
+                title = context.getString(R.string.authentication),
+                subtitle = "",
+                description = "",
+                negativeButtonText = context.getString(R.string.cancel)
+            )
         }
     }
 

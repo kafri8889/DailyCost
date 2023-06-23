@@ -59,4 +59,6 @@
     <string name="entertainment">Entertainment</string>
     <string name="gadget">Gadget</string>
     <string name="other">Other</string>
+    <string name="cancel">Cancel</string>
+    <string name="authentication">Authentication</string>
 </resources>

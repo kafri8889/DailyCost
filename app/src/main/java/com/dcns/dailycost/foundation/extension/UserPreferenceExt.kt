@@ -6,6 +6,7 @@ import com.dcns.dailycost.data.model.UserPreference
 
 fun ProtoUserPreference.toUserPreference(): UserPreference {
     return UserPreference(
-        language = Language.values()[language]
+        language = Language.values()[language],
+        secureApp = secureApp
     )
 }

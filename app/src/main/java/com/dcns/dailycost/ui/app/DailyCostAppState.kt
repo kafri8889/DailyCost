@@ -9,4 +9,8 @@ data class DailyCostAppState(
     val userBalance: UserBalance = ProtoUserBalance().toUserBalance(),
     val userCredential: UserCredential? = null,
     val currentDestinationRoute: String = "",
+    /**
+     * if secure app with biometric enabled
+     */
+    val isSecureAppEnabled: Boolean = false
 )

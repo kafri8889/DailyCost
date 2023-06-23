@@ -135,6 +135,9 @@ dependencies {
     // Constraint layout
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha10")
 
+    // Biometric
+    implementation("androidx.biometric:biometric-ktx:1.2.0-alpha05")
+
     // Material Design
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.compose.material:material:1.4.3")

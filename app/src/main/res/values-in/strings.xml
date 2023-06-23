@@ -58,4 +58,6 @@
     <string name="entertainment">Hiburan</string>
     <string name="gadget">Gawai</string>
     <string name="other">Lainnya</string>
+    <string name="cancel">Batalkan</string>
+    <string name="authentication">Autentikasi</string>
 </resources>
