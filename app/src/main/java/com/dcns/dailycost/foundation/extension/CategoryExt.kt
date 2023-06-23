@@ -1,0 +1,12 @@
+package com.dcns.dailycost.foundation.extension
+
+import com.dcns.dailycost.data.model.Category
+import com.dcns.dailycost.data.model.local.CategoryDb
+
+fun CategoryDb.toCategoryDb(): Category {
+    return Category(id, name, icon, defaultCategory)
+}
+
+fun Category.toCategoryDb(): CategoryDb {
+    return CategoryDb(id, name, icon, defaultCategory)
+}

@@ -51,4 +51,11 @@
     <string name="add">Tambah</string>
     <string name="shopping">Belanja</string>
     <string name="note">Catatan</string>
+    <string name="food">Makanan</string>
+    <string name="transport">Transportasi</string>
+    <string name="electronic">Elektronik</string>
+    <string name="bill">Tagihan</string>
+    <string name="entertainment">Hiburan</string>
+    <string name="gadget">Gawai</string>
+    <string name="other">Lainnya</string>
 </resources>

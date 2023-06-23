@@ -52,4 +52,11 @@
     <string name="add">Add</string>
     <string name="shopping">Shopping</string>
     <string name="note">Note</string>
+    <string name="food">Food</string>
+    <string name="transport">Transport</string>
+    <string name="electronic">Electronic</string>
+    <string name="bill">Bill</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="gadget">Gadget</string>
+    <string name="other">Other</string>
 </resources>

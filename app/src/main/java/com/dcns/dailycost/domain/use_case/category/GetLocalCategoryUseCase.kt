@@ -1,0 +1,30 @@
+package com.dcns.dailycost.domain.use_case.category
+
+import com.dcns.dailycost.data.model.Category
+import com.dcns.dailycost.domain.repository.ICategoryRepository
+import com.dcns.dailycost.domain.util.GetCategoryBy
+import com.dcns.dailycost.foundation.extension.toCategoryDb
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+
+class GetLocalCategoryUseCase(
+    private val categoryRepository: ICategoryRepository
+) {
+
+    operator fun invoke(
+        getCategoryBy: GetCategoryBy = GetCategoryBy.All
+    ): Flow<List<Category>> {
+        return when (getCategoryBy) {
+            is GetCategoryBy.ID -> {
+                categoryRepository.getCategoryByID(getCategoryBy.id)
+                    .filterNotNull()
+                    .map { listOf(it.toCategoryDb()) }
+            }
+            GetCategoryBy.All -> categoryRepository.getAllCategory()
+                .filterNotNull()
+                .map { it.map { it.toCategoryDb() } }
+        }
+    }
+
+}

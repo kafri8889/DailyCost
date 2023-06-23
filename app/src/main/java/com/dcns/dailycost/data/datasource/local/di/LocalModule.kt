@@ -2,6 +2,7 @@ package com.dcns.dailycost.data.datasource.local.di
 
 import android.content.Context
 import com.dcns.dailycost.data.datasource.local.AppDatabase
+import com.dcns.dailycost.data.datasource.local.dao.CategoryDao
 import com.dcns.dailycost.data.datasource.local.dao.ExpenseDao
 import com.dcns.dailycost.data.datasource.local.dao.NoteDao
 import dagger.Module
@@ -32,5 +33,11 @@ class LocalModule {
     fun provideExpenseDao(
         appDatabase: AppDatabase
     ): ExpenseDao = appDatabase.expenseDao()
+
+    @Provides
+    @Singleton
+    fun provideCategoryDao(
+        appDatabase: AppDatabase
+    ): CategoryDao = appDatabase.categoryDao()
 
 }

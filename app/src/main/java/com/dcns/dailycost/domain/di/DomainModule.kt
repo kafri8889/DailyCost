@@ -1,11 +1,13 @@
 package com.dcns.dailycost.domain.di
 
 import com.dcns.dailycost.domain.repository.IBalanceRepository
+import com.dcns.dailycost.domain.repository.ICategoryRepository
 import com.dcns.dailycost.domain.repository.IDepoRepository
 import com.dcns.dailycost.domain.repository.ILoginRegisterRepository
 import com.dcns.dailycost.domain.repository.INoteRepository
 import com.dcns.dailycost.domain.repository.IShoppingRepository
 import com.dcns.dailycost.domain.use_case.BalanceUseCases
+import com.dcns.dailycost.domain.use_case.CategoryUseCases
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.NoteUseCases
@@ -13,6 +15,8 @@ import com.dcns.dailycost.domain.use_case.ShoppingUseCases
 import com.dcns.dailycost.domain.use_case.balance.GetLocalBalanceUseCase
 import com.dcns.dailycost.domain.use_case.balance.GetRemoteBalanceUseCase
 import com.dcns.dailycost.domain.use_case.balance.UpdateLocalBalanceUseCase
+import com.dcns.dailycost.domain.use_case.category.GetLocalCategoryUseCase
+import com.dcns.dailycost.domain.use_case.category.InputLocalCategoryUseCase
 import com.dcns.dailycost.domain.use_case.depo.AddDepoUseCase
 import com.dcns.dailycost.domain.use_case.depo.EditDepoUseCase
 import com.dcns.dailycost.domain.use_case.depo.TopUpDepoUseCase
@@ -79,6 +83,15 @@ class DomainModule {
         getLocalNoteUseCase = GetLocalNoteUseCase(noteRepository),
         addRemoteNoteUseCase = AddRemoteNoteUseCase(noteRepository),
         upsertLocalNoteUseCase = UpsertLocalNoteUseCase(noteRepository)
+    )
+
+    @Provides
+    @Singleton
+    fun provideCategoryUseCases(
+        categoryRepository: ICategoryRepository
+    ): CategoryUseCases = CategoryUseCases(
+        getLocalCategoryUseCase = GetLocalCategoryUseCase(categoryRepository),
+        inputLocalCategoryUseCase = InputLocalCategoryUseCase(categoryRepository)
     )
 
 }
