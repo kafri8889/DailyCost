@@ -61,12 +61,11 @@ class SyncWorker @AssistedInject constructor(
                 val noteResponse = response.body()
 
                 noteResponse?.let {
-                    Timber.i("upserting notes to db...")
+                    Timber.i("sync notes to db...")
                     withContext(Dispatchers.IO) {
-                        noteUseCases.upsertLocalNoteUseCase(
-                            *noteResponse.data
+                        noteUseCases.syncLocalWithRemoteNoteUseCase(
+                            noteResponse.data
                                 .map { it.toNote() }
-                                .toTypedArray()
                         )
                     }
                 }
@@ -116,6 +115,15 @@ class SyncWorker @AssistedInject constructor(
                 response.errorBody()?.charStream(),
                 ErrorResponse::class.java
             )
+
+            // User ga punya saldo
+            if (response.code() == 404) {
+                balanceUseCases.updateLocalBalanceUseCase(
+                    cash = 0.0,
+                    eWallet = 0.0,
+                    bankAccount = 0.0
+                )
+            }
 
             Timber.e("failed to get remote balance: ${errorResponse.message}")
 
