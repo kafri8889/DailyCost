@@ -36,6 +36,11 @@ interface INoteRepository {
 
     suspend fun insertNote(vararg note: NoteDb)
 
+    /**
+     * Delete all note from the database except the given [ids]
+     */
+    suspend fun deleteNoteExcept(ids: List<String>)
+
     fun getAllNoteLocal(): Flow<List<NoteDb>>
 
     fun getNoteByIdLocal(id: Int): Flow<NoteDb?>

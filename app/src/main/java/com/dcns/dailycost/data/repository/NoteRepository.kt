@@ -49,6 +49,10 @@ class NoteRepository @Inject constructor(
         noteDao.insertNote(*note)
     }
 
+    override suspend fun deleteNoteExcept(ids: List<String>) {
+        noteDao.deleteNoteExcept(ids)
+    }
+
     override fun getAllNoteLocal(): Flow<List<NoteDb>> {
         return noteDao.getAllNote()
     }
