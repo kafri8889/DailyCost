@@ -40,13 +40,17 @@ abstract class LocalizedActivity: AppCompatActivity() {
 							_language.update { event.language }
 						}
 						is LocalizedUiEvent.ApplyLanguage -> {
-							currentLocale = Locale(event.language.lang)
-							LocalizationUtil.applyLanguageContext(
-								context = this@LocalizedActivity,
-								locale = this@LocalizedActivity.getLocale()
-							)
+							val newLocale = Locale(event.language.lang)
 
-							listener?.onChanged()
+							if (newLocale.language != currentLocale?.language) {
+								currentLocale = newLocale
+								LocalizationUtil.applyLanguageContext(
+									context = this@LocalizedActivity,
+									locale = this@LocalizedActivity.getLocale()
+								)
+
+								listener?.onChanged()
+							}
 						}
 					}
 				}
