@@ -22,8 +22,8 @@ interface NoteDao {
     @Query("SELECT * FROM note_table WHERE userId_note LIKE :id")
     fun getNoteByUserId(id: Int): Flow<List<NoteDb>>
 
-    @Query("DELETE FROM note_table WHERE id_note NOT IN (:notes)")
-    fun deleteExcept(notes: List<NoteDb>)
+    @Query("DELETE FROM note_table WHERE id_note NOT IN (:ids)")
+    fun deleteExcept(ids: List<String>)
 
     @Update
     fun updateNote(vararg note: NoteDb)
