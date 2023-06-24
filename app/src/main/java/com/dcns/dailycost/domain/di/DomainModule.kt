@@ -25,6 +25,7 @@ import com.dcns.dailycost.domain.use_case.login_register.UserRegisterUseCase
 import com.dcns.dailycost.domain.use_case.note.AddRemoteNoteUseCase
 import com.dcns.dailycost.domain.use_case.note.GetLocalNoteUseCase
 import com.dcns.dailycost.domain.use_case.note.GetRemoteNoteUseCase
+import com.dcns.dailycost.domain.use_case.note.SyncLocalWithRemoteNoteUseCase
 import com.dcns.dailycost.domain.use_case.note.UpsertLocalNoteUseCase
 import com.dcns.dailycost.domain.use_case.shopping.PostShoppingUseCase
 import dagger.Module
@@ -82,7 +83,8 @@ class DomainModule {
         getRemoteNoteUseCase = GetRemoteNoteUseCase(noteRepository),
         getLocalNoteUseCase = GetLocalNoteUseCase(noteRepository),
         addRemoteNoteUseCase = AddRemoteNoteUseCase(noteRepository),
-        upsertLocalNoteUseCase = UpsertLocalNoteUseCase(noteRepository)
+        upsertLocalNoteUseCase = UpsertLocalNoteUseCase(noteRepository),
+        syncLocalWithRemoteNoteUseCase = SyncLocalWithRemoteNoteUseCase(noteRepository)
     )
 
     @Provides
