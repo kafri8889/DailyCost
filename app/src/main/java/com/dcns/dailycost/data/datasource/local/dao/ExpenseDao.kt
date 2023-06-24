@@ -19,14 +19,14 @@ interface ExpenseDao {
     fun getExpenseById(id: Int): Flow<ExpenseDb?>
 
     @Update
-    fun updateExpense(vararg expense: ExpenseDb)
+    suspend fun updateExpense(vararg expense: ExpenseDb)
 
     @Upsert
-    fun upsertExpense(vararg expense: ExpenseDb)
+    suspend fun upsertExpense(vararg expense: ExpenseDb)
 
     @Delete
-    fun deleteExpense(vararg expense: ExpenseDb)
+    suspend fun deleteExpense(vararg expense: ExpenseDb)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertExpense(vararg expense: ExpenseDb)
+    suspend fun insertExpense(vararg expense: ExpenseDb)
 }
