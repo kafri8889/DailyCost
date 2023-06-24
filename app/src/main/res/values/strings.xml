@@ -61,4 +61,6 @@
     <string name="other">Other</string>
     <string name="cancel">Cancel</string>
     <string name="authentication">Authentication</string>
+    <string name="secure_app">Secure app</string>
+    <string name="secure_app_with_fingerprint">Secure app with fingerprint</string>
 </resources>

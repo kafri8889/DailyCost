@@ -11,7 +11,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -23,8 +23,10 @@ import com.dcns.dailycost.data.Constant
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
+import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
 import com.dcns.dailycost.foundation.extension.toast
 import com.dcns.dailycost.foundation.uicomponent.BasicPreference
+import com.dcns.dailycost.foundation.uicomponent.SwitchPreference
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,7 +41,9 @@ fun SettingScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val scope = rememberCoroutineScope()
+    val canAuth = remember(context) {
+        DailyCostBiometricManager.canAuthenticateWithAuthenticators(context)
+    }
 
     BackHandler {
         navigationActions.popBackStack(TopLevelDestinations.Home.dashboard.route)
@@ -67,6 +71,28 @@ fun SettingScreen(
             modifier = Modifier
                 .padding(scaffoldPadding)
         ) {
+            item {
+                SwitchPreference(
+                    enabled = canAuth,
+                    isChecked = state.isSecureAppEnabled,
+                    onCheckedChange = { checked ->
+                        viewModel.onAction(SettingAction.UpdateIsSecureAppEnabled(checked))
+                    },
+                    title = {
+                        Text(stringResource(id = R.string.secure_app))
+                    },
+                    summary = {
+                        Text(stringResource(id = R.string.secure_app_with_fingerprint))
+                    },
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_finger_scan),
+                            contentDescription = null
+                        )
+                    }
+                )
+            }
+
             item {
                 BasicPreference(
                     title = {

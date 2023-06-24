@@ -22,7 +22,7 @@ class DailyCostAppViewModel @Inject constructor(
             userPreferenceRepository.getUserPreference.collect { pref ->
                 updateState {
                     copy(
-                        isSecureAppEnabled = true
+                        isSecureAppEnabled = pref.secureApp
                     )
                 }
             }
@@ -62,6 +62,13 @@ class DailyCostAppViewModel @Inject constructor(
                             currentDestinationRoute = action.route
                         )
                     }
+                }
+            }
+            is DailyCostAppAction.IsBiometricAuthenticated -> {
+                updateState {
+                    copy(
+                        isBiometricAuthenticated = action.authenticated
+                    )
                 }
             }
         }

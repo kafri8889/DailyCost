@@ -27,6 +27,14 @@ class UserPreferenceRepository @Inject constructor(
         }
     }
 
+    override suspend fun setSecureApp(secure: Boolean) {
+        userPreferenceDataStore.updateData {
+            it.copy(
+                secureApp = secure
+            )
+        }
+    }
+
     companion object {
         val corruptionHandler = ReplaceFileCorruptionHandler(
             produceNewData = { ProtoUserPreference() }

@@ -18,6 +18,7 @@ import com.dcns.dailycost.foundation.extension.enqueue
 import com.dcns.dailycost.foundation.localized.LocalizedActivity
 import com.dcns.dailycost.foundation.localized.data.OnLocaleChangedListener
 import com.dcns.dailycost.ui.app.DailyCostApp
+import com.dcns.dailycost.ui.app.DailyCostAppAction
 import com.dcns.dailycost.ui.app.DailyCostAppUiEvent
 import com.dcns.dailycost.ui.app.DailyCostAppViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,7 +45,8 @@ class MainActivity: LocalizedActivity() {
         biometricManager = DailyCostBiometricManager(this).apply {
             setListener(object : DailyCostBiometricManager.BiometricListener {
                 override fun onSuccess(result: BiometricPrompt.AuthenticationResult) {
-                    Timber.i("Biometric auth: success (nothing) :D")
+                    dailyCostAppViewModel.onAction(DailyCostAppAction.IsBiometricAuthenticated(true))
+                    Timber.i("Biometric auth: success :D")
                 }
 
                 override fun onError(errorCode: Int, errString: CharSequence) {

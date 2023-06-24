@@ -14,18 +14,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -136,70 +136,80 @@ fun BasicPreference(
 
 @Composable
 fun SwitchPreference(
-	checked: Boolean,
-	title: String,
-	summary: String? = null,
-	iconResId: Int? = null,
-	useIconPadding: Boolean = true,
-	onCheckedChange: (Boolean) -> Unit
+	title: @Composable () -> Unit,
+	isChecked: Boolean,
+	modifier: Modifier = Modifier,
+	enabled: Boolean = true,
+	onCheckedChange: (Boolean) -> Unit,
+	summary: @Composable () -> Unit = {},
+	icon: @Composable (() -> Unit)? = null,
+	switch: @Composable () -> Unit = {
+		Switch(
+			enabled = enabled,
+			checked = isChecked,
+			onCheckedChange = {
+				onCheckedChange(!isChecked)
+			}
+		)
+	}
 ) {
 	Row(
 		verticalAlignment = Alignment.CenterVertically,
-		modifier = Modifier
-			.fillMaxWidth()
-			.height(64.dp)
-			.clickable {
-				onCheckedChange(!checked)
-			}
+		modifier = modifier
+			.heightIn(min = 64.dp)
+			.clickable(
+				enabled = enabled,
+				onClick = {
+					onCheckedChange(!isChecked)
+				}
+			)
 	) {
-		if (iconResId != null) {
-			Icon(
-				painter = painterResource(id = iconResId),
-				contentDescription = null,
-				modifier = Modifier
-					.size(24.dp)
-					.weight(0.12f)
+		CompositionLocalProvider(
+			LocalContentColor provides LocalContentColor.current.copy(
+				alpha = if (enabled) 1f else 0.32f
 			)
-		} else {
-			if (useIconPadding) {
-				Box(
-					modifier = Modifier
-						.weight(weight = 0.12f)
-				)
-			}
-		}
-
-		Column(
-			verticalArrangement = Arrangement.Center,
-			modifier = Modifier
-				.weight(0.68f)
 		) {
-			Text(
-				text = title,
-				style = MaterialTheme.typography.titleMedium.copy(
-					fontWeight = FontWeight.Medium
-				)
-			)
+			Box(
+				contentAlignment = Alignment.Center,
+				modifier = Modifier
+					.weight(
+						weight = 0.12f
+					)
+			) {
+				icon?.invoke()
+			}
 
-			if (!summary.isNullOrBlank()) {
-				Text(
-					text = summary,
-					maxLines = 1,
-					overflow = TextOverflow.Ellipsis,
-					style = MaterialTheme.typography.titleSmall.copy(
+			Column(
+				verticalArrangement = Arrangement.Center,
+				modifier = Modifier
+					.weight(0.68f)
+			) {
+				ProvideTextStyle(
+					value = MaterialTheme.typography.titleMedium.copy(
+						fontWeight = FontWeight.Medium
+					)
+				) {
+					title()
+				}
+
+				ProvideTextStyle(
+					value = MaterialTheme.typography.titleSmall.copy(
 						color = Color.Gray,
 						fontWeight = FontWeight.Normal
 					)
-				)
+				) {
+					summary()
+				}
 			}
 		}
 
-		Switch(
-			checked = checked,
-			onCheckedChange = onCheckedChange,
+		Box(
+			contentAlignment = Alignment.Center,
 			modifier = Modifier
 				.weight(0.2f)
-		)
+		) {
+			switch()
+		}
 	}
 }
 

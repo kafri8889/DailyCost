@@ -100,18 +100,17 @@ fun DailyCostApp(
         }
     }
 
-    LaunchedEffect(state.isSecureAppEnabled) {
-        // TODO: cek kalo pake pola, sandi, face id
+    LaunchedEffect(state.isSecureAppEnabled, state.isBiometricAuthenticated) {
         val canAuth = DailyCostBiometricManager.canAuthenticateWithAuthenticators(context)
 
-        if (state.isSecureAppEnabled && canAuth) {
+        if (state.isSecureAppEnabled && !state.isBiometricAuthenticated && canAuth) {
             biometricManager.showAuthentication(
                 title = context.getString(R.string.authentication),
                 subtitle = "",
                 description = "",
                 negativeButtonText = context.getString(R.string.cancel)
             )
-        }
+        } else viewModel.onAction(DailyCostAppAction.IsBiometricAuthenticated(true))
     }
 
     LaunchedEffect(state.userCredential) {

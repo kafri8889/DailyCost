@@ -9,5 +9,6 @@ interface IUserPreferenceRepository {
     val getUserPreference: Flow<UserPreference>
 
     suspend fun setLanguage(language: Language)
+    suspend fun setSecureApp(secure: Boolean)
 
 }

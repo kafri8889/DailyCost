@@ -60,4 +60,6 @@
     <string name="other">Lainnya</string>
     <string name="cancel">Batalkan</string>
     <string name="authentication">Autentikasi</string>
+    <string name="secure_app">Amankan aplikasi</string>
+    <string name="secure_app_with_fingerprint">Amankan aplikasi dengan sidik jari</string>
 </resources>

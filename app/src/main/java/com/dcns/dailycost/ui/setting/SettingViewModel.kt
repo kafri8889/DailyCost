@@ -29,7 +29,8 @@ class SettingViewModel @Inject constructor(
             userPreferenceRepository.getUserPreference.collect { pref ->
                 updateState {
                     copy(
-                        language = pref.language
+                        language = pref.language,
+                        isSecureAppEnabled = pref.secureApp
                     )
                 }
             }
@@ -38,5 +39,13 @@ class SettingViewModel @Inject constructor(
 
     override fun defaultState(): SettingState = SettingState()
 
-    override fun onAction(action: SettingAction) {}
+    override fun onAction(action: SettingAction) {
+        when (action) {
+            is SettingAction.UpdateIsSecureAppEnabled -> {
+                viewModelScope.launch {
+                    userPreferenceRepository.setSecureApp(action.enabled)
+                }
+            }
+        }
+    }
 }

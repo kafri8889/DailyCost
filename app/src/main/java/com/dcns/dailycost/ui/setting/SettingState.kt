@@ -7,5 +7,9 @@ import com.dcns.dailycost.foundation.extension.toUserCredential
 
 data class SettingState(
     val userCredential: UserCredential = ProtoUserCredential().toUserCredential(),
-    val language: Language = Language.English
+    val language: Language = Language.English,
+    /**
+     * if secure app with biometric enabled
+     */
+    val isSecureAppEnabled: Boolean = false
 )
