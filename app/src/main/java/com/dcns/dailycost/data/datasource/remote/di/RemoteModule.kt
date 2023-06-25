@@ -12,6 +12,7 @@ import com.dcns.dailycost.data.datasource.remote.handlers.LoginRegisterHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.NoteHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.ShoppingHandler
 import com.dcns.dailycost.data.datasource.remote.services.DepoService
+import com.dcns.dailycost.data.datasource.remote.services.IncomeService
 import com.dcns.dailycost.data.datasource.remote.services.LoginRegisterService
 import com.dcns.dailycost.data.datasource.remote.services.NoteService
 import com.dcns.dailycost.data.datasource.remote.services.ShoppingService
@@ -86,6 +87,12 @@ class RemoteModule {
     fun provideNoteService(
         retrofit: Retrofit
     ): NoteService = retrofit.create(NoteService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideIncomeService(
+        retrofit: Retrofit
+    ): IncomeService = retrofit.create(IncomeService::class.java)
 
     @Provides
     @Singleton
