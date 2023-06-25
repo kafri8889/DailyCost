@@ -1,4 +1,4 @@
-package com.dcns.dailycost.domain.use_case.balance
+package com.dcns.dailycost.domain.use_case.depo
 
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 

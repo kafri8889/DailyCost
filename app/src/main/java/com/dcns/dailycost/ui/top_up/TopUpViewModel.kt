@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.WalletType
 import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
-import com.dcns.dailycost.domain.use_case.BalanceUseCases
+import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.SharedUiEvent
@@ -21,8 +21,8 @@ import javax.inject.Inject
 class TopUpViewModel @Inject constructor(
     private val userCredentialRepository: IUserCredentialRepository,
     private val connectivityManager: ConnectivityManager,
-    private val balanceUseCases: BalanceUseCases,
-    private val sharedUiEvent: SharedUiEvent
+    private val sharedUiEvent: SharedUiEvent,
+    private val depoUseCases: DepoUseCases
 ): BaseViewModel<TopUpState, TopUpAction>() {
 
     init {
@@ -48,7 +48,7 @@ class TopUpViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            balanceUseCases.getLocalBalanceUseCase().collect { balance ->
+            depoUseCases.getLocalBalanceUseCase().collect { balance ->
                 updateState {
                     copy(
                         balance = balance

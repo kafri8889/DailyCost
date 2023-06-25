@@ -9,7 +9,6 @@ import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.data.model.remote.response.DepoResponse
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
-import com.dcns.dailycost.domain.use_case.BalanceUseCases
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.foundation.common.Workers
 import com.dcns.dailycost.foundation.extension.fromJson
@@ -25,7 +24,6 @@ class EditBalanceWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted params: WorkerParameters,
     private val depoUseCases: DepoUseCases,
-    private val balanceUseCases: BalanceUseCases,
     private val userCredentialRepository: IUserCredentialRepository,
 ): CoroutineWorker(context, params) {
 
@@ -67,7 +65,7 @@ class EditBalanceWorker @AssistedInject constructor(
                     val body = it.body() as DepoResponse
 
                     // Save to local
-                    balanceUseCases.updateLocalBalanceUseCase(
+                    depoUseCases.updateLocalBalanceUseCase(
                         cash = body.data.cash.toDouble(),
                         eWallet = body.data.eWallet.toDouble(),
                         bankAccount = body.data.bankAccount.toDouble(),

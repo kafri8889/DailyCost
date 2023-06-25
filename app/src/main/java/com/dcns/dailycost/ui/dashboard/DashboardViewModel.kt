@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.data.repository.UserCredentialRepository
-import com.dcns.dailycost.domain.use_case.BalanceUseCases
+import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.NoteUseCases
 import com.dcns.dailycost.domain.util.GetNoteBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
@@ -26,8 +26,8 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
     private val connectivityManager: ConnectivityManager,
-    private val balanceUseCases: BalanceUseCases,
     private val sharedUiEvent: SharedUiEvent,
+    private val depoUseCases: DepoUseCases,
     private val noteUseCases: NoteUseCases
 ): BaseViewModel<DashboardState, DashboardAction>() {
 
@@ -68,7 +68,7 @@ class DashboardViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            balanceUseCases.getLocalBalanceUseCase().collect { balance ->
+            depoUseCases.getLocalBalanceUseCase().collect { balance ->
                 updateState {
                     copy(
                         balance = balance
@@ -126,7 +126,7 @@ class DashboardViewModel @Inject constructor(
     private suspend fun getRemoteBalance() {
         val mState = state.value
 
-        balanceUseCases.getRemoteBalanceUseCase(
+        depoUseCases.getRemoteBalanceUseCase(
             token = mState.credential.getAuthToken(),
             userId = mState.credential.id.toInt()
         ).let { response ->
@@ -134,7 +134,7 @@ class DashboardViewModel @Inject constructor(
                 val balanceResponseData = response.body()?.data
 
                 balanceResponseData?.let {
-                    balanceUseCases.updateLocalBalanceUseCase(
+                    depoUseCases.updateLocalBalanceUseCase(
                         cash = balanceResponseData.cash.toDouble(),
                         eWallet = balanceResponseData.eWallet.toDouble(),
                         bankAccount = balanceResponseData.bankAccount.toDouble()

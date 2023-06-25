@@ -7,21 +7,20 @@ import com.dcns.dailycost.domain.repository.IIncomeRepository
 import com.dcns.dailycost.domain.repository.ILoginRegisterRepository
 import com.dcns.dailycost.domain.repository.INoteRepository
 import com.dcns.dailycost.domain.repository.IShoppingRepository
-import com.dcns.dailycost.domain.use_case.BalanceUseCases
 import com.dcns.dailycost.domain.use_case.CategoryUseCases
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.NoteUseCases
 import com.dcns.dailycost.domain.use_case.ShoppingUseCases
-import com.dcns.dailycost.domain.use_case.balance.GetLocalBalanceUseCase
-import com.dcns.dailycost.domain.use_case.balance.GetRemoteBalanceUseCase
-import com.dcns.dailycost.domain.use_case.balance.UpdateLocalBalanceUseCase
 import com.dcns.dailycost.domain.use_case.category.GetLocalCategoryUseCase
 import com.dcns.dailycost.domain.use_case.category.InputLocalCategoryUseCase
 import com.dcns.dailycost.domain.use_case.depo.AddDepoUseCase
 import com.dcns.dailycost.domain.use_case.depo.EditDepoUseCase
+import com.dcns.dailycost.domain.use_case.depo.GetLocalBalanceUseCase
+import com.dcns.dailycost.domain.use_case.depo.GetRemoteBalanceUseCase
 import com.dcns.dailycost.domain.use_case.depo.TopUpDepoUseCase
+import com.dcns.dailycost.domain.use_case.depo.UpdateLocalBalanceUseCase
 import com.dcns.dailycost.domain.use_case.income.AddRemoteIncomeUseCase
 import com.dcns.dailycost.domain.use_case.income.GetRemoteIncomeUseCase
 import com.dcns.dailycost.domain.use_case.login_register.UserLoginUseCase
@@ -61,22 +60,16 @@ class DomainModule {
 
     @Provides
     @Singleton
-    fun provideBalanceUseCases(
-        balanceRepository: IBalanceRepository
-    ): BalanceUseCases = BalanceUseCases(
-        updateLocalBalanceUseCase = UpdateLocalBalanceUseCase(balanceRepository),
-        getRemoteBalanceUseCase = GetRemoteBalanceUseCase(balanceRepository),
-        getLocalBalanceUseCase = GetLocalBalanceUseCase(balanceRepository)
-    )
-
-    @Provides
-    @Singleton
     fun provideDepoUseCases(
-        depoRepository: IDepoRepository
+        depoRepository: IDepoRepository,
+        balanceRepository: IBalanceRepository
     ): DepoUseCases = DepoUseCases(
         editDepoUseCase = EditDepoUseCase(depoRepository),
         addDepoUseCase = AddDepoUseCase(depoRepository),
-        topUpDepoUseCase = TopUpDepoUseCase(depoRepository)
+        topUpDepoUseCase = TopUpDepoUseCase(depoRepository),
+        updateLocalBalanceUseCase = UpdateLocalBalanceUseCase(balanceRepository),
+        getRemoteBalanceUseCase = GetRemoteBalanceUseCase(balanceRepository),
+        getLocalBalanceUseCase = GetLocalBalanceUseCase(balanceRepository)
     )
 
     @Provides

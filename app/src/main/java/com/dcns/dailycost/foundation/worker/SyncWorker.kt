@@ -8,7 +8,7 @@ import androidx.work.workDataOf
 import com.dcns.dailycost.data.model.UserCredential
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
-import com.dcns.dailycost.domain.use_case.BalanceUseCases
+import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.NoteUseCases
 import com.dcns.dailycost.domain.use_case.ShoppingUseCases
 import com.dcns.dailycost.domain.util.GetNoteBy
@@ -30,7 +30,7 @@ class SyncWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted params: WorkerParameters,
     private val noteUseCases: NoteUseCases,
-    private val balanceUseCases: BalanceUseCases,
+    private val depoUseCases: DepoUseCases,
     private val shoppingUseCases: ShoppingUseCases,
     private val userCredentialRepository: IUserCredentialRepository
 ): CoroutineWorker(context, params) {
@@ -91,7 +91,7 @@ class SyncWorker @AssistedInject constructor(
     }
 
     private suspend fun getBalance(credential: UserCredential): Result {
-        balanceUseCases.getRemoteBalanceUseCase(
+        depoUseCases.getRemoteBalanceUseCase(
             token = credential.getAuthToken(),
             userId = credential.id.toInt()
         ).let { response ->
@@ -99,7 +99,7 @@ class SyncWorker @AssistedInject constructor(
                 val balanceResponseData = response.body()?.data
 
                 balanceResponseData?.let {
-                    balanceUseCases.updateLocalBalanceUseCase(
+                    depoUseCases.updateLocalBalanceUseCase(
                         cash = balanceResponseData.cash.toDouble(),
                         eWallet = balanceResponseData.eWallet.toDouble(),
                         bankAccount = balanceResponseData.bankAccount.toDouble()
@@ -118,7 +118,7 @@ class SyncWorker @AssistedInject constructor(
 
             // User ga punya saldo
             if (response.code() == 404) {
-                balanceUseCases.updateLocalBalanceUseCase(
+                depoUseCases.updateLocalBalanceUseCase(
                     cash = 0.0,
                     eWallet = 0.0,
                     bankAccount = 0.0

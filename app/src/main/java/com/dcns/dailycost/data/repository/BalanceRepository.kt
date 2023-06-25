@@ -3,9 +3,9 @@ package com.dcns.dailycost.data.repository
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import com.dcns.dailycost.ProtoUserBalance
-import com.dcns.dailycost.data.datasource.remote.handlers.BalanceHandler
+import com.dcns.dailycost.data.datasource.remote.handlers.DepoHandler
 import com.dcns.dailycost.data.model.UserBalance
-import com.dcns.dailycost.data.model.remote.response.BalanceResponse
+import com.dcns.dailycost.data.model.remote.response.DepoResponse
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 import com.dcns.dailycost.foundation.extension.toUserBalance
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +14,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class BalanceRepository @Inject constructor(
-    private val balanceHandler: BalanceHandler,
+    private val depoHandler: DepoHandler,
     private val balanceDataStore: DataStore<ProtoUserBalance>
 ): IBalanceRepository {
 
@@ -46,8 +46,8 @@ class BalanceRepository @Inject constructor(
         }
     }
 
-    override suspend fun getRemoteBalance(userId: Int, token: String): Response<BalanceResponse> {
-        return balanceHandler.getBalance(userId, token)
+    override suspend fun getRemoteBalance(userId: Int, token: String): Response<DepoResponse> {
+        return depoHandler.getBalance(userId, token)
     }
 
     companion object {

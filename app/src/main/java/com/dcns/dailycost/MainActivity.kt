@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.work.WorkManager
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
-import com.dcns.dailycost.domain.use_case.BalanceUseCases
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
 import com.dcns.dailycost.foundation.common.Workers
@@ -31,7 +30,6 @@ class MainActivity: LocalizedActivity() {
 
     @Inject lateinit var connectivityManager: ConnectivityManager
     @Inject lateinit var userCredentialRepository: IUserCredentialRepository
-    @Inject lateinit var balanceUseCases: BalanceUseCases
 
     private val dailyCostAppViewModel: DailyCostAppViewModel by viewModels()
 

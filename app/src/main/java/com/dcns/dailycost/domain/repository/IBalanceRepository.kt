@@ -1,7 +1,7 @@
 package com.dcns.dailycost.domain.repository
 
 import com.dcns.dailycost.data.model.UserBalance
-import com.dcns.dailycost.data.model.remote.response.BalanceResponse
+import com.dcns.dailycost.data.model.remote.response.DepoResponse
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
@@ -16,6 +16,6 @@ interface IBalanceRepository {
     suspend fun getRemoteBalance(
         userId: Int,
         token: String
-    ): Response<BalanceResponse>
+    ): Response<DepoResponse>
 
 }

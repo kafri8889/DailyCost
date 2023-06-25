@@ -5,7 +5,6 @@ import com.dcns.dailycost.ProtoUserBalance
 import com.dcns.dailycost.ProtoUserCredential
 import com.dcns.dailycost.ProtoUserPreference
 import com.dcns.dailycost.data.datasource.local.dao.NoteDao
-import com.dcns.dailycost.data.datasource.remote.handlers.BalanceHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.DepoHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.IncomeHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.LoginRegisterHandler
@@ -72,10 +71,10 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideBalanceRepository(
-        balanceHandler: BalanceHandler,
+        depoHandler: DepoHandler,
         balanceDataStore: DataStore<ProtoUserBalance>
     ): IBalanceRepository = BalanceRepository(
-        balanceHandler = balanceHandler,
+        depoHandler = depoHandler,
         balanceDataStore = balanceDataStore
     )
 

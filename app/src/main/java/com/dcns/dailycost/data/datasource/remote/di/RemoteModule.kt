@@ -1,19 +1,16 @@
 package com.dcns.dailycost.data.datasource.remote.di
 
 import com.dcns.dailycost.BuildConfig
-import com.dcns.dailycost.data.datasource.remote.BalanceHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.DepoHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.IncomeHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.LoginRegisterHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.NoteHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.ShoppingHandlerImpl
-import com.dcns.dailycost.data.datasource.remote.handlers.BalanceHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.DepoHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.IncomeHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.LoginRegisterHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.NoteHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.ShoppingHandler
-import com.dcns.dailycost.data.datasource.remote.services.BalanceService
 import com.dcns.dailycost.data.datasource.remote.services.DepoService
 import com.dcns.dailycost.data.datasource.remote.services.LoginRegisterService
 import com.dcns.dailycost.data.datasource.remote.services.NoteService
@@ -80,12 +77,6 @@ class RemoteModule {
 
     @Provides
     @Singleton
-    fun provideBalanceService(
-        retrofit: Retrofit
-    ): BalanceService = retrofit.create(BalanceService::class.java)
-
-    @Provides
-    @Singleton
     fun provideDepoService(
         retrofit: Retrofit
     ): DepoService = retrofit.create(DepoService::class.java)
@@ -107,12 +98,6 @@ class RemoteModule {
     fun provideShoppingHandler(
         impl: ShoppingHandlerImpl
     ): ShoppingHandler = impl
-
-    @Provides
-    @Singleton
-    fun provideBalanceHandler(
-        impl: BalanceHandlerImpl
-    ): BalanceHandler = impl
 
     @Provides
     @Singleton

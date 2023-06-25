@@ -6,6 +6,11 @@ import retrofit2.Response
 
 interface DepoHandler {
 
+    suspend fun getBalance(
+        userId: Int,
+        token: String
+    ): Response<DepoResponse>
+
     suspend fun editDepo(
         body: RequestBody,
         token: String

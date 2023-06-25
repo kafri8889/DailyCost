@@ -1,6 +1,6 @@
-package com.dcns.dailycost.domain.use_case.balance
+package com.dcns.dailycost.domain.use_case.depo
 
-import com.dcns.dailycost.data.model.remote.response.BalanceResponse
+import com.dcns.dailycost.data.model.remote.response.DepoResponse
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 import retrofit2.Response
 
@@ -11,7 +11,7 @@ class GetRemoteBalanceUseCase(
     suspend operator fun invoke(
         userId: Int,
         token: String
-    ): Response<BalanceResponse> {
+    ): Response<DepoResponse> {
         return balanceRepository.getRemoteBalance(userId, token)
     }
 
