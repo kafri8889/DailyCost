@@ -4,7 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,7 +12,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,8 +47,7 @@ private fun BalanceCardPreview() {
                 cash = 90_000.0,
                 eWallet = 0.0,
                 bankAccount = 1_000_000_000_000_000_000_000_000.0
-            ),
-            onTopUpClicked = {}
+            )
         )
     }
 }
@@ -59,8 +56,7 @@ private fun BalanceCardPreview() {
 @Composable
 fun BalanceCard(
     balance: UserBalance,
-    modifier: Modifier = Modifier,
-    onTopUpClicked: () -> Unit
+    modifier: Modifier = Modifier
 ) {
 
     val currency = LocalCurrency.current
@@ -84,44 +80,33 @@ fun BalanceCard(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.total_balance),
-                        style = MaterialTheme.typography.bodySmall
-                    )
+            Text(
+                text = stringResource(id = R.string.total_balance),
+                style = MaterialTheme.typography.bodySmall
+            )
 
-                    Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
-                    AnimatedTextByChar(
-                        text = totalBalance,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            // Rendering to an offscreen buffer is required to get the faded edges' alpha to be
-                            // applied only to the text, and not whatever is drawn below this composable (e.g. the
-                            // window).
-                            .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
-                            .drawWithContent {
-                                drawContent()
-                                drawFadedEdge(
-                                    edgeWidth = 8.dp,
-                                    leftEdge = false
-                                )
-                            }
-                            .basicMarquee(
-                                delayMillis = 2000
-                            )
+            AnimatedTextByChar(
+                text = totalBalance,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    // Rendering to an offscreen buffer is required to get the faded edges' alpha to be
+                    // applied only to the text, and not whatever is drawn below this composable (e.g. the
+                    // window).
+                    .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+                    .drawWithContent {
+                        drawContent()
+                        drawFadedEdge(
+                            edgeWidth = 8.dp,
+                            leftEdge = false
+                        )
+                    }
+                    .basicMarquee(
+                        delayMillis = 2000
                     )
-                }
-                
-                FilledTonalButton(onClick = onTopUpClicked) {
-                    Text(stringResource(id = R.string.top_up))
-                }
-            }
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
 

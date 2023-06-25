@@ -51,7 +51,6 @@ import com.dcns.dailycost.navigation.home.DashboardNavigation
 import com.dcns.dailycost.navigation.home.NoteNavigation
 import com.dcns.dailycost.navigation.home.SettingNavigation
 import com.dcns.dailycost.navigation.home.SplashNavigation
-import com.dcns.dailycost.navigation.home.TopUpNavigation
 import com.dcns.dailycost.navigation.login_register.LoginRegisterNavigation
 import com.dcns.dailycost.theme.DailyCostTheme
 import com.google.accompanist.navigation.material.BottomSheetNavigator
@@ -207,7 +206,6 @@ private fun DailyCostNavHost(
 
         // Nested navigasi untuk dashboard (ketika user berhasil login)
         HomeNavHost {
-            TopUpNavigation(navActions)
             ChangeLanguageNavigation(navActions)
             CreateEditNoteNavigation(navActions)
 
