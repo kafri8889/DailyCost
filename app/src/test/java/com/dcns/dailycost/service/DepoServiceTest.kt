@@ -15,9 +15,6 @@ class DepoServiceTest {
 
     private lateinit var depoService: DepoService
 
-    private val adminUserId = 73
-    private val adminToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NzMsImVtYWlsIjoiYWRtaW4iLCJpYXQiOjE2ODc2NzgwNDksImV4cCI6MTY4Nzc2NDQ0OX0.dKYzZY5hKbX4SfOlXICq3chgu2fVis_ezAdmG7BR7F0"
-
     @BeforeEach
     fun setUp() {
         val retrofit = Retrofit.Builder()
@@ -31,13 +28,13 @@ class DepoServiceTest {
     @Test
     fun `post depo`() = runTest {
         val reqBody = DepoRequestBody(
-            id = adminUserId,
+            id = TestUtil.adminUserId,
             cash = 1_000,
             eWallet = 1_000,
             bankAccount = 1_000
         ).toRequestBody()
 
-        depoService.addDepo(reqBody, adminToken).let { response ->
+        depoService.addDepo(reqBody, TestUtil.adminToken).let { response ->
             TestUtil.printResponse(response)
 
             Truth.assertThat(response.isSuccessful).isTrue()
@@ -48,13 +45,13 @@ class DepoServiceTest {
     @Test
     fun `edit depo`() = runTest {
         val reqBody = DepoRequestBody(
-            id = adminUserId,
+            id = TestUtil.adminUserId,
             cash = 15_000,
             eWallet = 1_000_000,
             bankAccount = 50_000
         ).toRequestBody()
 
-        depoService.editDepo(reqBody, adminToken).let { response ->
+        depoService.editDepo(reqBody, TestUtil.adminToken).let { response ->
             TestUtil.printResponse(response)
 
             Truth.assertThat(response.isSuccessful).isTrue()
@@ -64,7 +61,7 @@ class DepoServiceTest {
 
     @Test
     fun `get depo`() = runTest {
-        depoService.getBalance(adminUserId, adminToken).let { response ->
+        depoService.getBalance(TestUtil.adminUserId, TestUtil.adminToken).let { response ->
             TestUtil.printResponse(response)
 
             Truth.assertThat(response.isSuccessful).isTrue()

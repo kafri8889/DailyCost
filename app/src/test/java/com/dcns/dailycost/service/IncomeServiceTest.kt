@@ -15,9 +15,6 @@ class IncomeServiceTest {
 
     private lateinit var incomeService: IncomeService
 
-    private val adminUserId = 73
-    private val adminToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NzMsImVtYWlsIjoiYWRtaW4iLCJpYXQiOjE2ODc2NzgwNDksImV4cCI6MTY4Nzc2NDQ0OX0.dKYzZY5hKbX4SfOlXICq3chgu2fVis_ezAdmG7BR7F0"
-
     @BeforeEach
     fun setUp() {
         val retrofit = Retrofit.Builder()
@@ -36,10 +33,10 @@ class IncomeServiceTest {
             name = "Kimbap",
             payment = "CASH",
             date = "2023-05-01",
-            userId = adminUserId
+            userId = TestUtil.adminUserId
         ).toRequestBody()
 
-        incomeService.addIncome(reqBody, adminToken).let { response ->
+        incomeService.addIncome(reqBody, TestUtil.adminToken).let { response ->
             TestUtil.printResponse(response)
 
             Truth.assertThat(response.isSuccessful).isTrue()
@@ -49,7 +46,7 @@ class IncomeServiceTest {
 
     @Test
     fun `get income`() = runTest {
-        incomeService.getIncome(adminUserId, adminToken).let { response ->
+        incomeService.getIncome(TestUtil.adminUserId, TestUtil.adminToken).let { response ->
             TestUtil.printResponse(response)
 
             Truth.assertThat(response.isSuccessful).isTrue()
