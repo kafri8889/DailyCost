@@ -3,14 +3,11 @@ package com.dcns.dailycost.ui.top_up
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.WalletType
-import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.SharedUiEvent
-import com.dcns.dailycost.foundation.common.Workers
-import com.dcns.dailycost.foundation.extension.enqueue
 import com.dcns.dailycost.ui.dashboard.DashboardUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -96,14 +93,14 @@ class TopUpViewModel @Inject constructor(
                         mState.amount
                     } else 0.0
 
-                    Workers.topUpBalanceWorker(
-                        DepoRequestBody(
-                            id = mState.credential.id.toInt(),
-                            cash = cash.toInt(),
-                            eWallet = eWallet.toInt(),
-                            bankAccount = bankAccount.toInt()
-                        )
-                    ).enqueue(action.context)
+//                    Workers.postIncomeWorker(
+//                        DepoRequestBody(
+//                            id = mState.credential.id.toInt(),
+//                            cash = cash.toInt(),
+//                            eWallet = eWallet.toInt(),
+//                            bankAccount = bankAccount.toInt()
+//                        )
+//                    ).enqueue(action.context)
 
                     sharedUiEvent.sendUiEvent(DashboardUiEvent.TopUpSuccess())
                 }
