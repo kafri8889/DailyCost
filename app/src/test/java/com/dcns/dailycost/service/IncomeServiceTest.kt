@@ -3,6 +3,7 @@ package com.dcns.dailycost.service
 import com.dcns.dailycost.BuildConfig
 import com.dcns.dailycost.data.datasource.remote.services.IncomeService
 import com.dcns.dailycost.data.model.remote.request_body.IncomeRequestBody
+import com.dcns.dailycost.foundation.util.TestUtil
 import com.google.common.truth.Truth
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -39,10 +40,7 @@ class IncomeServiceTest {
         ).toRequestBody()
 
         incomeService.addIncome(reqBody, adminToken).let { response ->
-            println(response.body())
-            println(response.code())
-            println(response.message())
-            println(response.raw())
+            TestUtil.printResponse(response)
 
             Truth.assertThat(response.isSuccessful).isTrue()
             Truth.assertThat(response.body()).isNotNull()
@@ -52,10 +50,7 @@ class IncomeServiceTest {
     @Test
     fun `get income`() = runTest {
         incomeService.getIncome(adminUserId, adminToken).let { response ->
-            println(response.body())
-            println(response.code())
-            println(response.message())
-            println(response.raw())
+            TestUtil.printResponse(response)
 
             Truth.assertThat(response.isSuccessful).isTrue()
             Truth.assertThat(response.body()).isNotNull()
