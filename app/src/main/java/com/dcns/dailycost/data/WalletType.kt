@@ -9,6 +9,16 @@ enum class WalletType {
     EWallet,
     BankAccount;
 
+    /**
+     * Digunakan di request body saat melakukan permintaan ke API
+     */
+    val apiName: String
+        get() = when (this) {
+            Cash -> "CASH"
+            EWallet -> "GOPAY"
+            BankAccount -> "REKENING"
+        }
+
     val localizedName: String
         @Composable
         get() = when (this) {
