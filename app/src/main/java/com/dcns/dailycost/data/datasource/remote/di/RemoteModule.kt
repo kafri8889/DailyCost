@@ -3,11 +3,13 @@ package com.dcns.dailycost.data.datasource.remote.di
 import com.dcns.dailycost.BuildConfig
 import com.dcns.dailycost.data.datasource.remote.BalanceHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.DepoHandlerImpl
+import com.dcns.dailycost.data.datasource.remote.IncomeHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.LoginRegisterHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.NoteHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.ShoppingHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.handlers.BalanceHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.DepoHandler
+import com.dcns.dailycost.data.datasource.remote.handlers.IncomeHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.LoginRegisterHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.NoteHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.ShoppingHandler
@@ -111,6 +113,12 @@ class RemoteModule {
     fun provideBalanceHandler(
         impl: BalanceHandlerImpl
     ): BalanceHandler = impl
+
+    @Provides
+    @Singleton
+    fun provideIncomeHandler(
+        impl: IncomeHandlerImpl
+    ): IncomeHandler = impl
 
     @Provides
     @Singleton
