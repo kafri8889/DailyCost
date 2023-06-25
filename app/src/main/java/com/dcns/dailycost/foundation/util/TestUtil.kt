@@ -1,7 +1,9 @@
 package com.dcns.dailycost.foundation.util
 
+import com.dcns.dailycost.data.model.remote.response.DeleteResponse
 import com.dcns.dailycost.data.model.remote.response.DepoResponse
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
+import com.dcns.dailycost.data.model.remote.response.ExpenseResponse
 import com.dcns.dailycost.data.model.remote.response.IncomeGetResponse
 import com.dcns.dailycost.data.model.remote.response.IncomePostResponse
 import com.dcns.dailycost.data.model.remote.response.LoginResponse
@@ -29,6 +31,8 @@ object TestUtil {
             is IncomeGetResponse -> println(body.toString())
             is ShoppingResponse -> println(body.toString())
             is RegisterResponse -> println(body.toString())
+            is ExpenseResponse -> println(body.toString())
+            is DeleteResponse -> println(body.toString())
             is ErrorResponse -> println(body.toString())
             is LoginResponse -> println(body.toString())
             is DepoResponse -> println(body.toString())
