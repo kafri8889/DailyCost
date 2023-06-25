@@ -6,9 +6,10 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.workDataOf
 import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.IncomeRequestBody
 import com.dcns.dailycost.foundation.worker.EditBalanceWorker
+import com.dcns.dailycost.foundation.worker.PostIncomeBalanceWorker
 import com.dcns.dailycost.foundation.worker.SyncWorker
-import com.dcns.dailycost.foundation.worker.TopUpBalanceWorker
 
 object Workers {
 
@@ -17,12 +18,12 @@ object Workers {
 
     const val ARG_DATA_REQUEST_BODY = "data_request_body"
 
-    const val TAG_TOP_UP_BALANCE_WORKER = "worker_tag_top_up_balance"
+    const val TAG_POST_INCOME_BALANCE_WORKER = "worker_tag_post_income_balance"
     const val TAG_EDIT_BALANCE_WORKER = "worker_tag_edit_balance"
     const val TAG_SYNC_WORKER = "worker_tag_sync_balance"
 
-    fun topUpBalanceWorker(body: DepoRequestBody): OneTimeWorkRequest {
-        return OneTimeWorkRequestBuilder<TopUpBalanceWorker>()
+    fun postIncomeWorker(body: IncomeRequestBody): OneTimeWorkRequest {
+        return OneTimeWorkRequestBuilder<PostIncomeBalanceWorker>()
             .setConstraints(
                 Constraints(
                     requiredNetworkType = NetworkType.CONNECTED
@@ -33,7 +34,7 @@ object Workers {
                     ARG_DATA_REQUEST_BODY to body.toJson()
                 )
             )
-            .addTag(TAG_TOP_UP_BALANCE_WORKER)
+            .addTag(TAG_POST_INCOME_BALANCE_WORKER)
             .build()
     }
 
