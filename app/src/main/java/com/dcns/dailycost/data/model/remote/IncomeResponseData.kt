@@ -8,5 +8,6 @@ data class IncomeResponseData(
     @SerializedName("nama") val name: String,
     @SerializedName("pembayaran") val payment: String,
     @SerializedName("tanggal") val date: String,
+    @SerializedName("pemasukan_id") val incomeId: Int,
     @SerializedName("user_id") val userId: Int
 )
