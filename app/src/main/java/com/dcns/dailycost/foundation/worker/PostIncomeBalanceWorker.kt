@@ -5,11 +5,11 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
-import com.dcns.dailycost.data.model.remote.response.DepoResponse
+import com.dcns.dailycost.data.model.remote.request_body.IncomeRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
+import com.dcns.dailycost.data.model.remote.response.IncomePostResponse
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
-import com.dcns.dailycost.domain.use_case.DepoUseCases
+import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.foundation.common.Workers
 import com.dcns.dailycost.foundation.extension.fromJson
 import com.google.gson.Gson
@@ -20,10 +20,10 @@ import okhttp3.RequestBody
 import timber.log.Timber
 
 @HiltWorker
-class TopUpBalanceWorker @AssistedInject constructor(
+class PostIncomeBalanceWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted params: WorkerParameters,
-    private val depoUseCases: DepoUseCases,
+    private val incomeUseCases: IncomeUseCases,
     private val userCredentialRepository: IUserCredentialRepository,
 ): CoroutineWorker(context, params) {
 
@@ -31,9 +31,9 @@ class TopUpBalanceWorker @AssistedInject constructor(
         val requestBody = inputData.getString(Workers.ARG_DATA_REQUEST_BODY)
 
         requestBody?.let { json ->
-            val body = json.fromJson(DepoRequestBody::class.java)
+            val body = json.fromJson(IncomeRequestBody::class.java)
 
-            return topUpBalance(body.toRequestBody())
+            return postIncome(body.toRequestBody())
         }
 
         return Result.failure(
@@ -43,22 +43,17 @@ class TopUpBalanceWorker @AssistedInject constructor(
         )
     }
 
-    private suspend fun topUpBalance(requestBody: RequestBody): Result {
+    private suspend fun postIncome(requestBody: RequestBody): Result {
         val token = userCredentialRepository.getUserCredential.firstOrNull()?.getAuthToken()
 
         if (token != null) {
-            depoUseCases.topUpDepoUseCase(requestBody, token).let {
+            incomeUseCases.addRemoteIncomeUseCase(requestBody, token).let {
                 if (it.isSuccessful) {
-                    val body = it.body() as DepoResponse
+                    val body = it.body() as IncomePostResponse
 
-                    // Save to local
-                    depoUseCases.updateLocalBalanceUseCase(
-                        cash = body.data.cash.toDouble(),
-                        eWallet = body.data.eWallet.toDouble(),
-                        bankAccount = body.data.bankAccount.toDouble(),
-                    )
+                    // TODO: Save to local
 
-                    Timber.i("top up finished")
+                    Timber.i("post finished")
 
                     return Result.success(
                         workDataOf(
