@@ -1,6 +1,7 @@
 package com.dcns.dailycost.data.datasource.remote.handlers
 
-import com.dcns.dailycost.data.model.remote.response.IncomeResponse
+import com.dcns.dailycost.data.model.remote.response.IncomeGetResponse
+import com.dcns.dailycost.data.model.remote.response.IncomePostResponse
 import okhttp3.RequestBody
 import retrofit2.Response
 
@@ -9,11 +10,11 @@ interface IncomeHandler {
     suspend fun addIncome(
         body: RequestBody,
         token: String
-    ): Response<IncomeResponse>
+    ): Response<IncomePostResponse>
 
     suspend fun getIncome(
         userId: Int,
         token: String
-    ): Response<IncomeResponse>
+    ): Response<IncomeGetResponse>
 
 }

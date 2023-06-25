@@ -1,6 +1,6 @@
 package com.dcns.dailycost.domain.use_case.income
 
-import com.dcns.dailycost.data.model.remote.response.IncomeResponse
+import com.dcns.dailycost.data.model.remote.response.IncomePostResponse
 import com.dcns.dailycost.domain.repository.IIncomeRepository
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -12,7 +12,7 @@ class AddRemoteIncomeUseCase(
     suspend operator fun invoke(
         body: RequestBody,
         token: String
-    ): Response<IncomeResponse> {
+    ): Response<IncomePostResponse> {
         return incomeRepository.addIncome(body, token)
     }
 

@@ -30,6 +30,7 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
+            isReturnDefaultValues = true
         }
     }
 
@@ -203,9 +204,13 @@ dependencies {
     implementation("commons-io:commons-io:2.11.0")
     implementation("androidx.test.ext:junit-ktx:1.1.5")
 
-    testImplementation("com.google.truth:truth:1.1")
+    testImplementation("org.json:json:20180813")
+    testImplementation("com.google.truth:truth:1.1.5")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.7.2")
+    testImplementation("org.mockito:mockito-core:5.4.0")
+    testImplementation("com.squareup.retrofit2:retrofit-mock:2.9.0")
     testImplementation("org.robolectric:robolectric:4.7.3")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -219,4 +224,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:${extra["compose_version"]}")
     debugImplementation("androidx.compose.ui:ui-test-manifest:${extra["compose_version"]}")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44.2")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

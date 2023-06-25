@@ -1,8 +1,12 @@
 package com.dcns.dailycost.data.model.remote
 
+import com.google.gson.annotations.SerializedName
+
 data class IncomeResponseData(
-    val uang_cash: Int,
-    val uang_gopay: Int,
-    val uang_rekening: Int,
-    val user_id: Int
+    @SerializedName("jumlah") val amount: Int,
+    @SerializedName("kategori") val category: String,
+    @SerializedName("nama") val name: String,
+    @SerializedName("pembayaran") val payment: String,
+    @SerializedName("tanggal") val date: String,
+    @SerializedName("user_id") val userId: Int
 )
