@@ -12,7 +12,6 @@ object DestinationRoute {
     const val LOGIN_REGISTER = "login_register"
     const val DASHBOARD = "dashboard"
     const val SETTING = "setting"
-    const val TOP_UP = "top_up"
     const val SPLASH = "splash"
     const val NOTES = "notes"
     const val CREATE_EDIT_NOTE = "create_edit_note"
@@ -167,10 +166,6 @@ object TopLevelDestinations {
             route = DestinationRoute.CREATE_EDIT_NOTE,
             icon = R.drawable.ic_notes,
             name = R.string.notes
-        )
-
-        val topUp = TopLevelDestination(
-            route = DestinationRoute.TOP_UP
         )
     }
 

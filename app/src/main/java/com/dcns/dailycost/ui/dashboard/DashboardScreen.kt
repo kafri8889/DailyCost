@@ -130,9 +130,6 @@ fun DashboardScreen(
         DashboardScreenContent(
             state = state,
             lazyListState = lazyListState,
-            onTopUpClicked = {
-                navigationActions.navigateTo(TopLevelDestinations.Home.topUp)
-            },
             onRefresh = {
                 viewModel.onAction(DashboardAction.Refresh)
             },
@@ -148,7 +145,6 @@ private fun DashboardScreenContent(
     state: DashboardState,
     lazyListState: LazyListState,
     modifier: Modifier = Modifier,
-    onTopUpClicked: () -> Unit,
     onRefresh: () -> Unit
 ) {
 
@@ -172,7 +168,6 @@ private fun DashboardScreenContent(
             item {
                 BalanceCard(
                     balance = state.balance,
-                    onTopUpClicked = onTopUpClicked,
                     modifier = Modifier
                         .fillMaxWidth(0.96f)
                 )
