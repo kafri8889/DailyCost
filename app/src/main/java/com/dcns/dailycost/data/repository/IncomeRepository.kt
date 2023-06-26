@@ -1,22 +1,51 @@
 package com.dcns.dailycost.data.repository
 
+import com.dcns.dailycost.data.datasource.local.dao.IncomeDao
 import com.dcns.dailycost.data.datasource.remote.handlers.IncomeHandler
+import com.dcns.dailycost.data.model.local.IncomeDb
+import com.dcns.dailycost.data.model.local.relation.IncomeDbWithCategoryDb
 import com.dcns.dailycost.data.model.remote.response.IncomeGetResponse
 import com.dcns.dailycost.data.model.remote.response.IncomePostResponse
 import com.dcns.dailycost.domain.repository.IIncomeRepository
+import kotlinx.coroutines.flow.Flow
 import okhttp3.RequestBody
 import retrofit2.Response
 import javax.inject.Inject
 
 class IncomeRepository @Inject constructor(
-    private val incomeHandler: IncomeHandler
+    private val incomeHandler: IncomeHandler,
+    private val incomeDao: IncomeDao
 ): IIncomeRepository {
 
-    override suspend fun addIncome(body: RequestBody, token: String): Response<IncomePostResponse> {
+    override suspend fun addRemoteIncome(body: RequestBody, token: String): Response<IncomePostResponse> {
         return incomeHandler.addIncome(body, token)
     }
 
-    override suspend fun getIncome(userId: Int, token: String): Response<IncomeGetResponse> {
+    override suspend fun getRemoteIncome(userId: Int, token: String): Response<IncomeGetResponse> {
         return incomeHandler.getIncome(userId, token)
+    }
+
+    override fun getAllIncomes(): Flow<List<IncomeDbWithCategoryDb>> {
+        return incomeDao.getAllIncomes()
+    }
+
+    override fun getIncomeById(id: Int): Flow<IncomeDbWithCategoryDb?> {
+        return incomeDao.getIncomeById(id)
+    }
+
+    override suspend fun updateIncome(vararg income: IncomeDb) {
+        incomeDao.updateIncome(*income)
+    }
+
+    override suspend fun upsertIncome(vararg income: IncomeDb) {
+        incomeDao.upsertIncome(*income)
+    }
+
+    override suspend fun deleteIncome(vararg income: IncomeDb) {
+        incomeDao.deleteIncome(*income)
+    }
+
+    override suspend fun insertIncome(vararg income: IncomeDb) {
+        incomeDao.insertIncome(*income)
     }
 }

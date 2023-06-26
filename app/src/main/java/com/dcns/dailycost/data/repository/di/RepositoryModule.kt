@@ -4,14 +4,18 @@ import androidx.datastore.core.DataStore
 import com.dcns.dailycost.ProtoUserBalance
 import com.dcns.dailycost.ProtoUserCredential
 import com.dcns.dailycost.ProtoUserPreference
+import com.dcns.dailycost.data.datasource.local.dao.ExpenseDao
+import com.dcns.dailycost.data.datasource.local.dao.IncomeDao
 import com.dcns.dailycost.data.datasource.local.dao.NoteDao
 import com.dcns.dailycost.data.datasource.remote.handlers.DepoHandler
+import com.dcns.dailycost.data.datasource.remote.handlers.ExpenseHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.IncomeHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.LoginRegisterHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.NoteHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.ShoppingHandler
 import com.dcns.dailycost.data.repository.BalanceRepository
 import com.dcns.dailycost.data.repository.DepoRepository
+import com.dcns.dailycost.data.repository.ExpenseRepository
 import com.dcns.dailycost.data.repository.IncomeRepository
 import com.dcns.dailycost.data.repository.LoginRegisterRepository
 import com.dcns.dailycost.data.repository.NoteRepository
@@ -20,6 +24,7 @@ import com.dcns.dailycost.data.repository.UserCredentialRepository
 import com.dcns.dailycost.data.repository.UserPreferenceRepository
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 import com.dcns.dailycost.domain.repository.IDepoRepository
+import com.dcns.dailycost.domain.repository.IExpenseRepository
 import com.dcns.dailycost.domain.repository.IIncomeRepository
 import com.dcns.dailycost.domain.repository.ILoginRegisterRepository
 import com.dcns.dailycost.domain.repository.INoteRepository
@@ -81,9 +86,21 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideIncomeRepository(
-        incomeHandler: IncomeHandler
+        incomeHandler: IncomeHandler,
+        incomeDao: IncomeDao
     ): IIncomeRepository = IncomeRepository(
-        incomeHandler = incomeHandler
+        incomeHandler = incomeHandler,
+        incomeDao = incomeDao
+    )
+
+    @Provides
+    @Singleton
+    fun provideExpenseRepository(
+        expenseHandler: ExpenseHandler,
+        expenseDao: ExpenseDao
+    ): IExpenseRepository = ExpenseRepository(
+        expenseHandler = expenseHandler,
+        expenseDao = expenseDao
     )
 
     @Provides

@@ -12,7 +12,7 @@ class GetRemoteExpenseUseCase(
         userId: Int,
         token: String
     ): Response<ExpenseResponse> {
-        return expenseRepository.getExpense(userId, token)
+        return expenseRepository.getRemoteExpense(userId, token)
     }
 
 }

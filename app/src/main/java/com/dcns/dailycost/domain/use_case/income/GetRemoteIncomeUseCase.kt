@@ -12,7 +12,7 @@ class GetRemoteIncomeUseCase(
         userId: Int,
         token: String
     ): Response<IncomeGetResponse> {
-        return incomeRepository.getIncome(userId, token)
+        return incomeRepository.getRemoteIncome(userId, token)
     }
 
 }

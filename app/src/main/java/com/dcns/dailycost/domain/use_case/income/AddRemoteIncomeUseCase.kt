@@ -13,7 +13,7 @@ class AddRemoteIncomeUseCase(
         body: RequestBody,
         token: String
     ): Response<IncomePostResponse> {
-        return incomeRepository.addIncome(body, token)
+        return incomeRepository.addRemoteIncome(body, token)
     }
 
 }

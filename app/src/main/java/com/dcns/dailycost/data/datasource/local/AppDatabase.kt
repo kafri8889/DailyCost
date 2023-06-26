@@ -7,14 +7,17 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.dcns.dailycost.data.datasource.local.dao.CategoryDao
 import com.dcns.dailycost.data.datasource.local.dao.ExpenseDao
+import com.dcns.dailycost.data.datasource.local.dao.IncomeDao
 import com.dcns.dailycost.data.datasource.local.dao.NoteDao
 import com.dcns.dailycost.data.model.local.CategoryDb
 import com.dcns.dailycost.data.model.local.ExpenseDb
+import com.dcns.dailycost.data.model.local.IncomeDb
 import com.dcns.dailycost.data.model.local.NoteDb
 
 @Database(
     entities = [
         NoteDb::class,
+        IncomeDb::class,
         ExpenseDb::class,
         CategoryDb::class
     ],
@@ -24,6 +27,7 @@ import com.dcns.dailycost.data.model.local.NoteDb
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun noteDao(): NoteDao
+    abstract fun incomeDao(): IncomeDao
     abstract fun expenseDao(): ExpenseDao
     abstract fun categoryDao(): CategoryDao
 
