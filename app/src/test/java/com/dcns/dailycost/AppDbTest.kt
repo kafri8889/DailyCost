@@ -9,11 +9,14 @@ import com.dcns.dailycost.data.datasource.local.dao.CategoryDao
 import com.dcns.dailycost.data.datasource.local.dao.ExpenseDao
 import com.dcns.dailycost.data.datasource.local.dao.NoteDao
 import com.dcns.dailycost.data.datasource.remote.handlers.NoteHandler
-import com.dcns.dailycost.data.model.remote.response.NoteResponse
-import com.dcns.dailycost.data.model.remote.response.UploadImageResponse
+import com.dcns.dailycost.data.model.remote.response.AddNoteResponse
+import com.dcns.dailycost.data.model.remote.response.DeleteResponse
+import com.dcns.dailycost.data.model.remote.response.EditNoteResponse
+import com.dcns.dailycost.data.model.remote.response.GetNoteResponse
 import com.dcns.dailycost.data.repository.CategoryRepository
 import com.dcns.dailycost.data.repository.NoteRepository
 import com.dcns.dailycost.domain.repository.ICategoryRepository
+import com.dcns.dailycost.domain.repository.IExpenseRepository
 import com.dcns.dailycost.domain.repository.INoteRepository
 import com.dcns.dailycost.domain.use_case.CategoryUseCases
 import com.dcns.dailycost.domain.use_case.category.GetLocalCategoryUseCase
@@ -22,7 +25,6 @@ import com.dcns.dailycost.domain.util.GetCategoryBy
 import com.dcns.dailycost.domain.util.InputActionType
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.runTest
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.junit.After
 import org.junit.Before
@@ -43,22 +45,32 @@ class AppDbTest {
     private lateinit var categoryDao: CategoryDao
 
     private lateinit var noteRepository: INoteRepository
-//    private lateinit var expenseRepository: IExpenseRepository
+    private lateinit var expenseRepository: IExpenseRepository
     private lateinit var categoryRepository: ICategoryRepository
 
     private val noteHandler = object : NoteHandler {
-        override suspend fun getNote(token: String): Response<NoteResponse> {
+        override suspend fun addNote(token: String, body: RequestBody): Response<AddNoteResponse> {
             return Response.success(null)
         }
-        override suspend fun addNote(token: String, body: RequestBody): Response<NoteResponse> {
+
+        override suspend fun editNote(
+            token: String,
+            body: RequestBody
+        ): Response<EditNoteResponse> {
             return Response.success(null)
         }
-        override suspend fun getNoteById(userId: Int, token: String): Response<NoteResponse> {
+
+        override suspend fun deleteNote(
+            token: String,
+            body: RequestBody
+        ): Response<DeleteResponse> {
             return Response.success(null)
         }
-        override suspend fun uploadImage(image: MultipartBody.Part): Response<UploadImageResponse> {
+
+        override suspend fun getNoteById(userId: Int, token: String): Response<GetNoteResponse> {
             return Response.success(null)
         }
+
     }
 
 //    private val expenseHandler: ExpenseHandler
@@ -78,6 +90,7 @@ class AppDbTest {
         categoryDao = db.categoryDao()
 
         noteRepository = NoteRepository(noteHandler, noteDao)
+//        expenseRepository = ExpenseRepository(expenseHandler, expenseDao)
         categoryRepository = CategoryRepository(categoryDao)
 
         categoryUseCases = CategoryUseCases(

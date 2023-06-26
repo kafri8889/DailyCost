@@ -3,8 +3,10 @@ package com.dcns.dailycost.data.repository
 import com.dcns.dailycost.data.datasource.local.dao.NoteDao
 import com.dcns.dailycost.data.datasource.remote.handlers.NoteHandler
 import com.dcns.dailycost.data.model.local.NoteDb
-import com.dcns.dailycost.data.model.remote.response.NoteResponse
-import com.dcns.dailycost.data.model.remote.response.UploadImageResponse
+import com.dcns.dailycost.data.model.remote.response.AddNoteResponse
+import com.dcns.dailycost.data.model.remote.response.DeleteResponse
+import com.dcns.dailycost.data.model.remote.response.EditNoteResponse
+import com.dcns.dailycost.data.model.remote.response.GetNoteResponse
 import com.dcns.dailycost.domain.repository.INoteRepository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
@@ -16,21 +18,33 @@ class NoteRepository @Inject constructor(
     private val noteHandler: NoteHandler,
     private val noteDao: NoteDao
 ): INoteRepository {
-
-    override suspend fun getNoteRemote(token: String): Response<NoteResponse> {
-        return noteHandler.getNote(token)
+    override suspend fun addNote(
+        token: String,
+        title: RequestBody,
+        body: RequestBody,
+        date: RequestBody,
+        userId: RequestBody,
+        file: MultipartBody.Part
+    ): Response<AddNoteResponse> {
+        return noteHandler.addNote(token, title, body, date, userId, file)
     }
 
-    override suspend fun addNoteRemote(token: String, body: RequestBody): Response<NoteResponse> {
-        return noteHandler.addNote(token, body)
+    override suspend fun editNoteRemote(
+        token: String,
+        body: RequestBody
+    ): Response<EditNoteResponse> {
+        return noteHandler.editNote(token, body)
     }
 
-    override suspend fun getNoteByIdRemote(userId: Int, token: String): Response<NoteResponse> {
+    override suspend fun deleteNoteRemote(
+        token: String,
+        body: RequestBody
+    ): Response<DeleteResponse> {
+        return noteHandler.deleteNote(token, body)
+    }
+
+    override suspend fun getNoteByIdRemote(userId: Int, token: String): Response<GetNoteResponse> {
         return noteHandler.getNoteById(userId, token)
-    }
-
-    override suspend fun uploadImage(image: MultipartBody.Part): Response<UploadImageResponse> {
-        return noteHandler.uploadImage(image)
     }
 
     override suspend fun updateNote(vararg note: NoteDb) {

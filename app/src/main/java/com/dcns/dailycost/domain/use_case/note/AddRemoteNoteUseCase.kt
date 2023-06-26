@@ -1,17 +1,14 @@
 package com.dcns.dailycost.domain.use_case.note
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import com.dcns.dailycost.data.model.Note
-import com.dcns.dailycost.data.model.remote.response.NoteResponse
+import com.dcns.dailycost.data.model.remote.response.AddNoteResponse
 import com.dcns.dailycost.domain.repository.INoteRepository
 import com.dcns.dailycost.foundation.extension.toNoteDb
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
-import timber.log.Timber
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -22,47 +19,36 @@ class AddRemoteNoteUseCase(
 ) {
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
+    /**
+     * @param image file imagenya, usahain dari cache dan sudah di compress
+     */
     suspend operator fun invoke(
-        image: File,
+        userId: String,
         token: String,
-        note: Note
-    ): Response<NoteResponse> {
+        note: Note,
+        image: File
+    ): Response<AddNoteResponse> {
         noteRepository.upsertNote(note.toNoteDb())
 
-        Timber.d("NOTE $note")
-        Timber.d("FILE $image")
-        Timber.d("TOKEN $token")
+        val mTitle = note.title.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val mBody = note.body.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val mDate = dateFormat.format(note.createdAt).toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val mUserId = userId.toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-        val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
+        val reqFile = image.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val mFile = MultipartBody.Part.createFormData(
+            "file",
+            image.name,
+            reqFile
+        )
 
-        if (image.exists()) {
-            val bmp = BitmapFactory.decodeFile(image.absolutePath)
-            val bos = ByteArrayOutputStream()
-
-            bmp.compress(Bitmap.CompressFormat.JPEG, 30, bos)
-
-            builder.addFormDataPart(
-                "file",
-                image.nameWithoutExtension,
-                bos.toByteArray().toRequestBody(MultipartBody.FORM)
-            )
-        } else {
-            return Response.error(
-                400,
-                "File image belum di buat".toResponseBody(null)
-            )
-        }
-
-        with(builder) {
-            addFormDataPart("body", note.body)
-            addFormDataPart("date", dateFormat.format(note.createdAt))
-            addFormDataPart("title", note.title)
-            addFormDataPart("user_id", note.userId)
-        }
-
-        return noteRepository.addNoteRemote(
+        return noteRepository.addNote(
             token = token,
-            body = builder.build()
+            title = mTitle,
+            body = mBody,
+            date = mDate,
+            userId = mUserId,
+            file = mFile
         )
     }
 
