@@ -2,16 +2,20 @@ package com.dcns.dailycost.data.datasource.remote.di
 
 import com.dcns.dailycost.BuildConfig
 import com.dcns.dailycost.data.datasource.remote.DepoHandlerImpl
+import com.dcns.dailycost.data.datasource.remote.ExpenseHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.IncomeHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.LoginRegisterHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.NoteHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.ShoppingHandlerImpl
 import com.dcns.dailycost.data.datasource.remote.handlers.DepoHandler
+import com.dcns.dailycost.data.datasource.remote.handlers.ExpenseHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.IncomeHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.LoginRegisterHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.NoteHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.ShoppingHandler
 import com.dcns.dailycost.data.datasource.remote.services.DepoService
+import com.dcns.dailycost.data.datasource.remote.services.ExpenseService
+import com.dcns.dailycost.data.datasource.remote.services.IncomeService
 import com.dcns.dailycost.data.datasource.remote.services.LoginRegisterService
 import com.dcns.dailycost.data.datasource.remote.services.NoteService
 import com.dcns.dailycost.data.datasource.remote.services.ShoppingService
@@ -89,6 +93,18 @@ class RemoteModule {
 
     @Provides
     @Singleton
+    fun provideIncomeService(
+        retrofit: Retrofit
+    ): IncomeService = retrofit.create(IncomeService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideExpenseService(
+        retrofit: Retrofit
+    ): ExpenseService = retrofit.create(ExpenseService::class.java)
+
+    @Provides
+    @Singleton
     fun provideLoginRegisterHandler(
         impl: LoginRegisterHandlerImpl
     ): LoginRegisterHandler = impl
@@ -116,5 +132,11 @@ class RemoteModule {
     fun provideNoteHandler(
         impl: NoteHandlerImpl
     ): NoteHandler = impl
+
+    @Provides
+    @Singleton
+    fun provideExpenseHandler(
+        impl: ExpenseHandlerImpl
+    ): ExpenseHandler = impl
 
 }

@@ -1,29 +1,37 @@
 package com.dcns.dailycost.data.datasource.remote.handlers
 
-import com.dcns.dailycost.data.model.remote.response.NoteResponse
-import com.dcns.dailycost.data.model.remote.response.UploadImageResponse
+import com.dcns.dailycost.data.model.remote.response.AddNoteResponse
+import com.dcns.dailycost.data.model.remote.response.DeleteResponse
+import com.dcns.dailycost.data.model.remote.response.EditNoteResponse
+import com.dcns.dailycost.data.model.remote.response.GetNoteResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 
 interface NoteHandler {
 
-    suspend fun getNote(
-        token: String
-    ): Response<NoteResponse>
-
     suspend fun addNote(
         token: String,
+        title: RequestBody,
+        body: RequestBody,
+        date: RequestBody,
+        userId: RequestBody,
+        file: MultipartBody.Part,
+    ): Response<AddNoteResponse>
+
+    suspend fun editNote(
+        token: String,
         body: RequestBody
-    ): Response<NoteResponse>
+    ): Response<EditNoteResponse>
+
+    suspend fun deleteNote(
+        token: String,
+        body: RequestBody
+    ): Response<DeleteResponse>
 
     suspend fun getNoteById(
         userId: Int,
         token: String
-    ): Response<NoteResponse>
-
-    suspend fun uploadImage(
-        image: MultipartBody.Part
-    ): Response<UploadImageResponse>
+    ): Response<GetNoteResponse>
 
 }

@@ -1,8 +1,8 @@
 package com.dcns.dailycost.service
 
 import com.dcns.dailycost.BuildConfig
-import com.dcns.dailycost.data.datasource.remote.services.IncomeService
-import com.dcns.dailycost.data.model.remote.request_body.IncomeRequestBody
+import com.dcns.dailycost.data.datasource.remote.services.ExpenseService
+import com.dcns.dailycost.data.model.remote.request_body.DeleteExpenseRequestBody
 import com.dcns.dailycost.foundation.util.TestUtil
 import com.google.common.truth.Truth
 import kotlinx.coroutines.test.runTest
@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class IncomeServiceTest {
+class ExpenseServiceTest {
 
-    private lateinit var incomeService: IncomeService
+    private lateinit var expenseService: ExpenseService
 
     @BeforeEach
     fun setUp() {
@@ -22,21 +22,12 @@ class IncomeServiceTest {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        incomeService = retrofit.create(IncomeService::class.java)
+        expenseService = retrofit.create(ExpenseService::class.java)
     }
 
     @Test
-    fun `post income`() = runTest {
-        val reqBody = IncomeRequestBody(
-            amount = 50_000,
-            category = "Makanan",
-            name = "Kimbap",
-            payment = "CASH",
-            date = "2023-05-01",
-            userId = TestUtil.adminUserId
-        ).toRequestBody()
-
-        incomeService.addIncome(reqBody, TestUtil.adminToken).let { response ->
+    fun `get expense`() = runTest {
+        expenseService.getExpense(TestUtil.adminUserId, TestUtil.adminToken).let { response ->
             TestUtil.printResponse(response)
 
             Truth.assertThat(response.isSuccessful).isTrue()
@@ -45,8 +36,16 @@ class IncomeServiceTest {
     }
 
     @Test
-    fun `get income`() = runTest {
-        incomeService.getIncome(TestUtil.adminUserId, TestUtil.adminToken).let { response ->
+    fun `delete expense`() = runTest {
+
+        // Kalo mau test delete expense
+        // Pastiin [expenseId] nya ada di server!
+        val reqBody = DeleteExpenseRequestBody(
+            expenseId = 146,
+            userId = TestUtil.adminUserId
+        ).toRequestBody()
+
+        expenseService.deleteExpense(reqBody, TestUtil.adminToken).let { response ->
             TestUtil.printResponse(response)
 
             Truth.assertThat(response.isSuccessful).isTrue()

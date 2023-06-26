@@ -2,7 +2,7 @@ package com.dcns.dailycost.data.model.remote.request_body.note
 
 import com.dcns.dailycost.foundation.common.RetrofitRequestBody
 
-data class NewNoteRequestBody(
+data class AddNoteRequestBody(
     val userId: Int,
     val title: String,
     val file: String,
