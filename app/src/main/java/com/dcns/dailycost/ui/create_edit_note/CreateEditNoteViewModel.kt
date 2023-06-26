@@ -77,11 +77,12 @@ class CreateEditNoteViewModel @Inject constructor(
                     }
                     if (note != null) {
                         launch {
-                            noteUseCases.addRemoteNoteUseCase(
-                                image = file,
-                                note = note,
-                                token = "Hello token"
-                            )
+//                            noteUseCases.addRemoteNoteUseCase(
+//                                image = file,
+//                                note = note,
+//                                token = "Hello token",
+//                                userId = mState
+//                            )
                         }
                     }
 

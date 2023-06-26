@@ -16,7 +16,7 @@ data class IncomeDb(
     @ColumnInfo(name = "name_income") val name: String,
     @ColumnInfo(name = "amount_income") val amount: Double,
     @ColumnInfo(name = "payment_income") val payment: WalletType,
-    @ColumnInfo(name = "categoryId_expense") val categoryId: Int,
+    @ColumnInfo(name = "categoryId_income") val categoryId: Int,
     /**
      * Time in millis
      */

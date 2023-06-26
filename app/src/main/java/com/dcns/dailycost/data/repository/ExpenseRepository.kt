@@ -3,6 +3,7 @@ package com.dcns.dailycost.data.repository
 import com.dcns.dailycost.data.datasource.local.dao.ExpenseDao
 import com.dcns.dailycost.data.datasource.remote.handlers.ExpenseHandler
 import com.dcns.dailycost.data.model.local.ExpenseDb
+import com.dcns.dailycost.data.model.local.relation.ExpenseDbWithCategoryDb
 import com.dcns.dailycost.data.model.remote.response.DeleteResponse
 import com.dcns.dailycost.data.model.remote.response.ExpenseResponse
 import com.dcns.dailycost.domain.repository.IExpenseRepository
@@ -24,11 +25,11 @@ class ExpenseRepository @Inject constructor(
         return expenseHandler.deleteExpense(body, token)
     }
 
-    override fun getAllExpenses(): Flow<List<ExpenseDb>> {
+    override fun getAllExpenses(): Flow<List<ExpenseDbWithCategoryDb>> {
         return expenseDao.getAllExpenses()
     }
 
-    override fun getExpenseById(id: Int): Flow<ExpenseDb?> {
+    override fun getExpenseById(id: Int): Flow<ExpenseDbWithCategoryDb?> {
         return expenseDao.getExpenseById(id)
     }
 

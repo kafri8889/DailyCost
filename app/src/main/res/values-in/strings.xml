@@ -62,4 +62,8 @@
     <string name="authentication">Autentikasi</string>
     <string name="secure_app">Amankan aplikasi</string>
     <string name="secure_app_with_fingerprint">Amankan aplikasi dengan sidik jari</string>
+    <string name="salary">Gaji</string>
+    <string name="investment">Investasi</string>
+    <string name="bonus">Bonus</string>
+    <string name="award">Hadiah</string>
 </resources>

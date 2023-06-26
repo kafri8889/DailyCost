@@ -1,6 +1,7 @@
 package com.dcns.dailycost.domain.repository
 
 import com.dcns.dailycost.data.model.local.IncomeDb
+import com.dcns.dailycost.data.model.local.relation.IncomeDbWithCategoryDb
 import com.dcns.dailycost.data.model.remote.response.IncomeGetResponse
 import com.dcns.dailycost.data.model.remote.response.IncomePostResponse
 import kotlinx.coroutines.flow.Flow
@@ -19,9 +20,9 @@ interface IIncomeRepository {
         token: String
     ): Response<IncomeGetResponse>
 
-    fun getAllIncomes(): Flow<List<IncomeDb>>
+    fun getAllIncomes(): Flow<List<IncomeDbWithCategoryDb>>
 
-    fun getIncomeById(id: Int): Flow<IncomeDb?>
+    fun getIncomeById(id: Int): Flow<IncomeDbWithCategoryDb?>
 
     suspend fun updateIncome(vararg income: IncomeDb)
 

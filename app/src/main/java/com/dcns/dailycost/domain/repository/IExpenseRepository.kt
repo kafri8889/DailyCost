@@ -1,6 +1,7 @@
 package com.dcns.dailycost.domain.repository
 
 import com.dcns.dailycost.data.model.local.ExpenseDb
+import com.dcns.dailycost.data.model.local.relation.ExpenseDbWithCategoryDb
 import com.dcns.dailycost.data.model.remote.response.DeleteResponse
 import com.dcns.dailycost.data.model.remote.response.ExpenseResponse
 import kotlinx.coroutines.flow.Flow
@@ -19,9 +20,9 @@ interface IExpenseRepository {
         token: String
     ): Response<DeleteResponse>
 
-    fun getAllExpenses(): Flow<List<ExpenseDb>>
+    fun getAllExpenses(): Flow<List<ExpenseDbWithCategoryDb>>
 
-    fun getExpenseById(id: Int): Flow<ExpenseDb?>
+    fun getExpenseById(id: Int): Flow<ExpenseDbWithCategoryDb?>
 
     suspend fun updateExpense(vararg expense: ExpenseDb)
 

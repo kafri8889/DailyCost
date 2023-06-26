@@ -12,12 +12,15 @@ enum class CategoryIcon {
     Game,
     Shop,
     Other,
+    Award,
+    Salary,
     Coffee,
     Mobile,
     Bitcoin,
     Blogger,
     CardCoin,
     Electronic,
+    Investment,
     MoneyReceive,
     ShoppingCart,
     Entertainment,
@@ -35,12 +38,15 @@ enum class CategoryIcon {
             Game -> R.drawable.ic_game
             Shop -> R.drawable.ic_shop
             Other -> R.drawable.ic_other
+            Award -> R.drawable.ic_award
+            Salary -> R.drawable.ic_salary
             Coffee -> R.drawable.ic_coffee
             Mobile -> R.drawable.ic_mobile
             Bitcoin -> R.drawable.ic_bitcoin
             Blogger -> R.drawable.ic_blogger
             CardCoin -> R.drawable.ic_card_coin
             Electronic -> R.drawable.ic_electronic
+            Investment -> R.drawable.ic_investment
             MoneyReceive -> R.drawable.ic_money_receive
             ShoppingCart -> R.drawable.ic_shopping_cart
             Entertainment -> R.drawable.ic_entertainment

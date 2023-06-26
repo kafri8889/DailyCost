@@ -12,6 +12,7 @@ import kotlinx.parcelize.Parcelize
 data class ExpenseDb (
     @PrimaryKey
     @ColumnInfo(name = "id_expense") val id: Int,
+    @ColumnInfo(name = "userId_expense") val userId: Int,
     @ColumnInfo(name = "name_expense") val name: String,
     @ColumnInfo(name = "amount_expense") val amount: Double,
     @ColumnInfo(name = "payment_expense") val payment: WalletType,

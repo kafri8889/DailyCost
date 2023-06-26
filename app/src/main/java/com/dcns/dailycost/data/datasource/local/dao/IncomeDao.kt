@@ -1,21 +1,27 @@
 package com.dcns.dailycost.data.datasource.local.dao
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import androidx.room.Upsert
 import com.dcns.dailycost.data.model.local.IncomeDb
+import com.dcns.dailycost.data.model.local.relation.IncomeDbWithCategoryDb
 import kotlinx.coroutines.flow.Flow
 
+@Dao
 interface IncomeDao {
 
+    @Transaction
     @Query("SELECT * FROM income_table")
-    fun getAllIncomes(): Flow<List<IncomeDb>>
+    fun getAllIncomes(): Flow<List<IncomeDbWithCategoryDb>>
 
+    @Transaction
     @Query("SELECT * FROM income_table WHERE id_income = :id")
-    fun getIncomeById(id: Int): Flow<IncomeDb?>
+    fun getIncomeById(id: Int): Flow<IncomeDbWithCategoryDb?>
 
     @Update
     suspend fun updateIncome(vararg income: IncomeDb)

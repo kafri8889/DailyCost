@@ -25,6 +25,7 @@ import com.dcns.dailycost.domain.util.GetCategoryBy
 import com.dcns.dailycost.domain.util.InputActionType
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.runTest
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.junit.After
 import org.junit.Before
@@ -49,7 +50,14 @@ class AppDbTest {
     private lateinit var categoryRepository: ICategoryRepository
 
     private val noteHandler = object : NoteHandler {
-        override suspend fun addNote(token: String, body: RequestBody): Response<AddNoteResponse> {
+        override suspend fun addNote(
+            token: String,
+            title: RequestBody,
+            body: RequestBody,
+            date: RequestBody,
+            userId: RequestBody,
+            file: MultipartBody.Part
+        ): Response<AddNoteResponse> {
             return Response.success(null)
         }
 
@@ -108,8 +116,8 @@ class AppDbTest {
     @Test
     fun `input and get all local category`() = runTest {
         val categories = arrayOf(
-            LocalCategoryDataProvider.bill,
-            LocalCategoryDataProvider.entertainment
+            LocalCategoryDataProvider.Expense.bill,
+            LocalCategoryDataProvider.Expense.entertainment
         )
 
         categoryUseCases.inputLocalCategoryUseCase(
@@ -129,8 +137,8 @@ class AppDbTest {
     @Test
     fun `input and get local category by id`() = runTest {
         val categories = arrayOf(
-            LocalCategoryDataProvider.bill,
-            LocalCategoryDataProvider.entertainment
+            LocalCategoryDataProvider.Expense.bill,
+            LocalCategoryDataProvider.Expense.entertainment
         )
 
         categoryUseCases.inputLocalCategoryUseCase(
@@ -139,7 +147,7 @@ class AppDbTest {
         )
 
         val categoriesFromGetUseCase = categoryUseCases.getLocalCategoryUseCase(
-            getCategoryBy = GetCategoryBy.ID(LocalCategoryDataProvider.bill.id)
+            getCategoryBy = GetCategoryBy.ID(LocalCategoryDataProvider.Expense.bill.id)
         ).firstOrNull()
 
         assert(categoriesFromGetUseCase != null) { "null categories" }

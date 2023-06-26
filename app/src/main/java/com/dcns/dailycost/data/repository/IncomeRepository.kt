@@ -3,6 +3,7 @@ package com.dcns.dailycost.data.repository
 import com.dcns.dailycost.data.datasource.local.dao.IncomeDao
 import com.dcns.dailycost.data.datasource.remote.handlers.IncomeHandler
 import com.dcns.dailycost.data.model.local.IncomeDb
+import com.dcns.dailycost.data.model.local.relation.IncomeDbWithCategoryDb
 import com.dcns.dailycost.data.model.remote.response.IncomeGetResponse
 import com.dcns.dailycost.data.model.remote.response.IncomePostResponse
 import com.dcns.dailycost.domain.repository.IIncomeRepository
@@ -24,11 +25,11 @@ class IncomeRepository @Inject constructor(
         return incomeHandler.getIncome(userId, token)
     }
 
-    override fun getAllIncomes(): Flow<List<IncomeDb>> {
+    override fun getAllIncomes(): Flow<List<IncomeDbWithCategoryDb>> {
         return incomeDao.getAllIncomes()
     }
 
-    override fun getIncomeById(id: Int): Flow<IncomeDb?> {
+    override fun getIncomeById(id: Int): Flow<IncomeDbWithCategoryDb?> {
         return incomeDao.getIncomeById(id)
     }
 
