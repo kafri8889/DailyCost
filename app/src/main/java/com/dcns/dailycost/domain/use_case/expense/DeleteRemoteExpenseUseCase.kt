@@ -13,7 +13,7 @@ class DeleteRemoteExpenseUseCase(
         body: RequestBody,
         token: String
     ): Response<DeleteResponse> {
-        return expenseRepository.deleteExpense(body, token)
+        return expenseRepository.deleteRemoteExpense(body, token)
     }
 
 }
