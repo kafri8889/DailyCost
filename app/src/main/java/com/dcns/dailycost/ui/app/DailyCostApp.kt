@@ -114,15 +114,18 @@ fun DailyCostApp(
         } else viewModel.onAction(DailyCostAppAction.IsBiometricAuthenticated(true))
     }
 
-    LaunchedEffect(state.userCredential) {
-        state.userCredential?.let {
+    LaunchedEffect(state.userCredential, state.isFirstInstall, state.userFirstEnteredApp) {
+        if (state.userFirstEnteredApp && state.isFirstInstall != null && state.userCredential != null) {
             navActions.navigateTo(
                 inclusivePopUpTo = true,
                 destination = when {
-                    it.isLoggedIn -> TopLevelDestinations.Home.dashboard
+                    state.isFirstInstall == true -> TopLevelDestinations.Onboarding.onboarding
+                    state.userCredential!!.isLoggedIn -> TopLevelDestinations.Home.dashboard
                     else -> TopLevelDestinations.LoginRegister.login
                 }
             )
+
+            viewModel.onAction(DailyCostAppAction.UpdateUserFirstEnteredApp(false))
         }
     }
 
@@ -133,6 +136,9 @@ fun DailyCostApp(
                     if (state.userCredential?.isLoggedIn == true) {
                         navActions.navigateTo(TopLevelDestinations.Home.dashboard)
                     }
+                }
+                is DailyCostAppUiEvent.NavigateTo -> {
+                    navActions.navigateTo(event.dest)
                 }
             }
         }

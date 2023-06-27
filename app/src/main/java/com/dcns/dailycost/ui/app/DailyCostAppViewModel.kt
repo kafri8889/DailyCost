@@ -22,7 +22,8 @@ class DailyCostAppViewModel @Inject constructor(
             userPreferenceRepository.getUserPreference.collect { pref ->
                 updateState {
                     copy(
-                        isSecureAppEnabled = pref.secureApp
+                        isSecureAppEnabled = pref.secureApp,
+                        isFirstInstall = !pref.isNotFirstInstall
                     )
                 }
             }
@@ -65,10 +66,21 @@ class DailyCostAppViewModel @Inject constructor(
                 }
             }
             is DailyCostAppAction.IsBiometricAuthenticated -> {
-                updateState {
-                    copy(
-                        isBiometricAuthenticated = action.authenticated
-                    )
+                viewModelScope.launch {
+                    updateState {
+                        copy(
+                            isBiometricAuthenticated = action.authenticated
+                        )
+                    }
+                }
+            }
+            is DailyCostAppAction.UpdateUserFirstEnteredApp -> {
+                viewModelScope.launch {
+                    updateState {
+                        copy(
+                            userFirstEnteredApp = action.first
+                        )
+                    }
                 }
             }
         }
