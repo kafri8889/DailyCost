@@ -42,7 +42,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -269,7 +268,6 @@ private fun TopContent(
     ) {
         Text(
             text = stringResource(id = R.string.sign_in_to_daily_cost),
-            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.Bold
             )
@@ -278,7 +276,6 @@ private fun TopContent(
         Text(
             text = stringResource(id = R.string.record_all_your_financial_activities_anywhere),
             style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
         )
     }
 }
