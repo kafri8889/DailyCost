@@ -1,6 +1,7 @@
 package com.dcns.dailycost.ui.login
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,6 +49,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.Status
@@ -127,6 +129,12 @@ fun LoginScreen(
             state = stateDialogState
         )
     )
+
+    BackHandler {
+        if (state.isFirstInstall) {
+            navigationActions.navigateTo(TopLevelDestinations.Onboarding.onboarding)
+        } else (context as MainActivity).finishAndRemoveTask()
+    }
 
     BaseScreenWrapper(
         viewModel = viewModel,
@@ -489,7 +497,8 @@ private fun BottomContent(
                     append(stringResource(id = R.string.sign_up))
                 },
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
                 ),
                 onClick = {
                     onSignUpClicked()

@@ -55,6 +55,16 @@ class LoginViewModel @Inject constructor(
                 }
             }
         }
+
+        viewModelScope.launch {
+            userPreferenceRepository.getUserPreference.collect { pref ->
+                updateState {
+                    copy(
+                        isFirstInstall = !pref.isNotFirstInstall
+                    )
+                }
+            }
+        }
     }
 
     override fun defaultState(): LoginState = LoginState()
