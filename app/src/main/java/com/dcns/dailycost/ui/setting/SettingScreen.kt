@@ -159,7 +159,7 @@ fun SettingScreen(
                     },
                     onClick = {
                         context.getString(R.string.logout_success).toast(context)
-                        navigationActions.navigateTo(TopLevelDestinations.LoginRegister.loginRegister)
+                        navigationActions.navigateTo(TopLevelDestinations.LoginRegister.login)
                     }
                 )
             }

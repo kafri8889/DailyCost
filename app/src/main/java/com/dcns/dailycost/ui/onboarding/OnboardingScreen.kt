@@ -39,6 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.theme.DailyCostTheme
 
 @Preview(showBackground = true, showSystemUi = true,
@@ -75,7 +76,7 @@ fun OnboardingScreen(
     )
 
     BackHandler {
-        if (state.currentPage != 0) {
+        if (state.currentPage != 1) {
             viewModel.onAction(OnboardingAction.UpdateCurrentPage(state.currentPage - 1))
 
             return@BackHandler
@@ -100,7 +101,7 @@ fun OnboardingScreen(
             onPrimaryButtonClicked = {
                 if (state.currentPage == state.pageCount) {
                     // Sign in
-
+                    navigationActions.navigateTo(TopLevelDestinations.LoginRegister.login)
                     return@OnboardingScreenContent
                 }
 
@@ -109,14 +110,14 @@ fun OnboardingScreen(
             onSecondaryButtonClicked = {
                 if (state.currentPage == state.pageCount) {
                     // Sign up
-
+                    navigationActions.navigateTo(TopLevelDestinations.LoginRegister.register)
                     return@OnboardingScreenContent
                 }
 
-                viewModel.onAction(OnboardingAction.UpdateCurrentPage(3))
+                viewModel.onAction(OnboardingAction.UpdateCurrentPage(state.pageCount))
             },
             modifier = Modifier
-                .fillMaxSize(0.96f)
+                .fillMaxSize(0.92f)
         )
     }
 }
