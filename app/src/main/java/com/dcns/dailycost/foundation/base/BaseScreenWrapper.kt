@@ -9,6 +9,7 @@ import androidx.compose.material3.SnackbarResult.Dismissed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.dcns.dailycost.foundation.extension.toast
 
@@ -20,6 +21,7 @@ import com.dcns.dailycost.foundation.extension.toast
 @Composable
 fun <STATE, ACTION> BaseScreenWrapper(
 	viewModel: BaseViewModel<STATE, ACTION>,
+	modifier: Modifier = Modifier,
 	topBar: @Composable () -> Unit = {},
 	bottomBar: @Composable () -> Unit = {},
 	floatingActionButton: @Composable () -> Unit = {},
@@ -63,6 +65,7 @@ fun <STATE, ACTION> BaseScreenWrapper(
 		topBar = topBar,
 		bottomBar = bottomBar,
 		floatingActionButton = floatingActionButton,
+		modifier = modifier,
 		snackbarHost = {
 			SnackbarHost(hostState = hostState)
 		}
