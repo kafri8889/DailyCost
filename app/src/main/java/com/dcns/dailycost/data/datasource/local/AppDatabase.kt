@@ -21,7 +21,7 @@ import com.dcns.dailycost.data.model.local.NoteDb
         ExpenseDb::class,
         CategoryDb::class
     ],
-    version = 1
+    version = 2
 )
 @TypeConverters(DatabaseTypeConverter::class)
 abstract class AppDatabase: RoomDatabase() {
