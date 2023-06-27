@@ -35,6 +35,14 @@ class UserPreferenceRepository @Inject constructor(
         }
     }
 
+    override suspend fun setIsNotFirstInstall(notFirst: Boolean) {
+        userPreferenceDataStore.updateData {
+            it.copy(
+                isNotFirstInstall = notFirst
+            )
+        }
+    }
+
     companion object {
         val corruptionHandler = ReplaceFileCorruptionHandler(
             produceNewData = { ProtoUserPreference() }
