@@ -83,4 +83,5 @@
     <string name="record_all_your_financial_activities_anywhere">Record all your financial activities anywhere</string>
     <string name="keep_me_signed_in">Keep me signed in</string>
     <string name="by_checking_this_box_you_wont_to_sign">By checking this box you won’t to sign in as often on this device. For your security, we remommend only checking this box on your personal device</string>
+    <string name="unlock_all_the_features_to_manage_income_expenses">Unlock all the features to manage income expenses and goals</string>
 </resources>

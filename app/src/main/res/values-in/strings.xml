@@ -11,7 +11,7 @@
     <string name="remember_me">Ingat saya</string>
     <string name="forgot_password">Lupa kata sandi</string>
     <string name="already_have_an_account">Sudah mempunyai akun?</string>
-    <string name="by_registering_txt">Dengan mendaftar, Anda menyetujui %1$s dan %2$s kami</string>
+    <string name="by_registering_txt">Dengan mendaftar, Anda menyetujui %1$s dan %2$s</string>
     <string name="terms_of_use">Syarat Penggunaan</string>
     <string name="privacy_policy">Kebijakan Pribadi</string>
     <string name="email_not_valid">Email tidak valid</string>
@@ -82,4 +82,5 @@
     <string name="record_all_your_financial_activities_anywhere">Rekam semua aktivitas keuangan Anda di mana saja</string>
     <string name="keep_me_signed_in">Biarkan saya tetap masuk</string>
     <string name="by_checking_this_box_you_wont_to_sign">Dengan mencentang kotak ini, Anda tidak akan terlalu sering masuk ke perangkat ini. Demi keamanan Anda, kami sarankan hanya mencentang kotak ini di perangkat pribadi Anda</string>
+    <string name="unlock_all_the_features_to_manage_income_expenses">Buka kunci semua fitur untuk mengelola pengeluaran dan sasaran pendapatan</string>
 </resources>
