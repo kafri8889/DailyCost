@@ -53,7 +53,6 @@ import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.Status
 import com.dcns.dailycost.data.TopLevelDestinations
-import com.dcns.dailycost.data.model.remote.response.LoginResponse
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.extension.toast
 import com.dcns.dailycost.theme.DailyCostTheme
@@ -103,9 +102,7 @@ fun LoginScreen(
             Status.Success -> {
                 Timber.i("Login or register success")
 
-                if (state.resource?.data is LoginResponse) {
-                    context.getString(R.string.login_success).toast(context)
-                } else context.getString(R.string.registration_success).toast(context)
+                context.getString(R.string.login_success).toast(context)
 
                 useCaseState.hide()
 
