@@ -8,7 +8,7 @@ fun NavGraphBuilder.LoginRegisterNavHost(
     builder: NavGraphBuilder.() -> Unit
 ) {
     navigation(
-        startDestination = TopLevelDestinations.LoginRegister.loginRegister.route,
+        startDestination = TopLevelDestinations.LoginRegister.login.route,
         route = TopLevelDestinations.LoginRegister.ROOT_ROUTE,
         builder = builder
     )

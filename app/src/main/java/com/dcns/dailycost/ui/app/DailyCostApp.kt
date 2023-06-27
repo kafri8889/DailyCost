@@ -52,7 +52,7 @@ import com.dcns.dailycost.navigation.home.DashboardNavigation
 import com.dcns.dailycost.navigation.home.NoteNavigation
 import com.dcns.dailycost.navigation.home.SettingNavigation
 import com.dcns.dailycost.navigation.home.SplashNavigation
-import com.dcns.dailycost.navigation.login_register.LoginRegisterNavigation
+import com.dcns.dailycost.navigation.login_register.LoginNavigation
 import com.dcns.dailycost.navigation.onboarding.OnboardingNavigation
 import com.dcns.dailycost.theme.DailyCostTheme
 import com.google.accompanist.navigation.material.BottomSheetNavigator
@@ -115,14 +115,15 @@ fun DailyCostApp(
     }
 
     LaunchedEffect(state.userCredential) {
-//        state.userCredential?.let {
-//            navActions.navigateTo(
-//                inclusivePopUpTo = true,
-//                destination = if (it.isLoggedIn) {
-//                    TopLevelDestinations.Home.dashboard
-//                } else TopLevelDestinations.LoginRegister.loginRegister
-//            )
-//        }
+        state.userCredential?.let {
+            navActions.navigateTo(
+                inclusivePopUpTo = true,
+                destination = when {
+                    it.isLoggedIn -> TopLevelDestinations.Home.dashboard
+                    else -> TopLevelDestinations.LoginRegister.login
+                }
+            )
+        }
     }
 
     LaunchedEffect(viewModel) {
@@ -197,7 +198,7 @@ private fun DailyCostNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = TopLevelDestinations.Onboarding.ROOT_ROUTE
+        startDestination = TopLevelDestinations.splash.route
     ) {
         SplashNavigation()
 
@@ -208,7 +209,7 @@ private fun DailyCostNavHost(
 
         // Nested navigasi untuk login atau register
         LoginRegisterNavHost {
-            LoginRegisterNavigation(navActions)
+            LoginNavigation(navActions)
         }
 
         // Nested navigasi untuk dashboard (ketika user berhasil login)

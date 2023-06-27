@@ -77,4 +77,9 @@
     <string name="no_need_to_add_expenses_manually">Tidak perlu menambah pengeluaran secara manual</string>
     <string name="your_bank_transaction_are_delivered_automatically">Transaksi bank Anda dikirim secara otomatis</string>
     <string name="sign_in">Masuk</string>
+    <string name="create_daily_cost_account">Buat akun daily cost!</string>
+    <string name="sign_in_to_daily_cost">Masuk ke daily cost!</string>
+    <string name="record_all_your_financial_activities_anywhere">Rekam semua aktivitas keuangan Anda di mana saja</string>
+    <string name="keep_me_signed_in">Biarkan saya tetap masuk</string>
+    <string name="by_checking_this_box_you_wont_to_sign">Dengan mencentang kotak ini, Anda tidak akan terlalu sering masuk ke perangkat ini. Demi keamanan Anda, kami sarankan hanya mencentang kotak ini di perangkat pribadi Anda</string>
 </resources>

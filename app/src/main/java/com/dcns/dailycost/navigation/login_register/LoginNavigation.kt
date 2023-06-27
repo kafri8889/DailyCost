@@ -5,17 +5,16 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
-import com.dcns.dailycost.ui.login_register.LoginRegisterScreen
-import com.dcns.dailycost.ui.login_register.LoginRegisterViewModel
+import com.dcns.dailycost.ui.login.LoginScreen
+import com.dcns.dailycost.ui.login.LoginViewModel
 
-fun NavGraphBuilder.LoginRegisterNavigation(navigationActions: NavigationActions) {
+fun NavGraphBuilder.LoginNavigation(navigationActions: NavigationActions) {
     composable(
-        route = TopLevelDestinations.LoginRegister.loginRegister.route
+        route = TopLevelDestinations.LoginRegister.login.route
     ) { backEntry ->
-        val mViewModel =
-            hiltViewModel<LoginRegisterViewModel>(backEntry)
+        val mViewModel = hiltViewModel<LoginViewModel>(backEntry)
 
-        LoginRegisterScreen(
+        LoginScreen(
             viewModel = mViewModel,
             navigationActions = navigationActions
         )

@@ -9,11 +9,12 @@ import com.dcns.dailycost.R
 
 object DestinationRoute {
     const val CHANGE_LANGUAGE = "change_language"
-    const val LOGIN_REGISTER = "login_register"
     const val ONBOARDING = "onboarding"
     const val DASHBOARD = "dashboard"
+    const val REGISTER = "register"
     const val SETTING = "setting"
     const val SPLASH = "splash"
+    const val LOGIN = "login"
     const val NOTES = "notes"
     const val CREATE_EDIT_NOTE = "create_edit_note"
 }
@@ -141,8 +142,12 @@ object TopLevelDestinations {
     object LoginRegister {
         const val ROOT_ROUTE = "root_login_register"
 
-        val loginRegister = TopLevelDestination(
-            route = DestinationRoute.LOGIN_REGISTER
+        val login = TopLevelDestination(
+            route = DestinationRoute.LOGIN
+        )
+
+        val register = TopLevelDestination(
+            route = DestinationRoute.REGISTER
         )
     }
 
