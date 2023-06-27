@@ -11,6 +11,7 @@ import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.data.model.remote.response.LoginResponse
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
+import com.dcns.dailycost.domain.repository.IUserPreferenceRepository
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
@@ -29,6 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userCredentialRepository: IUserCredentialRepository,
+    private val userPreferenceRepository: IUserPreferenceRepository,
     private val userBalanceRepository: IBalanceRepository,
     private val loginRegisterUseCases: LoginRegisterUseCases,
     private val connectivityManager: ConnectivityManager,
@@ -192,6 +194,8 @@ class LoginViewModel @Inject constructor(
                                     setId(body.data.id.toString())
                                     setToken(body.token)
                                 }
+
+                                userPreferenceRepository.setIsNotFirstInstall(true)
 
                                 depoUseCases.addDepoUseCase(
                                     token = "Bearer ${body.token}",

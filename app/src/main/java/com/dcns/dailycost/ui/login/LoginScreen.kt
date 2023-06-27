@@ -109,9 +109,7 @@ fun LoginScreen(
 
                 useCaseState.hide()
 
-                if (!state.rememberMe) {
-                    navigationActions.navigateTo(TopLevelDestinations.Home.dashboard)
-                }
+                navigationActions.navigateTo(TopLevelDestinations.Home.dashboard)
             }
             Status.Error -> {
                 Timber.i("Login error: ${state.resource?.message}")
