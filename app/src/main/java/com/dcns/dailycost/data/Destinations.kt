@@ -10,6 +10,7 @@ import com.dcns.dailycost.R
 object DestinationRoute {
     const val CHANGE_LANGUAGE = "change_language"
     const val LOGIN_REGISTER = "login_register"
+    const val ONBOARDING = "onboarding"
     const val DASHBOARD = "dashboard"
     const val SETTING = "setting"
     const val SPLASH = "splash"
@@ -128,6 +129,14 @@ class NavigationActions(private val navController: NavHostController) {
 }
 
 object TopLevelDestinations {
+
+    object Onboarding {
+        const val ROOT_ROUTE = "root_onboarding"
+
+        val onboarding = TopLevelDestination(
+            route = DestinationRoute.ONBOARDING
+        )
+    }
 
     object LoginRegister {
         const val ROOT_ROUTE = "root_login_register"
