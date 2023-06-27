@@ -100,7 +100,7 @@ fun LoginScreen(
     LaunchedEffect(state.resource) {
         when (state.resource?.status) {
             Status.Success -> {
-                Timber.i("Login or register success")
+                Timber.i("Login success")
 
                 context.getString(R.string.login_success).toast(context)
 
@@ -484,7 +484,7 @@ private fun BottomContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.already_have_an_account)
+                text = stringResource(id = R.string.dont_have_an_account)
             )
 
             ClickableText(
