@@ -13,5 +13,7 @@ data class DailyCostAppState(
      * if secure app with biometric enabled
      */
     val isSecureAppEnabled: Boolean = false,
-    val isBiometricAuthenticated: Boolean = false
+    val isBiometricAuthenticated: Boolean = false,
+    val userFirstEnteredApp: Boolean = true,
+    val isFirstInstall: Boolean? = null,
 )

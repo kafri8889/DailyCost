@@ -1,18 +1,17 @@
-package com.dcns.dailycost.ui.login_register
+package com.dcns.dailycost.ui.login
 
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.R
-import com.dcns.dailycost.data.LoginRegisterType
 import com.dcns.dailycost.data.Resource
 import com.dcns.dailycost.data.datasource.local.AppDatabase
 import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.LoginRequestBody
-import com.dcns.dailycost.data.model.remote.request_body.RegisterRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.data.model.remote.response.LoginResponse
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
+import com.dcns.dailycost.domain.repository.IUserPreferenceRepository
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
@@ -29,14 +28,15 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginRegisterViewModel @Inject constructor(
+class LoginViewModel @Inject constructor(
     private val userCredentialRepository: IUserCredentialRepository,
+    private val userPreferenceRepository: IUserPreferenceRepository,
     private val userBalanceRepository: IBalanceRepository,
     private val loginRegisterUseCases: LoginRegisterUseCases,
     private val connectivityManager: ConnectivityManager,
     private val depoUseCases: DepoUseCases,
     private val appDatabase: AppDatabase
-): BaseViewModel<LoginRegisterState, LoginRegisterAction>() {
+): BaseViewModel<LoginState, LoginAction>() {
 
     init {
         viewModelScope.launch {
@@ -51,41 +51,27 @@ class LoginRegisterViewModel @Inject constructor(
 
                 // Kalo ga ada koneksi internet, show snackbar
                 if (!have) {
-                    sendEvent(LoginRegisterUiEvent.NoInternetConnection())
+                    sendEvent(LoginUiEvent.NoInternetConnection())
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            userPreferenceRepository.getUserPreference.collect { pref ->
+                updateState {
+                    copy(
+                        isFirstInstall = !pref.isNotFirstInstall
+                    )
                 }
             }
         }
     }
 
-    override fun defaultState(): LoginRegisterState = LoginRegisterState()
+    override fun defaultState(): LoginState = LoginState()
 
-    override fun onAction(action: LoginRegisterAction) {
+    override fun onAction(action: LoginAction) {
         when (action) {
-            is LoginRegisterAction.UpdateLoginRegisterType -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            loginRegisterType = action.type,
-                            email = "",
-                            emailError = null,
-                            password = "",
-                            passwordError = null,
-                            showPassword = false,
-                            rememberMe = false
-                        )
-                    }
-                }
-            }
-            is LoginRegisterAction.UpdateShowPassword -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            showPassword = action.show
-                        )
-                    }
-                }
-            }
-            is LoginRegisterAction.UpdateEmail -> {
+            is LoginAction.UpdateEmail -> {
                 viewModelScope.launch {
                     updateState {
                         copy(
@@ -95,7 +81,7 @@ class LoginRegisterViewModel @Inject constructor(
                     }
                 }
             }
-            is LoginRegisterAction.UpdatePassword -> {
+            is LoginAction.UpdatePassword -> {
                 viewModelScope.launch {
                     updateState {
                         copy(
@@ -105,7 +91,7 @@ class LoginRegisterViewModel @Inject constructor(
                     }
                 }
             }
-            is LoginRegisterAction.UpdateRememberMe -> {
+            is LoginAction.UpdateRememberMe -> {
                 viewModelScope.launch {
                     updateState {
                         copy(
@@ -114,25 +100,16 @@ class LoginRegisterViewModel @Inject constructor(
                     }
                 }
             }
-            is LoginRegisterAction.UpdatePasswordRe -> {
+            is LoginAction.UpdateShowPassword -> {
                 viewModelScope.launch {
                     updateState {
                         copy(
-                            passwordRe = action.passwordRe
+                            showPassword = action.show
                         )
                     }
                 }
             }
-            is LoginRegisterAction.UpdateUsername -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            username = action.username
-                        )
-                    }
-                }
-            }
-            is LoginRegisterAction.ClearData -> {
+            is LoginAction.ClearData -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     // Clear database
                     appDatabase.clearAllTables()
@@ -157,13 +134,13 @@ class LoginRegisterViewModel @Inject constructor(
                     }
                 }
             }
-            is LoginRegisterAction.Login -> {
+            is LoginAction.SignIn -> {
                 viewModelScope.launch {
                     val mState = state.value
 
                     // Kalo ga ada koneksi internet, show snackbar
                     if (!mState.internetConnectionAvailable) {
-                        sendEvent(LoginRegisterUiEvent.NoInternetConnection())
+                        sendEvent(LoginUiEvent.NoInternetConnection())
                         return@launch
                     }
 
@@ -184,7 +161,6 @@ class LoginRegisterViewModel @Inject constructor(
                             isValidPassword.exceptionOrNull() is PasswordValidator.BelowMinLengthException -> action.context.getString(R.string.below_min_length_exception_msg)
                             isValidPassword.exceptionOrNull() is PasswordValidator.LowerCaseMissingException -> action.context.getString(R.string.lowercase_missing_exception_msg)
                             isValidPassword.exceptionOrNull() is PasswordValidator.UpperCaseMissingException -> action.context.getString(R.string.uppercase_missing_exception_msg)
-                            !mState.password.contentEquals(mState.passwordRe) -> action.context.getString(R.string.password_does_not_match)
                             else -> null
                         }
                     } else null
@@ -205,88 +181,49 @@ class LoginRegisterViewModel @Inject constructor(
                             )
                         }
 
-                        if (mState.loginRegisterType == LoginRegisterType.Login) {
-                            loginRegisterUseCases.userLoginUseCase(
-                                LoginRequestBody(
-                                    email = mState.email,
-                                    password = mState.password
-                                ).toRequestBody()
-                            ).let { response ->
-                               if (response.isSuccessful) {
-                                   val body = response.body() as LoginResponse
-
-                                   if (mState.rememberMe) {
-                                       launch {
-                                           with(userCredentialRepository) {
-                                               setName(body.data.name)
-                                               setEmail(mState.email)
-                                               setPassword(mState.password)
-                                           }
-                                       }
-                                   }
-
-                                   with(userCredentialRepository) {
-                                       setId(body.data.id.toString())
-                                       setToken(body.token)
-                                   }
-
-                                   depoUseCases.addDepoUseCase(
-                                       token = "Bearer ${body.token}",
-                                       body = DepoRequestBody(
-                                           id = body.data.id,
-                                           cash = 0,
-                                           eWallet = 0,
-                                           bankAccount = 0
-                                       ).toRequestBody()
-                                   )
-
-                                   updateState {
-                                       copy(
-                                           resource = Resource.success(response.body())
-                                       )
-                                   }
-
-                                   Workers.syncWorker().enqueue(action.context)
-
-                                   return@launch
-                               }
-
-                                // Response not success
-
-                                val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ErrorResponse::class.java)
-
-                                updateState {
-                                    copy(
-                                        resource = Resource.error(errorResponse.message, errorResponse)
-                                    )
-                                }
-                            }
-
-                            return@launch
-                        }
-
-                        // loginRegisterType == LoginRegisterType.Register
-                        loginRegisterUseCases.userRegisterUseCase(
-                            RegisterRequestBody(
-                                name = mState.username,
+                        loginRegisterUseCases.userLoginUseCase(
+                            LoginRequestBody(
                                 email = mState.email,
                                 password = mState.password
                             ).toRequestBody()
                         ).let { response ->
                             if (response.isSuccessful) {
-                                updateState {
-                                    copy(
-                                        username = "",
-                                        passwordRe = "",
-                                        loginRegisterType = LoginRegisterType.Login
-                                    )
+                                val body = response.body() as LoginResponse
+
+                                if (mState.rememberMe) {
+                                    launch {
+                                        with(userCredentialRepository) {
+                                            setName(body.data.name)
+                                            setEmail(mState.email)
+                                            setPassword(mState.password)
+                                        }
+                                    }
                                 }
+
+                                with(userCredentialRepository) {
+                                    setId(body.data.id.toString())
+                                    setToken(body.token)
+                                }
+
+                                userPreferenceRepository.setIsNotFirstInstall(true)
+
+                                depoUseCases.addDepoUseCase(
+                                    token = "Bearer ${body.token}",
+                                    body = DepoRequestBody(
+                                        id = body.data.id,
+                                        cash = 0,
+                                        eWallet = 0,
+                                        bankAccount = 0
+                                    ).toRequestBody()
+                                )
 
                                 updateState {
                                     copy(
                                         resource = Resource.success(response.body())
                                     )
                                 }
+
+                                Workers.syncWorker().enqueue(action.context)
 
                                 return@launch
                             }

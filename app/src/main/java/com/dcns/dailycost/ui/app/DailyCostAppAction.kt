@@ -6,4 +6,6 @@ sealed interface DailyCostAppAction {
 
     data class IsBiometricAuthenticated(val authenticated: Boolean): DailyCostAppAction
 
+    data class UpdateUserFirstEnteredApp(val first: Boolean): DailyCostAppAction
+
 }

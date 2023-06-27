@@ -4,12 +4,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.navigation
 import com.dcns.dailycost.data.TopLevelDestinations
 
-fun NavGraphBuilder.LoginRegisterNavHost(
+fun NavGraphBuilder.OnboardingNavHost(
     builder: NavGraphBuilder.() -> Unit
 ) {
     navigation(
-        startDestination = TopLevelDestinations.LoginRegister.login.route,
-        route = TopLevelDestinations.LoginRegister.ROOT_ROUTE,
+        startDestination = TopLevelDestinations.Onboarding.onboarding.route,
+        route = TopLevelDestinations.Onboarding.ROOT_ROUTE,
         builder = builder
     )
 }

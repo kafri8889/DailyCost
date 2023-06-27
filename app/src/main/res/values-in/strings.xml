@@ -11,7 +11,7 @@
     <string name="remember_me">Ingat saya</string>
     <string name="forgot_password">Lupa kata sandi</string>
     <string name="already_have_an_account">Sudah mempunyai akun?</string>
-    <string name="by_registering_txt">Dengan mendaftar, Anda menyetujui %1$s dan %2$s kami</string>
+    <string name="by_registering_txt">Dengan mendaftar, Anda menyetujui %1$s dan %2$s</string>
     <string name="terms_of_use">Syarat Penggunaan</string>
     <string name="privacy_policy">Kebijakan Pribadi</string>
     <string name="email_not_valid">Email tidak valid</string>
@@ -66,4 +66,21 @@
     <string name="investment">Investasi</string>
     <string name="bonus">Bonus</string>
     <string name="award">Hadiah</string>
+    <string name="you_can_see_where_the_money_goes">Anda dapat melihat ke mana uang itu pergi</string>
+    <string name="its_easy_to_spot_the_categories">Sangat mudah untuk menemukan kategori yang menarik lebih banyak sumber daya daripada yang Anda kira</string>
+    <string name="next">Lanjut</string>
+    <string name="skip">Lewati</string>
+    <string name="achieving_your_goals_is_easier">Mencapai tujuan Anda lebih mudah</string>
+    <string name="spending_plan_show_much_money">Rencana pengeluaran menunjukkan berapa banyak uang yang bebas digunakan untuk tujuan baru</string>
+    <string name="all_card_and_accounts_in_one_app">Semua kartu dan akun dalam satu aplikasi</string>
+    <string name="secure_synchronization_with_banks">Sinkronisasi aman dengan bank</string>
+    <string name="no_need_to_add_expenses_manually">Tidak perlu menambah pengeluaran secara manual</string>
+    <string name="your_bank_transaction_are_delivered_automatically">Transaksi bank Anda dikirim secara otomatis</string>
+    <string name="sign_in">Masuk</string>
+    <string name="create_daily_cost_account">Buat akun daily cost!</string>
+    <string name="sign_in_to_daily_cost">Masuk ke daily cost!</string>
+    <string name="record_all_your_financial_activities_anywhere">Rekam semua aktivitas keuangan Anda di mana saja</string>
+    <string name="keep_me_signed_in">Biarkan saya tetap masuk</string>
+    <string name="by_checking_this_box_you_wont_to_sign">Dengan mencentang kotak ini, Anda tidak akan terlalu sering masuk ke perangkat ini. Demi keamanan Anda, kami sarankan hanya mencentang kotak ini di perangkat pribadi Anda</string>
+    <string name="unlock_all_the_features_to_manage_income_expenses">Buka kunci semua fitur untuk mengelola pengeluaran dan sasaran pendapatan</string>
 </resources>

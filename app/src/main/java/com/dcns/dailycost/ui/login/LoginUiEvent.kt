@@ -1,10 +1,10 @@
-package com.dcns.dailycost.ui.login_register
+package com.dcns.dailycost.ui.login
 
 import androidx.compose.material3.SnackbarDuration
 import com.dcns.dailycost.R
 import com.dcns.dailycost.foundation.base.UiEvent
 
-sealed class LoginRegisterUiEvent: UiEvent() {
+sealed class LoginUiEvent: UiEvent() {
 
     class NoInternetConnection(
         override val message: String = asStringResource(R.string.internet_connection_not_available),

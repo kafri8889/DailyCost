@@ -45,13 +45,16 @@ import com.dcns.dailycost.data.drawerDestinations
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
 import com.dcns.dailycost.navigation.HomeNavHost
 import com.dcns.dailycost.navigation.LoginRegisterNavHost
+import com.dcns.dailycost.navigation.OnboardingNavHost
 import com.dcns.dailycost.navigation.home.ChangeLanguageNavigation
 import com.dcns.dailycost.navigation.home.CreateEditNoteNavigation
 import com.dcns.dailycost.navigation.home.DashboardNavigation
 import com.dcns.dailycost.navigation.home.NoteNavigation
 import com.dcns.dailycost.navigation.home.SettingNavigation
 import com.dcns.dailycost.navigation.home.SplashNavigation
-import com.dcns.dailycost.navigation.login_register.LoginRegisterNavigation
+import com.dcns.dailycost.navigation.login_register.LoginNavigation
+import com.dcns.dailycost.navigation.login_register.RegisterNavigation
+import com.dcns.dailycost.navigation.onboarding.OnboardingNavigation
 import com.dcns.dailycost.theme.DailyCostTheme
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -112,14 +115,18 @@ fun DailyCostApp(
         } else viewModel.onAction(DailyCostAppAction.IsBiometricAuthenticated(true))
     }
 
-    LaunchedEffect(state.userCredential) {
-        state.userCredential?.let {
+    LaunchedEffect(state.userCredential, state.isFirstInstall, state.userFirstEnteredApp) {
+        if (state.userFirstEnteredApp && state.isFirstInstall != null && state.userCredential != null) {
             navActions.navigateTo(
                 inclusivePopUpTo = true,
-                destination = if (it.isLoggedIn) {
-                    TopLevelDestinations.Home.dashboard
-                } else TopLevelDestinations.LoginRegister.loginRegister
+                destination = when {
+                    state.isFirstInstall == true -> TopLevelDestinations.Onboarding.onboarding
+                    state.userCredential!!.isLoggedIn -> TopLevelDestinations.Home.dashboard
+                    else -> TopLevelDestinations.LoginRegister.login
+                }
             )
+
+            viewModel.onAction(DailyCostAppAction.UpdateUserFirstEnteredApp(false))
         }
     }
 
@@ -130,6 +137,9 @@ fun DailyCostApp(
                     if (state.userCredential?.isLoggedIn == true) {
                         navActions.navigateTo(TopLevelDestinations.Home.dashboard)
                     }
+                }
+                is DailyCostAppUiEvent.NavigateTo -> {
+                    navActions.navigateTo(event.dest)
                 }
             }
         }
@@ -199,9 +209,15 @@ private fun DailyCostNavHost(
     ) {
         SplashNavigation()
 
+        // Nested navigasi untuk onboarding
+        OnboardingNavHost {
+            OnboardingNavigation(navActions)
+        }
+
         // Nested navigasi untuk login atau register
         LoginRegisterNavHost {
-            LoginRegisterNavigation(navActions)
+            LoginNavigation(navActions)
+            RegisterNavigation(navActions)
         }
 
         // Nested navigasi untuk dashboard (ketika user berhasil login)

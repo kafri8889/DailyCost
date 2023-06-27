@@ -67,4 +67,21 @@
     <string name="investment">Investment</string>
     <string name="bonus">Bonus</string>
     <string name="award">Award</string>
+    <string name="you_can_see_where_the_money_goes">You can see where the money goes</string>
+    <string name="its_easy_to_spot_the_categories">It’s easy to spot the categories that draw more resources than you’d think</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="achieving_your_goals_is_easier">Achieving your goals is easier</string>
+    <string name="spending_plan_show_much_money">Spending plan show how much money is free to be used for the new goals</string>
+    <string name="all_card_and_accounts_in_one_app">All card and accounts in one app</string>
+    <string name="secure_synchronization_with_banks">Secure synchronization with banks</string>
+    <string name="no_need_to_add_expenses_manually">No need to add expenses manually</string>
+    <string name="your_bank_transaction_are_delivered_automatically">Your bank transactions are deliverd automatically</string>
+    <string name="sign_in">Sign in</string>
+    <string name="create_daily_cost_account">Create daily cost account!</string>
+    <string name="sign_in_to_daily_cost">Sign in to daily cost!</string>
+    <string name="record_all_your_financial_activities_anywhere">Record all your financial activities anywhere</string>
+    <string name="keep_me_signed_in">Keep me signed in</string>
+    <string name="by_checking_this_box_you_wont_to_sign">By checking this box you won’t to sign in as often on this device. For your security, we remommend only checking this box on your personal device</string>
+    <string name="unlock_all_the_features_to_manage_income_expenses">Unlock all the features to manage income expenses and goals</string>
 </resources>
