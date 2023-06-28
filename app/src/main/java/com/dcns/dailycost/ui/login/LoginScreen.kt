@@ -2,6 +2,9 @@ package com.dcns.dailycost.ui.login
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,28 +13,39 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -90,7 +104,14 @@ fun LoginScreen(
 
     val stateDialogState = State.Loading(
         "Wait a moment",
-        ProgressIndicator.Circular()
+        ProgressIndicator.Circular {
+            CircularProgressIndicator(
+                color = DailyCostTheme.colorScheme.primary,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(48.dp)
+            )
+        }
     )
 
     LaunchedEffect(Unit) {
@@ -277,13 +298,15 @@ private fun TopContent(
         Text(
             text = stringResource(id = R.string.sign_in_to_daily_cost),
             style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.SemiBold
             )
         )
 
         Text(
             text = stringResource(id = R.string.record_all_your_financial_activities_anywhere),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Normal
+            )
         )
     }
 }
@@ -330,12 +353,12 @@ private fun CenterContent(
         constrain(titleText) {
             top.linkTo(checkbox.top)
             bottom.linkTo(checkbox.bottom)
-            start.linkTo(checkbox.end)
+            start.linkTo(checkbox.end, 8.dp)
         }
 
         constrain(bodyText) {
             top.linkTo(titleText.bottom, 8.dp)
-            start.linkTo(checkbox.end)
+            start.linkTo(checkbox.end, 8.dp)
             end.linkTo(parent.end)
 
             width = Dimension.fillToConstraints
@@ -360,6 +383,16 @@ private fun CenterContent(
                 onNext = {
                     focusManager.moveFocus(FocusDirection.Next)
                 }
+            ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = DailyCostTheme.colorScheme.primary,
+                cursorColor = DailyCostTheme.colorScheme.primary,
+                focusedLabelColor = DailyCostTheme.colorScheme.primary,
+                unfocusedBorderColor = DailyCostTheme.colorScheme.outline,
+                selectionColors = TextSelectionColors(
+                    handleColor = DailyCostTheme.colorScheme.primary,
+                    backgroundColor = LocalTextSelectionColors.current.backgroundColor
+                )
             ),
             label = {
                 Text(stringResource(id = R.string.email))
@@ -396,6 +429,16 @@ private fun CenterContent(
                 onDone = {
                     focusManager.clearFocus()
                 }
+            ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = DailyCostTheme.colorScheme.primary,
+                cursorColor = DailyCostTheme.colorScheme.primary,
+                focusedLabelColor = DailyCostTheme.colorScheme.primary,
+                unfocusedBorderColor = DailyCostTheme.colorScheme.outline,
+                selectionColors = TextSelectionColors(
+                    handleColor = DailyCostTheme.colorScheme.primary,
+                    backgroundColor = LocalTextSelectionColors.current.backgroundColor
+                )
             ),
             label = {
                 Text(stringResource(id = R.string.password))
@@ -436,19 +479,44 @@ private fun CenterContent(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Checkbox(
-                checked = rememberMe,
-                onCheckedChange = { remember ->
-                    onRememberMeCheckedChanged(remember)
-                },
+            // Checkbox
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
+                    .padding(2.dp)
+                    .size(20.dp)
+                    .clip(RoundedCornerShape(30))
+                    .border(
+                        width = 1.dp,
+                        color = if (rememberMe) Color.Transparent else DailyCostTheme.colorScheme.outline,
+                        shape = RoundedCornerShape(30)
+                    )
+                    .background(
+                        color = if (rememberMe) DailyCostTheme.colorScheme.primary
+                        else Color.White
+                    )
+                    .clip(CircleShape)
+                    .minimumInteractiveComponentSize()
+                    .clickable {
+                        onRememberMeCheckedChanged(!rememberMe)
+                    }
                     .layoutId("checkbox")
-            )
+            ) {
+                if (rememberMe) {
+                    Icon(
+                        imageVector = Icons.Rounded.Check,
+                        contentDescription = null,
+                        tint = DailyCostTheme.colorScheme.onPrimary,
+                        modifier = Modifier
+                            .size(16.dp)
+                    )
+                }
+            }
             
             Text(
                 text = stringResource(id = R.string.keep_me_signed_in),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.SemiBold
+                style = MaterialTheme.typography.titleSmall.copy(
+                    fontWeight = FontWeight.Medium
                 ),
                 modifier = Modifier
                     .layoutId("titleText")
@@ -456,7 +524,9 @@ private fun CenterContent(
 
             Text(
                 text = stringResource(id = R.string.by_checking_this_box_you_wont_to_sign),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = DailyCostTheme.colorScheme.labelText
+                ),
                 modifier = Modifier
                     .layoutId("bodyText")
             )
@@ -478,6 +548,9 @@ private fun BottomContent(
     ) {
         Button(
             onClick = onSignInClicked,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = DailyCostTheme.colorScheme.primary
+            ),
             modifier = Modifier
                 .fillMaxWidth()
         ) {
@@ -489,16 +562,19 @@ private fun BottomContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.dont_have_an_account)
+                text = stringResource(id = R.string.dont_have_an_account),
+                style = MaterialTheme.typography.titleSmall.copy(
+                    fontWeight = FontWeight.Normal
+                ),
             )
 
             ClickableText(
                 text = buildAnnotatedString {
                     append(stringResource(id = R.string.sign_up))
                 },
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                style = MaterialTheme.typography.titleSmall.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    color = DailyCostTheme.colorScheme.primary
                 ),
                 onClick = {
                     onSignUpClicked()

@@ -27,7 +27,7 @@
     <string name="registration_success">Registration success</string>
     <string name="login_success">Login success</string>
     <string name="dashboard">Dashboard</string>
-    <string name="setting">Setting</string>
+    <string name="advance_setting">Advance setting</string>
     <string name="logout">Logout</string>
     <string name="logout_success">Logout success</string>
     <string name="hello_welcome_x">Hello, Welcome %1$s</string>
@@ -84,4 +84,10 @@
     <string name="keep_me_signed_in">Keep me signed in</string>
     <string name="by_checking_this_box_you_wont_to_sign">By checking this box you won’t to sign in as often on this device. For your security, we remommend only checking this box on your personal device</string>
     <string name="unlock_all_the_features_to_manage_income_expenses">Unlock all the features to manage income expenses and goals</string>
+    <string name="categories">Categories</string>
+    <string name="manage_categories_change_icon_color">Manage categories, change icon, color and add  category</string>
+    <string name="set_number_format_locale_and_app_security">Set number format, locale, and app security</string>
+    <string name="sign_out">Sign out</string>
+    <string name="recently_activity">Recently activity</string>
+    <string name="see_all">See all</string>
 </resources>

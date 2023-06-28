@@ -6,9 +6,6 @@ import com.dcns.dailycost.R
 import com.dcns.dailycost.data.Resource
 import com.dcns.dailycost.data.model.remote.request_body.RegisterRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
-import com.dcns.dailycost.domain.repository.IBalanceRepository
-import com.dcns.dailycost.domain.repository.IUserCredentialRepository
-import com.dcns.dailycost.domain.repository.IUserPreferenceRepository
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
@@ -22,9 +19,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val userCredentialRepository: IUserCredentialRepository,
-    private val userPreferenceRepository: IUserPreferenceRepository,
-    private val userBalanceRepository: IBalanceRepository,
     private val loginRegisterUseCases: LoginRegisterUseCases,
     private val connectivityManager: ConnectivityManager,
 ): BaseViewModel<RegisterState, RegisterAction>() {

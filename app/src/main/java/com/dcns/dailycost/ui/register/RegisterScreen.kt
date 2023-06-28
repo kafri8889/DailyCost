@@ -12,16 +12,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -45,6 +51,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
@@ -56,6 +63,7 @@ import com.dcns.dailycost.data.Status
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.extension.toast
+import com.dcns.dailycost.theme.DailyCostTheme
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.state.StateDialog
 import com.maxkeppeler.sheets.state.models.ProgressIndicator
@@ -81,7 +89,14 @@ fun RegisterScreen(
 
     val stateDialogState = State.Loading(
         "Wait a moment",
-        ProgressIndicator.Circular()
+        ProgressIndicator.Circular {
+            CircularProgressIndicator(
+                color = DailyCostTheme.colorScheme.primary,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(48.dp)
+            )
+        }
     )
 
     LaunchedEffect(state.resource) {
@@ -262,13 +277,15 @@ private fun TopContent(
         Text(
             text = stringResource(id = R.string.create_daily_cost_account),
             style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.SemiBold
             )
         )
 
         Text(
             text = stringResource(id = R.string.unlock_all_the_features_to_manage_income_expenses),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Normal
+            )
         )
     }
 }
@@ -315,6 +332,16 @@ private fun CenterContent(
                     focusManager.moveFocus(FocusDirection.Next)
                 }
             ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = DailyCostTheme.colorScheme.primary,
+                cursorColor = DailyCostTheme.colorScheme.primary,
+                focusedLabelColor = DailyCostTheme.colorScheme.primary,
+                unfocusedBorderColor = DailyCostTheme.colorScheme.outline,
+                selectionColors = TextSelectionColors(
+                    handleColor = DailyCostTheme.colorScheme.primary,
+                    backgroundColor = LocalTextSelectionColors.current.backgroundColor
+                )
+            ),
             label = {
                 Text(stringResource(id = R.string.username))
             },
@@ -343,6 +370,16 @@ private fun CenterContent(
                 onNext = {
                     focusManager.moveFocus(FocusDirection.Next)
                 }
+            ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = DailyCostTheme.colorScheme.primary,
+                cursorColor = DailyCostTheme.colorScheme.primary,
+                focusedLabelColor = DailyCostTheme.colorScheme.primary,
+                unfocusedBorderColor = DailyCostTheme.colorScheme.outline,
+                selectionColors = TextSelectionColors(
+                    handleColor = DailyCostTheme.colorScheme.primary,
+                    backgroundColor = LocalTextSelectionColors.current.backgroundColor
+                )
             ),
             label = {
                 Text(stringResource(id = R.string.email))
@@ -379,6 +416,16 @@ private fun CenterContent(
                 onDone = {
                     focusManager.clearFocus()
                 }
+            ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = DailyCostTheme.colorScheme.primary,
+                cursorColor = DailyCostTheme.colorScheme.primary,
+                focusedLabelColor = DailyCostTheme.colorScheme.primary,
+                unfocusedBorderColor = DailyCostTheme.colorScheme.outline,
+                selectionColors = TextSelectionColors(
+                    handleColor = DailyCostTheme.colorScheme.primary,
+                    backgroundColor = LocalTextSelectionColors.current.backgroundColor
+                )
             ),
             label = {
                 Text(stringResource(id = R.string.password))
@@ -436,7 +483,14 @@ private fun BottomContent(
 
         text = text.replace(tou, "\n $tou")
 
-        append(text)
+        withStyle(
+            MaterialTheme.typography.titleSmall.copy(
+                fontWeight = FontWeight.Normal,
+                color = DailyCostTheme.colorScheme.titleText
+            ).toSpanStyle()
+        ) {
+            append(text)
+        }
 
         val startTou = text.indexOf(tou)
         val endTou = startTou + tou.length
@@ -447,18 +501,18 @@ private fun BottomContent(
         addStyle(
             end = endTou,
             start = startTou,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+            style = MaterialTheme.typography.titleSmall.copy(
+                fontWeight = FontWeight.SemiBold,
+                color = DailyCostTheme.colorScheme.primary
             ).toSpanStyle()
         )
 
         addStyle(
             end = endPp,
             start = startPp,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+            style = MaterialTheme.typography.titleSmall.copy(
+                fontWeight = FontWeight.SemiBold,
+                color = DailyCostTheme.colorScheme.primary
             ).toSpanStyle()
         )
 
@@ -484,6 +538,9 @@ private fun BottomContent(
     ) {
         Button(
             onClick = onSignUpClicked,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = DailyCostTheme.colorScheme.primary
+            ),
             modifier = Modifier
                 .fillMaxWidth()
         ) {
@@ -495,16 +552,19 @@ private fun BottomContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.already_have_an_account)
+                text = stringResource(id = R.string.already_have_an_account),
+                style = MaterialTheme.typography.titleSmall.copy(
+                    fontWeight = FontWeight.Normal
+                )
             )
 
             ClickableText(
                 text = buildAnnotatedString {
                     append(stringResource(id = R.string.sign_in))
                 },
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                style = MaterialTheme.typography.titleSmall.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    color = DailyCostTheme.colorScheme.primary
                 ),
                 onClick = {
                     onSignInClicked()

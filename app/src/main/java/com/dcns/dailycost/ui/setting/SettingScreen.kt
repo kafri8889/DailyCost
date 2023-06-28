@@ -1,6 +1,5 @@
 package com.dcns.dailycost.ui.setting
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -45,16 +44,12 @@ fun SettingScreen(
         DailyCostBiometricManager.canAuthenticateWithAuthenticators(context)
     }
 
-    BackHandler {
-        navigationActions.popBackStack(TopLevelDestinations.Home.dashboard.route)
-    }
-
     BaseScreenWrapper(
         viewModel = viewModel,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(stringResource(id = R.string.setting))
+                    Text(stringResource(id = R.string.advance_setting))
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigationIconClicked) {

@@ -9,6 +9,10 @@ import com.dcns.dailycost.domain.use_case.depo.UpdateLocalBalanceUseCase
 
 data class DepoUseCases(
     val editDepoUseCase: EditDepoUseCase,
+    @Deprecated(
+        message = "Deprecated, sekarang setiap user bikin akun baru sudah otomatis ditambahkan",
+        level = DeprecationLevel.ERROR
+    )
     val addDepoUseCase: AddDepoUseCase,
     @Deprecated(
         message = "Deprecated, gunakan fitur pemasukan",

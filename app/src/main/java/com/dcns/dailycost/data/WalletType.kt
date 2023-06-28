@@ -34,4 +34,15 @@ enum class WalletType {
             EWallet -> R.drawable.ic_bitcoin_card
             BankAccount -> R.drawable.ic_card
         }
+
+    companion object {
+        fun parse(input: String): WalletType {
+            return when (input.lowercase()) {
+                "cash" -> Cash
+                "gopay" -> EWallet
+                "rekening" -> BankAccount
+                else -> throw IllegalArgumentException("Invalid wallet for input: $input")
+            }
+        }
+    }
 }

@@ -1,20 +1,23 @@
 package com.dcns.dailycost.ui.app
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.IconButton
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
@@ -31,18 +34,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
+import com.dcns.dailycost.data.Language
 import com.dcns.dailycost.data.NavigationActions
-import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
-import com.dcns.dailycost.data.drawerDestinations
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
+import com.dcns.dailycost.foundation.uicomponent.NoRippleIconButton
 import com.dcns.dailycost.navigation.HomeNavHost
 import com.dcns.dailycost.navigation.LoginRegisterNavHost
 import com.dcns.dailycost.navigation.OnboardingNavHost
@@ -92,6 +97,23 @@ fun DailyCostApp(
 
     val navActions = remember(navController) {
         NavigationActions(navController)
+    }
+
+    val drawerState = rememberDrawerState(
+        initialValue = DrawerValue.Closed
+    )
+
+    val closeDrawer: () -> Unit = {
+        scope.launch {
+            drawerState.close()
+        }
+    }
+
+    val onNavigationIconClicked: () -> Unit = {
+        scope.launch {
+            if (drawerState.isOpen) drawerState.close()
+            else drawerState.open()
+        }
     }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -155,35 +177,51 @@ fun DailyCostApp(
         }
 
         Surface(color = MaterialTheme.colorScheme.background) {
-
-            val drawerState = rememberDrawerState(
-                initialValue = DrawerValue.Closed
-            )
-
-            val onNavigationIconClicked: () -> Unit = {
-                scope.launch {
-                    if (drawerState.isOpen) drawerState.close()
-                    else drawerState.open()
-                }
-            }
-
-            BackHandler(drawerState.isOpen) {
-                scope.launch {
-                    drawerState.close()
-                }
-            }
-
             DailyCostDrawer(
                 state = drawerState,
-                selectedDestinationRoute = state.currentDestinationRoute,
-                onDestinationClicked = { destination ->
-                    navActions.navigateTo(destination)
-                    scope.launch {
-                        drawerState.close()
-                    }
+                email = state.userCredential?.email ?: "",
+                language = state.language,
+                onNavigationIconClicked = onNavigationIconClicked,
+                onCategoriesClicked = {
+                    // TODO: ke categories screen
+                    closeDrawer()
+                },
+                onSettingClicked = {
+                    navActions.navigateTo(TopLevelDestinations.Home.setting)
+                    closeDrawer()
+                },
+                onLanguageClicked = {
+                    navActions.navigateTo(TopLevelDestinations.Home.changeLanguage)
+                    closeDrawer()
+                },
+                onSignOutClicked = {
+                    navActions.navigateTo(TopLevelDestinations.LoginRegister.login)
+                    closeDrawer()
                 }
             ) {
                 DailyCostBottomSheetLayout(bottomSheetNavigator) {
+                    BackHandler {
+                        when {
+                            drawerState.isOpen -> {
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                            }
+                            state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route -> {
+                                (context as MainActivity).finishAndRemoveTask()
+                            }
+                            state.currentDestinationRoute == TopLevelDestinations.Home.changeLanguage.route -> {
+                                navActions.popBackStack()
+                            }
+                            state.currentDestinationRoute == TopLevelDestinations.Home.setting.route -> {
+                                navActions.navigateTo(
+                                    destination = TopLevelDestinations.Home.dashboard,
+                                    inclusivePopUpTo = true
+                                )
+                            }
+                        }
+                    }
+
                     DailyCostNavHost(
                         navController = navController,
                         navActions = navActions,
@@ -262,8 +300,13 @@ private fun DailyCostBottomSheetLayout(
 @Composable
 private fun DailyCostDrawer(
     state: DrawerState,
-    selectedDestinationRoute: String,
-    onDestinationClicked: (TopLevelDestination) -> Unit,
+    email: String,
+    language: Language,
+    onNavigationIconClicked: () -> Unit,
+    onCategoriesClicked: () -> Unit,
+    onLanguageClicked: () -> Unit,
+    onSignOutClicked: () -> Unit,
+    onSettingClicked: () -> Unit,
     content: @Composable () -> Unit
 ) {
     ModalNavigationDrawer(
@@ -272,8 +315,13 @@ private fun DailyCostDrawer(
         gesturesEnabled = state.isOpen,
         drawerContent = {
             DailyCostDrawerContent(
-                selectedDestinationRoute = selectedDestinationRoute,
-                onDestinationClicked = onDestinationClicked
+                email = email,
+                language = language,
+                onCategoriesClicked = onCategoriesClicked,
+                onNavigationIconClicked = onNavigationIconClicked,
+                onSettingClicked = onSettingClicked,
+                onLanguageClicked = onLanguageClicked,
+                onSignOutClicked = onSignOutClicked
             )
         }
     )
@@ -281,33 +329,165 @@ private fun DailyCostDrawer(
 
 @Composable
 private fun DailyCostDrawerContent(
-    selectedDestinationRoute: String,
-    onDestinationClicked: (TopLevelDestination) -> Unit
+    email: String,
+    language: Language,
+    onNavigationIconClicked: () -> Unit,
+    onCategoriesClicked: () -> Unit,
+    onLanguageClicked: () -> Unit,
+    onSignOutClicked: () -> Unit,
+    onSettingClicked: () -> Unit
 ) {
+    val signOutInteractionSource = remember { MutableInteractionSource() }
+
     ModalDrawerSheet {
-        LazyColumn {
-            items(
-                items = drawerDestinations,
-                key = { dest -> dest.route }
-            ) { destination ->
-                NavigationDrawerItem(
-                    selected = selectedDestinationRoute == destination.route,
-                    label = {
-                        Text(stringResource(id = destination.name!!))
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text(stringResource(id = R.string.dashboard))
                     },
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = destination.icon!!),
-                            contentDescription = null
-                        )
-                    },
-                    onClick = {
-                        onDestinationClicked(destination)
-                    },
-                    modifier = Modifier
-                        .padding(NavigationDrawerItemDefaults.ItemPadding)
+                    leadingContent = {
+                        IconButton(onClick = onNavigationIconClicked) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_arrow_left),
+                                contentDescription = null
+                            )
+                        }
+                    }
                 )
             }
+
+            item {
+                val interactionSource = remember { MutableInteractionSource() }
+
+                Box(
+                    modifier = Modifier
+                        .clickable(
+                            indication = rememberRipple(),
+                            interactionSource = interactionSource,
+                            onClick = onCategoriesClicked
+                        )
+                ) {
+                    ListItem(
+                        headlineContent = {
+                            Text(stringResource(id = R.string.categories))
+                        },
+                        supportingContent = {
+                            Text(stringResource(id = R.string.manage_categories_change_icon_color))
+                        },
+                        leadingContent = {
+                            NoRippleIconButton(
+                                onClick = onCategoriesClicked,
+                                interactionSource = interactionSource
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_pie_chart),
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+
+            item {
+                val interactionSource = remember { MutableInteractionSource() }
+
+                Box(
+                    modifier = Modifier
+                        .clickable(
+                            indication = rememberRipple(),
+                            interactionSource = interactionSource,
+                            onClick = onSettingClicked
+                        )
+                ) {
+                    ListItem(
+                        headlineContent = {
+                            Text(stringResource(id = R.string.advance_setting))
+                        },
+                        supportingContent = {
+                            Text(stringResource(id = R.string.set_number_format_locale_and_app_security))
+                        },
+                        leadingContent = {
+                            NoRippleIconButton(
+                                onClick = onSettingClicked,
+                                interactionSource = interactionSource
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_setting),
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+
+            item {
+                val interactionSource = remember { MutableInteractionSource() }
+
+                Box(
+                    modifier = Modifier
+                        .clickable(
+                            indication = rememberRipple(),
+                            interactionSource = interactionSource,
+                            onClick = onLanguageClicked
+                        )
+                ) {
+                    ListItem(
+                        headlineContent = {
+                            Text(stringResource(id = R.string.language))
+                        },
+                        supportingContent = {
+                            Text(language.name)
+                        },
+                        leadingContent = {
+                            NoRippleIconButton(
+                                onClick = onLanguageClicked,
+                                interactionSource = interactionSource
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_global),
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .clickable(
+                    indication = rememberRipple(),
+                    interactionSource = signOutInteractionSource,
+                    onClick = onSettingClicked
+                )
+        ) {
+            ListItem(
+                headlineContent = {
+                    Text(stringResource(id = R.string.sign_out))
+                },
+                supportingContent = {
+                    Text(email)
+                },
+                leadingContent = {
+                    NoRippleIconButton(
+                        onClick = onSignOutClicked,
+                        interactionSource = signOutInteractionSource
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_logout),
+                            contentDescription = null
+                        )
+                    }
+                }
+            )
         }
     }
 }

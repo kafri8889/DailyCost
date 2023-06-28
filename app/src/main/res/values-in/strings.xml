@@ -26,7 +26,7 @@
     <string name="registration_success">Pendaftaran berhasil</string>
     <string name="login_success">Berhasil masuk</string>
     <string name="dashboard">Dasbor</string>
-    <string name="setting">Pengaturan</string>
+    <string name="advance_setting">Pengaturan lanjutan</string>
     <string name="logout">Keluar</string>
     <string name="logout_success">Berhasil keluar</string>
     <string name="hello_welcome_x">Halo, Selamat datang %1$s</string>
@@ -83,4 +83,10 @@
     <string name="keep_me_signed_in">Biarkan saya tetap masuk</string>
     <string name="by_checking_this_box_you_wont_to_sign">Dengan mencentang kotak ini, Anda tidak akan terlalu sering masuk ke perangkat ini. Demi keamanan Anda, kami sarankan hanya mencentang kotak ini di perangkat pribadi Anda</string>
     <string name="unlock_all_the_features_to_manage_income_expenses">Buka kunci semua fitur untuk mengelola pengeluaran dan sasaran pendapatan</string>
+    <string name="categories">Kategori</string>
+    <string name="manage_categories_change_icon_color">Kelola kategori, ubah ikon, warna, dan tambahkan kategori</string>
+    <string name="set_number_format_locale_and_app_security">Tetapkan format angka, lokal, dan keamanan aplikasi</string>
+    <string name="sign_out">Keluar</string>
+    <string name="recently_activity">Aktivitas terbaru</string>
+    <string name="see_all">Lihat semua</string>
 </resources>

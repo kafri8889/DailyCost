@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.Resource
 import com.dcns.dailycost.data.datasource.local.AppDatabase
-import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.LoginRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.data.model.remote.response.LoginResponse
@@ -206,16 +205,6 @@ class LoginViewModel @Inject constructor(
                                 }
 
                                 userPreferenceRepository.setIsNotFirstInstall(true)
-
-                                depoUseCases.addDepoUseCase(
-                                    token = "Bearer ${body.token}",
-                                    body = DepoRequestBody(
-                                        id = body.data.id,
-                                        cash = 0,
-                                        eWallet = 0,
-                                        bankAccount = 0
-                                    ).toRequestBody()
-                                )
 
                                 updateState {
                                     copy(

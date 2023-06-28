@@ -3,6 +3,7 @@ package com.dcns.dailycost.ui.onboarding
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
@@ -192,6 +194,8 @@ private fun OnboardingScreenContent(
     ) {
         LinearProgressIndicator(
             progress = progress(),
+            color = DailyCostTheme.colorScheme.primary,
+            trackColor = DailyCostTheme.colorScheme.primary.copy(alpha = 0.3f), // Opacity 30%
             strokeCap = ProgressIndicatorDefaults.CircularDeterminateStrokeCap,
             modifier = Modifier
                 .clip(CircleShape)
@@ -221,7 +225,9 @@ private fun OnboardingScreenContent(
 
         Text(
             text = bodyText,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Normal
+            ),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .layoutId("bodyText")
@@ -233,6 +239,9 @@ private fun OnboardingScreenContent(
         ) {
             Button(
                 onClick = onPrimaryButtonClicked,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = DailyCostTheme.colorScheme.primary
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
@@ -243,6 +252,14 @@ private fun OnboardingScreenContent(
 
             TextButton(
                 onClick = onSecondaryButtonClicked,
+                border = BorderStroke(
+                    width = 1.dp,
+                    color = if (progress() >= 0.99f) DailyCostTheme.colorScheme.primary
+                    else Color.Transparent
+                ),
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = DailyCostTheme.colorScheme.titleText
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
             ) {

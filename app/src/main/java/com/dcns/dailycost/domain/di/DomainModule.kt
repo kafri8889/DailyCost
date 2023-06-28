@@ -3,16 +3,16 @@ package com.dcns.dailycost.domain.di
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 import com.dcns.dailycost.domain.repository.ICategoryRepository
 import com.dcns.dailycost.domain.repository.IDepoRepository
+import com.dcns.dailycost.domain.repository.IExpenseRepository
 import com.dcns.dailycost.domain.repository.IIncomeRepository
 import com.dcns.dailycost.domain.repository.ILoginRegisterRepository
 import com.dcns.dailycost.domain.repository.INoteRepository
-import com.dcns.dailycost.domain.repository.IShoppingRepository
 import com.dcns.dailycost.domain.use_case.CategoryUseCases
 import com.dcns.dailycost.domain.use_case.DepoUseCases
+import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.NoteUseCases
-import com.dcns.dailycost.domain.use_case.ShoppingUseCases
 import com.dcns.dailycost.domain.use_case.category.GetLocalCategoryUseCase
 import com.dcns.dailycost.domain.use_case.category.InputLocalCategoryUseCase
 import com.dcns.dailycost.domain.use_case.depo.AddDepoUseCase
@@ -21,6 +21,10 @@ import com.dcns.dailycost.domain.use_case.depo.GetLocalBalanceUseCase
 import com.dcns.dailycost.domain.use_case.depo.GetRemoteBalanceUseCase
 import com.dcns.dailycost.domain.use_case.depo.TopUpDepoUseCase
 import com.dcns.dailycost.domain.use_case.depo.UpdateLocalBalanceUseCase
+import com.dcns.dailycost.domain.use_case.expense.AddRemoteExpenseUseCase
+import com.dcns.dailycost.domain.use_case.expense.DeleteRemoteExpenseUseCase
+import com.dcns.dailycost.domain.use_case.expense.GetRemoteExpenseUseCase
+import com.dcns.dailycost.domain.use_case.expense.SyncLocalWithRemoteExpenseUseCase
 import com.dcns.dailycost.domain.use_case.income.AddRemoteIncomeUseCase
 import com.dcns.dailycost.domain.use_case.income.GetRemoteIncomeUseCase
 import com.dcns.dailycost.domain.use_case.login_register.UserLoginUseCase
@@ -30,7 +34,6 @@ import com.dcns.dailycost.domain.use_case.note.GetLocalNoteUseCase
 import com.dcns.dailycost.domain.use_case.note.GetRemoteNoteUseCase
 import com.dcns.dailycost.domain.use_case.note.SyncLocalWithRemoteNoteUseCase
 import com.dcns.dailycost.domain.use_case.note.UpsertLocalNoteUseCase
-import com.dcns.dailycost.domain.use_case.shopping.PostShoppingUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,14 +51,6 @@ class DomainModule {
     ): LoginRegisterUseCases = LoginRegisterUseCases(
         userRegisterUseCase = UserRegisterUseCase(loginRegisterRepository),
         userLoginUseCase = UserLoginUseCase(loginRegisterRepository)
-    )
-
-    @Provides
-    @Singleton
-    fun provideShoppingUseCases(
-        shoppingRepository: IShoppingRepository
-    ): ShoppingUseCases = ShoppingUseCases(
-        postShoppingUseCase = PostShoppingUseCase(shoppingRepository)
     )
 
     @Provides
@@ -91,6 +86,17 @@ class DomainModule {
     ): CategoryUseCases = CategoryUseCases(
         getLocalCategoryUseCase = GetLocalCategoryUseCase(categoryRepository),
         inputLocalCategoryUseCase = InputLocalCategoryUseCase(categoryRepository)
+    )
+
+    @Provides
+    @Singleton
+    fun provideExpenseUseCases(
+        expenseRepository: IExpenseRepository
+    ): ExpenseUseCases = ExpenseUseCases(
+        addRemoteExpenseUseCase = AddRemoteExpenseUseCase(expenseRepository),
+        deleteRemoteExpenseUseCase = DeleteRemoteExpenseUseCase(expenseRepository),
+        getRemoteExpenseUseCase = GetRemoteExpenseUseCase(expenseRepository),
+        syncLocalWithRemoteExpenseUseCase = SyncLocalWithRemoteExpenseUseCase(expenseRepository)
     )
 
     @Provides
