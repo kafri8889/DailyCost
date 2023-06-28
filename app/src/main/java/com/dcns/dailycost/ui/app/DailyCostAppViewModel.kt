@@ -23,7 +23,8 @@ class DailyCostAppViewModel @Inject constructor(
                 updateState {
                     copy(
                         isSecureAppEnabled = pref.secureApp,
-                        isFirstInstall = !pref.isNotFirstInstall
+                        isFirstInstall = !pref.isNotFirstInstall,
+                        language = pref.language
                     )
                 }
             }

@@ -139,12 +139,14 @@ dependencies {
     // Biometric
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha05")
 
+    implementation("com.google.android.gms:play-services-auth:20.6.0")
+
     // Material Design
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.compose.material:material:1.4.3")
     implementation("androidx.compose.material:material-icons-extended:1.4.3")
     implementation("androidx.compose.material3:material3-android:1.2.0-alpha03")
-    implementation("androidx.compose.material3:material3-window-size-class:1.1.0")
+    implementation("androidx.compose.material3:material3-window-size-class:1.1.1")
 
     // Large screen support
 //    implementation("androidx.window:window:1.1.0")

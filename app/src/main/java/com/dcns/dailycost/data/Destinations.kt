@@ -167,7 +167,7 @@ object TopLevelDestinations {
         val setting = TopLevelDestination(
             route = DestinationRoute.SETTING,
             icon = R.drawable.ic_setting,
-            name = R.string.setting
+            name = R.string.advance_setting
         )
 
         val notes = TopLevelDestination(
