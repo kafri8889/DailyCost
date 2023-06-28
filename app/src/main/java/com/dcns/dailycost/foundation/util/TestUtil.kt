@@ -18,7 +18,7 @@ import retrofit2.Response
 object TestUtil {
 
     const val adminUserId = 73
-    const val adminToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NzMsImVtYWlsIjoiYWRtaW4iLCJpYXQiOjE2ODc2NzgwNDksImV4cCI6MTY4Nzc2NDQ0OX0.dKYzZY5hKbX4SfOlXICq3chgu2fVis_ezAdmG7BR7F0"
+    const val adminToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NzMsImVtYWlsIjoiYWRtaW4iLCJpYXQiOjE2ODc5NDc4MjUsImV4cCI6MTY4ODAzNDIyNX0.fVU8FCEwFLmTYonK43sixk5C21bpZdAJYDWTwNfJRv8"
 
     fun <T> printResponse(response: Response<T>) {
         println(getPrintedResponse(response))
