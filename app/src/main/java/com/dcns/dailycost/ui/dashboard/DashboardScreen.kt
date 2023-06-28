@@ -47,7 +47,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -99,14 +98,15 @@ fun DashboardScreen(
         floatingActionButton = {
             FloatingActionButton(
                 shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.primary,
+                containerColor = DailyCostTheme.colorScheme.primary,
                 onClick = {
 
                 }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_add),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = DailyCostTheme.colorScheme.onPrimary
                 )
             }
         }
@@ -178,14 +178,14 @@ private fun DashboardScreenContent(
                         Text(
                             text = stringResource(id = R.string.see_all),
                             style = MaterialTheme.typography.labelLarge.copy(
-                                color = Color(0xff7E7E7E)
+                                color = DailyCostTheme.colorScheme.labelText
                             )
                         )
 
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_right_new),
                             contentDescription = null,
-                            tint = Color(0xff7E7E7E)
+                            tint = DailyCostTheme.colorScheme.labelText
                         )
                     }
                 }

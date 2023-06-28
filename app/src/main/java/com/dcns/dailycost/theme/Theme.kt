@@ -96,7 +96,9 @@ fun DailyCostTheme(
     val dailyCostColorScheme = DailyCostColorScheme(
         primary = daily_cost_theme_light_primary,
         onPrimary = daily_cost_theme_light_onPrimary,
-        labelText = daily_cost_theme_light_labelText
+        labelText = daily_cost_theme_light_labelText,
+        titleText = daily_cost_theme_light_titleText,
+        outline = daily_cost_theme_light_outline,
     )
 
     CompositionLocalProvider(
