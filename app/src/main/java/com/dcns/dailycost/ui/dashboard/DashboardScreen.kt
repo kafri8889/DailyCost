@@ -3,10 +3,8 @@ package com.dcns.dailycost.ui.dashboard
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -22,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.ExperimentalMaterialApi
@@ -32,6 +31,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,7 +39,6 @@ import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,12 +47,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -61,10 +62,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
-import com.dcns.dailycost.data.TopLevelDestinations
+import com.dcns.dailycost.data.datasource.local.LocalExpenseDataProvider
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.uicomponent.BalanceCard
-import com.dcns.dailycost.foundation.uicomponent.NoteItem
 import com.dcns.dailycost.theme.DailyCostTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,12 +81,6 @@ fun DashboardScreen(
 
     val lazyListState = rememberLazyListState()
 
-    val expandFab by remember {
-        derivedStateOf {
-            lazyListState.firstVisibleItemIndex < 1
-        }
-    }
-
     BaseScreenWrapper(
         viewModel = viewModel,
         topBar = {
@@ -95,55 +89,26 @@ fun DashboardScreen(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                CenterAlignedTopAppBar(
-                    title = {},
-                    navigationIcon = {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .minimumInteractiveComponentSize()
-                                .size(40.dp)
-                                .clip(RoundedCornerShape(40))
-                                .border(
-                                    width = 1.dp,
-                                    color = MaterialTheme.colorScheme.outline,
-                                    shape = RoundedCornerShape(40)
-                                )
-                                .clickable(
-                                    onClick = onNavigationIconClicked,
-                                    role = Role.Button,
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = rememberRipple(
-                                        bounded = false
-                                    )
-                                )
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_categories),
-                                contentDescription = null
-                            )
-                        }
-                    },
+                DashboardTopAppBar(
+                    onNavigationIconClicked = onNavigationIconClicked,
                     modifier = Modifier
                         .fillMaxWidth(0.92f)
                 )
             }
         },
         floatingActionButton = {
-            DashboardFloatingActionButton(
-                expandFab = expandFab,
-                onShoppingClicked = {
-                    // TODO: ke add shopping
-                },
-                onNotesClicked = {
-                    navigationActions.navigateTo(
-                        destination = TopLevelDestinations.Home.createEditNote,
-                        inclusivePopUpTo = true
-                    )
-                },
-                modifier = Modifier
-                    .padding(8.dp)
-            )
+            FloatingActionButton(
+                shape = CircleShape,
+                containerColor = MaterialTheme.colorScheme.primary,
+                onClick = {
+
+                }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_add),
+                    contentDescription = null
+                )
+            }
         }
     ) { scaffoldPadding ->
         DashboardScreenContent(
@@ -193,32 +158,44 @@ private fun DashboardScreenContent(
             }
 
             item { 
-                AnimatedVisibility(
-                    visible = state.recentNotes.isNotEmpty(),
-                    enter = expandHorizontally(tween(512)),
-                    exit = shrinkHorizontally(tween(512)),
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth(0.92f)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.recent_notes),
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier
-                            .fillMaxWidth(0.96f)
+                        text = stringResource(id = R.string.recently_activity),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        )
                     )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.see_all),
+                            style = MaterialTheme.typography.labelLarge.copy(
+                                color = Color(0xff7E7E7E)
+                            )
+                        )
+
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_arrow_right_new),
+                            contentDescription = null,
+                            tint = Color(0xff7E7E7E)
+                        )
+                    }
                 }
             }
 
             items(
-                items = state.recentNotes,
+                items = LocalExpenseDataProvider.values,
                 key = { note -> note.id }
-            ) { note ->
-                NoteItem(
-                    note = note,
-                    onClick = {
+            ) { expense ->
 
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(0.96f)
-                )
             }
         }
 
@@ -344,6 +321,46 @@ private fun DashboardFloatingActionButton(
             }
         )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DashboardTopAppBar(
+    modifier: Modifier = Modifier,
+    onNavigationIconClicked: () -> Unit
+) {
+
+    CenterAlignedTopAppBar(
+        modifier = modifier,
+        title = {},
+        navigationIcon = {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .minimumInteractiveComponentSize()
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(40))
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.outline,
+                        shape = RoundedCornerShape(40)
+                    )
+                    .clickable(
+                        onClick = onNavigationIconClicked,
+                        role = Role.Button,
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = rememberRipple(
+                            bounded = false
+                        )
+                    )
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_categories),
+                    contentDescription = null
+                )
+            }
+        }
+    )
 }
 
 @Preview

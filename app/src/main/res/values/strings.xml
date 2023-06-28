@@ -88,4 +88,6 @@
     <string name="manage_categories_change_icon_color">Manage categories, change icon, color and add  category</string>
     <string name="set_number_format_locale_and_app_security">Set number format, locale, and app security</string>
     <string name="sign_out">Sign out</string>
+    <string name="recently_activity">Recently activity</string>
+    <string name="see_all">See all</string>
 </resources>

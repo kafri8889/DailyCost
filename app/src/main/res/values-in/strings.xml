@@ -87,4 +87,6 @@
     <string name="manage_categories_change_icon_color">Kelola kategori, ubah ikon, warna, dan tambahkan kategori</string>
     <string name="set_number_format_locale_and_app_security">Tetapkan format angka, lokal, dan keamanan aplikasi</string>
     <string name="sign_out">Keluar</string>
+    <string name="recently_activity">Aktivitas terbaru</string>
+    <string name="see_all">Lihat semua</string>
 </resources>
