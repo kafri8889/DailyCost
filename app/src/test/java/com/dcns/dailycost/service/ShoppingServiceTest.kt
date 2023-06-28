@@ -6,6 +6,8 @@ import com.dcns.dailycost.data.model.remote.request_body.ShoppingRequestBody
 import com.dcns.dailycost.foundation.util.TestUtil
 import com.google.common.truth.Truth
 import kotlinx.coroutines.test.runTest
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import retrofit2.Retrofit
@@ -17,9 +19,18 @@ class ShoppingServiceTest {
 
     @BeforeEach
     fun setUp() {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            setLevel(HttpLoggingInterceptor.Level.BODY)
+        }
+
+        val client = OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
+
         val retrofit = Retrofit.Builder()
             .baseUrl(BuildConfig.API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
             .build()
 
         shoppingService = retrofit.create(ShoppingService::class.java)
