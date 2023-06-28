@@ -9,6 +9,8 @@ interface ICategoryRepository {
 
     fun getCategoryByID(mID: Int): Flow<CategoryDb?>
 
+    fun getCategoryByName(name: String): Flow<CategoryDb?>
+
     suspend fun deleteCategoryDb(vararg categoryDb: CategoryDb)
 
     suspend fun updateCategoryDb(vararg categoryDb: CategoryDb)

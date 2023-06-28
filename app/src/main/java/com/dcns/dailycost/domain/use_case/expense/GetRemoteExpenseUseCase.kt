@@ -1,6 +1,6 @@
 package com.dcns.dailycost.domain.use_case.expense
 
-import com.dcns.dailycost.data.model.remote.response.ExpenseResponse
+import com.dcns.dailycost.data.model.remote.response.expense.GetExpenseResponse
 import com.dcns.dailycost.domain.repository.IExpenseRepository
 import retrofit2.Response
 
@@ -11,7 +11,7 @@ class GetRemoteExpenseUseCase(
     suspend operator fun invoke(
         userId: Int,
         token: String
-    ): Response<ExpenseResponse> {
+    ): Response<GetExpenseResponse> {
         return expenseRepository.getRemoteExpense(userId, token)
     }
 

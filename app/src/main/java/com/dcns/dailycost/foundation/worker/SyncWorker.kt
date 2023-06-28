@@ -5,14 +5,21 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.dcns.dailycost.data.CategoryIcon
+import com.dcns.dailycost.data.model.Category
 import com.dcns.dailycost.data.model.UserCredential
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
+import com.dcns.dailycost.domain.use_case.CategoryUseCases
 import com.dcns.dailycost.domain.use_case.DepoUseCases
+import com.dcns.dailycost.domain.use_case.ExpenseUseCases
+import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.NoteUseCases
-import com.dcns.dailycost.domain.use_case.ShoppingUseCases
+import com.dcns.dailycost.domain.util.GetCategoryBy
 import com.dcns.dailycost.domain.util.GetNoteBy
+import com.dcns.dailycost.domain.util.InputActionType
 import com.dcns.dailycost.foundation.common.Workers
+import com.dcns.dailycost.foundation.extension.toExpense
 import com.dcns.dailycost.foundation.extension.toNote
 import com.google.gson.Gson
 import dagger.assisted.Assisted
@@ -21,6 +28,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.Locale
+import kotlin.random.Random
 
 /**
  * Sync all data from server
@@ -31,9 +41,13 @@ class SyncWorker @AssistedInject constructor(
     @Assisted params: WorkerParameters,
     private val noteUseCases: NoteUseCases,
     private val depoUseCases: DepoUseCases,
-    private val shoppingUseCases: ShoppingUseCases,
+    private val incomeUseCases: IncomeUseCases,
+    private val expenseUseCases: ExpenseUseCases,
+    private val categoryUseCases: CategoryUseCases,
     private val userCredentialRepository: IUserCredentialRepository
 ): CoroutineWorker(context, params) {
+
+    val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
     override suspend fun doWork(): Result {
         val credential = userCredentialRepository.getUserCredential.firstOrNull()
@@ -44,12 +58,86 @@ class SyncWorker @AssistedInject constructor(
             )
 
         val results = listOf(
+            getExpense(credential),
             getBalance(credential),
             getNote(credential)
         )
 
         return if (results.all { it is Result.Success }) Result.success()
         else Result.retry()
+    }
+
+    private suspend fun getExpense(credential: UserCredential): Result {
+        // Get remote expense
+        expenseUseCases.getRemoteExpenseUseCase(
+            token = credential.getAuthToken(),
+            userId = credential.id.toInt()
+        ).let { response ->
+            if (response.isSuccessful) {
+                val expenseResponse = response.body()
+
+                expenseResponse?.let {
+                    Timber.i("sync expenses to db...")
+                    withContext(Dispatchers.IO) {
+                        // Sync local expense with remote expense
+                        expenseUseCases.syncLocalWithRemoteExpenseUseCase(
+                            // Convet [GetExpenseResponseData] to [Expense]
+                            expenseResponse.data
+                                .results
+                                .map {
+                                    it.toExpense(
+                                        userId = credential.id.toInt(),
+                                        date = { date ->
+                                            dateFormatter.parse(date)?.time ?: 0
+                                        },
+                                        category = { categoryName ->
+                                            // Get local category
+                                            var category = categoryUseCases.getLocalCategoryUseCase(
+                                                getCategoryBy = GetCategoryBy.Name(categoryName)
+                                            ).firstOrNull()?.getOrNull(0)
+
+                                            // If category not null, use
+                                            if (category != null) category
+                                            else {
+                                                // If null, create new category and insert to db
+                                                category = Category(
+                                                    id = Random(System.currentTimeMillis()).nextInt(),
+                                                    name = categoryName,
+                                                    icon = CategoryIcon.Other
+                                                )
+
+                                                categoryUseCases.inputLocalCategoryUseCase(
+                                                    inputActionType = InputActionType.Upsert,
+                                                    category
+                                                )
+
+                                                category
+                                            }
+                                        }
+                                    )
+                                }
+                        )
+                    }
+                }
+
+                Timber.i("get remote expense success")
+
+                return Result.success()
+            }
+
+            val errorResponse = Gson().fromJson(
+                response.errorBody()?.charStream(),
+                ErrorResponse::class.java
+            )
+
+            Timber.e("failed to get remote expense: ${errorResponse.message}")
+
+            return Result.failure(
+                workDataOf(
+                    Workers.ARG_WORKER_MESSAGE_KEY to errorResponse.message
+                )
+            )
+        }
     }
 
     private suspend fun getNote(credential: UserCredential): Result {

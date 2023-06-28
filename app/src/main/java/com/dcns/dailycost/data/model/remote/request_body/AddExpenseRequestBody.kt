@@ -3,7 +3,7 @@ package com.dcns.dailycost.data.model.remote.request_body
 import com.dcns.dailycost.foundation.common.RetrofitRequestBody
 import com.google.gson.annotations.SerializedName
 
-data class ShoppingRequestBody(
+data class AddExpenseRequestBody(
     @SerializedName("jumlah") val amount: Int,
     @SerializedName("nama") val name: String,
     @SerializedName("pembayaran") val payment: String,

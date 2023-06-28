@@ -16,6 +16,11 @@ class GetLocalCategoryUseCase(
         getCategoryBy: GetCategoryBy = GetCategoryBy.All
     ): Flow<List<Category>> {
         return when (getCategoryBy) {
+            is GetCategoryBy.Name -> {
+                categoryRepository.getCategoryByName(getCategoryBy.name)
+                    .filterNotNull()
+                    .map { listOf(it.toCategory()) }
+            }
             is GetCategoryBy.ID -> {
                 categoryRepository.getCategoryByID(getCategoryBy.id)
                     .filterNotNull()

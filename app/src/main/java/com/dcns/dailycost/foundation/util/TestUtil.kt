@@ -5,14 +5,14 @@ import com.dcns.dailycost.data.model.remote.response.DeleteResponse
 import com.dcns.dailycost.data.model.remote.response.DepoResponse
 import com.dcns.dailycost.data.model.remote.response.EditNoteResponse
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
-import com.dcns.dailycost.data.model.remote.response.ExpenseResponse
 import com.dcns.dailycost.data.model.remote.response.GetNoteResponse
 import com.dcns.dailycost.data.model.remote.response.IncomeGetResponse
 import com.dcns.dailycost.data.model.remote.response.IncomePostResponse
 import com.dcns.dailycost.data.model.remote.response.LoginResponse
 import com.dcns.dailycost.data.model.remote.response.RegisterResponse
-import com.dcns.dailycost.data.model.remote.response.ShoppingResponse
 import com.dcns.dailycost.data.model.remote.response.UploadImageResponse
+import com.dcns.dailycost.data.model.remote.response.expense.AddExpenseResponse
+import com.dcns.dailycost.data.model.remote.response.expense.GetExpenseResponse
 import retrofit2.Response
 
 object TestUtil {
@@ -37,10 +37,10 @@ object TestUtil {
             is IncomePostResponse -> bldr.append("$body \n")
             is IncomeGetResponse -> bldr.append("$body \n")
             is EditNoteResponse -> bldr.append("$body \n")
-            is ShoppingResponse -> bldr.append("$body \n")
+            is AddExpenseResponse -> bldr.append("$body \n")
             is RegisterResponse -> bldr.append("$body \n")
             is AddNoteResponse -> bldr.append("$body \n")
-            is ExpenseResponse -> bldr.append("$body \n")
+            is GetExpenseResponse -> bldr.append("$body \n")
             is DeleteResponse -> bldr.append("$body \n")
             is ErrorResponse -> bldr.append("$body \n")
             is LoginResponse -> bldr.append("$body \n")

@@ -19,6 +19,9 @@ interface CategoryDao {
     @Query("SELECT * FROM category_table WHERE category_id LIKE :mID")
     fun getCategoryByID(mID: Int): Flow<CategoryDb?>
 
+    @Query("SELECT * FROM category_table WHERE category_name LIKE :name")
+    fun getCategoryByName(name: String): Flow<CategoryDb?>
+
     @Delete
     suspend fun deleteCategoryDb(vararg categoryDb: CategoryDb)
 

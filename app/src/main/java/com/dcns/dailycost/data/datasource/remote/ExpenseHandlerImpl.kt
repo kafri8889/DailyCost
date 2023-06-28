@@ -3,7 +3,8 @@ package com.dcns.dailycost.data.datasource.remote
 import com.dcns.dailycost.data.datasource.remote.handlers.ExpenseHandler
 import com.dcns.dailycost.data.datasource.remote.services.ExpenseService
 import com.dcns.dailycost.data.model.remote.response.DeleteResponse
-import com.dcns.dailycost.data.model.remote.response.ExpenseResponse
+import com.dcns.dailycost.data.model.remote.response.expense.AddExpenseResponse
+import com.dcns.dailycost.data.model.remote.response.expense.GetExpenseResponse
 import okhttp3.RequestBody
 import retrofit2.Response
 import javax.inject.Inject
@@ -11,8 +12,14 @@ import javax.inject.Inject
 class ExpenseHandlerImpl @Inject constructor(
     private val expenseService: ExpenseService
 ): ExpenseHandler {
+    override suspend fun addExpense(
+        body: RequestBody,
+        token: String
+    ): Response<AddExpenseResponse> {
+        return expenseService.addExpense(body, token)
+    }
 
-    override suspend fun getExpense(userId: Int, token: String): Response<ExpenseResponse> {
+    override suspend fun getExpense(userId: Int, token: String): Response<GetExpenseResponse> {
         return expenseService.getExpense(userId, token)
     }
 

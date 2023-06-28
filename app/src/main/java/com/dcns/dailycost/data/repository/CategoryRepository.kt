@@ -18,6 +18,10 @@ class CategoryRepository @Inject constructor(
         return categoryDao.getCategoryByID(mID)
     }
 
+    override fun getCategoryByName(name: String): Flow<CategoryDb?> {
+        return categoryDao.getCategoryByName(name)
+    }
+
     override suspend fun deleteCategoryDb(vararg categoryDb: CategoryDb) {
         categoryDao.deleteCategoryDb(*categoryDb)
     }
