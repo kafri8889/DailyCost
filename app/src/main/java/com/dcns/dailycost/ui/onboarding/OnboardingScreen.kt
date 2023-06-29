@@ -258,7 +258,7 @@ private fun OnboardingScreenContent(
                     else Color.Transparent
                 ),
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = DailyCostTheme.colorScheme.titleText
+                    contentColor = DailyCostTheme.colorScheme.text
                 ),
                 modifier = Modifier
                     .fillMaxWidth()

@@ -97,7 +97,7 @@ fun DailyCostTheme(
         primary = daily_cost_theme_light_primary,
         onPrimary = daily_cost_theme_light_onPrimary,
         labelText = daily_cost_theme_light_labelText,
-        titleText = daily_cost_theme_light_titleText,
+        text = daily_cost_theme_light_text,
         outline = daily_cost_theme_light_outline,
     )
 
