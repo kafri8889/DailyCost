@@ -1,7 +1,6 @@
 package com.dcns.dailycost.foundation.uicomponent
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,10 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.CompositingStrategy
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,7 +27,7 @@ import com.dcns.dailycost.data.model.UserBalance
 import com.dcns.dailycost.foundation.common.CurrencyFormatter
 import com.dcns.dailycost.foundation.common.LocalCurrency
 import com.dcns.dailycost.foundation.common.primarySystemLocale
-import com.dcns.dailycost.foundation.extension.drawFadedEdge
+import com.dcns.dailycost.foundation.extension.dailyCostMarquee
 import com.dcns.dailycost.foundation.extension.toWallet
 import com.dcns.dailycost.theme.DailyCostTheme
 import com.tbuonomo.viewpagerdotsindicator.compose.DotsIndicator
@@ -92,20 +88,7 @@ fun BalanceCard(
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
                     .fillMaxWidth()
-                    // Rendering to an offscreen buffer is required to get the faded edges' alpha to be
-                    // applied only to the text, and not whatever is drawn below this composable (e.g. the
-                    // window).
-                    .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
-                    .drawWithContent {
-                        drawContent()
-                        drawFadedEdge(
-                            edgeWidth = 8.dp,
-                            leftEdge = false
-                        )
-                    }
-                    .basicMarquee(
-                        delayMillis = 2000
-                    )
+                    .dailyCostMarquee()
             )
 
             Spacer(modifier = Modifier.height(8.dp))
