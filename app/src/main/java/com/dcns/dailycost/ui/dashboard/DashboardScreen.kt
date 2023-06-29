@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +20,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,8 +45,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.datasource.local.LocalExpenseDataProvider
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
+import com.dcns.dailycost.foundation.common.NoRippleTheme
 import com.dcns.dailycost.foundation.uicomponent.BalanceCard
+import com.dcns.dailycost.foundation.uicomponent.TransactionCard
 import com.dcns.dailycost.theme.DailyCostTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -148,6 +154,32 @@ private fun DashboardScreenContent(
             item {
                 TitleSection(
                     title = stringResource(id = R.string.expenses),
+                    modifier = Modifier
+                        .fillMaxWidth(0.92f)
+                )
+            }
+
+            items(
+                items = LocalExpenseDataProvider.values,
+                key = { item -> item.id }
+            ) { expense ->
+                CompositionLocalProvider(
+                    LocalRippleTheme provides NoRippleTheme
+                ) {
+                    TransactionCard(
+                        transaction = expense,
+                        onClick = {
+
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(0.92f)
+                    )
+                }
+            }
+
+            item {
+                TitleSection(
+                    title = stringResource(id = R.string.income),
                     modifier = Modifier
                         .fillMaxWidth(0.92f)
                 )
