@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,10 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.CompositingStrategy
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -42,7 +38,7 @@ import coil.request.ImageRequest
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.datasource.local.LocalNoteDataProvider
 import com.dcns.dailycost.data.model.Note
-import com.dcns.dailycost.foundation.extension.drawFadedEdge
+import com.dcns.dailycost.foundation.extension.dailyCostMarquee
 import com.dcns.dailycost.theme.DailyCostTheme
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
@@ -168,20 +164,7 @@ fun NoteItem(
                         maxLines = 1,
                         modifier = Modifier
                             .weight(1f)
-                            // Rendering to an offscreen buffer is required to get the faded edges' alpha to be
-                            // applied only to the text, and not whatever is drawn below this composable (e.g. the
-                            // window).
-                            .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
-                            .drawWithContent {
-                                drawContent()
-                                drawFadedEdge(
-                                    edgeWidth = 8.dp,
-                                    leftEdge = false
-                                )
-                            }
-                            .basicMarquee(
-                                delayMillis = 2000
-                            )
+                            .dailyCostMarquee()
                     )
 
                     // Date

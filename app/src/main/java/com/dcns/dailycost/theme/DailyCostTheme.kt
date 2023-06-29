@@ -8,7 +8,7 @@ data class DailyCostColorScheme(
     val primary: Color,
     val onPrimary: Color,
     val labelText: Color,
-    val titleText: Color,
+    val text: Color,
     val outline: Color,
 )
 
@@ -17,7 +17,7 @@ val LocalDailyCostColorScheme = staticCompositionLocalOf {
         primary = Color.Unspecified,
         onPrimary = Color.Unspecified,
         labelText = Color.Unspecified,
-        titleText = Color.Unspecified,
+        text = Color.Unspecified,
         outline = Color.Unspecified,
     )
 }

@@ -2,15 +2,16 @@ package com.dcns.dailycost.data.model
 
 import android.os.Parcelable
 import com.dcns.dailycost.data.WalletType
+import com.dcns.dailycost.foundation.common.Transaction
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Expense(
-    val id: Int,
-    val userId: Int,
-    val name: String,
-    val amount: Double,
-    val payment: WalletType,
-    val date: Long,
-    val category: Category
-): Parcelable
+    override val id: Int,
+    override val userId: Int,
+    override val name: String,
+    override val amount: Double,
+    override val payment: WalletType,
+    override val date: Long,
+    override val category: Category
+): Transaction, Parcelable

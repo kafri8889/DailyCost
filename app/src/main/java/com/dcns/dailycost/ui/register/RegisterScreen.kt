@@ -486,7 +486,7 @@ private fun BottomContent(
         withStyle(
             MaterialTheme.typography.titleSmall.copy(
                 fontWeight = FontWeight.Normal,
-                color = DailyCostTheme.colorScheme.titleText
+                color = DailyCostTheme.colorScheme.text
             ).toSpanStyle()
         ) {
             append(text)

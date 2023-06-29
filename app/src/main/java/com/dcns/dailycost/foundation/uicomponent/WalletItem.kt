@@ -5,7 +5,6 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,8 +21,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -31,7 +28,7 @@ import com.dcns.dailycost.data.model.Wallet
 import com.dcns.dailycost.foundation.common.CurrencyFormatter
 import com.dcns.dailycost.foundation.common.LocalCurrency
 import com.dcns.dailycost.foundation.common.primarySystemLocale
-import com.dcns.dailycost.foundation.extension.drawFadedEdge
+import com.dcns.dailycost.foundation.extension.dailyCostMarquee
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -141,20 +138,7 @@ private fun WalletItemContent(
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .fillMaxWidth()
-                    // Rendering to an offscreen buffer is required to get the faded edges' alpha to be
-                    // applied only to the text, and not whatever is drawn below this composable (e.g. the
-                    // window).
-                    .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
-                    .drawWithContent {
-                        drawContent()
-                        drawFadedEdge(
-                            edgeWidth = 8.dp,
-                            leftEdge = false
-                        )
-                    }
-                    .basicMarquee(
-                        delayMillis = 2000
-                    )
+                    .dailyCostMarquee()
             )
         }
 
