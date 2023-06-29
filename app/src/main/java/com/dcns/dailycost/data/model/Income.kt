@@ -7,11 +7,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Income(
-    val id: Int,
-    val userId: Int,
-    val name: String,
-    val amount: Double,
-    val payment: WalletType,
-    val date: Long,
-    val category: Category
-): Transaction(), Parcelable
+    override var id: Int,
+    override val userId: Int,
+    override val name: String,
+    override val amount: Double,
+    override val payment: WalletType,
+    override val date: Long,
+    override val category: Category
+): Transaction, Parcelable
