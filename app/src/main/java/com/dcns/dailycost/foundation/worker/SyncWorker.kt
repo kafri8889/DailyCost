@@ -18,6 +18,7 @@ import com.dcns.dailycost.domain.use_case.NoteUseCases
 import com.dcns.dailycost.domain.util.GetCategoryBy
 import com.dcns.dailycost.domain.util.GetNoteBy
 import com.dcns.dailycost.domain.util.InputActionType
+import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.Workers
 import com.dcns.dailycost.foundation.extension.toExpense
 import com.dcns.dailycost.foundation.extension.toNote
@@ -28,8 +29,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.text.SimpleDateFormat
-import java.util.Locale
 import kotlin.random.Random
 
 /**
@@ -46,8 +45,6 @@ class SyncWorker @AssistedInject constructor(
     private val categoryUseCases: CategoryUseCases,
     private val userCredentialRepository: IUserCredentialRepository
 ): CoroutineWorker(context, params) {
-
-    val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
     override suspend fun doWork(): Result {
         val credential = userCredentialRepository.getUserCredential.firstOrNull()
@@ -88,7 +85,7 @@ class SyncWorker @AssistedInject constructor(
                                     it.toExpense(
                                         userId = credential.id.toInt(),
                                         date = { date ->
-                                            dateFormatter.parse(date)?.time ?: 0
+                                            CommonDateFormatter.api.parse(date)?.time ?: 0
                                         },
                                         category = { categoryName ->
                                             // Get local category
