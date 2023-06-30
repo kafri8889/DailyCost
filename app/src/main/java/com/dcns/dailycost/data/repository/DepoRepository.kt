@@ -15,10 +15,12 @@ class DepoRepository @Inject constructor(
         return depoHandler.editDepo(body, token)
     }
 
+    @Deprecated("otomatis ditambahkan saat user register")
     override suspend fun addDepo(body: RequestBody, token: String): Response<DepoResponse> {
         return depoHandler.addDepo(body, token)
     }
 
+    @Deprecated("gunakan fitur Income")
     override suspend fun topup(body: RequestBody, token: String): Response<DepoResponse> {
         return depoHandler.topup(body, token)
     }

@@ -14,6 +14,9 @@ import com.dcns.dailycost.data.model.local.ExpenseDb
 import com.dcns.dailycost.data.model.local.IncomeDb
 import com.dcns.dailycost.data.model.local.NoteDb
 
+/**
+ * Database untuk aplikasi ini
+ */
 @Database(
     entities = [
         NoteDb::class,

@@ -13,6 +13,9 @@ import retrofit2.Response
 import java.io.File
 
 
+/**
+ * Use case untuk menambahkan catatan ke database server
+ */
 class AddRemoteNoteUseCase(
     private val noteRepository: INoteRepository
 ) {

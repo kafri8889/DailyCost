@@ -6,7 +6,7 @@ import com.dcns.dailycost.domain.util.InputActionType
 import com.dcns.dailycost.foundation.extension.toCategoryDb
 
 /**
- * Create, Update and Delete
+ * Create, Upsert, Update and Delete kategori ke database lokal
  */
 class InputLocalCategoryUseCase(
     private val categoryRepository: ICategoryRepository

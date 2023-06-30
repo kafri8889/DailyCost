@@ -5,6 +5,9 @@ import com.dcns.dailycost.domain.repository.IIncomeRepository
 import okhttp3.RequestBody
 import retrofit2.Response
 
+/**
+ * Use case untuk menambahkan pemsaukan baru ke database server
+ */
 class AddRemoteIncomeUseCase(
     private val incomeRepository: IIncomeRepository
 ) {

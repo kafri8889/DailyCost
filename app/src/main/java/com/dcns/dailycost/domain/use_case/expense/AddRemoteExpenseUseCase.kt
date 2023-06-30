@@ -5,6 +5,9 @@ import com.dcns.dailycost.domain.repository.IExpenseRepository
 import okhttp3.RequestBody
 import retrofit2.Response
 
+/**
+ * Use case untuk menambahkan pengeluaran ke database server
+ */
 class AddRemoteExpenseUseCase(
     private val expenseRepository: IExpenseRepository
 ) {

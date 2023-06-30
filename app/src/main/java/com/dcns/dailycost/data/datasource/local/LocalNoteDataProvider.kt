@@ -2,6 +2,9 @@ package com.dcns.dailycost.data.datasource.local
 
 import com.dcns.dailycost.data.model.Note
 
+/**
+ * Data provider lokal untuk note (berguna untuk testing)
+ */
 object LocalNoteDataProvider {
 
     val note1 = Note(

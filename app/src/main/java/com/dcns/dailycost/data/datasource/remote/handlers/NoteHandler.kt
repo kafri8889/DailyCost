@@ -10,6 +10,9 @@ import retrofit2.Response
 
 interface NoteHandler {
 
+    /**
+     * Tambah catatan baru
+     */
     suspend fun addNote(
         token: String,
         title: RequestBody,
@@ -19,16 +22,25 @@ interface NoteHandler {
         file: MultipartBody.Part,
     ): Response<AddNoteResponse>
 
+    /**
+     * Edit catatan
+     */
     suspend fun editNote(
         token: String,
         body: RequestBody
     ): Response<EditNoteResponse>
 
+    /**
+     * Hapus catatan
+     */
     suspend fun deleteNote(
         token: String,
         body: RequestBody
     ): Response<DeleteResponse>
 
+    /**
+     * Dapatkan catatan by id
+     */
     suspend fun getNoteById(
         userId: Int,
         token: String

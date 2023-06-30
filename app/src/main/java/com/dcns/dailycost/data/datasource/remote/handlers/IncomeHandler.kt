@@ -7,11 +7,17 @@ import retrofit2.Response
 
 interface IncomeHandler {
 
+    /**
+     * Tambah pemasukan baru
+     */
     suspend fun addIncome(
         body: RequestBody,
         token: String
     ): Response<IncomePostResponse>
 
+    /**
+     * Dapatkan pemasukan dari id yang diberikan
+     */
     suspend fun getIncome(
         userId: Int,
         token: String

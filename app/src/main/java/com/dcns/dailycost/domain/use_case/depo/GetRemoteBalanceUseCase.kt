@@ -4,6 +4,9 @@ import com.dcns.dailycost.data.model.remote.response.DepoResponse
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 import retrofit2.Response
 
+/**
+ * Use case untuk mendapatkan saldo dari server
+ */
 class GetRemoteBalanceUseCase(
     private val balanceRepository: IBalanceRepository
 ) {
