@@ -2,6 +2,9 @@ package com.dcns.dailycost.domain.use_case.depo
 
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 
+/**
+ * Use case untuk memperbarui saldo lokal
+ */
 class UpdateLocalBalanceUseCase(
     private val balanceRepository: IBalanceRepository
 ) {

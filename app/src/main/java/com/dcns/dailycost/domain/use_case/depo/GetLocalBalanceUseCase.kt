@@ -4,6 +4,9 @@ import com.dcns.dailycost.data.model.UserBalance
 import com.dcns.dailycost.domain.repository.IBalanceRepository
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Use case untuk mendapatkan saldo lokal
+ */
 class GetLocalBalanceUseCase(
     private val balanceRepository: IBalanceRepository
 ) {

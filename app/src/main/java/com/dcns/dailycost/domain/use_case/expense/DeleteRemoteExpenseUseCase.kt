@@ -5,6 +5,9 @@ import com.dcns.dailycost.domain.repository.IExpenseRepository
 import okhttp3.RequestBody
 import retrofit2.Response
 
+/**
+ * Use case untuk menghapus pengeluaran dari database server
+ */
 class DeleteRemoteExpenseUseCase(
     private val expenseRepository: IExpenseRepository
 ) {

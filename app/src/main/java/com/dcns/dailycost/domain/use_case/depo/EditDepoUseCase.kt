@@ -5,6 +5,9 @@ import com.dcns.dailycost.domain.repository.IDepoRepository
 import okhttp3.RequestBody
 import retrofit2.Response
 
+/**
+ * Use case untuk mengedit depo ke database server
+ */
 class EditDepoUseCase(
     private val depoRepository: IDepoRepository
 ) {

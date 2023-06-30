@@ -3,6 +3,9 @@ package com.dcns.dailycost.data.datasource.local
 import com.dcns.dailycost.data.CategoryIcon
 import com.dcns.dailycost.data.model.Category
 
+/**
+ * Data provider lokal untuk category (berguna untuk testing)
+ */
 object LocalCategoryDataProvider {
 
     val other = Category(

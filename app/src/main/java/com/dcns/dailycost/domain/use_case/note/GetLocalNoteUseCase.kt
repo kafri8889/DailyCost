@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 
+/**
+ * Use case untuk mendapatkan catatan dari lokal database
+ */
 class GetLocalNoteUseCase(
     private val noteRepository: INoteRepository
 ) {
@@ -18,7 +21,7 @@ class GetLocalNoteUseCase(
         val flow = when (getNoteBy) {
             is GetNoteBy.UserID -> noteRepository.getNoteByUserIdLocal(getNoteBy.userId)
             is GetNoteBy.ID -> noteRepository.getNoteByIdLocal(getNoteBy.id)
-                .filterNotNull()
+                .filterNotNull() // Filter value yg tidak null
                 .map { listOf(it) }
             GetNoteBy.All -> noteRepository.getAllNoteLocal()
         }

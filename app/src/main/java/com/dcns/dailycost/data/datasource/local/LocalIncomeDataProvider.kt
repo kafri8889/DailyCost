@@ -3,6 +3,9 @@ package com.dcns.dailycost.data.datasource.local
 import com.dcns.dailycost.data.WalletType
 import com.dcns.dailycost.data.model.Income
 
+/**
+ * Data provider lokal untuk income (berguna untuk testing)
+ */
 object LocalIncomeDataProvider {
 
     val income1 = Income(

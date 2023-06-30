@@ -4,6 +4,9 @@ import com.dcns.dailycost.data.model.remote.response.expense.GetExpenseResponse
 import com.dcns.dailycost.domain.repository.IExpenseRepository
 import retrofit2.Response
 
+/**
+ * Use case untuk mendapatkan pengeluaran dari database server
+ */
 class GetRemoteExpenseUseCase(
     private val expenseRepository: IExpenseRepository
 ) {

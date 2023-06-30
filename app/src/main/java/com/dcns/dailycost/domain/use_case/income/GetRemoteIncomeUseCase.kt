@@ -4,6 +4,9 @@ import com.dcns.dailycost.data.model.remote.response.IncomeGetResponse
 import com.dcns.dailycost.domain.repository.IIncomeRepository
 import retrofit2.Response
 
+/**
+ * Use case untuk mendapatkan pemsaukan dari database server
+ */
 class GetRemoteIncomeUseCase(
     private val incomeRepository: IIncomeRepository
 ) {

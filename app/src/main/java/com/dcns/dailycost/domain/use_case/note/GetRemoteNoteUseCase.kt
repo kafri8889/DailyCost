@@ -5,6 +5,9 @@ import com.dcns.dailycost.domain.repository.INoteRepository
 import com.dcns.dailycost.domain.util.GetNoteBy
 import retrofit2.Response
 
+/**
+ * Use case untuk mendapatkan catatan dari database server
+ */
 class GetRemoteNoteUseCase(
     private val noteRepository: INoteRepository
 ) {

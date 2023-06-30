@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 
+/**
+ * Use case untuk mendapatkan kategori dari database lokal
+ */
 class GetLocalCategoryUseCase(
     private val categoryRepository: ICategoryRepository
 ) {
@@ -18,16 +21,16 @@ class GetLocalCategoryUseCase(
         return when (getCategoryBy) {
             is GetCategoryBy.Name -> {
                 categoryRepository.getCategoryByName(getCategoryBy.name)
-                    .filterNotNull()
+                    .filterNotNull() // Filter value yg tidak null
                     .map { listOf(it.toCategory()) }
             }
             is GetCategoryBy.ID -> {
                 categoryRepository.getCategoryByID(getCategoryBy.id)
-                    .filterNotNull()
+                    .filterNotNull() // Filter value yg tidak null
                     .map { listOf(it.toCategory()) }
             }
             GetCategoryBy.All -> categoryRepository.getAllCategory()
-                .filterNotNull()
+                .filterNotNull() // Filter value yg tidak null
                 .map { it.map { it.toCategory() } }
         }
     }

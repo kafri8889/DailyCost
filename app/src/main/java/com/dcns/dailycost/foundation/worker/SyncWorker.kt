@@ -32,7 +32,7 @@ import timber.log.Timber
 import kotlin.random.Random
 
 /**
- * Sync all data from server
+ * Worker untuk mengsinkronisasikan semua data dari remote ke lokal
  */
 @HiltWorker
 class SyncWorker @AssistedInject constructor(
