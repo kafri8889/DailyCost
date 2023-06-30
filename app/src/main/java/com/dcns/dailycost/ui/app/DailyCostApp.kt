@@ -5,16 +5,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.IconButton
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -47,7 +48,7 @@ import com.dcns.dailycost.data.Language
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
-import com.dcns.dailycost.foundation.uicomponent.NoRippleIconButton
+import com.dcns.dailycost.foundation.uicomponent.DrawerItem
 import com.dcns.dailycost.navigation.HomeNavHost
 import com.dcns.dailycost.navigation.LoginRegisterNavHost
 import com.dcns.dailycost.navigation.OnboardingNavHost
@@ -346,116 +347,102 @@ private fun DailyCostDrawerContent(
                 .weight(1f)
         ) {
             item {
-                ListItem(
-                    headlineContent = {
-                        Text(stringResource(id = R.string.dashboard))
-                    },
-                    leadingContent = {
-                        IconButton(onClick = onNavigationIconClicked) {
+                Box(
+                    modifier = Modifier
+                        .clickable(onClick = onNavigationIconClicked)
+                ) {
+                    DrawerItem(
+                        title = {
+                            Text(stringResource(id = R.string.dashboard))
+                        },
+                        icon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_arrow_left),
                                 contentDescription = null
                             )
-                        }
-                    }
-                )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = 16.dp,
+                                bottom = 8.dp,
+                                top = 8.dp
+                            )
+                    )
+                }
             }
 
             item {
-                val interactionSource = remember { MutableInteractionSource() }
-
                 Box(
                     modifier = Modifier
-                        .clickable(
-                            indication = rememberRipple(),
-                            interactionSource = interactionSource,
-                            onClick = onCategoriesClicked
-                        )
+                        .clickable(onClick = onCategoriesClicked)
                 ) {
-                    ListItem(
-                        headlineContent = {
+                    DrawerItem(
+                        title = {
                             Text(stringResource(id = R.string.categories))
                         },
-                        supportingContent = {
+                        summary = {
                             Text(stringResource(id = R.string.manage_categories_change_icon_color))
                         },
-                        leadingContent = {
-                            NoRippleIconButton(
-                                onClick = onCategoriesClicked,
-                                interactionSource = interactionSource
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_pie_chart),
-                                    contentDescription = null
-                                )
-                            }
-                        }
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_pie_chart),
+                                contentDescription = null
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp)
                     )
                 }
             }
 
             item {
-                val interactionSource = remember { MutableInteractionSource() }
-
                 Box(
                     modifier = Modifier
-                        .clickable(
-                            indication = rememberRipple(),
-                            interactionSource = interactionSource,
-                            onClick = onSettingClicked
-                        )
+                        .clickable(onClick = onSettingClicked)
                 ) {
-                    ListItem(
-                        headlineContent = {
+                    DrawerItem(
+                        title = {
                             Text(stringResource(id = R.string.advance_setting))
                         },
-                        supportingContent = {
+                        summary = {
                             Text(stringResource(id = R.string.set_number_format_locale_and_app_security))
                         },
-                        leadingContent = {
-                            NoRippleIconButton(
-                                onClick = onSettingClicked,
-                                interactionSource = interactionSource
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_setting),
-                                    contentDescription = null
-                                )
-                            }
-                        }
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_setting),
+                                contentDescription = null
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp)
                     )
                 }
             }
 
             item {
-                val interactionSource = remember { MutableInteractionSource() }
-
                 Box(
                     modifier = Modifier
-                        .clickable(
-                            indication = rememberRipple(),
-                            interactionSource = interactionSource,
-                            onClick = onLanguageClicked
-                        )
+                        .clickable(onClick = onLanguageClicked)
                 ) {
-                    ListItem(
-                        headlineContent = {
+                    DrawerItem(
+                        title = {
                             Text(stringResource(id = R.string.language))
                         },
-                        supportingContent = {
+                        summary = {
                             Text(language.name)
                         },
-                        leadingContent = {
-                            NoRippleIconButton(
-                                onClick = onLanguageClicked,
-                                interactionSource = interactionSource
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_global),
-                                    contentDescription = null
-                                )
-                            }
-                        }
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_global),
+                                contentDescription = null
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp)
                     )
                 }
             }
@@ -463,31 +450,27 @@ private fun DailyCostDrawerContent(
 
         Box(
             modifier = Modifier
-                .clickable(
-                    indication = rememberRipple(),
-                    interactionSource = signOutInteractionSource,
-                    onClick = onSettingClicked
-                )
+                .clickable(onClick = onSignOutClicked)
         ) {
-            ListItem(
-                headlineContent = {
+            DrawerItem(
+                title = {
                     Text(stringResource(id = R.string.sign_out))
                 },
-                supportingContent = {
+                summary = {
                     Text(email)
                 },
-                leadingContent = {
-                    NoRippleIconButton(
-                        onClick = onSignOutClicked,
-                        interactionSource = signOutInteractionSource
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_logout),
-                            contentDescription = null
-                        )
-                    }
-                }
+                icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_logout),
+                        contentDescription = null
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp)
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
