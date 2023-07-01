@@ -15,11 +15,9 @@ import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.NoteUseCases
 import com.dcns.dailycost.domain.use_case.category.GetLocalCategoryUseCase
 import com.dcns.dailycost.domain.use_case.category.InputLocalCategoryUseCase
-import com.dcns.dailycost.domain.use_case.depo.AddDepoUseCase
 import com.dcns.dailycost.domain.use_case.depo.EditDepoUseCase
 import com.dcns.dailycost.domain.use_case.depo.GetLocalBalanceUseCase
 import com.dcns.dailycost.domain.use_case.depo.GetRemoteBalanceUseCase
-import com.dcns.dailycost.domain.use_case.depo.TopUpDepoUseCase
 import com.dcns.dailycost.domain.use_case.depo.UpdateLocalBalanceUseCase
 import com.dcns.dailycost.domain.use_case.expense.AddRemoteExpenseUseCase
 import com.dcns.dailycost.domain.use_case.expense.DeleteRemoteExpenseUseCase
@@ -60,8 +58,6 @@ class DomainModule {
         balanceRepository: IBalanceRepository
     ): DepoUseCases = DepoUseCases(
         editDepoUseCase = EditDepoUseCase(depoRepository),
-        addDepoUseCase = AddDepoUseCase(depoRepository),
-        topUpDepoUseCase = TopUpDepoUseCase(depoRepository),
         updateLocalBalanceUseCase = UpdateLocalBalanceUseCase(balanceRepository),
         getRemoteBalanceUseCase = GetRemoteBalanceUseCase(balanceRepository),
         getLocalBalanceUseCase = GetLocalBalanceUseCase(balanceRepository)
