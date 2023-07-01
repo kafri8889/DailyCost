@@ -126,8 +126,7 @@ fun RegisterScreen(
 
     BackHandler {
         navigationActions.navigateTo(
-            destination = TopLevelDestinations.LoginRegister.login,
-            inclusivePopUpTo = true
+            destination = TopLevelDestinations.LoginRegister.login
         )
     }
 

@@ -42,7 +42,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.Language
 import com.dcns.dailycost.data.NavigationActions
@@ -140,7 +139,6 @@ fun DailyCostApp(
     LaunchedEffect(state.userCredential, state.isFirstInstall, state.userFirstEnteredApp) {
         if (state.userFirstEnteredApp && state.isFirstInstall != null && state.userCredential != null) {
             navActions.navigateTo(
-                inclusivePopUpTo = true,
                 destination = when {
                     state.isFirstInstall == true -> TopLevelDestinations.Onboarding.onboarding
                     state.userCredential!!.isLoggedIn -> TopLevelDestinations.Home.dashboard
@@ -187,7 +185,12 @@ fun DailyCostApp(
                     closeDrawer()
                 },
                 onSettingClicked = {
-                    navActions.navigateTo(TopLevelDestinations.Home.setting)
+                    navActions.navigateTo(
+                        destination = TopLevelDestinations.Home.setting,
+                        builder = NavigationActions.defaultNavOptionsBuilder(
+                            popTo = TopLevelDestinations.Home.dashboard
+                        )
+                    )
                     closeDrawer()
                 },
                 onLanguageClicked = {
@@ -201,23 +204,9 @@ fun DailyCostApp(
             ) {
                 DailyCostBottomSheetLayout(bottomSheetNavigator) {
                     BackHandler {
-                        when {
-                            drawerState.isOpen -> {
-                                scope.launch {
-                                    drawerState.close()
-                                }
-                            }
-                            state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route -> {
-                                (context as MainActivity).finishAndRemoveTask()
-                            }
-                            state.currentDestinationRoute == TopLevelDestinations.Home.changeLanguage.route -> {
-                                navActions.popBackStack()
-                            }
-                            state.currentDestinationRoute == TopLevelDestinations.Home.setting.route -> {
-                                navActions.navigateTo(
-                                    destination = TopLevelDestinations.Home.dashboard,
-                                    inclusivePopUpTo = true
-                                )
+                        if (drawerState.isOpen) {
+                            scope.launch {
+                                drawerState.close()
                             }
                         }
                     }

@@ -81,8 +81,7 @@ fun NoteScreen(
 
     BackHandler {
         navigationActions.navigateTo(
-            destination = TopLevelDestinations.Home.dashboard,
-            inclusivePopUpTo = true
+            destination = TopLevelDestinations.Home.dashboard
         )
     }
 
@@ -97,8 +96,7 @@ fun NoteScreen(
                     IconButton(
                         onClick = {
                             navigationActions.navigateTo(
-                                destination = TopLevelDestinations.Home.dashboard,
-                                inclusivePopUpTo = true
+                                destination = TopLevelDestinations.Home.dashboard
                             )
                         }
                     ) {
