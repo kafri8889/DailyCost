@@ -42,6 +42,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.Language
 import com.dcns.dailycost.data.NavigationActions
@@ -54,6 +55,7 @@ import com.dcns.dailycost.navigation.OnboardingNavHost
 import com.dcns.dailycost.navigation.home.ChangeLanguageNavigation
 import com.dcns.dailycost.navigation.home.DashboardNavigation
 import com.dcns.dailycost.navigation.home.NoteNavigation
+import com.dcns.dailycost.navigation.home.NotesNavigation
 import com.dcns.dailycost.navigation.home.SettingNavigation
 import com.dcns.dailycost.navigation.home.SplashNavigation
 import com.dcns.dailycost.navigation.login_register.LoginNavigation
@@ -138,13 +140,13 @@ fun DailyCostApp(
 
     LaunchedEffect(state.userCredential, state.isFirstInstall, state.userFirstEnteredApp) {
         if (state.userFirstEnteredApp && state.isFirstInstall != null && state.userCredential != null) {
-            navActions.navigateTo(
-                destination = when {
-                    state.isFirstInstall == true -> TopLevelDestinations.Onboarding.onboarding
-                    state.userCredential!!.isLoggedIn -> TopLevelDestinations.Home.dashboard
-                    else -> TopLevelDestinations.LoginRegister.login
-                }
-            )
+            val dest = when {
+                state.isFirstInstall == true -> TopLevelDestinations.Onboarding.onboarding
+                state.userCredential!!.isLoggedIn -> TopLevelDestinations.Home.dashboard
+                else -> TopLevelDestinations.LoginRegister.login
+            }
+
+            navActions.navigateTo(dest)
 
             viewModel.onAction(DailyCostAppAction.UpdateUserFirstEnteredApp(false))
         }
@@ -203,12 +205,16 @@ fun DailyCostApp(
                 }
             ) {
                 DailyCostBottomSheetLayout(bottomSheetNavigator) {
-                    BackHandler {
+                    BackHandler(drawerState.isOpen) {
                         if (drawerState.isOpen) {
                             scope.launch {
                                 drawerState.close()
                             }
                         }
+                    }
+
+                    BackHandler(state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route) {
+                        (context as MainActivity).finishAndRemoveTask()
                     }
 
                     DailyCostNavHost(
@@ -257,7 +263,7 @@ private fun DailyCostNavHost(
                 onNavigationIconClicked = onNavigationIconClicked
             )
 
-            NoteNavigation(
+            NotesNavigation(
                 navigationActions = navActions,
                 onNavigationIconClicked = onNavigationIconClicked
             )

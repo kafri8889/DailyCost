@@ -90,7 +90,8 @@ fun DashboardScreen(
                     navigationActions.navigateTo(
                         destination = TopLevelDestinations.Home.note,
                         builder = NavigationActions.defaultNavOptionsBuilder(
-                            popTo = TopLevelDestinations.Home.dashboard
+                            popTo = TopLevelDestinations.Home.dashboard,
+                            inclusivePopUpTo = true
                         )
                     )
                 }

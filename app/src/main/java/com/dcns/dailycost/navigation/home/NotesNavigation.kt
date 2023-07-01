@@ -8,7 +8,7 @@ import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.ui.notes.NoteScreen
 import com.dcns.dailycost.ui.notes.NotesViewModel
 
-fun NavGraphBuilder.NoteNavigation(
+fun NavGraphBuilder.NotesNavigation(
     navigationActions: NavigationActions,
     onNavigationIconClicked: () -> Unit
 ) {
