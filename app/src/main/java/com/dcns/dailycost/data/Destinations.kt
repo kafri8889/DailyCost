@@ -80,51 +80,33 @@ class NavigationActions(private val navController: NavHostController) {
 
     fun navigateTo(
         destination: TopLevelDestination,
-        popTo: Int = navController.graph.startDestinationId,
-        inclusivePopUpTo: Boolean = false,
-        builder: NavOptionsBuilder.() -> Unit = {
-            // Pop up to the start destination of the graph to
-            // avoid building up a large stack of destinations
-            // on the back stack as users select items
-            popUpTo(popTo) {
-                saveState = true
-                inclusive = inclusivePopUpTo
-            }
-            // Avoid multiple copies of the same destination when
-            // re-selecting the same item
-            launchSingleTop = true
-            // Restore state when re-selecting a previously selected item
-            restoreState = true
-        }
+        builder: NavOptionsBuilder.() -> Unit = defaultNavOptionsBuilder()
     ) {
         navController.navigate(destination.route, builder)
     }
 
-    fun navigateTo(
-        destination: TopLevelDestination,
-        popTo: String,
-        inclusivePopUpTo: Boolean = false,
-        builder: NavOptionsBuilder.() -> Unit = {
+    companion object {
+        fun defaultNavOptionsBuilder(
+            popTo: TopLevelDestination? = null,
+            launchAsSingleTop: Boolean = true,
+            saveStatePopUpTo: Boolean = true,
+            inclusivePopUpTo: Boolean = false,
+            restoreAnyState: Boolean = true
+        ): NavOptionsBuilder.() -> Unit = {
             // Pop up to the start destination of the graph to
             // avoid building up a large stack of destinations
             // on the back stack as users select items
-            popUpTo(popTo) {
-                saveState = true
-                inclusive = inclusivePopUpTo
+            popTo?.let {
+                popUpTo(popTo.route) {
+                    saveState = saveStatePopUpTo
+                    inclusive = inclusivePopUpTo
+                }
             }
             // Avoid multiple copies of the same destination when
             // re-selecting the same item
-            launchSingleTop = true
+            launchSingleTop = launchAsSingleTop
             // Restore state when re-selecting a previously selected item
-            restoreState = true
-        }
-    ) {
-        val currentDestination = navController.currentDestination?.route
-        
-        // If current destination is different with target destination, navigate it
-        // Otherwise don't navigate
-        if (currentDestination != destination.route) {
-            navController.navigate(destination.route, builder)
+            restoreState = restoreAnyState
         }
     }
 }

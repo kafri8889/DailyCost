@@ -18,10 +18,6 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.DailyCost"
         tools:targetApi="31">
-        
-        <service
-            android:name="androidx.work.multiprocess.RemoteWorkerService"
-            android:exported="false"/>
 
         <provider
             android:exported="false"
@@ -39,7 +35,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.DailyCost">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
