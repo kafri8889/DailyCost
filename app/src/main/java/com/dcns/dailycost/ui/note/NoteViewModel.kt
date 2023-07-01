@@ -1,4 +1,4 @@
-package com.dcns.dailycost.ui.create_edit_note
+package com.dcns.dailycost.ui.note
 
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.model.Note
@@ -12,19 +12,19 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class CreateEditNoteViewModel @Inject constructor(
+class NoteViewModel @Inject constructor(
     private val userCredentialRepository: UserCredentialRepository,
     private val noteUseCases: NoteUseCases
-): BaseViewModel<CreateEditNoteState, CreateEditNoteAction>() {
+): BaseViewModel<NoteState, NoteAction>() {
 
     init {
     }
 
-    override fun defaultState(): CreateEditNoteState = CreateEditNoteState()
+    override fun defaultState(): NoteState = NoteState()
 
-    override fun onAction(action: CreateEditNoteAction) {
+    override fun onAction(action: NoteAction) {
         when(action) {
-            is CreateEditNoteAction.UpdateTitle -> {
+            is NoteAction.UpdateTitle -> {
                 viewModelScope.launch {
                     updateState {
                         copy(
@@ -33,7 +33,7 @@ class CreateEditNoteViewModel @Inject constructor(
                     }
                 }
             }
-            is CreateEditNoteAction.UpdateDescription -> {
+            is NoteAction.UpdateDescription -> {
                 viewModelScope.launch {
                     updateState {
                         copy(
@@ -42,7 +42,7 @@ class CreateEditNoteViewModel @Inject constructor(
                     }
                 }
             }
-            is CreateEditNoteAction.UpdateDate -> {
+            is NoteAction.UpdateDate -> {
                 viewModelScope.launch {
                     updateState {
                         copy(
@@ -51,7 +51,7 @@ class CreateEditNoteViewModel @Inject constructor(
                     }
                 }
             }
-            is CreateEditNoteAction.UpdateImage -> {
+            is NoteAction.UpdateImage -> {
                 viewModelScope.launch {
                     updateState {
                         copy(
@@ -60,7 +60,7 @@ class CreateEditNoteViewModel @Inject constructor(
                     }
                 }
             }
-            is CreateEditNoteAction.CreateNote -> {
+            is NoteAction.CreateNote -> {
                 viewModelScope.launch {
                     val mState = state.value
 //                  Create Post Request
@@ -88,7 +88,7 @@ class CreateEditNoteViewModel @Inject constructor(
 
                 }
             }
-            is CreateEditNoteAction.EditNote -> {
+            is NoteAction.EditNote -> {
                 viewModelScope.launch {
 //                    todo
                 }

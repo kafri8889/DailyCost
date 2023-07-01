@@ -1,4 +1,4 @@
-package com.dcns.dailycost.ui.create_edit_note
+package com.dcns.dailycost.ui.note
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -70,8 +70,8 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateEditNoteScreen(
-    viewModel: CreateEditNoteViewModel,
+fun NoteScreen(
+    viewModel: NoteViewModel,
     navigationActions: NavigationActions
 ) {
 
@@ -81,8 +81,7 @@ fun CreateEditNoteScreen(
 
     BackHandler {
         navigationActions.navigateTo(
-            destination = TopLevelDestinations.Home.dashboard,
-            inclusivePopUpTo = true
+            destination = TopLevelDestinations.Home.dashboard
         )
     }
 
@@ -97,8 +96,7 @@ fun CreateEditNoteScreen(
                     IconButton(
                         onClick = {
                             navigationActions.navigateTo(
-                                destination = TopLevelDestinations.Home.dashboard,
-                                inclusivePopUpTo = true
+                                destination = TopLevelDestinations.Home.dashboard
                             )
                         }
                     ) {
@@ -118,10 +116,10 @@ fun CreateEditNoteScreen(
             viewModel = viewModel,
             state = state,
             onTitleChanged = { s ->
-                viewModel.onAction(CreateEditNoteAction.UpdateTitle(s))
+                viewModel.onAction(NoteAction.UpdateTitle(s))
             },
             onDescriptionChanged = { s ->
-                viewModel.onAction(CreateEditNoteAction.UpdateDescription(s))
+                viewModel.onAction(NoteAction.UpdateDescription(s))
             }
         )
     }
@@ -132,11 +130,11 @@ fun CreateEditNoteScreen(
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun CreateEditNoteForm(
-    state: CreateEditNoteState,
+    state: NoteState,
     modifier: Modifier = Modifier,
     onTitleChanged: (String) -> Unit = {},
     onDescriptionChanged: (String) -> Unit = {},
-    viewModel: CreateEditNoteViewModel,
+    viewModel: NoteViewModel,
 ) {
     val (
         titleFocusRequester,
@@ -272,7 +270,7 @@ private fun CreateEditNoteForm(
                                 onClick = {
                                     openDialog.value = false
                                     snackScope.launch {
-                                        viewModel.onAction(CreateEditNoteAction.UpdateDate(datePickerState.selectedDateMillis))
+                                        viewModel.onAction(NoteAction.UpdateDate(datePickerState.selectedDateMillis))
                                         snackState.showSnackbar(
                                             "Selected date timestamp: ${datePickerState.selectedDateMillis}"
                                         )
@@ -300,7 +298,7 @@ private fun CreateEditNoteForm(
             Button(
                 onClick = {
                     state.toString()
-                    viewModel.onAction(CreateEditNoteAction.CreateNote(context))
+                    viewModel.onAction(NoteAction.CreateNote(context))
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -321,7 +319,7 @@ private fun CreateEditNoteForm(
 
 @Composable
 fun RequestContentPermission(
-    viewModel: CreateEditNoteViewModel
+    viewModel: NoteViewModel
 ) {
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
@@ -334,7 +332,7 @@ fun RequestContentPermission(
     val launcher = rememberLauncherForActivityResult(contract =
     ActivityResultContracts.GetContent()) { uri: Uri? ->
         imageUri = uri
-        viewModel.onAction(CreateEditNoteAction.UpdateImage(uri = uri))
+        viewModel.onAction(NoteAction.UpdateImage(uri = uri))
     }
     Column() {
         Button(onClick = {
@@ -372,7 +370,7 @@ fun RequestContentPermission(
 fun LoginScreenContentPreview() {
 
     CreateEditNoteForm(
-        state = CreateEditNoteState(),
+        state = NoteState(),
         viewModel = hiltViewModel()
     )
 }
