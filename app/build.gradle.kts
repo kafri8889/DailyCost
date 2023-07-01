@@ -28,10 +28,10 @@ android {
     }
 
     testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-            isReturnDefaultValues = true
-        }
+//        unitTests {
+//            isIncludeAndroidResources = true
+//            isReturnDefaultValues = true
+//        }
     }
 
     buildTypes {
@@ -48,7 +48,7 @@ android {
 
             kotlinOptions {
                 freeCompilerArgs += listOf(
-                    "-Xopt-in=kotlin.RequiresOptIn",
+                    "-opt-in=kotlin.RequiresOptIn",
                     "-Xjvm-default=all"
                 )
             }
@@ -61,7 +61,7 @@ android {
 
             kotlinOptions {
                 freeCompilerArgs += listOf(
-                    "-Xopt-in=kotlin.RequiresOptIn",
+                    "-opt-in=kotlin.RequiresOptIn",
                     "-Xjvm-default=all"
                 )
             }
@@ -80,7 +80,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.7"
+        kotlinCompilerExtensionVersion = "1.4.8"
     }
     packaging {
         resources {
@@ -97,10 +97,10 @@ wire {
 
 dependencies {
 
-    val kotlin_version by extra("1.8.21")
-    val compose_version by extra("1.5.0-beta02")
+    val kotlin_version by extra("1.8.22")
+    val compose_version by extra("1.5.0-beta03")
     val lifecycle_version by extra("2.6.1")
-    val accompanist_version by extra("0.31.3-beta")
+    val accompanist_version by extra("0.31.4-beta")
 
 //    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
@@ -139,8 +139,6 @@ dependencies {
     // Biometric
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha05")
 
-    implementation("com.google.android.gms:play-services-auth:20.6.0")
-
     // Material Design
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.compose.material:material:1.4.3")
@@ -176,9 +174,9 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.44.2")
 
     // Room
-    implementation("androidx.room:room-runtime:2.5.1")
-    implementation("androidx.room:room-ktx:2.5.1")
-    kapt("androidx.room:room-compiler:2.5.1")
+    implementation("androidx.room:room-runtime:2.5.2")
+    implementation("androidx.room:room-ktx:2.5.2")
+    kapt("androidx.room:room-compiler:2.5.2")
 
     // Accompanist
     implementation("com.google.accompanist:accompanist-pager:${extra["accompanist_version"]}")

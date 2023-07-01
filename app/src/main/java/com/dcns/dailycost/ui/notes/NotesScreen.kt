@@ -70,10 +70,7 @@ fun NoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navigationActions.navigateTo(
-                        inclusivePopUpTo = true,
-                        destination = TopLevelDestinations.Home.note
-                    )
+
                 },
                 modifier = Modifier
                     .padding(16.dp)
