@@ -1,9 +1,9 @@
-package com.dcns.dailycost.ui.create_edit_note
+package com.dcns.dailycost.ui.note
 
 import androidx.compose.material3.SnackbarDuration
 import com.dcns.dailycost.foundation.base.UiEvent
 
-class CreateEditNoteUiEvent: UiEvent() {
+class NoteUiEvent: UiEvent() {
 
     class GetRemoteNoteFailed(
         override val message: String = "",

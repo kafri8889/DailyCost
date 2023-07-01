@@ -72,7 +72,7 @@ fun NoteScreen(
                 onClick = {
                     navigationActions.navigateTo(
                         inclusivePopUpTo = true,
-                        destination = TopLevelDestinations.Home.createEditNote
+                        destination = TopLevelDestinations.Home.note
                     )
                 },
                 modifier = Modifier

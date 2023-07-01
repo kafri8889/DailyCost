@@ -1,9 +1,9 @@
-package com.dcns.dailycost.ui.create_edit_note
+package com.dcns.dailycost.ui.note
 
 import android.net.Uri
 import androidx.core.net.toUri
 
-data class CreateEditNoteState(
+data class NoteState(
     val isRefreshing: Boolean = false,
     val title: String = "",
     val description: String = "",

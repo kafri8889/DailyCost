@@ -16,7 +16,7 @@ object DestinationRoute {
     const val SPLASH = "splash"
     const val LOGIN = "login"
     const val NOTES = "notes"
-    const val CREATE_EDIT_NOTE = "create_edit_note"
+    const val NOTE = "note"
 }
 
 /**
@@ -176,10 +176,8 @@ object TopLevelDestinations {
             name = R.string.notes
         )
 
-        val createEditNote = TopLevelDestination(
-            route = DestinationRoute.CREATE_EDIT_NOTE,
-            icon = R.drawable.ic_notes,
-            name = R.string.notes
+        val note = TopLevelDestination(
+            route = DestinationRoute.NOTE
         )
     }
 
