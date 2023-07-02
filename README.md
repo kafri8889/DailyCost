@@ -15,15 +15,15 @@ Front End: https://github.com/fikrimln16/dailycost-fe-app
 Join discord untuk info lebih lengkap
 
 # Prerequisite
-Compose Version: 1.5.0-beta02
+Compose Version: 1.5.0-beta03
 
-Kotlin Version: 1.8.21
+Kotlin Version: 1.8.22
 
-Android Gradle Plugin Version: 8.2.0-alpha09
+Android Gradle Plugin Version: 8.2.0-alpha10
 
 Java Version: 17
 
-Android Studio Version: Hedgehog Canary 9
+Android Studio Version: Hedgehog Canary 10
 
 # Project Structure
 ```
@@ -51,6 +51,6 @@ Aplikasi ini menggunakan **Clean Architecture**, lebih lengkapnya lihat disini h
 # Contributors for this project
 - [Fikri](https://twitter.com/maulanafikri455)
 - [Anaf](https://twitter.com/anafthdev_)
-- [Rabih](https://github.com/RobyCigar)
+- [Rabih]([https://github.com/RobyCigar](https://twitter.com/Robycigar))
 - [Aziz](https://twitter.com/ihsanazz)
 - [deotamaaa](https://github.com/deotamaaa)
