@@ -145,6 +145,9 @@ private fun DashboardScreenContent(
             item {
                 BalanceCard(
                     balance = state.balance,
+                    onTopUpClicked = {
+
+                    },
                     modifier = Modifier
                         .fillMaxWidth(0.96f)
                 )

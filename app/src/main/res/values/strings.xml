@@ -92,4 +92,6 @@
     <string name="see_all">See all</string>
     <string name="expenses">Expenses</string>
     <string name="income">Income</string>
+    <string name="subscribtions_wallet">Subscribtion’s wallet</string>
+    <string name="monthly_expenses_x">Monthly expenses %1$s</string>
 </resources>
