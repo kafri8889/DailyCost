@@ -11,8 +11,15 @@ object CommonDateFormatter {
     val api = SimpleDateFormat("dd MMMM yyyy hh:mm:ss", Locale.US)
 
     /**
-     * Date format dengan format "EEEE, dd MMM yyyy"
+     * Date format dengan format "EEEE, dd MMM yyyy" dan locale US
      */
     val edmy = SimpleDateFormat("EEEE, dd MMM yyyy", Locale.US)
+
+    /**
+     * Date format dengan format "EEEE, dd MMM yyyy" dan custom locale
+     */
+    fun edmy(locale: Locale): SimpleDateFormat {
+        return SimpleDateFormat("EEEE, dd MMM yyyy", locale)
+    }
 
 }

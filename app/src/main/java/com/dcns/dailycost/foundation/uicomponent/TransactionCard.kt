@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +38,8 @@ fun TransactionCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
+
+    val context = LocalContext.current
 
     Card(
         onClick = onClick,
@@ -80,7 +83,7 @@ fun TransactionCard(
                 )
 
                 Text(
-                    text = CommonDateFormatter.edmy.format(transaction.date),
+                    text = CommonDateFormatter.edmy(context.resources.configuration.locales[0]).format(transaction.date),
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.Normal,
                         color = DailyCostTheme.colorScheme.labelText
