@@ -1,4 +1,4 @@
-package com.dcns.dailycost.theme
+package com.dcns.dailycost.foundation.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

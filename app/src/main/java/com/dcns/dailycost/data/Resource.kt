@@ -1,5 +1,8 @@
 package com.dcns.dailycost.data
 
+/**
+ * Mirip [Result] punya kotlin
+ */
 data class Resource<out T>(
     val status: Status,
     val data: T?,

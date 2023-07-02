@@ -91,4 +91,6 @@
     <string name="see_all">Lihat semua</string>
     <string name="expenses">Pengeluaran</string>
     <string name="income">Pemasukan</string>
+    <string name="subscribtions_wallet">Dompet langganan</string>
+    <string name="monthly_expenses_x">Pengeluaran bulanan %1$s</string>
 </resources>

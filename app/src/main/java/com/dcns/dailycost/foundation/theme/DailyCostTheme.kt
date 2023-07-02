@@ -1,4 +1,4 @@
-package com.dcns.dailycost.theme
+package com.dcns.dailycost.foundation.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf

@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.dcns.dailycost.data.Language
-import com.dcns.dailycost.theme.DailyCostTheme
+import com.dcns.dailycost.foundation.theme.DailyCostTheme
 
 private class SelectablePreviewParameter: PreviewParameterProvider<Boolean> {
     override val values: Sequence<Boolean>

@@ -39,7 +39,7 @@ import com.dcns.dailycost.R
 import com.dcns.dailycost.data.datasource.local.LocalNoteDataProvider
 import com.dcns.dailycost.data.model.Note
 import com.dcns.dailycost.foundation.extension.dailyCostMarquee
-import com.dcns.dailycost.theme.DailyCostTheme
+import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer

@@ -42,11 +42,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.Language
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
+import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.DrawerItem
 import com.dcns.dailycost.navigation.HomeNavHost
 import com.dcns.dailycost.navigation.LoginRegisterNavHost
@@ -54,12 +56,12 @@ import com.dcns.dailycost.navigation.OnboardingNavHost
 import com.dcns.dailycost.navigation.home.ChangeLanguageNavigation
 import com.dcns.dailycost.navigation.home.DashboardNavigation
 import com.dcns.dailycost.navigation.home.NoteNavigation
+import com.dcns.dailycost.navigation.home.NotesNavigation
 import com.dcns.dailycost.navigation.home.SettingNavigation
 import com.dcns.dailycost.navigation.home.SplashNavigation
 import com.dcns.dailycost.navigation.login_register.LoginNavigation
 import com.dcns.dailycost.navigation.login_register.RegisterNavigation
 import com.dcns.dailycost.navigation.onboarding.OnboardingNavigation
-import com.dcns.dailycost.theme.DailyCostTheme
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
@@ -138,13 +140,13 @@ fun DailyCostApp(
 
     LaunchedEffect(state.userCredential, state.isFirstInstall, state.userFirstEnteredApp) {
         if (state.userFirstEnteredApp && state.isFirstInstall != null && state.userCredential != null) {
-            navActions.navigateTo(
-                destination = when {
-                    state.isFirstInstall == true -> TopLevelDestinations.Onboarding.onboarding
-                    state.userCredential!!.isLoggedIn -> TopLevelDestinations.Home.dashboard
-                    else -> TopLevelDestinations.LoginRegister.login
-                }
-            )
+            val dest = when {
+                state.isFirstInstall == true -> TopLevelDestinations.Onboarding.onboarding
+                state.userCredential!!.isLoggedIn -> TopLevelDestinations.Home.dashboard
+                else -> TopLevelDestinations.LoginRegister.login
+            }
+
+            navActions.navigateTo(dest)
 
             viewModel.onAction(DailyCostAppAction.UpdateUserFirstEnteredApp(false))
         }
@@ -203,12 +205,16 @@ fun DailyCostApp(
                 }
             ) {
                 DailyCostBottomSheetLayout(bottomSheetNavigator) {
-                    BackHandler {
+                    BackHandler(drawerState.isOpen) {
                         if (drawerState.isOpen) {
                             scope.launch {
                                 drawerState.close()
                             }
                         }
+                    }
+
+                    BackHandler(state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route) {
+                        (context as MainActivity).finishAndRemoveTask()
                     }
 
                     DailyCostNavHost(
@@ -257,7 +263,7 @@ private fun DailyCostNavHost(
                 onNavigationIconClicked = onNavigationIconClicked
             )
 
-            NoteNavigation(
+            NotesNavigation(
                 navigationActions = navActions,
                 onNavigationIconClicked = onNavigationIconClicked
             )

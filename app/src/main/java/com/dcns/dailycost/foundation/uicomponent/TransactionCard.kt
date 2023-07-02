@@ -28,7 +28,7 @@ import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.LocalCurrency
 import com.dcns.dailycost.foundation.common.Transaction
 import com.dcns.dailycost.foundation.extension.dailyCostMarquee
-import com.dcns.dailycost.theme.DailyCostTheme
+import com.dcns.dailycost.foundation.theme.DailyCostTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

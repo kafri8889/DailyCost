@@ -49,9 +49,9 @@ import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.datasource.local.LocalExpenseDataProvider
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.NoRippleTheme
+import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.BalanceCard
 import com.dcns.dailycost.foundation.uicomponent.TransactionCard
-import com.dcns.dailycost.theme.DailyCostTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,7 +90,8 @@ fun DashboardScreen(
                     navigationActions.navigateTo(
                         destination = TopLevelDestinations.Home.note,
                         builder = NavigationActions.defaultNavOptionsBuilder(
-                            popTo = TopLevelDestinations.Home.dashboard
+                            popTo = TopLevelDestinations.Home.dashboard,
+                            inclusivePopUpTo = true
                         )
                     )
                 }
@@ -144,6 +145,9 @@ private fun DashboardScreenContent(
             item {
                 BalanceCard(
                     balance = state.balance,
+                    onTopUpClicked = {
+
+                    },
                     modifier = Modifier
                         .fillMaxWidth(0.96f)
                 )
