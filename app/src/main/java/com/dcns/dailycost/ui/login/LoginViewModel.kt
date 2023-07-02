@@ -9,10 +9,11 @@ import com.dcns.dailycost.data.model.remote.request_body.LoginRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.data.model.remote.response.LoginResponse
 import com.dcns.dailycost.domain.repository.IBalanceRepository
-import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.repository.IUserPreferenceRepository
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
+import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
+import com.dcns.dailycost.domain.util.EditUserCredentialType
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.EmailValidator
@@ -28,8 +29,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val userCredentialRepository: IUserCredentialRepository,
     private val userPreferenceRepository: IUserPreferenceRepository,
+    private val userCredentialUseCases: UserCredentialUseCases,
     private val userBalanceRepository: IBalanceRepository,
     private val loginRegisterUseCases: LoginRegisterUseCases,
     private val connectivityManager: ConnectivityManager,
@@ -124,12 +125,12 @@ class LoginViewModel @Inject constructor(
                     }
 
                     // Clear credential
-                    with(userCredentialRepository) {
-                        setId("")
-                        setName("")
-                        setEmail("")
-                        setToken("")
-                        setPassword("")
+                    with(userCredentialUseCases.editUserCredentialUseCase) {
+                        invoke(EditUserCredentialType.ID(""))
+                        invoke(EditUserCredentialType.Name(""))
+                        invoke(EditUserCredentialType.Email(""))
+                        invoke(EditUserCredentialType.Token(""))
+                        invoke(EditUserCredentialType.Password(""))
                     }
                 }
             }
@@ -190,18 +191,16 @@ class LoginViewModel @Inject constructor(
                                 val body = response.body() as LoginResponse
 
                                 if (mState.rememberMe) {
-                                    launch {
-                                        with(userCredentialRepository) {
-                                            setName(body.data.name)
-                                            setEmail(mState.email)
-                                            setPassword(mState.password)
-                                        }
+                                    with(userCredentialUseCases.editUserCredentialUseCase) {
+                                        invoke(EditUserCredentialType.Name(body.data.name))
+                                        invoke(EditUserCredentialType.Email(mState.email))
+                                        invoke(EditUserCredentialType.Password(mState.password))
                                     }
                                 }
 
-                                with(userCredentialRepository) {
-                                    setId(body.data.id.toString())
-                                    setToken(body.token)
+                                with(userCredentialUseCases.editUserCredentialUseCase) {
+                                    invoke(EditUserCredentialType.ID(body.data.id.toString()))
+                                    invoke(EditUserCredentialType.Token(body.token))
                                 }
 
                                 userPreferenceRepository.setIsNotFirstInstall(true)

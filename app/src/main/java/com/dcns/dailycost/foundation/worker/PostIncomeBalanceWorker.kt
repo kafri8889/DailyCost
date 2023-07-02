@@ -8,8 +8,8 @@ import androidx.work.workDataOf
 import com.dcns.dailycost.data.model.remote.request_body.IncomeRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.data.model.remote.response.IncomePostResponse
-import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
+import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.foundation.common.Workers
 import com.dcns.dailycost.foundation.extension.fromJson
 import com.google.gson.Gson
@@ -24,7 +24,7 @@ class PostIncomeBalanceWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted params: WorkerParameters,
     private val incomeUseCases: IncomeUseCases,
-    private val userCredentialRepository: IUserCredentialRepository,
+    private val userCredentialUseCases: UserCredentialUseCases
 ): CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
@@ -44,7 +44,7 @@ class PostIncomeBalanceWorker @AssistedInject constructor(
     }
 
     private suspend fun postIncome(requestBody: RequestBody): Result {
-        val token = userCredentialRepository.getUserCredential.firstOrNull()?.getAuthToken()
+        val token = userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.getAuthToken()
 
         if (token != null) {
             incomeUseCases.addRemoteIncomeUseCase(requestBody, token).let {

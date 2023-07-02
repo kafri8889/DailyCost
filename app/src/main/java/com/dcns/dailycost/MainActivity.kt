@@ -9,7 +9,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.work.WorkManager
-import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
 import com.dcns.dailycost.foundation.common.Workers
@@ -29,7 +28,6 @@ import javax.inject.Inject
 class MainActivity: LocalizedActivity() {
 
     @Inject lateinit var connectivityManager: ConnectivityManager
-    @Inject lateinit var userCredentialRepository: IUserCredentialRepository
 
     private val dailyCostAppViewModel: DailyCostAppViewModel by viewModels()
 
