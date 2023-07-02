@@ -12,6 +12,8 @@ Back End: https://github.com/fikrimln16/dailycost-be-app
 
 Front End: https://github.com/fikrimln16/dailycost-fe-app
 
+Dokumentasi: [GitBook](https://anafthdev.gitbook.io/dailycost-android-documentation/)
+
 Join discord untuk info lebih lengkap
 
 # Prerequisite
