@@ -2,8 +2,8 @@ package com.dcns.dailycost.ui.note
 
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.model.Note
-import com.dcns.dailycost.data.repository.UserCredentialRepository
 import com.dcns.dailycost.domain.use_case.NoteUseCases
+import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NoteViewModel @Inject constructor(
-    private val userCredentialRepository: UserCredentialRepository,
+    private val userCredentialUseCases: UserCredentialUseCases,
     private val noteUseCases: NoteUseCases
 ): BaseViewModel<NoteState, NoteAction>() {
 

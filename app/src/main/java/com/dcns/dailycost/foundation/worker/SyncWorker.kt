@@ -1,5 +1,6 @@
 package com.dcns.dailycost.foundation.worker
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
@@ -9,12 +10,12 @@ import com.dcns.dailycost.data.CategoryIcon
 import com.dcns.dailycost.data.model.Category
 import com.dcns.dailycost.data.model.UserCredential
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
-import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.use_case.CategoryUseCases
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.NoteUseCases
+import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.util.GetCategoryBy
 import com.dcns.dailycost.domain.util.GetNoteBy
 import com.dcns.dailycost.domain.util.InputActionType
@@ -43,11 +44,12 @@ class SyncWorker @AssistedInject constructor(
     private val incomeUseCases: IncomeUseCases,
     private val expenseUseCases: ExpenseUseCases,
     private val categoryUseCases: CategoryUseCases,
-    private val userCredentialRepository: IUserCredentialRepository
+    private val userCredentialUseCases: UserCredentialUseCases
 ): CoroutineWorker(context, params) {
 
+    @SuppressLint("RestrictedApi")
     override suspend fun doWork(): Result {
-        val credential = userCredentialRepository.getUserCredential.firstOrNull()
+        val credential = userCredentialUseCases.getUserCredentialUseCase().firstOrNull()
             ?: return Result.failure(
                 workDataOf(
                     Workers.ARG_WORKER_MESSAGE_KEY to "Null credential"

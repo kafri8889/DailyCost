@@ -8,8 +8,8 @@ import androidx.work.workDataOf
 import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.data.model.remote.response.DepoResponse
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
-import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.use_case.DepoUseCases
+import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.foundation.common.Workers
 import com.dcns.dailycost.foundation.extension.fromJson
 import com.google.gson.Gson
@@ -24,7 +24,7 @@ class EditBalanceWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted params: WorkerParameters,
     private val depoUseCases: DepoUseCases,
-    private val userCredentialRepository: IUserCredentialRepository,
+    private val userCredentialUseCases: UserCredentialUseCases
 ): CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
@@ -57,7 +57,7 @@ class EditBalanceWorker @AssistedInject constructor(
 //    }
 
     private suspend fun editBalance(requestBody: RequestBody): Result {
-        val token = userCredentialRepository.getUserCredential.firstOrNull()?.getAuthToken()
+        val token = userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.getAuthToken()
 
         if (token != null) {
             depoUseCases.editDepoUseCase(requestBody, token).let {
