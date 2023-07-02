@@ -12,6 +12,7 @@ object DestinationRoute {
     const val ONBOARDING = "onboarding"
     const val DASHBOARD = "dashboard"
     const val REGISTER = "register"
+    const val EXPENSE = "expense"
     const val SETTING = "setting"
     const val SPLASH = "splash"
     const val LOGIN = "login"
@@ -144,6 +145,10 @@ object TopLevelDestinations {
             route = DestinationRoute.DASHBOARD,
             icon = R.drawable.ic_dashboard,
             name = R.string.dashboard
+        )
+
+        val expense = TopLevelDestination(
+            route = DestinationRoute.EXPENSE
         )
 
         val setting = TopLevelDestination(
