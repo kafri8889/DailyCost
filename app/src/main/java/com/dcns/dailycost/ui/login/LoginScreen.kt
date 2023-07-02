@@ -128,7 +128,12 @@ fun LoginScreen(
 
                 useCaseState.hide()
 
-                navigationActions.navigateTo(TopLevelDestinations.Home.dashboard)
+                navigationActions.navigateTo(
+                    destination = TopLevelDestinations.Home.dashboard,
+                    builder = NavigationActions.defaultNavOptionsBuilder(
+                        popTo = TopLevelDestinations.Home.dashboard
+                    )
+                )
             }
             Status.Error -> {
                 Timber.i("Login error: ${state.resource?.message}")
