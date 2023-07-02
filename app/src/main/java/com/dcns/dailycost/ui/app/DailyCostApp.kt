@@ -2,7 +2,6 @@ package com.dcns.dailycost.ui.app
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -34,7 +33,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -334,7 +332,7 @@ private fun DailyCostDrawerContent(
     onSignOutClicked: () -> Unit,
     onSettingClicked: () -> Unit
 ) {
-    val signOutInteractionSource = remember { MutableInteractionSource() }
+    val context = LocalContext.current
 
     ModalDrawerSheet {
         LazyColumn(
@@ -349,7 +347,7 @@ private fun DailyCostDrawerContent(
                 ) {
                     DrawerItem(
                         title = {
-                            Text(stringResource(id = R.string.dashboard))
+                            Text(context.getString(R.string.dashboard))
                         },
                         icon = {
                             Icon(
@@ -375,10 +373,10 @@ private fun DailyCostDrawerContent(
                 ) {
                     DrawerItem(
                         title = {
-                            Text(stringResource(id = R.string.categories))
+                            Text(context.getString(R.string.categories))
                         },
                         summary = {
-                            Text(stringResource(id = R.string.manage_categories_change_icon_color))
+                            Text(context.getString(R.string.manage_categories_change_icon_color))
                         },
                         icon = {
                             Icon(
@@ -400,10 +398,10 @@ private fun DailyCostDrawerContent(
                 ) {
                     DrawerItem(
                         title = {
-                            Text(stringResource(id = R.string.advance_setting))
+                            Text(context.getString(R.string.advance_setting))
                         },
                         summary = {
-                            Text(stringResource(id = R.string.set_number_format_locale_and_app_security))
+                            Text(context.getString(R.string.set_number_format_locale_and_app_security))
                         },
                         icon = {
                             Icon(
@@ -425,7 +423,7 @@ private fun DailyCostDrawerContent(
                 ) {
                     DrawerItem(
                         title = {
-                            Text(stringResource(id = R.string.language))
+                            Text(context.getString(R.string.language))
                         },
                         summary = {
                             Text(language.name)
@@ -450,7 +448,7 @@ private fun DailyCostDrawerContent(
         ) {
             DrawerItem(
                 title = {
-                    Text(stringResource(id = R.string.sign_out))
+                    Text(context.getString(R.string.sign_out))
                 },
                 summary = {
                     Text(email)
