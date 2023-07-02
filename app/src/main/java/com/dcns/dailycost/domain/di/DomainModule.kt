@@ -8,6 +8,7 @@ import com.dcns.dailycost.domain.repository.IIncomeRepository
 import com.dcns.dailycost.domain.repository.ILoginRegisterRepository
 import com.dcns.dailycost.domain.repository.INoteRepository
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
+import com.dcns.dailycost.domain.repository.IUserPreferenceRepository
 import com.dcns.dailycost.domain.use_case.CategoryUseCases
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
@@ -15,6 +16,7 @@ import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.NoteUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
+import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.domain.use_case.category.GetLocalCategoryUseCase
 import com.dcns.dailycost.domain.use_case.category.InputLocalCategoryUseCase
 import com.dcns.dailycost.domain.use_case.depo.EditDepoUseCase
@@ -36,6 +38,8 @@ import com.dcns.dailycost.domain.use_case.note.SyncLocalWithRemoteNoteUseCase
 import com.dcns.dailycost.domain.use_case.note.UpsertLocalNoteUseCase
 import com.dcns.dailycost.domain.use_case.user_credential.EditUserCredentialUseCase
 import com.dcns.dailycost.domain.use_case.user_credential.GetUserCredentialUseCase
+import com.dcns.dailycost.domain.use_case.user_preference.EditUserPreferenceUseCase
+import com.dcns.dailycost.domain.use_case.user_preference.GetUserPreferenceUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -115,6 +119,15 @@ class DomainModule {
     ): UserCredentialUseCases = UserCredentialUseCases(
         editUserCredentialUseCase = EditUserCredentialUseCase(userCredentialRepository),
         getUserCredentialUseCase = GetUserCredentialUseCase(userCredentialRepository)
+    )
+
+    @Provides
+    @Singleton
+    fun provideUserPreferenceUseCases(
+        userPreferenceRepository: IUserPreferenceRepository
+    ): UserPreferenceUseCases = UserPreferenceUseCases(
+        editUserPreferenceUseCase = EditUserPreferenceUseCase(userPreferenceRepository),
+        getUserPreferenceUseCase = GetUserPreferenceUseCase(userPreferenceRepository)
     )
 
 }

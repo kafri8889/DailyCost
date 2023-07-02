@@ -9,11 +9,12 @@ import com.dcns.dailycost.data.model.remote.request_body.LoginRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.data.model.remote.response.LoginResponse
 import com.dcns.dailycost.domain.repository.IBalanceRepository
-import com.dcns.dailycost.domain.repository.IUserPreferenceRepository
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
+import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.domain.util.EditUserCredentialType
+import com.dcns.dailycost.domain.util.EditUserPreferenceType
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.EmailValidator
@@ -29,7 +30,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val userPreferenceRepository: IUserPreferenceRepository,
+    private val userPreferenceUseCases: UserPreferenceUseCases,
     private val userCredentialUseCases: UserCredentialUseCases,
     private val userBalanceRepository: IBalanceRepository,
     private val loginRegisterUseCases: LoginRegisterUseCases,
@@ -57,7 +58,7 @@ class LoginViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            userPreferenceRepository.getUserPreference.collect { pref ->
+            userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
                 updateState {
                     copy(
                         isFirstInstall = !pref.isNotFirstInstall
@@ -203,7 +204,9 @@ class LoginViewModel @Inject constructor(
                                     invoke(EditUserCredentialType.Token(body.token))
                                 }
 
-                                userPreferenceRepository.setIsNotFirstInstall(true)
+                                userPreferenceUseCases.editUserPreferenceUseCase(
+                                    type = EditUserPreferenceType.IsNotFirstInstall(true)
+                                )
 
                                 updateState {
                                     copy(

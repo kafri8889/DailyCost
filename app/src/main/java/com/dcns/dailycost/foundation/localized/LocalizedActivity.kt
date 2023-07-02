@@ -7,7 +7,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.dcns.dailycost.data.Language
-import com.dcns.dailycost.data.repository.UserPreferenceRepository
 import com.dcns.dailycost.foundation.localized.data.OnLocaleChangedListener
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,12 +15,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Locale
-import javax.inject.Inject
 
 abstract class LocalizedActivity: AppCompatActivity() {
-
-	@Inject
-	lateinit var userPreferenceRepository: UserPreferenceRepository
 
 	private val localizedViewModel: LocalizedViewModel by viewModels()
 	private var currentLocale: Locale? = null

@@ -2,8 +2,8 @@ package com.dcns.dailycost.ui.notes
 
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
-import com.dcns.dailycost.data.repository.UserCredentialRepository
 import com.dcns.dailycost.domain.use_case.NoteUseCases
+import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.util.GetNoteBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.extension.toNote
@@ -16,13 +16,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotesViewModel @Inject constructor(
-    private val userCredentialRepository: UserCredentialRepository,
+    private val userCredentialUseCases: UserCredentialUseCases,
     private val noteUseCases: NoteUseCases
 ): BaseViewModel<NotesState, NotesAction>() {
 
     init {
         viewModelScope.launch {
-            userCredentialRepository.getUserCredential.collect { cred ->
+            userCredentialUseCases.getUserCredentialUseCase().collect { cred ->
                 updateState {
                     copy(
                         credential = cred

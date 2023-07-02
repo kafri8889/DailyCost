@@ -1,9 +1,9 @@
 package com.dcns.dailycost.ui.app
 
 import androidx.lifecycle.viewModelScope
-import com.dcns.dailycost.domain.repository.IUserPreferenceRepository
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
+import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -12,14 +12,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DailyCostAppViewModel @Inject constructor(
-    private val userPreferenceRepository: IUserPreferenceRepository,
+    private val userPreferenceUseCases: UserPreferenceUseCases,
     private val userCredentialUseCases: UserCredentialUseCases,
     private val depoUseCases: DepoUseCases
 ): BaseViewModel<DailyCostAppState, DailyCostAppAction>() {
 
     init {
         viewModelScope.launch {
-            userPreferenceRepository.getUserPreference.collect { pref ->
+            userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
                 updateState {
                     copy(
                         isSecureAppEnabled = pref.secureApp,

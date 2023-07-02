@@ -1,8 +1,9 @@
 package com.dcns.dailycost.ui.setting
 
 import androidx.lifecycle.viewModelScope
-import com.dcns.dailycost.data.repository.UserCredentialRepository
-import com.dcns.dailycost.data.repository.UserPreferenceRepository
+import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
+import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
+import com.dcns.dailycost.domain.util.EditUserPreferenceType
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -10,13 +11,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val userCredentialRepository: UserCredentialRepository,
-    private val userPreferenceRepository: UserPreferenceRepository,
+    private val userCredentialUseCases: UserCredentialUseCases,
+    private val userPreferenceUseCases: UserPreferenceUseCases,
 ): BaseViewModel<SettingState, SettingAction>() {
 
     init {
         viewModelScope.launch {
-            userCredentialRepository.getUserCredential.collect { cred ->
+            userCredentialUseCases.getUserCredentialUseCase().collect { cred ->
                 updateState {
                     copy(
                         userCredential = cred
@@ -26,7 +27,7 @@ class SettingViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            userPreferenceRepository.getUserPreference.collect { pref ->
+            userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
                 updateState {
                     copy(
                         language = pref.language,
@@ -43,7 +44,9 @@ class SettingViewModel @Inject constructor(
         when (action) {
             is SettingAction.UpdateIsSecureAppEnabled -> {
                 viewModelScope.launch {
-                    userPreferenceRepository.setSecureApp(action.enabled)
+                    userPreferenceUseCases.editUserPreferenceUseCase(
+                        type = EditUserPreferenceType.SecureApp(action.enabled)
+                    )
                 }
             }
         }
