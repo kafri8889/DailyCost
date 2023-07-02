@@ -25,6 +25,7 @@ import com.dcns.dailycost.domain.use_case.depo.GetRemoteBalanceUseCase
 import com.dcns.dailycost.domain.use_case.depo.UpdateLocalBalanceUseCase
 import com.dcns.dailycost.domain.use_case.expense.AddRemoteExpenseUseCase
 import com.dcns.dailycost.domain.use_case.expense.DeleteRemoteExpenseUseCase
+import com.dcns.dailycost.domain.use_case.expense.GetLocalExpenseUseCase
 import com.dcns.dailycost.domain.use_case.expense.GetRemoteExpenseUseCase
 import com.dcns.dailycost.domain.use_case.expense.SyncLocalWithRemoteExpenseUseCase
 import com.dcns.dailycost.domain.use_case.income.AddRemoteIncomeUseCase
@@ -100,6 +101,7 @@ class DomainModule {
         addRemoteExpenseUseCase = AddRemoteExpenseUseCase(expenseRepository),
         deleteRemoteExpenseUseCase = DeleteRemoteExpenseUseCase(expenseRepository),
         getRemoteExpenseUseCase = GetRemoteExpenseUseCase(expenseRepository),
+        getLocalExpenseUseCase = GetLocalExpenseUseCase(expenseRepository),
         syncLocalWithRemoteExpenseUseCase = SyncLocalWithRemoteExpenseUseCase(expenseRepository)
     )
 

@@ -2,7 +2,8 @@ package com.dcns.dailycost.ui.dashboard
 
 import com.dcns.dailycost.ProtoUserBalance
 import com.dcns.dailycost.ProtoUserCredential
-import com.dcns.dailycost.data.model.Note
+import com.dcns.dailycost.data.model.Expense
+import com.dcns.dailycost.data.model.Income
 import com.dcns.dailycost.data.model.UserBalance
 import com.dcns.dailycost.data.model.UserCredential
 import com.dcns.dailycost.foundation.extension.toUserBalance
@@ -13,5 +14,6 @@ data class DashboardState(
     val balance: UserBalance = ProtoUserBalance().toUserBalance(),
     val internetConnectionAvailable: Boolean = true,
     val isRefreshing: Boolean = false,
-    val recentNotes: List<Note> = emptyList()
+    val expenses: List<Expense> = emptyList(),
+    val incomes: List<Income> = emptyList(),
 )

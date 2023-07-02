@@ -46,7 +46,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
-import com.dcns.dailycost.data.datasource.local.LocalExpenseDataProvider
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.NoRippleTheme
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
@@ -170,7 +169,7 @@ private fun DashboardScreenContent(
             }
 
             items(
-                items = LocalExpenseDataProvider.values,
+                items = state.expenses,
                 key = { item -> item.id }
             ) { expense ->
                 CompositionLocalProvider(

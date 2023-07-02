@@ -6,20 +6,17 @@ import com.dcns.dailycost.data.Resource
 import com.dcns.dailycost.data.Status
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.domain.use_case.DepoUseCases
-import com.dcns.dailycost.domain.use_case.NoteUseCases
+import com.dcns.dailycost.domain.use_case.ExpenseUseCases
+import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
-import com.dcns.dailycost.domain.util.GetNoteBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.IResponse
 import com.dcns.dailycost.foundation.common.SharedUiEvent
-import com.dcns.dailycost.foundation.extension.toNote
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,9 +24,10 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     private val userCredentialUseCases: UserCredentialUseCases,
     private val connectivityManager: ConnectivityManager,
+    private val expenseUseCases: ExpenseUseCases,
+    private val incomeUseCases: IncomeUseCases,
     private val sharedUiEvent: SharedUiEvent,
     private val depoUseCases: DepoUseCases,
-    private val noteUseCases: NoteUseCases
 ): BaseViewModel<DashboardState, DashboardAction>() {
 
     init {
@@ -59,10 +57,10 @@ class DashboardViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            noteUseCases.getLocalNoteUseCase().collect { notes ->
+            expenseUseCases.getLocalExpenseUseCase().collect { expenseList ->
                 updateState {
                     copy(
-                        recentNotes = notes.take(2)
+                        expenses = expenseList
                     )
                 }
             }
@@ -86,41 +84,6 @@ class DashboardViewModel @Inject constructor(
                     )
                 }
             }
-        }
-    }
-
-    private suspend fun getRemoteNote(): Resource<IResponse> {
-        val mState = state.value
-
-        return noteUseCases.getRemoteNoteUseCase(
-            token = mState.credential.getAuthToken(),
-            getNoteBy = GetNoteBy.UserID(mState.credential.id.toInt())
-        ).let { response ->
-            if (response.isSuccessful) {
-                val noteResponse = response.body()
-
-                noteResponse?.let {
-                    Timber.i("upserting notes to db...")
-                    withContext(Dispatchers.IO) {
-                        noteUseCases.upsertLocalNoteUseCase(
-                            *noteResponse.data
-                                .map { it.toNote() }
-                                .toTypedArray()
-                        )
-                    }
-                }
-
-                Timber.i("get remote note success")
-
-                return Resource.success(noteResponse)
-            }
-
-            val errorResponse = Gson().fromJson(
-                response.errorBody()?.charStream(),
-                ErrorResponse::class.java
-            )
-
-            Resource.error(errorResponse.message, null)
         }
     }
 
@@ -174,7 +137,6 @@ class DashboardViewModel @Inject constructor(
                 }
 
                 val response = listOf(
-                    getRemoteNote(),
                     getRemoteBalance()
                 )
 

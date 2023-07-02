@@ -16,7 +16,6 @@ import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.NoteUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
-import com.dcns.dailycost.domain.util.GetCategoryBy
 import com.dcns.dailycost.domain.util.GetNoteBy
 import com.dcns.dailycost.domain.util.InputActionType
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
@@ -76,46 +75,49 @@ class SyncWorker @AssistedInject constructor(
                 val expenseResponse = response.body()
 
                 expenseResponse?.let {
+                    val categories = categoryUseCases.getLocalCategoryUseCase().firstOrNull() ?: emptyList()
                     Timber.i("sync expenses to db...")
                     withContext(Dispatchers.IO) {
-                        // Sync local expense with remote expense
-                        expenseUseCases.syncLocalWithRemoteExpenseUseCase(
-                            // Convet [GetExpenseResponseData] to [Expense]
-                            expenseResponse.data
-                                .results
-                                .map {
-                                    it.toExpense(
-                                        userId = credential.id.toInt(),
-                                        date = { date ->
-                                            CommonDateFormatter.api.parse(date)?.time ?: 0
-                                        },
-                                        category = { categoryName ->
-                                            // Get local category
-                                            var category = categoryUseCases.getLocalCategoryUseCase(
-                                                getCategoryBy = GetCategoryBy.Name(categoryName)
-                                            ).firstOrNull()?.getOrNull(0)
 
-                                            // If category not null, use
-                                            if (category != null) category
-                                            else {
-                                                // If null, create new category and insert to db
-                                                category = Category(
-                                                    id = Random(System.currentTimeMillis()).nextInt(),
-                                                    name = categoryName,
-                                                    icon = CategoryIcon.Other
-                                                )
+                        // Convet [GetExpenseResponseData] to [Expense]
+                        val results = expenseResponse
+                            .data
+                            .results
 
-                                                categoryUseCases.inputLocalCategoryUseCase(
-                                                    inputActionType = InputActionType.Upsert,
-                                                    category
-                                                )
+                        val mappedResults = results.map {
+                            it.toExpense(
+                                userId = credential.id.toInt(),
+                                date = { date ->
+                                    CommonDateFormatter.api.parse(date)?.time ?: 0
+                                },
+                                category = { categoryName ->
+                                    // Get local category
+                                    var category = categories.find { it.name == categoryName }
 
-                                                category
-                                            }
-                                        }
-                                    )
+                                    // If category not null, use
+                                    if (category != null) category
+                                    else {
+                                        // If null, create new category and insert to db
+                                        category = Category(
+                                            id = Random(System.currentTimeMillis()).nextInt(),
+                                            name = categoryName,
+                                            icon = CategoryIcon.Other
+                                        )
+
+                                        categoryUseCases.inputLocalCategoryUseCase(
+                                            inputActionType = InputActionType.Upsert,
+                                            category
+                                        )
+
+                                        category
+                                    }
                                 }
-                        )
+                            )
+                        }
+
+                        // Sync local expense with remote expense
+                        expenseUseCases.syncLocalWithRemoteExpenseUseCase(mappedResults)
+                        Timber.i("sync expenses to db success")
                     }
                 }
 

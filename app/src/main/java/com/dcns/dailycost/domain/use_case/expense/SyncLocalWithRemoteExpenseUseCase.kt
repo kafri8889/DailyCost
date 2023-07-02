@@ -3,6 +3,7 @@ package com.dcns.dailycost.domain.use_case.expense
 import com.dcns.dailycost.data.model.Expense
 import com.dcns.dailycost.domain.repository.IExpenseRepository
 import com.dcns.dailycost.foundation.extension.toExpenseDb
+import timber.log.Timber
 
 /**
  * Use case untuk mengsinkronisasikan pengeluaran dari remote ke lokal
@@ -19,6 +20,7 @@ class SyncLocalWithRemoteExpenseUseCase(
         // Update expense lokal dengan data dari expense remote
         // Jika tidak (id dari remote tidak ada di lokal)
         // Insert expense dari remote ke lokal
+        Timber.i("remote expenses: $remoteExpenses")
         expenseRepository.upsertExpense(
             *remoteExpenses
                 .map { it.toExpenseDb() }
