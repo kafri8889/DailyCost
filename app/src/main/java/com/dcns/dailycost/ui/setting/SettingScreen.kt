@@ -3,7 +3,6 @@ package com.dcns.dailycost.ui.setting
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,10 +19,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.Constant
 import com.dcns.dailycost.data.NavigationActions
-import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
-import com.dcns.dailycost.foundation.extension.toast
 import com.dcns.dailycost.foundation.uicomponent.BasicPreference
 import com.dcns.dailycost.foundation.uicomponent.SwitchPreference
 
@@ -106,35 +103,6 @@ fun SettingScreen(
                     },
                     onClick = {
                         uriHandler.openUri(Constant.PRIVACY_POLICY_URL)
-                    }
-                )
-            }
-
-            item {
-                Divider()
-            }
-
-            item {
-                BasicPreference(
-                    title = {
-                        Text(stringResource(id = R.string.logout))
-                    },
-                    summary = { maxLines, overflow ->
-                        Text(
-                            text = state.userCredential.email,
-                            maxLines = maxLines,
-                            overflow = overflow
-                        )
-                    },
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_profile),
-                            contentDescription = null
-                        )
-                    },
-                    onClick = {
-                        context.getString(R.string.logout_success).toast(context)
-                        navigationActions.navigateTo(TopLevelDestinations.LoginRegister.login)
                     }
                 )
             }
