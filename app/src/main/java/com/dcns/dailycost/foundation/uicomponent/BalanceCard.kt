@@ -37,7 +37,7 @@ import com.dcns.dailycost.foundation.common.CurrencyFormatter
 import com.dcns.dailycost.foundation.common.LocalCurrency
 import com.dcns.dailycost.foundation.common.primarySystemLocale
 import com.dcns.dailycost.foundation.extension.dailyCostMarquee
-import com.dcns.dailycost.theme.DailyCostTheme
+import com.dcns.dailycost.foundation.theme.DailyCostTheme
 
 @Preview(showBackground = true)
 @Composable

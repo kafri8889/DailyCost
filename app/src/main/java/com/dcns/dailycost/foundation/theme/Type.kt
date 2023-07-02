@@ -1,4 +1,4 @@
-package com.dcns.dailycost.theme
+package com.dcns.dailycost.foundation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

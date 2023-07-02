@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dcns.dailycost.R
-import com.dcns.dailycost.theme.DailyCostTheme
+import com.dcns.dailycost.foundation.theme.DailyCostTheme
 
 @Preview(showBackground = true)
 @Composable

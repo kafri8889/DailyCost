@@ -48,6 +48,7 @@ import com.dcns.dailycost.data.Language
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
+import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.DrawerItem
 import com.dcns.dailycost.navigation.HomeNavHost
 import com.dcns.dailycost.navigation.LoginRegisterNavHost
@@ -61,7 +62,6 @@ import com.dcns.dailycost.navigation.home.SplashNavigation
 import com.dcns.dailycost.navigation.login_register.LoginNavigation
 import com.dcns.dailycost.navigation.login_register.RegisterNavigation
 import com.dcns.dailycost.navigation.onboarding.OnboardingNavigation
-import com.dcns.dailycost.theme.DailyCostTheme
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout

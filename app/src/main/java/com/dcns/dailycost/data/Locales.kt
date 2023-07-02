@@ -2,6 +2,9 @@ package com.dcns.dailycost.data
 
 import java.util.Locale
 
+/**
+ * Kumpulan custom locale
+ */
 object Locales {
 
     val ARABIC_ALGERIAN: Locale get() = Locale("ar", "DZ")

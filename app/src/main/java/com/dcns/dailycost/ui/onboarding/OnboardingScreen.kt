@@ -42,7 +42,7 @@ import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
-import com.dcns.dailycost.theme.DailyCostTheme
+import com.dcns.dailycost.foundation.theme.DailyCostTheme
 
 @Preview(showBackground = true, showSystemUi = true,
     device = "spec:width=360dp,height=700dp,dpi=320"
