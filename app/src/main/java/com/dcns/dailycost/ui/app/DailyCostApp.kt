@@ -204,16 +204,17 @@ fun DailyCostApp(
                 }
             ) {
                 DailyCostBottomSheetLayout(bottomSheetNavigator) {
-                    BackHandler(drawerState.isOpen) {
-                        if (drawerState.isOpen) {
-                            scope.launch {
-                                drawerState.close()
+                    BackHandler(drawerState.isOpen || state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route) {
+                        when {
+                            drawerState.isOpen -> {
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                            }
+                            state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route -> {
+                                (context as MainActivity).finishAndRemoveTask()
                             }
                         }
-                    }
-
-                    BackHandler(state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route) {
-                        (context as MainActivity).finishAndRemoveTask()
                     }
 
                     DailyCostNavHost(
