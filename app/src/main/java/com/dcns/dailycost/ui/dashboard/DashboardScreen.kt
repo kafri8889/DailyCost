@@ -50,7 +50,7 @@ import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.NoRippleTheme
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.BalanceCard
-import com.dcns.dailycost.foundation.uicomponent.TransactionCard
+import com.dcns.dailycost.foundation.uicomponent.TransactionItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -175,7 +175,7 @@ private fun DashboardScreenContent(
                 CompositionLocalProvider(
                     LocalRippleTheme provides NoRippleTheme
                 ) {
-                    TransactionCard(
+                    TransactionItem(
                         transaction = expense,
                         onClick = {
 

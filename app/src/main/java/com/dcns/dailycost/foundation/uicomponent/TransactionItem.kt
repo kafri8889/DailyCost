@@ -33,7 +33,7 @@ import com.dcns.dailycost.foundation.theme.DailyCostTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TransactionCard(
+fun TransactionItem(
     transaction: Transaction,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
@@ -112,7 +112,7 @@ fun TransactionCard(
 @Composable
 private fun TransactionCardPreview() {
     DailyCostTheme {
-        TransactionCard(
+        TransactionItem(
             transaction = LocalExpenseDataProvider.expense1.copy(
                 name = "Loooooooooooooooooonnnnnnnnnnnnnnnggggggggggg tttteeeeeeekkkkkk"
             ),
