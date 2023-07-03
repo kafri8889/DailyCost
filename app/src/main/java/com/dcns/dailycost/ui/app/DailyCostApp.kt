@@ -51,6 +51,7 @@ import com.dcns.dailycost.foundation.uicomponent.DrawerItem
 import com.dcns.dailycost.navigation.HomeNavHost
 import com.dcns.dailycost.navigation.LoginRegisterNavHost
 import com.dcns.dailycost.navigation.OnboardingNavHost
+import com.dcns.dailycost.navigation.home.CategoriesNavigation
 import com.dcns.dailycost.navigation.home.ChangeLanguageNavigation
 import com.dcns.dailycost.navigation.home.DashboardNavigation
 import com.dcns.dailycost.navigation.home.NoteNavigation
@@ -182,7 +183,12 @@ fun DailyCostApp(
                 language = state.language,
                 onNavigationIconClicked = onNavigationIconClicked,
                 onCategoriesClicked = {
-                    // TODO: ke categories screen
+                    navActions.navigateTo(
+                        destination = TopLevelDestinations.Home.categories,
+                        builder = NavigationActions.defaultNavOptionsBuilder(
+                            popTo = TopLevelDestinations.Home.dashboard
+                        )
+                    )
                     closeDrawer()
                 },
                 onSettingClicked = {
@@ -257,6 +263,7 @@ private fun DailyCostNavHost(
         HomeNavHost {
             ChangeLanguageNavigation(navActions)
             TransactionNavigation(navActions)
+            CategoriesNavigation(navActions)
             NoteNavigation(navActions)
 
             DashboardNavigation(
