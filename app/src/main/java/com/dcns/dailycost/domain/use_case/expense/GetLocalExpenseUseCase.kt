@@ -2,7 +2,7 @@ package com.dcns.dailycost.domain.use_case.expense
 
 import com.dcns.dailycost.data.model.Expense
 import com.dcns.dailycost.domain.repository.IExpenseRepository
-import com.dcns.dailycost.domain.util.GetExpenseBy
+import com.dcns.dailycost.domain.util.GetTransactionBy
 import com.dcns.dailycost.foundation.extension.toExpense
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -16,11 +16,11 @@ class GetLocalExpenseUseCase(
 ) {
 
     operator fun invoke(
-        getExpenseBy: GetExpenseBy = GetExpenseBy.All
+        getTransactionBy: GetTransactionBy = GetTransactionBy.All
     ): Flow<List<Expense>> {
-        val flow = when (getExpenseBy) {
-            is GetExpenseBy.ID -> expenseRepository.getExpenseById(getExpenseBy.id).map { listOf(it) }
-            GetExpenseBy.All -> expenseRepository.getAllExpenses()
+        val flow = when (getTransactionBy) {
+            is GetTransactionBy.ID -> expenseRepository.getExpenseById(getTransactionBy.id).map { listOf(it) }
+            GetTransactionBy.All -> expenseRepository.getAllExpenses()
         }
 
         return flow
