@@ -53,11 +53,11 @@ import com.dcns.dailycost.navigation.LoginRegisterNavHost
 import com.dcns.dailycost.navigation.OnboardingNavHost
 import com.dcns.dailycost.navigation.home.ChangeLanguageNavigation
 import com.dcns.dailycost.navigation.home.DashboardNavigation
-import com.dcns.dailycost.navigation.home.ExpenseNavigation
 import com.dcns.dailycost.navigation.home.NoteNavigation
 import com.dcns.dailycost.navigation.home.NotesNavigation
 import com.dcns.dailycost.navigation.home.SettingNavigation
 import com.dcns.dailycost.navigation.home.SplashNavigation
+import com.dcns.dailycost.navigation.home.TransactionNavigation
 import com.dcns.dailycost.navigation.login_register.LoginNavigation
 import com.dcns.dailycost.navigation.login_register.RegisterNavigation
 import com.dcns.dailycost.navigation.onboarding.OnboardingNavigation
@@ -256,7 +256,7 @@ private fun DailyCostNavHost(
         // Nested navigasi untuk dashboard (ketika user berhasil login)
         HomeNavHost {
             ChangeLanguageNavigation(navActions)
-            ExpenseNavigation(navActions)
+            TransactionNavigation(navActions)
             NoteNavigation(navActions)
 
             DashboardNavigation(
