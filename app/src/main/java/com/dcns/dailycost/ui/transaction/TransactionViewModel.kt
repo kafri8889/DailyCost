@@ -1,4 +1,4 @@
-package com.dcns.dailycost.ui.expense
+package com.dcns.dailycost.ui.transaction
 
 import androidx.lifecycle.SavedStateHandle
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
@@ -7,14 +7,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ExpenseViewModel @Inject constructor(
+class TransactionViewModel @Inject constructor(
     private val expenseUseCases: ExpenseUseCases,
     savedStateHandle: SavedStateHandle
-): BaseViewModel<ExpenseState, ExpenseAction>() {
+): BaseViewModel<TransactionState, TransactionAction>() {
 
-    override fun defaultState(): ExpenseState = ExpenseState()
+    override fun defaultState(): TransactionState = TransactionState()
 
-    override fun onAction(action: ExpenseAction) {
+    override fun onAction(action: TransactionAction) {
 
     }
 }
