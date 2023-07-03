@@ -44,8 +44,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
+import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
+import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.NoRippleTheme
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
@@ -109,6 +112,14 @@ fun DashboardScreen(
             onRefresh = {
                 viewModel.onAction(DashboardAction.Refresh)
             },
+            onNavigateTo = { dest ->
+                navigationActions.navigateTo(
+                    destination = dest,
+                    builder = NavigationActions.defaultNavOptionsBuilder(
+                        popTo = TopLevelDestinations.Home.dashboard
+                    )
+                )
+            },
             modifier = Modifier
                 .padding(scaffoldPadding)
         )
@@ -121,6 +132,7 @@ private fun DashboardScreenContent(
     state: DashboardState,
     lazyListState: LazyListState,
     modifier: Modifier = Modifier,
+    onNavigateTo: (TopLevelDestination) -> Unit,
     onRefresh: () -> Unit
 ) {
 
@@ -155,6 +167,9 @@ private fun DashboardScreenContent(
             item { 
                 TitleSection(
                     title = stringResource(id = R.string.recently_activity),
+                    onSeeAllClick = {
+
+                    },
                     modifier = Modifier
                         .fillMaxWidth(0.92f)
                 )
@@ -163,6 +178,13 @@ private fun DashboardScreenContent(
             item {
                 TitleSection(
                     title = stringResource(id = R.string.expenses),
+                    onSeeAllClick = {
+                        onNavigateTo(
+                            TopLevelDestinations.Home.transactions.createRoute(
+                                DestinationArgument.TRANSACTION_TYPE to TransactionType.Expense
+                            )
+                        )
+                    },
                     modifier = Modifier
                         .fillMaxWidth(0.92f)
                 )
@@ -189,6 +211,13 @@ private fun DashboardScreenContent(
             item {
                 TitleSection(
                     title = stringResource(id = R.string.income),
+                    onSeeAllClick = {
+                        onNavigateTo(
+                            TopLevelDestinations.Home.transactions.createRoute(
+                                DestinationArgument.TRANSACTION_TYPE to TransactionType.Income
+                            )
+                        )
+                    },
                     modifier = Modifier
                         .fillMaxWidth(0.92f)
                 )
@@ -207,7 +236,8 @@ private fun DashboardScreenContent(
 @Composable
 private fun TitleSection(
     title: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSeeAllClick: () -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -223,7 +253,11 @@ private fun TitleSection(
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+                .clip(RoundedCornerShape(25))
+                .clickable { onSeeAllClick() }
+                .padding(4.dp)
         ) {
             Text(
                 text = stringResource(id = R.string.see_all),
@@ -235,7 +269,9 @@ private fun TitleSection(
             Icon(
                 painter = painterResource(id = R.drawable.ic_arrow_right_new),
                 contentDescription = null,
-                tint = DailyCostTheme.colorScheme.labelText
+                tint = DailyCostTheme.colorScheme.labelText,
+                modifier = Modifier
+                    .size(16.dp)
             )
         }
     }

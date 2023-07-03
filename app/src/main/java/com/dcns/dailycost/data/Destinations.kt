@@ -5,10 +5,14 @@ import androidx.annotation.StringRes
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.dcns.dailycost.R
+import com.dcns.dailycost.foundation.nav_type.TransactionTypeNavType
 
 object DestinationRoute {
     const val CHANGE_LANGUAGE = "change_language"
+    const val TRANSACTIONS = "transactions"
     const val CATEGORIES = "categories"
     const val ONBOARDING = "onboarding"
     const val DASHBOARD = "dashboard"
@@ -25,7 +29,7 @@ object DestinationRoute {
  * Key untuk argument
  */
 object DestinationArgument {
-
+    const val TRANSACTION_TYPE = "transaction_type"
 }
 
 data class TopLevelDestination(
@@ -141,6 +145,17 @@ object TopLevelDestinations {
 
         val changeLanguage = TopLevelDestination(
             route = DestinationRoute.CHANGE_LANGUAGE
+        )
+
+        val transactions = TopLevelDestination(
+            route = "${DestinationRoute.TRANSACTIONS}?" +
+                    "${DestinationArgument.TRANSACTION_TYPE}={${DestinationArgument.TRANSACTION_TYPE}}",
+            arguments = listOf(
+                navArgument(DestinationArgument.TRANSACTION_TYPE) {
+                    type = NavType.TransactionTypeNavType
+                    nullable = true
+                }
+            )
         )
 
         val categories = TopLevelDestination(
