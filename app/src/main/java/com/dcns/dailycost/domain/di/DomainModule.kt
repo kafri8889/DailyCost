@@ -31,6 +31,7 @@ import com.dcns.dailycost.domain.use_case.expense.SyncLocalWithRemoteExpenseUseC
 import com.dcns.dailycost.domain.use_case.income.AddRemoteIncomeUseCase
 import com.dcns.dailycost.domain.use_case.income.GetLocalIncomeUseCase
 import com.dcns.dailycost.domain.use_case.income.GetRemoteIncomeUseCase
+import com.dcns.dailycost.domain.use_case.income.SyncLocalWithRemoteIncomeUseCase
 import com.dcns.dailycost.domain.use_case.login_register.UserLoginUseCase
 import com.dcns.dailycost.domain.use_case.login_register.UserRegisterUseCase
 import com.dcns.dailycost.domain.use_case.note.AddRemoteNoteUseCase
@@ -113,7 +114,8 @@ class DomainModule {
     ): IncomeUseCases = IncomeUseCases(
         addRemoteIncomeUseCase = AddRemoteIncomeUseCase(incomeRepository),
         getRemoteIncomeUseCase = GetRemoteIncomeUseCase(incomeRepository),
-        getLocalIncomeUseCase = GetLocalIncomeUseCase(incomeRepository)
+        getLocalIncomeUseCase = GetLocalIncomeUseCase(incomeRepository),
+        syncLocalWithRemoteIncomeUseCase = SyncLocalWithRemoteIncomeUseCase(incomeRepository)
     )
 
     @Provides
