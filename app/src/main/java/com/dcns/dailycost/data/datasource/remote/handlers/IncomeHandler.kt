@@ -11,6 +11,7 @@ interface IncomeHandler {
      * Tambah pemasukan baru
      */
     suspend fun addIncome(
+        userId: Int,
         body: RequestBody,
         token: String
     ): Response<IncomePostResponse>

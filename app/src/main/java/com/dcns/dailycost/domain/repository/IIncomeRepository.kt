@@ -14,6 +14,7 @@ interface IIncomeRepository {
      * Tambah pemasukan baru ke database server
      */
     suspend fun addRemoteIncome(
+        userId: Int,
         body: RequestBody,
         token: String
     ): Response<IncomePostResponse>

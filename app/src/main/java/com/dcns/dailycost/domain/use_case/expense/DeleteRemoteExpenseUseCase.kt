@@ -13,10 +13,11 @@ class DeleteRemoteExpenseUseCase(
 ) {
 
     suspend operator fun invoke(
+        userId: Int,
         body: RequestBody,
         token: String
     ): Response<DeleteResponse> {
-        return expenseRepository.deleteRemoteExpense(body, token)
+        return expenseRepository.deleteRemoteExpense(userId, body, token)
     }
 
 }

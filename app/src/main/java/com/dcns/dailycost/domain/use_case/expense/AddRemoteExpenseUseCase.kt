@@ -13,10 +13,11 @@ class AddRemoteExpenseUseCase(
 ) {
 
     suspend operator fun invoke(
+        userId: Int,
         body: RequestBody,
         token: String
     ): Response<AddExpenseResponse> {
-        return expenseRepository.addRemoteExpense(body, token)
+        return expenseRepository.addRemoteExpense(userId, body, token)
     }
 
 }

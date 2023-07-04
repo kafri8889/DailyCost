@@ -17,8 +17,12 @@ class IncomeRepository @Inject constructor(
     private val incomeDao: IncomeDao
 ): IIncomeRepository {
 
-    override suspend fun addRemoteIncome(body: RequestBody, token: String): Response<IncomePostResponse> {
-        return incomeHandler.addIncome(body, token)
+    override suspend fun addRemoteIncome(
+        userId: Int,
+        body: RequestBody,
+        token: String
+    ): Response<IncomePostResponse> {
+        return incomeHandler.addIncome(userId, body, token)
     }
 
     override suspend fun getRemoteIncome(userId: Int, token: String): Response<IncomeGetResponse> {

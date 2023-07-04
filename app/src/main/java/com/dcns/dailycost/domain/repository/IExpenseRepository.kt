@@ -15,6 +15,7 @@ interface IExpenseRepository {
      * Tambahkan pengeluaran baru ke database server
      */
     suspend fun addRemoteExpense(
+        userId: Int,
         body: RequestBody,
         token: String
     ): Response<AddExpenseResponse>
@@ -31,6 +32,7 @@ interface IExpenseRepository {
      * Hapus pengeluaran dari database server
      */
     suspend fun deleteRemoteExpense(
+        userId: Int,
         body: RequestBody,
         token: String
     ): Response<DeleteResponse>

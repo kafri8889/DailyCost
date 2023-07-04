@@ -18,18 +18,23 @@ class ExpenseRepository @Inject constructor(
     private val expenseDao: ExpenseDao
 ): IExpenseRepository {
     override suspend fun addRemoteExpense(
+        userId: Int,
         body: RequestBody,
         token: String
     ): Response<AddExpenseResponse> {
-        return expenseHandler.addExpense(body, token)
+        return expenseHandler.addExpense(userId, body, token)
     }
 
     override suspend fun getRemoteExpense(userId: Int, token: String): Response<GetExpenseResponse> {
         return expenseHandler.getExpense(userId, token)
     }
 
-    override suspend fun deleteRemoteExpense(body: RequestBody, token: String): Response<DeleteResponse> {
-        return expenseHandler.deleteExpense(body, token)
+    override suspend fun deleteRemoteExpense(
+        userId: Int,
+        body: RequestBody,
+        token: String
+    ): Response<DeleteResponse> {
+        return expenseHandler.deleteExpense(userId, body, token)
     }
 
     override fun getAllExpenses(): Flow<List<ExpenseDbWithCategoryDb>> {

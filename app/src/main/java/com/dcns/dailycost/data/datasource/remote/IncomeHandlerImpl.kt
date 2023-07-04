@@ -12,8 +12,12 @@ class IncomeHandlerImpl @Inject constructor(
     private val incomeService: IncomeService
 ): IncomeHandler {
 
-    override suspend fun addIncome(body: RequestBody, token: String): Response<IncomePostResponse> {
-        return incomeService.addIncome(body, token)
+    override suspend fun addIncome(
+        userId: Int,
+        body: RequestBody,
+        token: String
+    ): Response<IncomePostResponse> {
+        return incomeService.addIncome(userId, body, token)
     }
 
     override suspend fun getIncome(userId: Int, token: String): Response<IncomeGetResponse> {

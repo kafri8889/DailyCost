@@ -21,8 +21,9 @@ interface ExpenseService {
      */
 
     @Headers("Content-Type: application/json;charset=UTF-8")
-    @POST("/api/pengeluaran")
+    @POST("/api/pengeluaran/{id}")
     suspend fun addExpense(
+        @Path("id") userId: Int,
         @Body body: RequestBody,
         @Header("Authorization") token: String
     ): Response<AddExpenseResponse>
@@ -35,8 +36,9 @@ interface ExpenseService {
     ): Response<GetExpenseResponse>
 
     @Headers("Content-Type: application/json;charset=UTF-8")
-    @HTTP(method = "DELETE", path = "/api/pengeluaran", hasBody = true)
+    @HTTP(method = "DELETE", path = "/api/pengeluaran/{id}", hasBody = true)
     suspend fun deleteExpense(
+        @Path("id") userId: Int,
         @Body body: RequestBody,
         @Header("Authorization") token: String
     ): Response<DeleteResponse>
