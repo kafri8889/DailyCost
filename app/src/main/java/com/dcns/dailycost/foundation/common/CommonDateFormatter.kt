@@ -1,6 +1,7 @@
 package com.dcns.dailycost.foundation.common
 
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.Locale
 
 object CommonDateFormatter {
@@ -20,6 +21,18 @@ object CommonDateFormatter {
      */
     fun edmy(locale: Locale): SimpleDateFormat {
         return SimpleDateFormat("EEEE, dd MMM yyyy", locale)
+    }
+
+    fun tryParseApi(input: String): Long? {
+        try {
+            return api.parse(input)?.time
+        } catch (e: Exception) { e.printStackTrace() }
+
+        try {
+            return Instant.parse(input).toEpochMilli()
+        } catch (e: Exception) { e.printStackTrace() }
+
+        return null
     }
 
 }
