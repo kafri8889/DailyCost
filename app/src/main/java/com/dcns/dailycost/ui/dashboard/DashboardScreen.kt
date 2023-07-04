@@ -56,6 +56,7 @@ import com.dcns.dailycost.foundation.common.NoRippleTheme
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.BalanceCard
 import com.dcns.dailycost.foundation.uicomponent.TransactionItem
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -115,6 +116,7 @@ fun DashboardScreen(
                 viewModel.onAction(DashboardAction.Refresh)
             },
             onNavigateTo = { dest ->
+                Timber.i("transaction: ${dest.route}")
                 navigationActions.navigateTo(
                     destination = dest,
                     builder = NavigationActions.defaultNavOptionsBuilder(

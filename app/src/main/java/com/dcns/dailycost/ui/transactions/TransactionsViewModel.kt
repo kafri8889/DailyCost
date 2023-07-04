@@ -10,6 +10,7 @@ import com.dcns.dailycost.foundation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,7 +20,7 @@ class TransactionsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ): BaseViewModel<TransactionsState, TransactionsAction>() {
 
-    private val deliveredTransactionType = savedStateHandle.getStateFlow<TransactionType?>(
+    private val deliveredTransactionType = savedStateHandle.getStateFlow<String?>(
         DestinationArgument.TRANSACTION_TYPE,
         null
     )
@@ -31,8 +32,9 @@ class TransactionsViewModel @Inject constructor(
                 incomeUseCases.getLocalIncomeUseCase(),
                 deliveredTransactionType
             ) { expenses, incomes, transactionType ->
-                Triple(expenses, incomes, transactionType)
+                Triple(expenses, incomes, if (transactionType != null) TransactionType.valueOf(transactionType) else null)
             }.collect { (expenses, incomes, transactionType) ->
+                Timber.i("Transaction type: $transactionType")
                 updateState {
                     copy(
                         transactions = when (transactionType) {
