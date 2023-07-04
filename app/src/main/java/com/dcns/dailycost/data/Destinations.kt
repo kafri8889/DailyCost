@@ -41,7 +41,7 @@ data class TopLevelDestination(
     /**
      * @param value {key: value}
      */
-    fun createRoute(vararg value: Pair<Any, Any>): TopLevelDestination {
+    fun createRoute(vararg value: Pair<Any, Any?>): TopLevelDestination {
         var mRoute = route
 
         value.forEach { (key, value) ->
