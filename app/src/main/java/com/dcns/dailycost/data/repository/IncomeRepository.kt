@@ -33,6 +33,10 @@ class IncomeRepository @Inject constructor(
         return incomeDao.getIncomeById(id)
     }
 
+    override suspend fun deleteIncomeExcept(ids: List<Int>) {
+        return incomeDao.deleteIncomeExcept(ids)
+    }
+
     override suspend fun updateIncome(vararg income: IncomeDb) {
         incomeDao.updateIncome(*income)
     }

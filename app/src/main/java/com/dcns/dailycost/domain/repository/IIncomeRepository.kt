@@ -37,6 +37,12 @@ interface IIncomeRepository {
     fun getIncomeById(id: Int): Flow<IncomeDbWithCategoryDb?>
 
     /**
+     * Hapus semua pemasukan dari database lokal, kecuali dari id yang diberikan
+     * @param ids id pemasukan yg dikecualikan
+     */
+    suspend fun deleteIncomeExcept(ids: List<Int>)
+
+    /**
      * Update pemasukan ke database lokal
      */
     suspend fun updateIncome(vararg income: IncomeDb)
