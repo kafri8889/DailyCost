@@ -70,7 +70,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-//        isCoreLibraryDesugaringEnabled = true
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -102,7 +102,7 @@ dependencies {
     val lifecycle_version by extra("2.6.1")
     val accompanist_version by extra("0.31.4-beta")
 
-//    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
