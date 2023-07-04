@@ -14,6 +14,7 @@ interface IIncomeRepository {
      * Tambah pemasukan baru ke database server
      */
     suspend fun addRemoteIncome(
+        userId: Int,
         body: RequestBody,
         token: String
     ): Response<IncomePostResponse>
@@ -35,6 +36,12 @@ interface IIncomeRepository {
      * Dapatkan pemasukan by id dari database lokal
      */
     fun getIncomeById(id: Int): Flow<IncomeDbWithCategoryDb?>
+
+    /**
+     * Hapus semua pemasukan dari database lokal, kecuali dari id yang diberikan
+     * @param ids id pemasukan yg dikecualikan
+     */
+    suspend fun deleteIncomeExcept(ids: List<Int>)
 
     /**
      * Update pemasukan ke database lokal

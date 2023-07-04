@@ -1,10 +1,10 @@
-package com.dcns.dailycost.ui.expense
+package com.dcns.dailycost.ui.transactions
 
 import androidx.compose.material3.SnackbarDuration
 import com.dcns.dailycost.R
 import com.dcns.dailycost.foundation.base.UiEvent
 
-sealed class ExpenseUiEvent: UiEvent() {
+sealed class TransactionsUiEvent: UiEvent() {
 
     class NoInternetConnection(
         override val message: String = asStringResource(R.string.internet_connection_not_available),

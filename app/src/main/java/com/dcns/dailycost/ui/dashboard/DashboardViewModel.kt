@@ -2,23 +2,21 @@ package com.dcns.dailycost.ui.dashboard
 
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
-import com.dcns.dailycost.R
+import com.dcns.dailycost.data.Resource
+import com.dcns.dailycost.data.Status
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.domain.use_case.DepoUseCases
-import com.dcns.dailycost.domain.use_case.NoteUseCases
+import com.dcns.dailycost.domain.use_case.ExpenseUseCases
+import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
-import com.dcns.dailycost.domain.util.GetNoteBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
-import com.dcns.dailycost.foundation.base.UiEvent
 import com.dcns.dailycost.foundation.common.ConnectivityManager
+import com.dcns.dailycost.foundation.common.IResponse
 import com.dcns.dailycost.foundation.common.SharedUiEvent
-import com.dcns.dailycost.foundation.extension.toNote
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -26,9 +24,10 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     private val userCredentialUseCases: UserCredentialUseCases,
     private val connectivityManager: ConnectivityManager,
+    private val expenseUseCases: ExpenseUseCases,
+    private val incomeUseCases: IncomeUseCases,
     private val sharedUiEvent: SharedUiEvent,
     private val depoUseCases: DepoUseCases,
-    private val noteUseCases: NoteUseCases
 ): BaseViewModel<DashboardState, DashboardAction>() {
 
     init {
@@ -58,10 +57,20 @@ class DashboardViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            noteUseCases.getLocalNoteUseCase().collect { notes ->
+            expenseUseCases.getLocalExpenseUseCase().collect { expenseList ->
                 updateState {
                     copy(
-                        recentNotes = notes.take(2)
+                        expenses = expenseList
+                    )
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            incomeUseCases.getLocalIncomeUseCase().collect { incomeList ->
+                updateState {
+                    copy(
+                        incomes = incomeList
                     )
                 }
             }
@@ -88,45 +97,10 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getRemoteNote() {
+    private suspend fun getRemoteBalance(): Resource<IResponse> {
         val mState = state.value
 
-        noteUseCases.getRemoteNoteUseCase(
-            token = mState.credential.getAuthToken(),
-            getNoteBy = GetNoteBy.UserID(mState.credential.id.toInt())
-        ).let { response ->
-            if (response.isSuccessful) {
-                val noteResponse = response.body()
-
-                noteResponse?.let {
-                    Timber.i("upserting notes to db...")
-                    withContext(Dispatchers.IO) {
-                        noteUseCases.upsertLocalNoteUseCase(
-                            *noteResponse.data
-                                .map { it.toNote() }
-                                .toTypedArray()
-                        )
-                    }
-                }
-
-                Timber.i("get remote note success")
-
-                return
-            }
-
-            val errorResponse = Gson().fromJson(
-                response.errorBody()?.charStream(),
-                ErrorResponse::class.java
-            )
-
-            sendEvent(DashboardUiEvent.GetRemoteNoteFailed(errorResponse.message))
-        }
-    }
-
-    private suspend fun getRemoteBalance() {
-        val mState = state.value
-
-        depoUseCases.getRemoteBalanceUseCase(
+        return depoUseCases.getRemoteBalanceUseCase(
             token = mState.credential.getAuthToken(),
             userId = mState.credential.id.toInt()
         ).let { response ->
@@ -143,7 +117,7 @@ class DashboardViewModel @Inject constructor(
 
                 Timber.i("get remote balance success")
 
-                return
+                return Resource.success(response.body())
             }
 
             val errorResponse = Gson().fromJson(
@@ -151,12 +125,7 @@ class DashboardViewModel @Inject constructor(
                 ErrorResponse::class.java
             )
 
-            sendEvent(
-                DashboardUiEvent.GetRemoteBalanceFailed(
-                    message = if (response.code() == 404) UiEvent.asStringResource(R.string.you_have_no_balance)
-                    else errorResponse.message
-                )
-            )
+            Resource.error(errorResponse.message, null)
         }
     }
 
@@ -177,8 +146,13 @@ class DashboardViewModel @Inject constructor(
                     )
                 }
 
-                getRemoteNote()
-                getRemoteBalance()
+                val response = listOf(
+                    getRemoteBalance()
+                )
+
+                response.filter { it.status == Status.Error }.forEach {
+                    sendEvent(DashboardUiEvent.GetRemoteFailed(it.message ?: ""))
+                }
 
                 updateState {
                     copy(

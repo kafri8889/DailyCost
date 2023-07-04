@@ -13,18 +13,23 @@ class ExpenseHandlerImpl @Inject constructor(
     private val expenseService: ExpenseService
 ): ExpenseHandler {
     override suspend fun addExpense(
+        userId: Int,
         body: RequestBody,
         token: String
     ): Response<AddExpenseResponse> {
-        return expenseService.addExpense(body, token)
+        return expenseService.addExpense(userId, body, token)
     }
 
     override suspend fun getExpense(userId: Int, token: String): Response<GetExpenseResponse> {
         return expenseService.getExpense(userId, token)
     }
 
-    override suspend fun deleteExpense(body: RequestBody, token: String): Response<DeleteResponse> {
-        return expenseService.deleteExpense(body, token)
+    override suspend fun deleteExpense(
+        userId: Int,
+        body: RequestBody,
+        token: String
+    ): Response<DeleteResponse> {
+        return expenseService.deleteExpense(userId, body, token)
     }
 
 }

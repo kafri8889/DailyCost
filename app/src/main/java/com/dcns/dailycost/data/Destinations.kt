@@ -5,10 +5,15 @@ import androidx.annotation.StringRes
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.dcns.dailycost.R
+import com.dcns.dailycost.foundation.nav_type.TransactionTypeNavType
 
 object DestinationRoute {
     const val CHANGE_LANGUAGE = "change_language"
+    const val TRANSACTIONS = "transactions"
+    const val CATEGORIES = "categories"
     const val ONBOARDING = "onboarding"
     const val DASHBOARD = "dashboard"
     const val REGISTER = "register"
@@ -24,7 +29,7 @@ object DestinationRoute {
  * Key untuk argument
  */
 object DestinationArgument {
-
+    const val TRANSACTION_TYPE = "transaction_type"
 }
 
 data class TopLevelDestination(
@@ -36,7 +41,7 @@ data class TopLevelDestination(
     /**
      * @param value {key: value}
      */
-    fun createRoute(vararg value: Pair<Any, Any>): TopLevelDestination {
+    fun createRoute(vararg value: Pair<Any, Any?>): TopLevelDestination {
         var mRoute = route
 
         value.forEach { (key, value) ->
@@ -87,6 +92,7 @@ class NavigationActions(private val navController: NavHostController) {
     }
 
     companion object {
+        // TODO: langsung pass ke param aja
         fun defaultNavOptionsBuilder(
             popTo: TopLevelDestination? = null,
             launchAsSingleTop: Boolean = true,
@@ -139,6 +145,21 @@ object TopLevelDestinations {
 
         val changeLanguage = TopLevelDestination(
             route = DestinationRoute.CHANGE_LANGUAGE
+        )
+
+        val transactions = TopLevelDestination(
+            route = "${DestinationRoute.TRANSACTIONS}?" +
+                    "${DestinationArgument.TRANSACTION_TYPE}={${DestinationArgument.TRANSACTION_TYPE}}",
+            arguments = listOf(
+                navArgument(DestinationArgument.TRANSACTION_TYPE) {
+                    type = NavType.TransactionTypeNavType
+                    nullable = true
+                }
+            )
+        )
+
+        val categories = TopLevelDestination(
+            route = DestinationRoute.CATEGORIES
         )
 
         val dashboard = TopLevelDestination(

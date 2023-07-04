@@ -7,7 +7,6 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.dcns.dailycost.data.model.remote.request_body.IncomeRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
-import com.dcns.dailycost.data.model.remote.response.IncomePostResponse
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.foundation.common.Workers
@@ -44,15 +43,11 @@ class PostIncomeBalanceWorker @AssistedInject constructor(
     }
 
     private suspend fun postIncome(requestBody: RequestBody): Result {
-        val token = userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.getAuthToken()
+        val credential = userCredentialUseCases.getUserCredentialUseCase().firstOrNull()
 
-        if (token != null) {
-            incomeUseCases.addRemoteIncomeUseCase(requestBody, token).let {
+        if (credential != null) {
+            incomeUseCases.addRemoteIncomeUseCase(credential.id.toInt(), requestBody, credential.getAuthToken()).let {
                 if (it.isSuccessful) {
-                    val body = it.body() as IncomePostResponse
-
-                    // TODO: Save to local
-
                     Timber.i("post finished")
 
                     return Result.success(

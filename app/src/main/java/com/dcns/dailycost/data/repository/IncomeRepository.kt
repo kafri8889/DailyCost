@@ -17,8 +17,12 @@ class IncomeRepository @Inject constructor(
     private val incomeDao: IncomeDao
 ): IIncomeRepository {
 
-    override suspend fun addRemoteIncome(body: RequestBody, token: String): Response<IncomePostResponse> {
-        return incomeHandler.addIncome(body, token)
+    override suspend fun addRemoteIncome(
+        userId: Int,
+        body: RequestBody,
+        token: String
+    ): Response<IncomePostResponse> {
+        return incomeHandler.addIncome(userId, body, token)
     }
 
     override suspend fun getRemoteIncome(userId: Int, token: String): Response<IncomeGetResponse> {
@@ -31,6 +35,10 @@ class IncomeRepository @Inject constructor(
 
     override fun getIncomeById(id: Int): Flow<IncomeDbWithCategoryDb?> {
         return incomeDao.getIncomeById(id)
+    }
+
+    override suspend fun deleteIncomeExcept(ids: List<Int>) {
+        return incomeDao.deleteIncomeExcept(ids)
     }
 
     override suspend fun updateIncome(vararg income: IncomeDb) {

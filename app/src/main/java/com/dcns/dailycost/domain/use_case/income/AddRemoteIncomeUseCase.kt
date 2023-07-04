@@ -13,10 +13,11 @@ class AddRemoteIncomeUseCase(
 ) {
 
     suspend operator fun invoke(
+        userId: Int,
         body: RequestBody,
         token: String
     ): Response<IncomePostResponse> {
-        return incomeRepository.addRemoteIncome(body, token)
+        return incomeRepository.addRemoteIncome(userId, body, token)
     }
 
 }

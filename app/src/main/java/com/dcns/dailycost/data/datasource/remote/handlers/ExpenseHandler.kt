@@ -12,6 +12,7 @@ interface ExpenseHandler {
      * Tambahkan pengeluaran baru
      */
     suspend fun addExpense(
+        userId: Int,
         body: RequestBody,
         token: String
     ): Response<AddExpenseResponse>
@@ -28,6 +29,7 @@ interface ExpenseHandler {
      * Hapus pengeluaran
      */
     suspend fun deleteExpense(
+        userId: Int,
         body: RequestBody,
         token: String
     ): Response<DeleteResponse>

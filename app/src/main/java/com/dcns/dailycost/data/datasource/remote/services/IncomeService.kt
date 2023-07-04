@@ -14,8 +14,9 @@ import retrofit2.http.Path
 interface IncomeService {
 
     @Headers("Content-Type: application/json;charset=UTF-8")
-    @POST("/api/pemasukan")
+    @POST("/api/pemasukan/{id}")
     suspend fun addIncome(
+        @Path("id") userId: Int,
         @Body body: RequestBody,
         @Header("Authorization") token: String
     ): Response<IncomePostResponse>

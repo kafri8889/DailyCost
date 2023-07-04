@@ -23,6 +23,9 @@ interface IncomeDao {
     @Query("SELECT * FROM income_table WHERE id_income = :id")
     fun getIncomeById(id: Int): Flow<IncomeDbWithCategoryDb?>
 
+    @Query("DELETE FROM income_table WHERE id_income NOT IN (:ids)")
+    suspend fun deleteIncomeExcept(ids: List<Int>)
+
     @Update
     suspend fun updateIncome(vararg income: IncomeDb)
 

@@ -2,7 +2,6 @@ package com.dcns.dailycost.ui.app
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -34,7 +33,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -53,13 +51,15 @@ import com.dcns.dailycost.foundation.uicomponent.DrawerItem
 import com.dcns.dailycost.navigation.HomeNavHost
 import com.dcns.dailycost.navigation.LoginRegisterNavHost
 import com.dcns.dailycost.navigation.OnboardingNavHost
+import com.dcns.dailycost.navigation.home.CategoriesNavigation
 import com.dcns.dailycost.navigation.home.ChangeLanguageNavigation
 import com.dcns.dailycost.navigation.home.DashboardNavigation
-import com.dcns.dailycost.navigation.home.ExpenseNavigation
 import com.dcns.dailycost.navigation.home.NoteNavigation
 import com.dcns.dailycost.navigation.home.NotesNavigation
 import com.dcns.dailycost.navigation.home.SettingNavigation
 import com.dcns.dailycost.navigation.home.SplashNavigation
+import com.dcns.dailycost.navigation.home.TransactionNavigation
+import com.dcns.dailycost.navigation.home.TransactionsNavigation
 import com.dcns.dailycost.navigation.login_register.LoginNavigation
 import com.dcns.dailycost.navigation.login_register.RegisterNavigation
 import com.dcns.dailycost.navigation.onboarding.OnboardingNavigation
@@ -184,7 +184,12 @@ fun DailyCostApp(
                 language = state.language,
                 onNavigationIconClicked = onNavigationIconClicked,
                 onCategoriesClicked = {
-                    // TODO: ke categories screen
+                    navActions.navigateTo(
+                        destination = TopLevelDestinations.Home.categories,
+                        builder = NavigationActions.defaultNavOptionsBuilder(
+                            popTo = TopLevelDestinations.Home.dashboard
+                        )
+                    )
                     closeDrawer()
                 },
                 onSettingClicked = {
@@ -206,16 +211,17 @@ fun DailyCostApp(
                 }
             ) {
                 DailyCostBottomSheetLayout(bottomSheetNavigator) {
-                    BackHandler(drawerState.isOpen) {
-                        if (drawerState.isOpen) {
-                            scope.launch {
-                                drawerState.close()
+                    BackHandler(drawerState.isOpen || state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route) {
+                        when {
+                            drawerState.isOpen -> {
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                            }
+                            state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route -> {
+                                (context as MainActivity).finishAndRemoveTask()
                             }
                         }
-                    }
-
-                    BackHandler(state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route) {
-                        (context as MainActivity).finishAndRemoveTask()
                     }
 
                     DailyCostNavHost(
@@ -257,7 +263,9 @@ private fun DailyCostNavHost(
         // Nested navigasi untuk dashboard (ketika user berhasil login)
         HomeNavHost {
             ChangeLanguageNavigation(navActions)
-            ExpenseNavigation(navActions)
+            TransactionsNavigation(navActions)
+            TransactionNavigation(navActions)
+            CategoriesNavigation(navActions)
             NoteNavigation(navActions)
 
             DashboardNavigation(
@@ -334,7 +342,7 @@ private fun DailyCostDrawerContent(
     onSignOutClicked: () -> Unit,
     onSettingClicked: () -> Unit
 ) {
-    val signOutInteractionSource = remember { MutableInteractionSource() }
+    val context = LocalContext.current
 
     ModalDrawerSheet {
         LazyColumn(
@@ -349,7 +357,7 @@ private fun DailyCostDrawerContent(
                 ) {
                     DrawerItem(
                         title = {
-                            Text(stringResource(id = R.string.dashboard))
+                            Text(context.getString(R.string.dashboard))
                         },
                         icon = {
                             Icon(
@@ -375,10 +383,10 @@ private fun DailyCostDrawerContent(
                 ) {
                     DrawerItem(
                         title = {
-                            Text(stringResource(id = R.string.categories))
+                            Text(context.getString(R.string.categories))
                         },
                         summary = {
-                            Text(stringResource(id = R.string.manage_categories_change_icon_color))
+                            Text(context.getString(R.string.manage_categories_change_icon_color))
                         },
                         icon = {
                             Icon(
@@ -400,10 +408,10 @@ private fun DailyCostDrawerContent(
                 ) {
                     DrawerItem(
                         title = {
-                            Text(stringResource(id = R.string.advance_setting))
+                            Text(context.getString(R.string.advance_setting))
                         },
                         summary = {
-                            Text(stringResource(id = R.string.set_number_format_locale_and_app_security))
+                            Text(context.getString(R.string.set_number_format_locale_and_app_security))
                         },
                         icon = {
                             Icon(
@@ -425,7 +433,7 @@ private fun DailyCostDrawerContent(
                 ) {
                     DrawerItem(
                         title = {
-                            Text(stringResource(id = R.string.language))
+                            Text(context.getString(R.string.language))
                         },
                         summary = {
                             Text(language.name)
@@ -450,7 +458,7 @@ private fun DailyCostDrawerContent(
         ) {
             DrawerItem(
                 title = {
-                    Text(stringResource(id = R.string.sign_out))
+                    Text(context.getString(R.string.sign_out))
                 },
                 summary = {
                     Text(email)
