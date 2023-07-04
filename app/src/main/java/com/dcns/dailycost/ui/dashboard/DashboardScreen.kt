@@ -1,5 +1,7 @@
 package com.dcns.dailycost.ui.dashboard
 
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -126,7 +128,7 @@ fun DashboardScreen(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun DashboardScreenContent(
     state: DashboardState,
@@ -204,6 +206,7 @@ private fun DashboardScreenContent(
                         },
                         modifier = Modifier
                             .fillMaxWidth(0.92f)
+                            .animateItemPlacement(tween(256))
                     )
                 }
             }
@@ -221,6 +224,25 @@ private fun DashboardScreenContent(
                     modifier = Modifier
                         .fillMaxWidth(0.92f)
                 )
+            }
+
+            items(
+                items = state.incomes,
+                key = { item -> item.id }
+            ) { income ->
+                CompositionLocalProvider(
+                    LocalRippleTheme provides NoRippleTheme
+                ) {
+                    TransactionItem(
+                        transaction = income,
+                        onClick = {
+
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(0.92f)
+                            .animateItemPlacement(tween(256))
+                    )
+                }
             }
         }
 

@@ -67,6 +67,16 @@ class DashboardViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            incomeUseCases.getLocalIncomeUseCase().collect { incomeList ->
+                updateState {
+                    copy(
+                        incomes = incomeList
+                    )
+                }
+            }
+        }
+
+        viewModelScope.launch {
             depoUseCases.getLocalBalanceUseCase().collect { balance ->
                 updateState {
                     copy(
