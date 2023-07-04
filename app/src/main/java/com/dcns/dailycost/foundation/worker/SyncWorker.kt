@@ -21,6 +21,7 @@ import com.dcns.dailycost.domain.util.InputActionType
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.Workers
 import com.dcns.dailycost.foundation.extension.toExpense
+import com.dcns.dailycost.foundation.extension.toIncome
 import com.dcns.dailycost.foundation.extension.toNote
 import com.google.gson.Gson
 import dagger.assisted.Assisted
@@ -58,7 +59,7 @@ class SyncWorker @AssistedInject constructor(
         val results = listOf(
             getExpense(credential),
             getBalance(credential),
-//            getIncome(credential),
+            getIncome(credential),
             getNote(credential)
         )
 
@@ -90,7 +91,7 @@ class SyncWorker @AssistedInject constructor(
                                 userId = credential.id.toInt(),
                                 date = { date ->
                                     Timber.i("try to parse date: $date")
-                                    CommonDateFormatter.api.parse(date)?.time ?: 0
+                                    CommonDateFormatter.tryParseApi(date) ?: 0
                                 },
                                 category = { categoryName ->
                                     // Get local category
@@ -143,80 +144,79 @@ class SyncWorker @AssistedInject constructor(
         }
     }
 
-//    private suspend fun getIncome(credential: UserCredential): Result {
-//        // Get remote income
-//        incomeUseCases.getRemoteIncomeUseCase(
-//            token = credential.getAuthToken(),
-//            userId = credential.id.toInt()
-//        ).let { response ->
-//            if (response.isSuccessful) {
-//                val incomeResponse = response.body()
-//
-//                incomeResponse?.let {
-//                    val categories = categoryUseCases.getLocalCategoryUseCase().firstOrNull() ?: emptyList()
-//                    Timber.i("sync income to db...")
-//                    withContext(Dispatchers.IO) {
-//
-//                        // Convet [GetExpenseResponseData] to [Expense]
-//                        val results = incomeResponse
-//                            .data
-//
-//                        val mappedResults = results.map {
-//                            it.toExpense(
-//                                userId = credential.id.toInt(),
-//                                date = { date ->
-//                                    CommonDateFormatter.api.parse(date)?.time ?: 0
-//                                },
-//                                category = { categoryName ->
-//                                    // Get local category
-//                                    var category = categories.find { it.name == categoryName }
-//
-//                                    // If category not null, use
-//                                    if (category != null) category
-//                                    else {
-//                                        // If null, create new category and insert to db
-//                                        category = Category(
-//                                            id = Random(System.currentTimeMillis()).nextInt(),
-//                                            name = categoryName,
-//                                            icon = CategoryIcon.Other
-//                                        )
-//
-//                                        categoryUseCases.inputLocalCategoryUseCase(
-//                                            inputActionType = InputActionType.Upsert,
-//                                            category
-//                                        )
-//
-//                                        category
-//                                    }
-//                                }
-//                            )
-//                        }
-//
-//                        // Sync local expense with remote expense
-//                        expenseUseCases.syncLocalWithRemoteExpenseUseCase(mappedResults)
-//                        Timber.i("sync expenses to db success")
-//                    }
-//                }
-//
-//                Timber.i("get remote expense success")
-//
-//                return Result.success()
-//            }
-//
-//            val errorResponse = Gson().fromJson(
-//                response.errorBody()?.charStream(),
-//                ErrorResponse::class.java
-//            )
-//
-//            Timber.e("failed to get remote expense: ${errorResponse.message}")
-//
-//            return Result.failure(
-//                workDataOf(
-//                    Workers.ARG_WORKER_MESSAGE_KEY to errorResponse.message
-//                )
-//            )
-//        }
-//    }
+    private suspend fun getIncome(credential: UserCredential): Result {
+        // Get remote income
+        incomeUseCases.getRemoteIncomeUseCase(
+            token = credential.getAuthToken(),
+            userId = credential.id.toInt()
+        ).let { response ->
+            if (response.isSuccessful) {
+                val incomeResponse = response.body()
+
+                incomeResponse?.let {
+                    val categories = categoryUseCases.getLocalCategoryUseCase().firstOrNull() ?: emptyList()
+                    Timber.i("sync income to db...")
+                    withContext(Dispatchers.IO) {
+
+                        // Convet [IncomeResponseData] to [Income]
+                        val results = incomeResponse
+                            .data
+
+                        val mappedResults = results.map {
+                            it.toIncome(
+                                date = { date ->
+                                    CommonDateFormatter.tryParseApi(date) ?: 0
+                                },
+                                category = { categoryName ->
+                                    // Get local category
+                                    var category = categories.find { it.name == categoryName }
+
+                                    // If category not null, use
+                                    if (category != null) category
+                                    else {
+                                        // If null, create new category and insert to db
+                                        category = Category(
+                                            id = Random(System.currentTimeMillis()).nextInt(),
+                                            name = categoryName,
+                                            icon = CategoryIcon.Other
+                                        )
+
+                                        categoryUseCases.inputLocalCategoryUseCase(
+                                            inputActionType = InputActionType.Upsert,
+                                            category
+                                        )
+
+                                        category
+                                    }
+                                }
+                            )
+                        }
+
+                        // Sync local income with remote expense
+                        incomeUseCases.syncLocalWithRemoteIncomeUseCase(mappedResults)
+                        Timber.i("sync income to db success")
+                    }
+                }
+
+                Timber.i("get remote income success")
+
+                return Result.success()
+            }
+
+            val errorResponse = Gson().fromJson(
+                response.errorBody()?.charStream(),
+                ErrorResponse::class.java
+            )
+
+            Timber.e("failed to get remote expense: ${errorResponse.message}")
+
+            return Result.failure(
+                workDataOf(
+                    Workers.ARG_WORKER_MESSAGE_KEY to errorResponse.message
+                )
+            )
+        }
+    }
 
     private suspend fun getNote(credential: UserCredential): Result {
         noteUseCases.getRemoteNoteUseCase(
