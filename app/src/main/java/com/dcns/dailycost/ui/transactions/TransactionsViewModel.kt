@@ -20,7 +20,7 @@ class TransactionsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ): BaseViewModel<TransactionsState, TransactionsAction>() {
 
-    private val deliveredTransactionType = savedStateHandle.getStateFlow<String?>(
+    private val deliveredTransactionType = savedStateHandle.getStateFlow<TransactionType?>(
         DestinationArgument.TRANSACTION_TYPE,
         null
     )
@@ -32,7 +32,7 @@ class TransactionsViewModel @Inject constructor(
                 incomeUseCases.getLocalIncomeUseCase(),
                 deliveredTransactionType
             ) { expenses, incomes, transactionType ->
-                Triple(expenses, incomes, if (transactionType != null) TransactionType.valueOf(transactionType) else null)
+                Triple(expenses, incomes, transactionType)
             }.collect { (expenses, incomes, transactionType) ->
                 Timber.i("Transaction type: $transactionType")
                 updateState {

@@ -23,6 +23,6 @@ val NavType.Companion.TransactionTypeNavType: NavType<TransactionType>
 
         override fun put(bundle: Bundle, key: String, value: TransactionType) {
             Timber.i("transaction put: $value")
-            bundle.putString(key, value.name)
+            bundle.putSerializable(key, value)
         }
     }
