@@ -95,6 +95,7 @@ class SyncWorker @AssistedInject constructor(
                                 },
                                 category = { categoryName ->
                                     // Get local category
+                                    // TODO: format nama kategori
                                     var category = categories.find { it.name == categoryName }
 
                                     // If category not null, use
