@@ -17,8 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.selection.LocalTextSelectionColors
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -62,6 +60,7 @@ import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.Status
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
+import com.dcns.dailycost.foundation.extension.dailyCostColor
 import com.dcns.dailycost.foundation.extension.toast
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
@@ -322,6 +321,7 @@ private fun CenterContent(
             singleLine = true,
             onValueChange = onUsernameChanged,
             shape = RoundedCornerShape(20),
+            colors = OutlinedTextFieldDefaults.dailyCostColor(),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Text
@@ -330,16 +330,6 @@ private fun CenterContent(
                 onNext = {
                     focusManager.moveFocus(FocusDirection.Next)
                 }
-            ),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = DailyCostTheme.colorScheme.primary,
-                cursorColor = DailyCostTheme.colorScheme.primary,
-                focusedLabelColor = DailyCostTheme.colorScheme.primary,
-                unfocusedBorderColor = DailyCostTheme.colorScheme.outline,
-                selectionColors = TextSelectionColors(
-                    handleColor = DailyCostTheme.colorScheme.primary,
-                    backgroundColor = LocalTextSelectionColors.current.backgroundColor
-                )
             ),
             label = {
                 Text(stringResource(id = R.string.username))
@@ -361,6 +351,7 @@ private fun CenterContent(
             isError = emailError != null,
             onValueChange = onEmailChanged,
             shape = RoundedCornerShape(20),
+            colors = OutlinedTextFieldDefaults.dailyCostColor(),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Email
@@ -369,16 +360,6 @@ private fun CenterContent(
                 onNext = {
                     focusManager.moveFocus(FocusDirection.Next)
                 }
-            ),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = DailyCostTheme.colorScheme.primary,
-                cursorColor = DailyCostTheme.colorScheme.primary,
-                focusedLabelColor = DailyCostTheme.colorScheme.primary,
-                unfocusedBorderColor = DailyCostTheme.colorScheme.outline,
-                selectionColors = TextSelectionColors(
-                    handleColor = DailyCostTheme.colorScheme.primary,
-                    backgroundColor = LocalTextSelectionColors.current.backgroundColor
-                )
             ),
             label = {
                 Text(stringResource(id = R.string.email))
@@ -405,6 +386,7 @@ private fun CenterContent(
             singleLine = true,
             onValueChange = onPasswordChanged,
             shape = RoundedCornerShape(20),
+            colors = OutlinedTextFieldDefaults.dailyCostColor(),
             visualTransformation = if (!showPassword) PasswordVisualTransformation()
             else VisualTransformation.None,
             keyboardOptions = KeyboardOptions(
@@ -415,16 +397,6 @@ private fun CenterContent(
                 onDone = {
                     focusManager.clearFocus()
                 }
-            ),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = DailyCostTheme.colorScheme.primary,
-                cursorColor = DailyCostTheme.colorScheme.primary,
-                focusedLabelColor = DailyCostTheme.colorScheme.primary,
-                unfocusedBorderColor = DailyCostTheme.colorScheme.outline,
-                selectionColors = TextSelectionColors(
-                    handleColor = DailyCostTheme.colorScheme.primary,
-                    backgroundColor = LocalTextSelectionColors.current.backgroundColor
-                )
             ),
             label = {
                 Text(stringResource(id = R.string.password))
