@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -48,6 +49,8 @@ private fun ExpenseScreenContent(
     onNavigationIconClicked: () -> Unit
 ) {
 
+    val focusManager = LocalFocusManager.current
+
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -66,5 +69,36 @@ private fun ExpenseScreenContent(
                 }
             )
         }
+
+//        item {
+//            OutlinedTextField(
+//                value = state.name,
+//                singleLine = true,
+//                onValueChange = onUsernameChanged,
+//                shape = RoundedCornerShape(20),
+//                colors = OutlinedTextFieldDefaults.dailyCostColor(),
+//                keyboardOptions = KeyboardOptions(
+//                    imeAction = ImeAction.Next,
+//                    keyboardType = KeyboardType.Text
+//                ),
+//                keyboardActions = KeyboardActions(
+//                    onNext = {
+//                        focusManager.moveFocus(FocusDirection.Next)
+//                    }
+//                ),
+//                label = {
+//                    Text(stringResource(id = R.string.username))
+//                },
+//                leadingIcon = {
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.ic_profile),
+//                        contentDescription = null
+//                    )
+//                },
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .focusRequester(usernameFocusRequester)
+//            )
+//        }
     }
 }
