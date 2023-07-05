@@ -1,8 +1,6 @@
 package com.dcns.dailycost.ui.onboarding
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -16,9 +14,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -43,6 +39,7 @@ import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
+import com.dcns.dailycost.foundation.uicomponent.LinearProgressIndicator
 
 @Preview(showBackground = true, showSystemUi = true,
     device = "spec:width=360dp,height=700dp,dpi=320"
@@ -71,12 +68,6 @@ fun OnboardingScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val progress by animateFloatAsState(
-        label = "progress",
-        targetValue = state.currentPage / state.pageCount.toFloat(),
-        animationSpec = tween(256)
-    )
-
     BackHandler {
         if (state.currentPage != 1) {
             viewModel.onAction(OnboardingAction.UpdateCurrentPage(state.currentPage - 1))
@@ -95,7 +86,7 @@ fun OnboardingScreen(
             .systemBarsPadding()
     ) {
         OnboardingScreenContent(
-            progress = { progress },
+            progress = { state.currentPage / state.pageCount.toFloat() },
             bodyText = stringResource(id = state.bodyText),
             titleText = stringResource(id = state.titleText),
             primaryButtonText = stringResource(id = state.primaryButtonText),
@@ -192,11 +183,8 @@ private fun OnboardingScreenContent(
         modifier = modifier
             .fillMaxSize()
     ) {
-        LinearProgressIndicator(
-            progress = progress(),
-            color = DailyCostTheme.colorScheme.primary,
-            trackColor = DailyCostTheme.colorScheme.primary.copy(alpha = 0.3f), // Opacity 30%
-            strokeCap = ProgressIndicatorDefaults.CircularDeterminateStrokeCap,
+        OnboardingLinearProgressIndicator(
+            progress = progress,
             modifier = Modifier
                 .clip(CircleShape)
                 .fillMaxWidth()
@@ -237,34 +225,75 @@ private fun OnboardingScreenContent(
             modifier = Modifier
                 .layoutId("nextSkipButton")
         ) {
-            Button(
+            OnboardingPrimaryButton(
+                text = primaryButtonText,
                 onClick = onPrimaryButtonClicked,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = DailyCostTheme.colorScheme.primary
-                ),
                 modifier = Modifier
                     .fillMaxWidth()
-            ) {
-                Text(primaryButtonText)
-            }
+            )
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            TextButton(
+            OnboardingSecondaryButton(
+                text = secondaryButtonText,
                 onClick = onSecondaryButtonClicked,
-                border = BorderStroke(
-                    width = 1.dp,
-                    color = if (progress() >= 0.99f) DailyCostTheme.colorScheme.primary
-                    else Color.Transparent
-                ),
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = DailyCostTheme.colorScheme.text
-                ),
+                progress = progress(),
                 modifier = Modifier
                     .fillMaxWidth()
-            ) {
-                Text(secondaryButtonText)
-            }
+            )
         }
+    }
+}
+
+@Composable
+private fun OnboardingLinearProgressIndicator(
+    progress: () -> Float,
+    modifier: Modifier = Modifier
+) {
+    LinearProgressIndicator(
+        progress = progress(),
+        color = DailyCostTheme.colorScheme.primary,
+        trackColor = DailyCostTheme.colorScheme.primary.copy(alpha = 0.3f), // Opacity 30%
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun OnboardingPrimaryButton(
+    text: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = DailyCostTheme.colorScheme.primary
+        )
+    ) {
+        Text(text)
+    }
+}
+
+@Composable
+private fun OnboardingSecondaryButton(
+    text: String,
+    progress: Float,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
+    TextButton(
+        onClick = onClick,
+        border = BorderStroke(
+            width = 1.dp,
+            color = if (progress >= 0.99f) DailyCostTheme.colorScheme.primary
+            else Color.Transparent
+        ),
+        modifier = modifier,
+        colors = ButtonDefaults.textButtonColors(
+            contentColor = DailyCostTheme.colorScheme.text
+        )
+    ) {
+        Text(text)
     }
 }
