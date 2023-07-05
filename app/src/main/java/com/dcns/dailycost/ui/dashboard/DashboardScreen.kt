@@ -8,10 +8,13 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -24,12 +27,12 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -74,19 +77,6 @@ fun DashboardScreen(
 
     BaseScreenWrapper(
         viewModel = viewModel,
-        topBar = {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                DashboardTopAppBar(
-                    onNavigationIconClicked = onNavigationIconClicked,
-                    modifier = Modifier
-                        .fillMaxWidth(0.92f)
-                )
-            }
-        },
         floatingActionButton = {
             FloatingActionButton(
                 shape = CircleShape,
@@ -108,10 +98,11 @@ fun DashboardScreen(
                 )
             }
         }
-    ) { scaffoldPadding ->
+    ) { _ ->
         DashboardScreenContent(
             state = state,
             lazyListState = lazyListState,
+            onNavigationIconClicked = onNavigationIconClicked,
             onRefresh = {
                 viewModel.onAction(DashboardAction.Refresh)
             },
@@ -125,7 +116,7 @@ fun DashboardScreen(
                 )
             },
             modifier = Modifier
-                .padding(scaffoldPadding)
+                .statusBarsPadding()
         )
     }
 }
@@ -136,6 +127,7 @@ private fun DashboardScreenContent(
     state: DashboardState,
     lazyListState: LazyListState,
     modifier: Modifier = Modifier,
+    onNavigationIconClicked: () -> Unit,
     onNavigateTo: (TopLevelDestination) -> Unit,
     onRefresh: () -> Unit
 ) {
@@ -157,6 +149,14 @@ private fun DashboardScreenContent(
                 .fillMaxSize()
                 .pullRefresh(pullRefreshState)
         ) {
+            item {
+                DashboardTopAppBar(
+                    onNavigationIconClicked = onNavigationIconClicked,
+                    modifier = Modifier
+                        .fillMaxWidth(0.92f)
+                )
+            }
+
             item {
                 BalanceCard(
                     balance = state.balance,
@@ -246,6 +246,11 @@ private fun DashboardScreenContent(
                     )
                 }
             }
+
+            item {
+                // Fab size: 56.dp
+                Spacer(modifier = Modifier.height(56.dp + 16.dp))
+            }
         }
 
         PullRefreshIndicator(
@@ -308,7 +313,7 @@ private fun DashboardTopAppBar(
     onNavigationIconClicked: () -> Unit
 ) {
 
-    CenterAlignedTopAppBar(
+    TopAppBar(
         modifier = modifier,
         title = {},
         navigationIcon = {
