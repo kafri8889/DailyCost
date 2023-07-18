@@ -16,6 +16,6 @@ inline fun IncomeResponseData.toIncome(
         amount = amount.toDouble(),
         payment = WalletType.parse(payment),
         date = date(this.date),
-        category = category(this.category),
+        category = category(this.category.uppercaseFirstLetterInWord()),
     )
 }

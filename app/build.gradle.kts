@@ -194,12 +194,13 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.5.0")
 
     // Other
-    implementation("com.google.code.gson:gson:2.9.0")
+    implementation("com.google.code.gson:gson:2.10")
     implementation("com.jakewharton.timber:timber:5.0.1")
     implementation("com.squareup.wire:wire-runtime:4.4.3")
     implementation("com.maxkeppeler.sheets-compose-dialogs:state:1.2.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("com.tbuonomo:dotsindicator:5.0")
+    implementation("io.github.fornewid:material-motion-compose-navigation:1.0.4")
 
     implementation("commons-codec:commons-codec:1.16.0")
     implementation("commons-io:commons-io:2.11.0")
@@ -208,7 +209,7 @@ dependencies {
     testImplementation("org.json:json:20180813")
     testImplementation("com.google.truth:truth:1.1.5")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

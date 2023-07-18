@@ -10,7 +10,7 @@ import com.dcns.dailycost.ui.transaction.TransactionViewModel
 
 fun NavGraphBuilder.TransactionNavigation(navigationActions: NavigationActions) {
     composable(
-        route = TopLevelDestinations.Home.expense.route
+        route = TopLevelDestinations.Home.transaction.route
     ) { backEntry ->
         val mViewModel = hiltViewModel<TransactionViewModel>(backEntry)
 

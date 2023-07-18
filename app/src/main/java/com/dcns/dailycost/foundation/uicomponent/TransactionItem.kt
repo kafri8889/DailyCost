@@ -131,7 +131,7 @@ fun TransactionItem(
                             color = DailyCostTheme.colorScheme.labelText
                         ),
                         modifier = Modifier
-                            .weight(0.4f)
+                            .weight(0.5f)
                     )
 
                     Text(
@@ -142,7 +142,7 @@ fun TransactionItem(
                             color = DailyCostTheme.colorScheme.text
                         ),
                         modifier = Modifier
-                            .weight(0.6f)
+                            .weight(0.5f)
                             .dailyCostMarquee(
                                 edgeWidth = 0.dp
                             )

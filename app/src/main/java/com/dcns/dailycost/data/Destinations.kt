@@ -13,11 +13,11 @@ import com.dcns.dailycost.foundation.nav_type.TransactionTypeNavType
 object DestinationRoute {
     const val CHANGE_LANGUAGE = "change_language"
     const val TRANSACTIONS = "transactions"
+    const val TRANSACTION = "transaction"
     const val CATEGORIES = "categories"
     const val ONBOARDING = "onboarding"
     const val DASHBOARD = "dashboard"
     const val REGISTER = "register"
-    const val EXPENSE = "expense"
     const val SETTING = "setting"
     const val SPLASH = "splash"
     const val LOGIN = "login"
@@ -158,6 +158,10 @@ object TopLevelDestinations {
             )
         )
 
+        val transaction = TopLevelDestination(
+            route = DestinationRoute.TRANSACTION
+        )
+
         val categories = TopLevelDestination(
             route = DestinationRoute.CATEGORIES
         )
@@ -166,10 +170,6 @@ object TopLevelDestinations {
             route = DestinationRoute.DASHBOARD,
             icon = R.drawable.ic_dashboard,
             name = R.string.dashboard
-        )
-
-        val expense = TopLevelDestination(
-            route = DestinationRoute.EXPENSE
         )
 
         val setting = TopLevelDestination(
