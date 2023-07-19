@@ -21,11 +21,13 @@ Compose Version: 1.5.0-beta03
 
 Kotlin Version: 1.8.22
 
-Android Gradle Plugin Version: 8.2.0-alpha12
+Android Gradle Plugin Version: 8.2.0-alpha13
+
+Gradle: gradle-8.2-bin.zip
 
 Java Version: 17
 
-Android Studio Version: Hedgehog Canary 12
+Android Studio Version: Hedgehog Canary 13
 
 # Project Structure
 ```
