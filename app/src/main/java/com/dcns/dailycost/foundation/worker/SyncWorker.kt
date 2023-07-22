@@ -60,7 +60,7 @@ class SyncWorker @AssistedInject constructor(
             getExpense(credential),
             getBalance(credential),
             getIncome(credential),
-            getNote(credential)
+//            getNote(credential)
         )
 
         return if (results.all { it is Result.Success }) Result.success()

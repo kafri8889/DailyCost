@@ -1,9 +1,12 @@
 package com.dcns.dailycost.ui.app
 
 import androidx.lifecycle.viewModelScope
+import com.dcns.dailycost.data.model.UserCredential
 import com.dcns.dailycost.domain.use_case.DepoUseCases
+import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
+import com.dcns.dailycost.domain.util.EditUserCredentialType
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,6 +17,7 @@ import javax.inject.Inject
 class DailyCostAppViewModel @Inject constructor(
     private val userPreferenceUseCases: UserPreferenceUseCases,
     private val userCredentialUseCases: UserCredentialUseCases,
+    private val loginRegisterUseCases: LoginRegisterUseCases,
     private val depoUseCases: DepoUseCases
 ): BaseViewModel<DailyCostAppState, DailyCostAppAction>() {
 
@@ -44,11 +48,33 @@ class DailyCostAppViewModel @Inject constructor(
             userCredentialUseCases.getUserCredentialUseCase().collect { cred ->
                 Timber.i("credential: $cred | ${cred.isLoggedIn}")
 
-                updateState {
-                    copy(
-                        userCredential = cred
-                    )
+                checkToken(cred)
+            }
+        }
+    }
+
+    private suspend fun checkToken(credential: UserCredential) {
+        depoUseCases.getRemoteBalanceUseCase(
+            token = credential.getAuthToken(),
+            userId = credential.id.toIntOrNull() ?: -1
+        ).let { response ->
+            if (!response.isSuccessful) {
+                sendEvent(DailyCostAppUiEvent.TokenExpired)
+
+                // Clear credential
+                with(userCredentialUseCases.editUserCredentialUseCase) {
+                    invoke(EditUserCredentialType.ID(""))
+                    invoke(EditUserCredentialType.Name(""))
+                    invoke(EditUserCredentialType.Email(""))
+                    invoke(EditUserCredentialType.Token(""))
+                    invoke(EditUserCredentialType.Password(""))
                 }
+            }
+
+            updateState {
+                copy(
+                    userCredential = credential
+                )
             }
         }
     }
