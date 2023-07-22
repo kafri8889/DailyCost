@@ -22,9 +22,9 @@ class NetworkConnectivity(
     private val validNetworks: MutableSet<Network> = HashSet()
 
     fun initialize() {
-//        checkValidNetworks()
+        checkValidNetworks()
         // Assume the device is now online
-        postValue(true)
+//        postValue(true)
     }
 
     private fun checkValidNetworks() {
