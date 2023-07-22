@@ -54,7 +54,7 @@ fun <STATE, ACTION> BaseScreenWrapper(
 						)
 					}
 					is UiEvent.ShowToast -> {
-						event.message.toast(context, event.length)
+						event.getMessage(context).toast(context, event.length)
 					}
 				}
 			}

@@ -45,6 +45,7 @@ import com.dcns.dailycost.R
 import com.dcns.dailycost.data.Language
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
+import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.DrawerItem
@@ -177,58 +178,60 @@ fun DailyCostApp(
             )
         }
 
-        Surface(color = MaterialTheme.colorScheme.background) {
-            DailyCostDrawer(
-                state = drawerState,
-                email = state.userCredential?.email ?: "",
-                language = state.language,
-                onNavigationIconClicked = onNavigationIconClicked,
-                onCategoriesClicked = {
-                    navActions.navigateTo(
-                        destination = TopLevelDestinations.Home.categories,
-                        builder = NavigationActions.defaultNavOptionsBuilder(
-                            popTo = TopLevelDestinations.Home.dashboard
+        BaseScreenWrapper(viewModel) {
+            Surface(color = MaterialTheme.colorScheme.background) {
+                DailyCostDrawer(
+                    state = drawerState,
+                    email = state.userCredential?.email ?: "",
+                    language = state.language,
+                    onNavigationIconClicked = onNavigationIconClicked,
+                    onCategoriesClicked = {
+                        navActions.navigateTo(
+                            destination = TopLevelDestinations.Home.categories,
+                            builder = NavigationActions.defaultNavOptionsBuilder(
+                                popTo = TopLevelDestinations.Home.dashboard
+                            )
                         )
-                    )
-                    closeDrawer()
-                },
-                onSettingClicked = {
-                    navActions.navigateTo(
-                        destination = TopLevelDestinations.Home.setting,
-                        builder = NavigationActions.defaultNavOptionsBuilder(
-                            popTo = TopLevelDestinations.Home.dashboard
+                        closeDrawer()
+                    },
+                    onSettingClicked = {
+                        navActions.navigateTo(
+                            destination = TopLevelDestinations.Home.setting,
+                            builder = NavigationActions.defaultNavOptionsBuilder(
+                                popTo = TopLevelDestinations.Home.dashboard
+                            )
                         )
-                    )
-                    closeDrawer()
-                },
-                onLanguageClicked = {
-                    navActions.navigateTo(TopLevelDestinations.Home.changeLanguage)
-                    closeDrawer()
-                },
-                onSignOutClicked = {
-                    navActions.navigateTo(TopLevelDestinations.LoginRegister.login)
-                    closeDrawer()
-                }
-            ) {
-                DailyCostBottomSheetLayout(bottomSheetNavigator) {
-                    BackHandler(drawerState.isOpen || state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route) {
-                        when {
-                            drawerState.isOpen -> {
-                                scope.launch {
-                                    drawerState.close()
+                        closeDrawer()
+                    },
+                    onLanguageClicked = {
+                        navActions.navigateTo(TopLevelDestinations.Home.changeLanguage)
+                        closeDrawer()
+                    },
+                    onSignOutClicked = {
+                        navActions.navigateTo(TopLevelDestinations.LoginRegister.login)
+                        closeDrawer()
+                    }
+                ) {
+                    DailyCostBottomSheetLayout(bottomSheetNavigator) {
+                        BackHandler(drawerState.isOpen || state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route) {
+                            when {
+                                drawerState.isOpen -> {
+                                    scope.launch {
+                                        drawerState.close()
+                                    }
+                                }
+                                state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route -> {
+                                    (context as MainActivity).finishAndRemoveTask()
                                 }
                             }
-                            state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route -> {
-                                (context as MainActivity).finishAndRemoveTask()
-                            }
                         }
-                    }
 
-                    DailyCostNavHost(
-                        navController = navController,
-                        navActions = navActions,
-                        onNavigationIconClicked = onNavigationIconClicked
-                    )
+                        DailyCostNavHost(
+                            navController = navController,
+                            navActions = navActions,
+                            onNavigationIconClicked = onNavigationIconClicked
+                        )
+                    }
                 }
             }
         }
