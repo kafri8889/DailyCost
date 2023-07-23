@@ -102,7 +102,7 @@ class DashboardViewModel @Inject constructor(
 
         return depoUseCases.getRemoteBalanceUseCase(
             token = mState.credential.getAuthToken(),
-            userId = mState.credential.id.toInt()
+            userId = mState.credential.id.toIntOrNull() ?: -1
         ).let { response ->
             if (response.isSuccessful) {
                 val balanceResponseData = response.body()?.data

@@ -3,6 +3,7 @@ package com.dcns.dailycost.foundation.common
 import timber.log.Timber
 import java.io.IOException
 import java.net.InetSocketAddress
+import java.net.SocketTimeoutException
 import javax.net.SocketFactory
 
 /**
@@ -20,8 +21,11 @@ object DoesNetworkHaveInternet {
             socket.close()
             Timber.d("PING success.")
             true
-        }catch (e: IOException){
+        } catch (e: IOException){
             Timber.e("No internet connection. $e")
+            false
+        } catch (e: SocketTimeoutException) {
+            Timber.e("Socket timeout")
             false
         }
     }

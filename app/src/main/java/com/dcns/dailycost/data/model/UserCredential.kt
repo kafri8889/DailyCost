@@ -17,6 +17,22 @@ data class UserCredential(
     val password: String
 ): Parcelable {
 
+    /**
+     * return true if all value not empty, false otherwise
+     */
+    val allNotEmpty: Boolean
+        get() = isLoggedIn
+
+    /**
+     * return true if all value empty, false otherwise
+     */
+    val allEmpty: Boolean
+        get() = id.isBlank() &&
+                name.isBlank() &&
+                email.isBlank() &&
+                token.isBlank() &&
+                password.isBlank()
+
     val isLoggedIn: Boolean
         get() = id.isNotBlank() &&
                 name.isNotBlank() &&
