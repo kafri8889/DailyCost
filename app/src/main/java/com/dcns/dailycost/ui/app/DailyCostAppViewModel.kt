@@ -54,6 +54,12 @@ class DailyCostAppViewModel @Inject constructor(
     }
 
     private suspend fun checkToken(credential: UserCredential) {
+        updateState {
+            copy(
+                userCredential = credential
+            )
+        }
+
         depoUseCases.getRemoteBalanceUseCase(
             token = credential.getAuthToken(),
             userId = credential.id.toIntOrNull() ?: -1
@@ -69,12 +75,6 @@ class DailyCostAppViewModel @Inject constructor(
                     invoke(EditUserCredentialType.Token(""))
                     invoke(EditUserCredentialType.Password(""))
                 }
-            }
-
-            updateState {
-                copy(
-                    userCredential = credential
-                )
             }
         }
     }
