@@ -58,7 +58,7 @@ class DailyCostAppViewModel @Inject constructor(
             token = credential.getAuthToken(),
             userId = credential.id.toIntOrNull() ?: -1
         ).let { response ->
-            if (!response.isSuccessful) {
+            if (!response.isSuccessful && credential.allNotEmpty) {
                 sendEvent(DailyCostAppUiEvent.TokenExpired)
 
                 // Clear credential
