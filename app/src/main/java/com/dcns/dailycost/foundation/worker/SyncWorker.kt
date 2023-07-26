@@ -63,7 +63,9 @@ class SyncWorker @AssistedInject constructor(
         )
 
         return if (results.all { it is Result.Success }) Result.success()
-        else Result.retry()
+        else Result.failure(workDataOf(
+            Workers.ARG_WORKER_MESSAGE_KEY to "Something went wrong!"
+        ))
     }
 
     private suspend fun getExpense(credential: UserCredential): Result {
