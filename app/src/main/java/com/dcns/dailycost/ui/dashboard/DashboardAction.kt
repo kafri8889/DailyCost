@@ -1,7 +1,9 @@
 package com.dcns.dailycost.ui.dashboard
 
+import android.content.Context
+
 sealed interface DashboardAction {
 
-    object Refresh: DashboardAction
+    data class Refresh(val context: Context): DashboardAction
 
 }

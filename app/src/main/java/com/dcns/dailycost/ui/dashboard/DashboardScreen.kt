@@ -108,7 +108,7 @@ fun DashboardScreen(
             lazyListState = lazyListState,
             onNavigationIconClicked = onNavigationIconClicked,
             onRefresh = {
-                viewModel.onAction(DashboardAction.Refresh)
+                viewModel.onAction(DashboardAction.Refresh(context))
             },
             onNavigateTo = { dest ->
                 Timber.i("transaction: ${dest.route}")
