@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -18,12 +19,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
+import com.dcns.dailycost.foundation.extension.toast
 
 @Composable
 fun TransactionScreen(
     viewModel: TransactionViewModel,
     navigationActions: NavigationActions,
 ) {
+
+    val context = LocalContext.current
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -33,7 +37,9 @@ fun TransactionScreen(
         ExpenseScreenContent(
             state = state,
             onNavigationIconClicked = {
-                navigationActions.popBackStack()
+                viewModel.performInsertTransaction()
+                "perform insert".toast(context)
+//                navigationActions.popBackStack()
             },
             modifier = Modifier
                 .statusBarsPadding()
