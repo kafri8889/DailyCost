@@ -1,23 +1,32 @@
 package com.dcns.dailycost.ui.onboarding
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -25,15 +34,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.ConstraintSet
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
@@ -42,12 +53,17 @@ import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.LinearProgressIndicator
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Preview(showBackground = true, showSystemUi = true, device = "id:J2 Prime")
 //@Preview(showBackground = true, showSystemUi = true, device = "spec:width=1280dp,height=800dp,dpi=240")
-@Preview(showBackground = true, showSystemUi = true, device = "spec:width=411dp,height=891dp")
 @Preview(showBackground = true, showSystemUi = true, device = "spec:width=360dp,height=700dp,dpi=320")
+@Preview(showBackground = true, showSystemUi = true, device = "spec:width=411dp,height=900dp")
 @Composable
 private fun OnboardingScreenContentPreview() {
+
+    val config = LocalConfiguration.current
+    val density = LocalDensity.current
+
     DailyCostTheme {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -59,10 +75,11 @@ private fun OnboardingScreenContentPreview() {
                 progress = { 0.5f },
                 bodyText = stringResource(id = R.string.you_can_see_where_the_money_goes),
                 titleText = stringResource(id = R.string.you_can_see_where_the_money_goes),
-                primaryButtonText = stringResource(id = R.string.you_can_see_where_the_money_goes),
-                secondaryButtonText = stringResource(id = R.string.you_can_see_where_the_money_goes),
+                primaryButtonText = "Next",
+                secondaryButtonText = "Skip",
                 onPrimaryButtonClicked = {},
                 onSecondaryButtonClicked = {},
+                windowSizeClass = WindowSizeClass.calculateFromSize(DpSize(config.screenWidthDp.dp, config.screenHeightDp.dp)),
                 modifier = Modifier
                     .fillMaxSize(0.92f)
             )
@@ -70,6 +87,7 @@ private fun OnboardingScreenContentPreview() {
     }
 }
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun OnboardingScreen(
     viewModel: OnboardingViewModel,
@@ -79,6 +97,8 @@ fun OnboardingScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    val windowSizeClass = calculateWindowSizeClass(context as MainActivity)
+
     BackHandler {
         if (state.currentPage != 1) {
             viewModel.onAction(OnboardingAction.UpdateCurrentPage(state.currentPage - 1))
@@ -86,7 +106,7 @@ fun OnboardingScreen(
             return@BackHandler
         }
 
-        (context as MainActivity).finishAndRemoveTask()
+        context.finishAndRemoveTask()
     }
 
     Column(
@@ -102,6 +122,7 @@ fun OnboardingScreen(
             titleText = stringResource(id = state.titleText),
             primaryButtonText = stringResource(id = state.primaryButtonText),
             secondaryButtonText = stringResource(id = state.secondaryButtonText),
+            windowSizeClass = windowSizeClass,
             onPrimaryButtonClicked = {
                 if (state.currentPage == state.pageCount) {
                     // Sign in
@@ -133,64 +154,16 @@ private fun OnboardingScreenContent(
     titleText: String,
     primaryButtonText: String,
     secondaryButtonText: String,
+    windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
     onPrimaryButtonClicked: () -> Unit,
     onSecondaryButtonClicked: () -> Unit
 ) {
 
-    val constraintSet = ConstraintSet {
-        val (
-            progressIndicator,
-            image,
-            titleTextRef,
-            bodyTextRef,
-            nextSkipButton,
-        ) = createRefsFor(
-            "progressIndicator",
-            "image",
-            "titleText",
-            "bodyText",
-            "nextSkipButton",
-        )
+    val config = LocalConfiguration.current
 
-        constrain(progressIndicator) {
-            centerHorizontallyTo(parent)
-
-            top.linkTo(parent.top)
-            bottom.linkTo(image.top)
-        }
-
-        constrain(image) {
-            centerHorizontallyTo(parent)
-
-            top.linkTo(progressIndicator.bottom)
-            bottom.linkTo(titleTextRef.top)
-        }
-
-        constrain(titleTextRef) {
-            centerHorizontallyTo(parent)
-
-            top.linkTo(image.bottom)
-            bottom.linkTo(bodyTextRef.top)
-        }
-
-        constrain(bodyTextRef) {
-            centerHorizontallyTo(parent)
-
-            top.linkTo(titleTextRef.bottom)
-            bottom.linkTo(nextSkipButton.top)
-        }
-
-        constrain(nextSkipButton) {
-            centerHorizontallyTo(parent)
-
-            top.linkTo(bodyTextRef.bottom)
-            bottom.linkTo(parent.bottom)
-        }
-    }
-
-    ConstraintLayout(
-        constraintSet = constraintSet,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
     ) {
@@ -200,59 +173,109 @@ private fun OnboardingScreenContent(
                 .clip(CircleShape)
                 .fillMaxWidth()
                 .height(8.dp)
-                .layoutId("progressIndicator")
+        )
+
+        Spacer(
+            modifier = Modifier
+                .height(
+                    dimensionResource(
+                        id = if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded) com.intuit.sdp.R.dimen._32sdp
+                        else com.intuit.sdp.R.dimen._20sdp
+                    )
+                )
         )
 
         Image(
             painter = ColorPainter(Color.LightGray),
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .layoutId("image")
+                .width(config.smallestScreenWidthDp.dp - 16.dp)
+                .aspectRatio(
+                    if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded || config.screenHeightDp >= 700) 1f
+                    else 1f/0.8f
+                )
+        )
+
+        Spacer(
+            modifier = Modifier
+                .height(
+                    dimensionResource(
+                        id = if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded) com.intuit.sdp.R.dimen._28sdp
+                        else com.intuit.sdp.R.dimen._20sdp
+                    )
+                )
         )
 
         Text(
             text = titleText,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = dimensionResource(
+                    id = when {
+                        config.screenHeightDp < 700 -> com.intuit.ssp.R.dimen._16ssp
+                        windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded -> com.intuit.ssp.R.dimen._20ssp
+                        else -> com.intuit.ssp.R.dimen._18ssp
+                    }
+                ).value.sp
             ),
             modifier = Modifier
-                .layoutId("titleText")
+                .animateContentSize(tween(256))
         )
+
+        Spacer(modifier = Modifier.height(dimensionResource( id = com.intuit.sdp.R.dimen._16sdp)))
 
         Text(
             text = bodyText,
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Normal
-            ),
             textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Normal,
+                fontSize = dimensionResource(
+                    id = when {
+                        config.screenHeightDp < 700 -> com.intuit.ssp.R.dimen._12ssp
+                        windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded -> com.intuit.ssp.R.dimen._16ssp
+                        else -> com.intuit.ssp.R.dimen._14ssp
+                    }
+                ).value.sp
+            ),
             modifier = Modifier
-                .layoutId("bodyText")
+                .animateContentSize(tween(256))
         )
 
-        Column(
+        Spacer(
             modifier = Modifier
-                .layoutId("nextSkipButton")
-        ) {
-            OnboardingPrimaryButton(
-                text = primaryButtonText,
-                onClick = onPrimaryButtonClicked,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
+                .height(
+                    dimensionResource(
+                        id = if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded) com.intuit.sdp.R.dimen._32sdp
+                        else com.intuit.sdp.R.dimen._20sdp
+                    )
+                )
+        )
 
-            Spacer(modifier = Modifier.height(4.dp))
+        OnboardingPrimaryButton(
+            text = primaryButtonText,
+            onClick = onPrimaryButtonClicked,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
 
-            OnboardingSecondaryButton(
-                text = secondaryButtonText,
-                onClick = onSecondaryButtonClicked,
-                progress = progress(),
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        }
+        Spacer(
+            modifier = Modifier
+                .height(
+                    dimensionResource(
+                        id = if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded) com.intuit.sdp.R.dimen._16sdp
+                        else com.intuit.sdp.R.dimen._10sdp
+                    )
+                )
+        )
+
+        OnboardingSecondaryButton(
+            text = secondaryButtonText,
+            onClick = onSecondaryButtonClicked,
+            progress = progress(),
+            modifier = Modifier
+                .fillMaxWidth()
+        )
     }
 }
 
@@ -275,7 +298,15 @@ private fun OnboardingPrimaryButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
+    val config = LocalConfiguration.current
+
     Button(
+        contentPadding = PaddingValues(
+            dimensionResource(
+                id = if (config.screenHeightDp < 700) com.intuit.sdp.R.dimen._8sdp
+                else com.intuit.sdp.R.dimen._12sdp
+            )
+        ),
         shape = RoundedCornerShape(25),
         onClick = onClick,
         modifier = modifier,
@@ -283,7 +314,12 @@ private fun OnboardingPrimaryButton(
             containerColor = DailyCostTheme.colorScheme.primary
         )
     ) {
-        Text(text)
+        Text(
+            text = text,
+            style = LocalTextStyle.current.copy(
+                fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._14ssp).value.sp
+            )
+        )
     }
 }
 
@@ -294,7 +330,15 @@ private fun OnboardingSecondaryButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
+    val config = LocalConfiguration.current
+
     TextButton(
+        contentPadding = PaddingValues(
+            dimensionResource(
+                id = if (config.screenHeightDp < 700) com.intuit.sdp.R.dimen._8sdp
+                else com.intuit.sdp.R.dimen._12sdp
+            )
+        ),
         shape = RoundedCornerShape(25),
         onClick = onClick,
         border = BorderStroke(
@@ -307,6 +351,11 @@ private fun OnboardingSecondaryButton(
             contentColor = DailyCostTheme.colorScheme.text
         )
     ) {
-        Text(text)
+        Text(
+            text = text,
+            style = LocalTextStyle.current.copy(
+                fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._14ssp).value.sp
+            )
+        )
     }
 }
