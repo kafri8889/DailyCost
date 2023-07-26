@@ -8,7 +8,6 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.work.WorkManager
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
 import com.dcns.dailycost.foundation.extension.enqueue
@@ -31,13 +30,11 @@ class MainActivity: LocalizedActivity() {
 
     private val dailyCostAppViewModel: DailyCostAppViewModel by viewModels()
 
-    private lateinit var workManager: WorkManager
     private lateinit var biometricManager: DailyCostBiometricManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        workManager = WorkManager.getInstance(this@MainActivity)
         biometricManager = DailyCostBiometricManager(this).apply {
             setListener(object : DailyCostBiometricManager.BiometricListener {
                 override fun onSuccess(result: BiometricPrompt.AuthenticationResult) {
