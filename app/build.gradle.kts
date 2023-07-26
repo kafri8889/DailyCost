@@ -147,8 +147,7 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class:1.1.1")
 
     // Large screen support
-//    implementation("androidx.window:window:1.1.0")
-//    implementation("androidx.window:window-java:1.1.0")
+    implementation("androidx.window:window:1.1.0")
 
     // Datastore
     implementation("androidx.datastore:datastore:1.0.0")
@@ -201,6 +200,8 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("com.tbuonomo:dotsindicator:5.0")
     implementation("io.github.fornewid:material-motion-compose-navigation:1.0.4")
+    implementation("com.intuit.ssp:ssp-android:1.1.0")
+    implementation("com.intuit.sdp:sdp-android:1.1.0")
 
     implementation("commons-codec:commons-codec:1.16.0")
     implementation("commons-io:commons-io:2.11.0")
