@@ -11,10 +11,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.work.WorkManager
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
-import com.dcns.dailycost.foundation.common.Workers
 import com.dcns.dailycost.foundation.extension.enqueue
 import com.dcns.dailycost.foundation.localized.LocalizedActivity
 import com.dcns.dailycost.foundation.localized.data.OnLocaleChangedListener
+import com.dcns.dailycost.foundation.worker.Workers
 import com.dcns.dailycost.ui.app.DailyCostApp
 import com.dcns.dailycost.ui.app.DailyCostAppAction
 import com.dcns.dailycost.ui.app.DailyCostAppUiEvent
