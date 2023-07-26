@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -41,21 +42,31 @@ import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.LinearProgressIndicator
 
-@Preview(showBackground = true, showSystemUi = true,
-    device = "spec:width=360dp,height=700dp,dpi=320"
-)
+@Preview(showBackground = true, showSystemUi = true, device = "id:J2 Prime")
+//@Preview(showBackground = true, showSystemUi = true, device = "spec:width=1280dp,height=800dp,dpi=240")
+@Preview(showBackground = true, showSystemUi = true, device = "spec:width=411dp,height=891dp")
+@Preview(showBackground = true, showSystemUi = true, device = "spec:width=360dp,height=700dp,dpi=320")
 @Composable
 private fun OnboardingScreenContentPreview() {
     DailyCostTheme {
-        OnboardingScreenContent(
-            progress = { 0.5f },
-            bodyText = stringResource(id = R.string.you_can_see_where_the_money_goes),
-            titleText = stringResource(id = R.string.you_can_see_where_the_money_goes),
-            primaryButtonText = stringResource(id = R.string.you_can_see_where_the_money_goes),
-            secondaryButtonText = stringResource(id = R.string.you_can_see_where_the_money_goes),
-            onPrimaryButtonClicked = {},
-            onSecondaryButtonClicked = {}
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            OnboardingScreenContent(
+                progress = { 0.5f },
+                bodyText = stringResource(id = R.string.you_can_see_where_the_money_goes),
+                titleText = stringResource(id = R.string.you_can_see_where_the_money_goes),
+                primaryButtonText = stringResource(id = R.string.you_can_see_where_the_money_goes),
+                secondaryButtonText = stringResource(id = R.string.you_can_see_where_the_money_goes),
+                onPrimaryButtonClicked = {},
+                onSecondaryButtonClicked = {},
+                modifier = Modifier
+                    .fillMaxSize(0.92f)
+            )
+        }
     }
 }
 
@@ -265,6 +276,7 @@ private fun OnboardingPrimaryButton(
     onClick: () -> Unit = {}
 ) {
     Button(
+        shape = RoundedCornerShape(25),
         onClick = onClick,
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
@@ -283,6 +295,7 @@ private fun OnboardingSecondaryButton(
     onClick: () -> Unit = {}
 ) {
     TextButton(
+        shape = RoundedCornerShape(25),
         onClick = onClick,
         border = BorderStroke(
             width = 1.dp,
