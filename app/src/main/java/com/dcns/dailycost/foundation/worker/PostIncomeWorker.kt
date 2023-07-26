@@ -9,7 +9,6 @@ import com.dcns.dailycost.data.model.remote.request_body.IncomeRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
-import com.dcns.dailycost.foundation.common.Workers
 import com.dcns.dailycost.foundation.extension.fromJson
 import com.google.gson.Gson
 import dagger.assisted.Assisted
@@ -19,7 +18,7 @@ import okhttp3.RequestBody
 import timber.log.Timber
 
 @HiltWorker
-class PostIncomeBalanceWorker @AssistedInject constructor(
+class PostIncomeWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted params: WorkerParameters,
     private val incomeUseCases: IncomeUseCases,

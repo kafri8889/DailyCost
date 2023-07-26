@@ -19,7 +19,6 @@ import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.util.GetNoteBy
 import com.dcns.dailycost.domain.util.InputActionType
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
-import com.dcns.dailycost.foundation.common.Workers
 import com.dcns.dailycost.foundation.extension.toExpense
 import com.dcns.dailycost.foundation.extension.toIncome
 import com.dcns.dailycost.foundation.extension.toNote
@@ -64,7 +63,9 @@ class SyncWorker @AssistedInject constructor(
         )
 
         return if (results.all { it is Result.Success }) Result.success()
-        else Result.retry()
+        else Result.failure(workDataOf(
+            Workers.ARG_WORKER_MESSAGE_KEY to "Something went wrong!"
+        ))
     }
 
     private suspend fun getExpense(credential: UserCredential): Result {

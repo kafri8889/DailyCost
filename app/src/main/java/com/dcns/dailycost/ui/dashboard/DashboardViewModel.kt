@@ -2,24 +2,30 @@ package com.dcns.dailycost.ui.dashboard
 
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
-import com.dcns.dailycost.data.Resource
-import com.dcns.dailycost.data.Status
-import com.dcns.dailycost.data.model.remote.response.ErrorResponse
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
-import com.dcns.dailycost.foundation.common.IResponse
 import com.dcns.dailycost.foundation.common.SharedUiEvent
-import com.google.gson.Gson
+import com.dcns.dailycost.foundation.extension.enqueue
+import com.dcns.dailycost.foundation.worker.Workers
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val userCredentialUseCases: UserCredentialUseCases,
@@ -28,7 +34,11 @@ class DashboardViewModel @Inject constructor(
     private val incomeUseCases: IncomeUseCases,
     private val sharedUiEvent: SharedUiEvent,
     private val depoUseCases: DepoUseCases,
+    private val workManager: WorkManager
 ): BaseViewModel<DashboardState, DashboardAction>() {
+
+    private val _currentSyncWorkId = MutableStateFlow<UUID?>(null)
+    private val currentSyncWorkId: StateFlow<UUID?> = _currentSyncWorkId
 
     init {
         viewModelScope.launch {
@@ -95,37 +105,42 @@ class DashboardViewModel @Inject constructor(
                 }
             }
         }
-    }
 
-    private suspend fun getRemoteBalance(): Resource<IResponse> {
-        val mState = state.value
+        viewModelScope.launch {
+            currentSyncWorkId.flatMapLatest { uuid ->
+                if (uuid != null) {
+                    workManager.getWorkInfoByIdLiveData(uuid).asFlow()
+                } else flowOf(null)
+            }.filterNotNull().collect { workInfo ->
+                when (workInfo.state) {
+                    WorkInfo.State.ENQUEUED -> {
+                        updateState {
+                            copy(
+                                isRefreshing = true
+                            )
+                        }
+                    }
+                    WorkInfo.State.SUCCEEDED -> {
+                        updateState {
+                            copy(
+                                isRefreshing = false
+                            )
+                        }
+                    }
+                    WorkInfo.State.FAILED -> {
+                        workInfo.outputData.getString(Workers.ARG_WORKER_MESSAGE_KEY)?.let { message ->
+                            sendEvent(DashboardUiEvent.GetRemoteFailed(message))
+                        }
 
-        return depoUseCases.getRemoteBalanceUseCase(
-            token = mState.credential.getAuthToken(),
-            userId = mState.credential.id.toIntOrNull() ?: -1
-        ).let { response ->
-            if (response.isSuccessful) {
-                val balanceResponseData = response.body()?.data
-
-                balanceResponseData?.let {
-                    depoUseCases.updateLocalBalanceUseCase(
-                        cash = balanceResponseData.cash.toDouble(),
-                        eWallet = balanceResponseData.eWallet.toDouble(),
-                        bankAccount = balanceResponseData.bankAccount.toDouble()
-                    )
+                        updateState {
+                            copy(
+                                isRefreshing = false
+                            )
+                        }
+                    }
+                    else -> {}
                 }
-
-                Timber.i("get remote balance success")
-
-                return Resource.success(response.body())
             }
-
-            val errorResponse = Gson().fromJson(
-                response.errorBody()?.charStream(),
-                ErrorResponse::class.java
-            )
-
-            Resource.error(errorResponse.message, null)
         }
     }
 
@@ -133,32 +148,16 @@ class DashboardViewModel @Inject constructor(
 
     override fun onAction(action: DashboardAction) {
         when (action) {
-            DashboardAction.Refresh -> viewModelScope.launch {
+            is DashboardAction.Refresh -> viewModelScope.launch {
                 // Kalo ga ada koneksi internet, show snackbar
                 if (!state.value.internetConnectionAvailable) {
                     sendEvent(DashboardUiEvent.NoInternetConnection())
                     return@launch
                 }
 
-                updateState {
-                    copy(
-                        isRefreshing = true
-                    )
-                }
-
-                val response = listOf(
-                    getRemoteBalance()
-                )
-
-                response.filter { it.status == Status.Error }.forEach {
-                    sendEvent(DashboardUiEvent.GetRemoteFailed(it.message ?: ""))
-                }
-
-                updateState {
-                    copy(
-                        isRefreshing = false
-                    )
-                }
+                Workers.syncWorker().also {
+                    _currentSyncWorkId.emit(it.id)
+                }.enqueue(action.context)
             }
         }
     }

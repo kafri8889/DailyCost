@@ -5,10 +5,9 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
-import com.dcns.dailycost.data.model.remote.response.DepoResponse
+import com.dcns.dailycost.data.model.remote.request_body.IncomeRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
-import com.dcns.dailycost.domain.use_case.DepoUseCases
+import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.foundation.extension.fromJson
 import com.google.gson.Gson
@@ -19,10 +18,10 @@ import okhttp3.RequestBody
 import timber.log.Timber
 
 @HiltWorker
-class EditBalanceWorker @AssistedInject constructor(
+class PostExpenseWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted params: WorkerParameters,
-    private val depoUseCases: DepoUseCases,
+    private val expenseUseCases: ExpenseUseCases,
     private val userCredentialUseCases: UserCredentialUseCases
 ): CoroutineWorker(context, params) {
 
@@ -30,9 +29,9 @@ class EditBalanceWorker @AssistedInject constructor(
         val requestBody = inputData.getString(Workers.ARG_DATA_REQUEST_BODY)
 
         requestBody?.let { json ->
-            val body = json.fromJson(DepoRequestBody::class.java)
+            val body = json.fromJson(IncomeRequestBody::class.java)
 
-            return editBalance(body.toRequestBody())
+            return postIncome(body.toRequestBody())
         }
 
         return Result.failure(
@@ -42,35 +41,13 @@ class EditBalanceWorker @AssistedInject constructor(
         )
     }
 
-//    override suspend fun getForegroundInfo(): ForegroundInfo {
-//
-//        val notification = NotificationCompat.Builder(context, NotificationUtil.WORKER_CHANNEL_ID).apply {
-//            setOngoing(true)
-//            setLocalOnly(true)
-//            setAutoCancel(true)
-//            setOnlyAlertOnce(true)
-//            setVisibility(NotificationCompat.VISIBILITY_SECRET)
-//
-//            priority = NotificationCompat.PRIORITY_MIN
-//        }.build()
-//    }
+    private suspend fun postIncome(requestBody: RequestBody): Result {
+        val credential = userCredentialUseCases.getUserCredentialUseCase().firstOrNull()
 
-    private suspend fun editBalance(requestBody: RequestBody): Result {
-        val token = userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.getAuthToken()
-
-        if (token != null) {
-            depoUseCases.editDepoUseCase(requestBody, token).let {
+        if (credential != null) {
+            expenseUseCases.addRemoteExpenseUseCase(credential.id.toInt(), requestBody, credential.getAuthToken()).let {
                 if (it.isSuccessful) {
-                    val body = it.body() as DepoResponse
-
-                    // Save to local
-                    depoUseCases.updateLocalBalanceUseCase(
-                        cash = body.data.cash.toDouble(),
-                        eWallet = body.data.eWallet.toDouble(),
-                        bankAccount = body.data.bankAccount.toDouble(),
-                    )
-
-                    Timber.i("edit finished")
+                    Timber.i("post finished")
 
                     return Result.success(
                         workDataOf(
@@ -104,4 +81,5 @@ class EditBalanceWorker @AssistedInject constructor(
             )
         )
     }
+
 }
