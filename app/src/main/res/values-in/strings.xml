@@ -96,4 +96,5 @@
     <string name="token_expired">Token kedaluwarsa</string>
     <string name="enter_email">Masukkan email</string>
     <string name="enter_password">Masukkan password</string>
+    <string name="enter_name">Masukkan nama</string>
 </resources>
