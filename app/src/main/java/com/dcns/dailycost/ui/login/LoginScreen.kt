@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -47,16 +49,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
@@ -226,6 +229,9 @@ private fun LoginScreenContent(
     onSignUpClicked: () -> Unit = {},
     onEmailChanged: (String) -> Unit = {}
 ) {
+
+    val _48dp = dimensionResource(id = com.intuit.sdp.R.dimen._48sdp)
+
     val constraintSet = ConstraintSet {
         val (
             topContent,
@@ -237,9 +243,11 @@ private fun LoginScreenContent(
             "bottomContent",
         )
 
+        val gl1 = createGuidelineFromTop(_48dp)
+
         constrain(topContent) {
             start.linkTo(parent.start)
-            top.linkTo(parent.top)
+            top.linkTo(gl1)
         }
 
         constrain(centerContent) {
@@ -309,7 +317,8 @@ private fun TopContent(
         Text(
             text = stringResource(id = R.string.record_all_your_financial_activities_anywhere),
             style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Normal
+                fontWeight = FontWeight.Normal,
+                fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._16ssp).value.sp
             )
         )
     }
@@ -370,16 +379,16 @@ private fun CenterContent(
     }
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = com.intuit.sdp.R.dimen._12sdp)),
         modifier = modifier
     ) {
-        OutlinedTextField(
-            value = email,
-            singleLine = true,
-            isError = emailError != null,
-            onValueChange = onEmailChanged,
-            shape = RoundedCornerShape(20),
-            colors = OutlinedTextFieldDefaults.dailyCostColor(),
+        LoginOutlinedTextField(
+            text = email,
+            label = stringResource(id = R.string.enter_email),
+            errorText = emailError,
+            placeholderText = stringResource(id = R.string.email),
+            focusRequester = emailFocusRequester,
+            onValueChanged = onEmailChanged,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Email
@@ -388,53 +397,25 @@ private fun CenterContent(
                 onNext = {
                     focusManager.moveFocus(FocusDirection.Next)
                 }
-            ),
-            label = {
-                Text(stringResource(id = R.string.email))
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_email_or_sms),
-                    contentDescription = null
-                )
-            },
-            supportingText = if (emailError != null) {
-                {
-                    Text(emailError)
-                }
-            } else null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(emailFocusRequester)
+            )
         )
 
-        OutlinedTextField(
-            value = password,
-            isError = passwordError != null,
-            singleLine = true,
-            onValueChange = onPasswordChanged,
-            shape = RoundedCornerShape(20),
-            colors = OutlinedTextFieldDefaults.dailyCostColor(),
-            visualTransformation = if (!showPassword) PasswordVisualTransformation()
-            else VisualTransformation.None,
+        LoginOutlinedTextField(
+            text = password,
+            label = stringResource(id = R.string.enter_password),
+            errorText = passwordError,
+            placeholderText = stringResource(id = R.string.password),
+            focusRequester = passwordFocusRequester,
+            onValueChanged = onPasswordChanged,
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
             ),
             keyboardActions = KeyboardActions(
-                onDone = {
+                onNext = {
                     focusManager.clearFocus()
                 }
             ),
-            label = {
-                Text(stringResource(id = R.string.password))
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_lock),
-                    contentDescription = null
-                )
-            },
             trailingIcon = {
                 IconButton(
                     onClick = {
@@ -450,15 +431,22 @@ private fun CenterContent(
                     )
                 }
             },
-            supportingText = if (passwordError != null) {
-                {
-                    Text(passwordError)
-                }
-            } else null,
+        )
+
+        Spacer(modifier = Modifier.height(dimensionResource(id = com.intuit.sdp.R.dimen._8sdp)))
+
+        Text(
+            textAlign = TextAlign.End,
+            text = stringResource(id = R.string.forgot_password),
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontWeight = FontWeight.Medium,
+                fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._12ssp).value.sp
+            ),
             modifier = Modifier
                 .fillMaxWidth()
-                .focusRequester(passwordFocusRequester)
         )
+
+        Spacer(modifier = Modifier.height(dimensionResource(id = com.intuit.sdp.R.dimen._8sdp)))
 
         ConstraintLayout(
             constraintSet = rememberMeConstraintSet,
@@ -511,7 +499,7 @@ private fun CenterContent(
             Text(
                 text = stringResource(id = R.string.by_checking_this_box_you_wont_to_sign),
                 style = MaterialTheme.typography.bodySmall.copy(
-                    color = DailyCostTheme.colorScheme.labelText
+                    color = DailyCostTheme.colorScheme.text
                 ),
                 modifier = Modifier
                     .layoutId("bodyText")
@@ -533,6 +521,7 @@ private fun BottomContent(
         modifier = modifier
     ) {
         Button(
+            shape = RoundedCornerShape(25),
             onClick = onSignInClicked,
             colors = ButtonDefaults.buttonColors(
                 containerColor = DailyCostTheme.colorScheme.primary
@@ -542,6 +531,8 @@ private fun BottomContent(
         ) {
             Text(stringResource(R.string.sign_in))
         }
+
+        Spacer(modifier = Modifier.height(dimensionResource(id = com.intuit.sdp.R.dimen._6sdp)))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -567,5 +558,54 @@ private fun BottomContent(
                 }
             )
         }
+    }
+}
+
+@Composable
+private fun LoginOutlinedTextField(
+    text: String,
+    label: String,
+    placeholderText: String,
+    focusRequester: FocusRequester,
+    keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions,
+    modifier: Modifier = Modifier,
+    errorText: String? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    onValueChanged: (String) -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = com.intuit.sdp.R.dimen._8sdp)),
+        modifier = modifier
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.titleSmall.copy(
+                fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._14ssp).value.sp
+            )
+        )
+
+        OutlinedTextField(
+            value = text,
+            singleLine = true,
+            isError = errorText != null,
+            onValueChange = onValueChanged,
+            shape = RoundedCornerShape(20),
+            colors = OutlinedTextFieldDefaults.dailyCostColor(),
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            trailingIcon = trailingIcon,
+            placeholder = {
+                Text(placeholderText)
+            },
+            supportingText = if (errorText != null) {
+                {
+                    Text(errorText)
+                }
+            } else null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester)
+        )
     }
 }

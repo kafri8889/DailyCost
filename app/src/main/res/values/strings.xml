@@ -10,7 +10,7 @@
     <string name="dont_have_an_account">Don\'t have an account?</string>
     <string name="sign_up">Sign up</string>
     <string name="remember_me">Remember me</string>
-    <string name="forgot_password">Forgot password</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="by_registering_txt">By registering, you are agreeing to our %1$s and %2$s</string>
     <string name="terms_of_use">Terms of use</string>
@@ -95,4 +95,7 @@
     <string name="subscribtions_wallet">Subscribtion’s wallet</string>
     <string name="monthly_expenses_x">Monthly expenses %1$s</string>
     <string name="token_expired">Token expired</string>
+    <string name="enter_email">Enter email</string>
+    <string name="enter_password">Enter password</string>
+    <string name="enter_name">Enter name</string>
 </resources>

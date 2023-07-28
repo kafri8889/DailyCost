@@ -9,7 +9,7 @@
     <string name="dont_have_an_account">Tidak mempunyai akun?</string>
     <string name="sign_up">Daftar</string>
     <string name="remember_me">Ingat saya</string>
-    <string name="forgot_password">Lupa kata sandi</string>
+    <string name="forgot_password">Lupa kata sandi?</string>
     <string name="already_have_an_account">Sudah mempunyai akun?</string>
     <string name="by_registering_txt">Dengan mendaftar, Anda menyetujui %1$s dan %2$s</string>
     <string name="terms_of_use">Syarat Penggunaan</string>
@@ -94,4 +94,7 @@
     <string name="subscribtions_wallet">Dompet langganan</string>
     <string name="monthly_expenses_x">Pengeluaran bulanan %1$s</string>
     <string name="token_expired">Token kedaluwarsa</string>
+    <string name="enter_email">Masukkan email</string>
+    <string name="enter_password">Masukkan password</string>
+    <string name="enter_name">Masukkan nama</string>
 </resources>

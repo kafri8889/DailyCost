@@ -41,16 +41,16 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -199,6 +199,8 @@ private fun RegisterScreenContent(
     onEmailChanged: (String) -> Unit = {}
 ) {
 
+    val _48dp = dimensionResource(id = com.intuit.sdp.R.dimen._48sdp)
+
     val constraintSet = ConstraintSet {
         val (
             topContent,
@@ -210,9 +212,11 @@ private fun RegisterScreenContent(
             "bottomContent",
         )
 
+        val gl1 = createGuidelineFromTop(_48dp)
+
         constrain(topContent) {
             start.linkTo(parent.start)
-            top.linkTo(parent.top)
+            top.linkTo(gl1)
         }
 
         constrain(centerContent) {
@@ -282,7 +286,8 @@ private fun TopContent(
         Text(
             text = stringResource(id = R.string.unlock_all_the_features_to_manage_income_expenses),
             style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Normal
+                fontWeight = FontWeight.Normal,
+                fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._16ssp).value.sp
             )
         )
     }
@@ -313,15 +318,15 @@ private fun CenterContent(
     ) = FocusRequester.createRefs()
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = com.intuit.sdp.R.dimen._12sdp)),
         modifier = modifier
     ) {
-        OutlinedTextField(
-            value = username,
-            singleLine = true,
-            onValueChange = onUsernameChanged,
-            shape = RoundedCornerShape(20),
-            colors = OutlinedTextFieldDefaults.dailyCostColor(),
+        RegisterOutlinedTextField(
+            text = username,
+            label = stringResource(id = R.string.enter_name),
+            placeholderText = stringResource(id = R.string.username),
+            focusRequester = usernameFocusRequester,
+            onValueChanged = onUsernameChanged,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Text
@@ -330,28 +335,16 @@ private fun CenterContent(
                 onNext = {
                     focusManager.moveFocus(FocusDirection.Next)
                 }
-            ),
-            label = {
-                Text(stringResource(id = R.string.username))
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_profile),
-                    contentDescription = null
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(usernameFocusRequester)
+            )
         )
 
-        OutlinedTextField(
-            value = email,
-            singleLine = true,
-            isError = emailError != null,
-            onValueChange = onEmailChanged,
-            shape = RoundedCornerShape(20),
-            colors = OutlinedTextFieldDefaults.dailyCostColor(),
+        RegisterOutlinedTextField(
+            text = email,
+            label = stringResource(id = R.string.enter_email),
+            errorText = emailError,
+            placeholderText = stringResource(id = R.string.email),
+            focusRequester = emailFocusRequester,
+            onValueChanged = onEmailChanged,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Email
@@ -360,53 +353,25 @@ private fun CenterContent(
                 onNext = {
                     focusManager.moveFocus(FocusDirection.Next)
                 }
-            ),
-            label = {
-                Text(stringResource(id = R.string.email))
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_email_or_sms),
-                    contentDescription = null
-                )
-            },
-            supportingText = if (emailError != null) {
-                {
-                    Text(emailError)
-                }
-            } else null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(emailFocusRequester)
+            )
         )
 
-        OutlinedTextField(
-            value = password,
-            isError = passwordError != null,
-            singleLine = true,
-            onValueChange = onPasswordChanged,
-            shape = RoundedCornerShape(20),
-            colors = OutlinedTextFieldDefaults.dailyCostColor(),
-            visualTransformation = if (!showPassword) PasswordVisualTransformation()
-            else VisualTransformation.None,
+        RegisterOutlinedTextField(
+            text = password,
+            label = stringResource(id = R.string.enter_password),
+            errorText = passwordError,
+            placeholderText = stringResource(id = R.string.password),
+            focusRequester = passwordFocusRequester,
+            onValueChanged = onPasswordChanged,
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
             ),
             keyboardActions = KeyboardActions(
-                onDone = {
+                onNext = {
                     focusManager.clearFocus()
                 }
             ),
-            label = {
-                Text(stringResource(id = R.string.password))
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_lock),
-                    contentDescription = null
-                )
-            },
             trailingIcon = {
                 IconButton(
                     onClick = {
@@ -422,14 +387,6 @@ private fun CenterContent(
                     )
                 }
             },
-            supportingText = if (passwordError != null) {
-                {
-                    Text(passwordError)
-                }
-            } else null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(passwordFocusRequester)
         )
     }
 }
@@ -508,6 +465,7 @@ private fun BottomContent(
         modifier = modifier
     ) {
         Button(
+            shape = RoundedCornerShape(25),
             onClick = onSignUpClicked,
             colors = ButtonDefaults.buttonColors(
                 containerColor = DailyCostTheme.colorScheme.primary
@@ -543,7 +501,7 @@ private fun BottomContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(id = com.intuit.sdp.R.dimen._6sdp)))
 
         ClickableText(
             text = registerTouAndPpText,
@@ -566,3 +524,51 @@ private fun BottomContent(
     }
 }
 
+@Composable
+private fun RegisterOutlinedTextField(
+    text: String,
+    label: String,
+    placeholderText: String,
+    focusRequester: FocusRequester,
+    keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions,
+    modifier: Modifier = Modifier,
+    errorText: String? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    onValueChanged: (String) -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = com.intuit.sdp.R.dimen._8sdp)),
+        modifier = modifier
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.titleSmall.copy(
+                fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._14ssp).value.sp
+            )
+        )
+
+        OutlinedTextField(
+            value = text,
+            singleLine = true,
+            isError = errorText != null,
+            onValueChange = onValueChanged,
+            shape = RoundedCornerShape(20),
+            colors = OutlinedTextFieldDefaults.dailyCostColor(),
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            trailingIcon = trailingIcon,
+            placeholder = {
+                Text(placeholderText)
+            },
+            supportingText = if (errorText != null) {
+                {
+                    Text(errorText)
+                }
+            } else null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester)
+        )
+    }
+}
