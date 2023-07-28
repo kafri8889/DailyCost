@@ -8,6 +8,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
 import com.dcns.dailycost.foundation.extension.enqueue
@@ -19,6 +20,7 @@ import com.dcns.dailycost.ui.app.DailyCostAppAction
 import com.dcns.dailycost.ui.app.DailyCostAppUiEvent
 import com.dcns.dailycost.ui.app.DailyCostAppViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -27,6 +29,7 @@ import javax.inject.Inject
 class MainActivity: LocalizedActivity() {
 
     @Inject lateinit var connectivityManager: ConnectivityManager
+    @Inject lateinit var userCredentialUseCases: UserCredentialUseCases
 
     private val dailyCostAppViewModel: DailyCostAppViewModel by viewModels()
 
@@ -71,7 +74,9 @@ class MainActivity: LocalizedActivity() {
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                Workers.syncWorker().enqueue(this@MainActivity)
+                if (userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.isLoggedIn == true) {
+                    Workers.syncWorker().enqueue(this@MainActivity)
+                }
             }
         }
 

@@ -1,14 +1,16 @@
 package com.dcns.dailycost.ui.app
 
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.model.UserCredential
 import com.dcns.dailycost.domain.use_case.DepoUseCases
-import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.domain.util.EditUserCredentialType
 import com.dcns.dailycost.foundation.base.BaseViewModel
+import com.dcns.dailycost.foundation.common.ConnectivityManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -17,7 +19,7 @@ import javax.inject.Inject
 class DailyCostAppViewModel @Inject constructor(
     private val userPreferenceUseCases: UserPreferenceUseCases,
     private val userCredentialUseCases: UserCredentialUseCases,
-    private val loginRegisterUseCases: LoginRegisterUseCases,
+    private val connectivityManager: ConnectivityManager,
     private val depoUseCases: DepoUseCases
 ): BaseViewModel<DailyCostAppState, DailyCostAppAction>() {
 
@@ -45,10 +47,21 @@ class DailyCostAppViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            userCredentialUseCases.getUserCredentialUseCase().collect { cred ->
+            userCredentialUseCases.getUserCredentialUseCase().combine(
+                connectivityManager.isNetworkAvailable.asFlow()
+            ) { cred, have ->
+                cred to have
+            }.collect { (cred, have) ->
                 Timber.i("credential: $cred | ${cred.isLoggedIn}")
 
-                checkToken(cred)
+                if (have == true) checkToken(cred)
+                else {
+                    updateState {
+                        copy(
+                            userCredential = cred
+                        )
+                    }
+                }
             }
         }
     }

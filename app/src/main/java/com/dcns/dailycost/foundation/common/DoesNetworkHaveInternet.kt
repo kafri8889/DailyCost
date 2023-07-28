@@ -4,6 +4,7 @@ import timber.log.Timber
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.net.SocketFactory
 
 /**
@@ -22,10 +23,13 @@ object DoesNetworkHaveInternet {
             Timber.d("PING success.")
             true
         } catch (e: IOException){
-            Timber.e("No internet connection. $e")
+            Timber.e(e, "No internet connection")
             false
         } catch (e: SocketTimeoutException) {
-            Timber.e("Socket timeout")
+            Timber.e(e, "Socket timeout")
+            false
+        } catch (e: UnknownHostException) {
+            Timber.e(e, "Unknown host")
             false
         }
     }
