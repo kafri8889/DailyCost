@@ -56,6 +56,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -405,6 +407,7 @@ private fun CenterContent(
             label = stringResource(id = R.string.enter_password),
             errorText = passwordError,
             placeholderText = stringResource(id = R.string.password),
+            visualTransformation = if (!showPassword) PasswordVisualTransformation() else VisualTransformation.None,
             focusRequester = passwordFocusRequester,
             onValueChanged = onPasswordChanged,
             keyboardOptions = KeyboardOptions(
@@ -570,6 +573,7 @@ private fun LoginOutlinedTextField(
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
     modifier: Modifier = Modifier,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     errorText: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     onValueChanged: (String) -> Unit
@@ -592,6 +596,7 @@ private fun LoginOutlinedTextField(
             onValueChange = onValueChanged,
             shape = RoundedCornerShape(20),
             colors = OutlinedTextFieldDefaults.dailyCostColor(),
+            visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             trailingIcon = trailingIcon,
