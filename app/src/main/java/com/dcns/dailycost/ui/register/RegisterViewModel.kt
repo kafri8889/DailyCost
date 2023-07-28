@@ -30,12 +30,12 @@ class RegisterViewModel @Inject constructor(
 
                 updateState {
                     copy(
-                        internetConnectionAvailable = have
+                        internetConnectionAvailable = have == true
                     )
                 }
 
                 // Kalo ga ada koneksi internet, show snackbar
-                if (!have) {
+                if (have == false) {
                     sendEvent(RegisterUiEvent.NoInternetConnection())
                 }
             }

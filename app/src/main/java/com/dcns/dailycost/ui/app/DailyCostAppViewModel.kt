@@ -54,7 +54,7 @@ class DailyCostAppViewModel @Inject constructor(
             }.collect { (cred, have) ->
                 Timber.i("credential: $cred | ${cred.isLoggedIn}")
 
-                if (have) checkToken(cred)
+                if (have == true) checkToken(cred)
                 else {
                     updateState {
                         copy(

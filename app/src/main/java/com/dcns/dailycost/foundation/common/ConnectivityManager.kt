@@ -14,8 +14,8 @@ class ConnectivityManager @Inject constructor(
 
     private val connectionLiveData = NetworkConnectivity(context)
 
-    private val _isNetworkAvailable = MutableLiveData(true)
-    val isNetworkAvailable: LiveData<Boolean> = _isNetworkAvailable
+    private val _isNetworkAvailable: MutableLiveData<Boolean?> = MutableLiveData(null)
+    val isNetworkAvailable: LiveData<Boolean?> = _isNetworkAvailable
 
     fun initialize() {
         connectionLiveData.initialize()
