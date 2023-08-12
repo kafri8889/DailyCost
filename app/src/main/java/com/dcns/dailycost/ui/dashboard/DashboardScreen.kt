@@ -66,6 +66,7 @@ import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.TransactionType
+import com.dcns.dailycost.data.defaultNavOptionsBuilder
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.NoRippleTheme
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
@@ -94,7 +95,7 @@ fun DashboardScreen(
                 navigateTo = { dest ->
                     navigationActions.navigateTo(
                         destination = dest,
-                        builder = NavigationActions.defaultNavOptionsBuilder(
+                        builder = defaultNavOptionsBuilder(
                             popTo = TopLevelDestinations.Home.dashboard,
                             inclusivePopUpTo = false
                         )
@@ -114,7 +115,7 @@ fun DashboardScreen(
                 Timber.i("transaction: ${dest.route}")
                 navigationActions.navigateTo(
                     destination = dest,
-                    builder = NavigationActions.defaultNavOptionsBuilder(
+                    builder = defaultNavOptionsBuilder(
                         popTo = TopLevelDestinations.Home.dashboard
                     )
                 )

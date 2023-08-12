@@ -90,32 +90,29 @@ class NavigationActions(private val navController: NavHostController) {
     ) {
         navController.navigate(destination.route, builder)
     }
+}
 
-    companion object {
-        // TODO: langsung pass ke param aja
-        fun defaultNavOptionsBuilder(
-            popTo: TopLevelDestination? = null,
-            launchAsSingleTop: Boolean = true,
-            saveStatePopUpTo: Boolean = true,
-            inclusivePopUpTo: Boolean = false,
-            restoreAnyState: Boolean = true
-        ): NavOptionsBuilder.() -> Unit = {
-            // Pop up to the start destination of the graph to
-            // avoid building up a large stack of destinations
-            // on the back stack as users select items
-            popTo?.let {
-                popUpTo(popTo.route) {
-                    saveState = saveStatePopUpTo
-                    inclusive = inclusivePopUpTo
-                }
-            }
-            // Avoid multiple copies of the same destination when
-            // re-selecting the same item
-            launchSingleTop = launchAsSingleTop
-            // Restore state when re-selecting a previously selected item
-            restoreState = restoreAnyState
+fun defaultNavOptionsBuilder(
+    popTo: TopLevelDestination? = null,
+    launchAsSingleTop: Boolean = true,
+    saveStatePopUpTo: Boolean = true,
+    inclusivePopUpTo: Boolean = false,
+    restoreAnyState: Boolean = true
+): NavOptionsBuilder.() -> Unit = {
+    // Pop up to the start destination of the graph to
+    // avoid building up a large stack of destinations
+    // on the back stack as users select items
+    popTo?.let {
+        popUpTo(popTo.route) {
+            saveState = saveStatePopUpTo
+            inclusive = inclusivePopUpTo
         }
     }
+    // Avoid multiple copies of the same destination when
+    // re-selecting the same item
+    launchSingleTop = launchAsSingleTop
+    // Restore state when re-selecting a previously selected item
+    restoreState = restoreAnyState
 }
 
 object TopLevelDestinations {
