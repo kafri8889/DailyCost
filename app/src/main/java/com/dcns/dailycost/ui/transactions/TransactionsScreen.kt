@@ -2,10 +2,12 @@ package com.dcns.dailycost.ui.transactions
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -102,11 +104,12 @@ private fun TransactionsScreenContent(
         ) { transaction ->
             TransactionItem(
                 transaction = transaction,
-                onClick = {
-
-                },
                 modifier = Modifier
-                    .fillMaxWidth(0.92f)
+                    .clickable {
+
+                    }
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
                     .animateItemPlacement(tween(256))
             )
         }

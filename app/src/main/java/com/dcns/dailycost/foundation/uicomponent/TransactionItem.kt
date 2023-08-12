@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,18 +35,15 @@ import com.dcns.dailycost.foundation.common.Transaction
 import com.dcns.dailycost.foundation.extension.dailyCostMarquee
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionItem(
     transaction: Transaction,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    modifier: Modifier = Modifier
 ) {
 
     val context = LocalContext.current
 
     Card(
-        onClick = onClick,
         modifier = modifier,
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
@@ -160,10 +156,7 @@ private fun TransactionCardPreview() {
         TransactionItem(
             transaction = LocalExpenseDataProvider.expense1.copy(
                 name = "Loooooooooooooooooonnnnnnnnnnnnnnnggggggggggg tttteeeeeeekkkkkk"
-            ),
-            onClick = {
-
-            }
+            )
         )
     }
 }

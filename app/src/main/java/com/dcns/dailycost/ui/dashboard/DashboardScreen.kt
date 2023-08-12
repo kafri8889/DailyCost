@@ -31,7 +31,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -42,7 +41,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,7 +66,6 @@ import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.data.defaultNavOptionsBuilder
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
-import com.dcns.dailycost.foundation.common.NoRippleTheme
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.BalanceCard
 import com.dcns.dailycost.foundation.uicomponent.TransactionItem
@@ -158,7 +155,8 @@ private fun DashboardScreenContent(
                 DashboardTopAppBar(
                     onNavigationIconClicked = onNavigationIconClicked,
                     modifier = Modifier
-                        .fillMaxWidth(0.92f)
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 )
             }
 
@@ -180,7 +178,8 @@ private fun DashboardScreenContent(
 
                     },
                     modifier = Modifier
-                        .fillMaxWidth(0.92f)
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 )
             }
 
@@ -195,7 +194,8 @@ private fun DashboardScreenContent(
                         )
                     },
                     modifier = Modifier
-                        .fillMaxWidth(0.92f)
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 )
             }
 
@@ -203,19 +203,16 @@ private fun DashboardScreenContent(
                 items = state.expenses,
                 key = { item -> item.id }
             ) { expense ->
-                CompositionLocalProvider(
-                    LocalRippleTheme provides NoRippleTheme
-                ) {
-                    TransactionItem(
-                        transaction = expense,
-                        onClick = {
+                TransactionItem(
+                    transaction = expense,
+                    modifier = Modifier
+                        .clickable {
 
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth(0.92f)
-                            .animateItemPlacement(tween(256))
-                    )
-                }
+                        }
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .animateItemPlacement(tween(256))
+                )
             }
 
             item {
@@ -229,7 +226,8 @@ private fun DashboardScreenContent(
                         )
                     },
                     modifier = Modifier
-                        .fillMaxWidth(0.92f)
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 )
             }
 
@@ -237,19 +235,16 @@ private fun DashboardScreenContent(
                 items = state.incomes,
                 key = { item -> item.id }
             ) { income ->
-                CompositionLocalProvider(
-                    LocalRippleTheme provides NoRippleTheme
-                ) {
-                    TransactionItem(
-                        transaction = income,
-                        onClick = {
+                TransactionItem(
+                    transaction = income,
+                    modifier = Modifier
+                        .clickable {
 
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth(0.92f)
-                            .animateItemPlacement(tween(256))
-                    )
-                }
+                        }
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .animateItemPlacement(tween(256))
+                )
             }
 
             item {
