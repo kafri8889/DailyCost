@@ -25,8 +25,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
+import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
+import com.dcns.dailycost.data.TransactionMode
+import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.TransactionItem
@@ -62,8 +66,9 @@ fun TransactionsScreen(
     ) { _ ->
         TransactionsScreenContent(
             state = state,
-            onNavigationIconClicked = {
-                navigationActions.popBackStack()
+            onNavigationIconClicked = navigationActions::popBackStack,
+            onNavigateTo = { dest ->
+                navigationActions.navigateTo(dest)
             },
             modifier = Modifier
                 .statusBarsPadding()
@@ -76,6 +81,7 @@ fun TransactionsScreen(
 private fun TransactionsScreenContent(
     state: TransactionsState,
     modifier: Modifier = Modifier,
+    onNavigateTo: (TopLevelDestination) -> Unit,
     onNavigationIconClicked: () -> Unit
 ) {
 
@@ -106,7 +112,13 @@ private fun TransactionsScreenContent(
                 transaction = transaction,
                 modifier = Modifier
                     .clickable {
-
+                        onNavigateTo(
+                            TopLevelDestinations.Home.transaction.createRoute(
+                                DestinationArgument.TRANSACTION_ID to transaction.id,
+                                DestinationArgument.TRANSACTION_TYPE to if (transaction.isIncome) TransactionType.Income else TransactionType.Expense,
+                                DestinationArgument.TRANSACTION_MODE to TransactionMode.Edit,
+                            )
+                        )
                     }
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
