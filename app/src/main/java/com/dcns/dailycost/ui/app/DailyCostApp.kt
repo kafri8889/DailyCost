@@ -45,6 +45,7 @@ import com.dcns.dailycost.R
 import com.dcns.dailycost.data.Language
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
+import com.dcns.dailycost.data.defaultNavOptionsBuilder
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
@@ -121,6 +122,8 @@ fun DailyCostApp(
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
+    // Update current destination
+    // digunakan di drawer
     LaunchedEffect(navBackStackEntry) {
         navBackStackEntry?.destination?.route?.let { route ->
             viewModel.onAction(DailyCostAppAction.UpdateCurrentDestinationRoute(route))
@@ -130,7 +133,11 @@ fun DailyCostApp(
     LaunchedEffect(state.isSecureAppEnabled, state.isBiometricAuthenticated) {
         val canAuth = DailyCostBiometricManager.canAuthenticateWithAuthenticators(context)
 
+        // Jika user mengaktifkan secure app, dan
+        // belum terautentikasi (awal membuka aplikasi), dan
+        // device support biometric authentication
         if (state.isSecureAppEnabled && !state.isBiometricAuthenticated && canAuth) {
+            // Tampilkan autentikasi
             biometricManager.showAuthentication(
                 title = context.getString(R.string.authentication),
                 subtitle = "",
@@ -141,15 +148,23 @@ fun DailyCostApp(
     }
 
     LaunchedEffect(state.userCredential, state.isFirstInstall, state.userFirstEnteredApp) {
+        // Jika user pertama kali masuk ke aplikasi, dan
+        // first install tidak null (true atau false), dan
+        // user credential tidak null.
+        // Jika salah satunya null, maka user akan tetap berada di `SplashScreen`
         if (state.userFirstEnteredApp && state.isFirstInstall != null && state.userCredential != null) {
             val dest = when {
+                // Jika pertama kali install, ke onboarding
                 state.isFirstInstall == true -> TopLevelDestinations.Onboarding.onboarding
+                // Jika user sudah login, ke dashboard
                 state.userCredential!!.isLoggedIn -> TopLevelDestinations.Home.dashboard
+                // Jika tidak keduanya, ke login screen
                 else -> TopLevelDestinations.LoginRegister.login
             }
 
             navActions.navigateTo(dest)
 
+            // Update user pertama kali masuk ke aplikasi ke false
             viewModel.onAction(DailyCostAppAction.UpdateUserFirstEnteredApp(false))
         }
     }
@@ -188,7 +203,7 @@ fun DailyCostApp(
                     onCategoriesClicked = {
                         navActions.navigateTo(
                             destination = TopLevelDestinations.Home.categories,
-                            builder = NavigationActions.defaultNavOptionsBuilder(
+                            builder = defaultNavOptionsBuilder(
                                 popTo = TopLevelDestinations.Home.dashboard
                             )
                         )
@@ -197,7 +212,7 @@ fun DailyCostApp(
                     onSettingClicked = {
                         navActions.navigateTo(
                             destination = TopLevelDestinations.Home.setting,
-                            builder = NavigationActions.defaultNavOptionsBuilder(
+                            builder = defaultNavOptionsBuilder(
                                 popTo = TopLevelDestinations.Home.dashboard
                             )
                         )
