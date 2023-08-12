@@ -9,6 +9,7 @@ import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.data.WalletType
 import com.dcns.dailycost.data.datasource.local.LocalCategoryDataProvider
 import com.dcns.dailycost.data.model.remote.request_body.AddExpenseRequestBody
+import com.dcns.dailycost.domain.use_case.CategoryUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
@@ -27,6 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
     private val userCredentialUseCases: UserCredentialUseCases,
+    private val categoryUseCases: CategoryUseCases,
     private val expenseUseCases: ExpenseUseCases,
     private val incomeUseCases: IncomeUseCases,
     private val workManager: WorkManager,
@@ -74,6 +76,16 @@ class TransactionViewModel @Inject constructor(
                     }
                 }
         }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            categoryUseCases.getLocalCategoryUseCase().collect { categories ->
+                updateState {
+                    copy(
+                        availableCategory = categories
+                    )
+                }
+            }
+        }
     }
 
     /**
@@ -102,6 +114,71 @@ class TransactionViewModel @Inject constructor(
     override fun defaultState(): TransactionState = TransactionState()
 
     override fun onAction(action: TransactionAction) {
+        when (action) {
+            is TransactionAction.SetTransactionType -> {
+                viewModelScope.launch {
+                    updateState {
+                        copy(
+                            transactionType = action.type
+                        )
+                    }
+                }
+            }
+            is TransactionAction.SetAmount -> {
+                viewModelScope.launch {
+                    updateState {
+                        copy(
+                            amount = action.amount
+                        )
+                    }
+                }
+            }
+            is TransactionAction.SetCategory -> {
+                viewModelScope.launch {
+                    updateState {
+                        copy(
+                            category = action.category
+                        )
+                    }
+                }
+            }
+            is TransactionAction.SetDate -> {
+                viewModelScope.launch {
+                    updateState {
+                        copy(
+                            date = action.date
+                        )
+                    }
+                }
+            }
+            is TransactionAction.SetPayment -> {
+                viewModelScope.launch {
+                    updateState {
+                        copy(
+                            payment = action.payment
+                        )
+                    }
+                }
+            }
+            is TransactionAction.SetName -> {
+                viewModelScope.launch {
+                    updateState {
+                        copy(
+                            name = action.name
+                        )
+                    }
+                }
+            }
+            TransactionAction.Delete -> {
+                viewModelScope.launch(Dispatchers.IO) {
 
+                }
+            }
+            TransactionAction.Save -> {
+                viewModelScope.launch(Dispatchers.IO) {
+
+                }
+            }
+        }
     }
 }

@@ -98,4 +98,8 @@
     <string name="enter_email">Enter email</string>
     <string name="enter_password">Enter password</string>
     <string name="enter_name">Enter name</string>
+    <string name="accessibility_delete_transaction">Delete transaction</string>
+    <string name="accessibility_pick_date">Pick date</string>
+    <string name="save">Save</string>
+    <string name="accessibility_expand_dropdown_menu">Expand dropdown menu</string>
 </resources>
