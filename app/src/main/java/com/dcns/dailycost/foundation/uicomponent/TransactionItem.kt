@@ -32,8 +32,8 @@ import com.dcns.dailycost.data.datasource.local.LocalExpenseDataProvider
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.LocalCurrency
 import com.dcns.dailycost.foundation.common.Transaction
-import com.dcns.dailycost.foundation.common.primarySystemLocale
 import com.dcns.dailycost.foundation.extension.dailyCostMarquee
+import com.dcns.dailycost.foundation.extension.primaryLocale
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 
 @Composable
@@ -122,7 +122,7 @@ fun TransactionItem(
                         .fillMaxWidth()
                 ) {
                     Text(
-                        text = CommonDateFormatter.edmy(primarySystemLocale).format(transaction.date),
+                        text = CommonDateFormatter.edmy(context.primaryLocale).format(transaction.date),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight.Normal,
                             color = DailyCostTheme.colorScheme.labelText
