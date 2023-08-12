@@ -71,6 +71,7 @@ import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.Status
 import com.dcns.dailycost.data.TopLevelDestinations
+import com.dcns.dailycost.data.defaultNavOptionsBuilder
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.extension.dailyCostColor
 import com.dcns.dailycost.foundation.extension.toast
@@ -134,7 +135,7 @@ fun LoginScreen(
 
                 navigationActions.navigateTo(
                     destination = TopLevelDestinations.Home.dashboard,
-                    builder = NavigationActions.defaultNavOptionsBuilder(
+                    builder = defaultNavOptionsBuilder(
                         popTo = TopLevelDestinations.Home.dashboard
                     )
                 )
