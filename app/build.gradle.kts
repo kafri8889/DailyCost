@@ -143,7 +143,7 @@ dependencies {
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.compose.material:material:1.4.3")
     implementation("androidx.compose.material:material-icons-extended:1.4.3")
-    implementation("androidx.compose.material3:material3-android:1.2.0-alpha04")
+    implementation("androidx.compose.material3:material3-android:1.2.0-alpha05")
     implementation("androidx.compose.material3:material3-window-size-class:1.1.1")
 
     // Large screen support
