@@ -102,4 +102,6 @@
     <string name="accessibility_pick_date">Pick date</string>
     <string name="save">Save</string>
     <string name="accessibility_expand_dropdown_menu">Expand dropdown menu</string>
+    <string name="close">Close</string>
+    <string name="ok">Ok</string>
 </resources>

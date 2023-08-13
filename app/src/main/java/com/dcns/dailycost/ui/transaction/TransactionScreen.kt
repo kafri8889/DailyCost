@@ -15,6 +15,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -26,7 +28,9 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -131,6 +135,7 @@ private fun TransactionScreenContent(
 ) {
 
     val focusManager = LocalFocusManager.current
+
     val (
         nameFocusRequester,
         amountFocusRequester,
@@ -138,6 +143,42 @@ private fun TransactionScreenContent(
         dateFocusRequester,
         categoryFocusRequester
     ) = remember { FocusRequester.createRefs() }
+
+    var showDatePicker by remember { mutableStateOf(false) }
+
+    if (showDatePicker) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = state.date
+        )
+
+        DatePickerDialog(
+            onDismissRequest = {
+                showDatePicker = false
+            },
+            confirmButton = {
+                Button(
+                    enabled = datePickerState.selectedDateMillis != null,
+                    onClick = {
+                        onDateChanged(datePickerState.selectedDateMillis!!)
+                        showDatePicker = false
+                    }
+                ) {
+                    Text(stringResource(id = R.string.ok))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showDatePicker = false
+                    }
+                ) {
+                    Text(stringResource(id = R.string.close))
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -163,7 +204,7 @@ private fun TransactionScreenContent(
                 actions = {
                     IconButton(
                         onClick = {
-
+                            showDatePicker = true
                         }
                     ) {
                         Icon(
