@@ -6,9 +6,9 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.workDataOf
 import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
-import com.dcns.dailycost.data.model.remote.request_body.IncomeRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.expense.AddExpenseRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.expense.DeleteExpenseRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.income.AddIncomeRequestBody
 
 object Workers {
 
@@ -32,7 +32,7 @@ object Workers {
     const val TAG_EDIT_BALANCE_WORKER = "worker_tag_edit_balance"
     const val TAG_SYNC_WORKER = "worker_tag_sync_balance"
 
-    fun postIncomeWorker(body: IncomeRequestBody): OneTimeWorkRequest {
+    fun postIncomeWorker(body: AddIncomeRequestBody): OneTimeWorkRequest {
         return OneTimeWorkRequestBuilder<PostIncomeWorker>()
             .setConstraints(
                 Constraints(

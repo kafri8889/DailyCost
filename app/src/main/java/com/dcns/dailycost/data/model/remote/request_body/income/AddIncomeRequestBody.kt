@@ -1,9 +1,9 @@
-package com.dcns.dailycost.data.model.remote.request_body
+package com.dcns.dailycost.data.model.remote.request_body.income
 
 import com.dcns.dailycost.foundation.common.RetrofitRequestBody
 import com.google.gson.annotations.SerializedName
 
-data class IncomeRequestBody(
+data class AddIncomeRequestBody(
     @SerializedName("jumlah") val amount: Int,
     @SerializedName("kategori") val category: String,
     @SerializedName("nama") val name: String,
