@@ -8,6 +8,7 @@ import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.dcns.dailycost.R
+import com.dcns.dailycost.foundation.nav_type.TransactionModeNavType
 import com.dcns.dailycost.foundation.nav_type.TransactionTypeNavType
 
 object DestinationRoute {
@@ -29,7 +30,9 @@ object DestinationRoute {
  * Key untuk argument
  */
 object DestinationArgument {
+    const val TRANSACTION_ID = "transaction_id"
     const val TRANSACTION_TYPE = "transaction_type"
+    const val TRANSACTION_MODE = "transaction_mode"
 }
 
 data class TopLevelDestination(
@@ -144,6 +147,10 @@ object TopLevelDestinations {
             route = DestinationRoute.CHANGE_LANGUAGE
         )
 
+        /**
+         * Required argument:
+         * - [DestinationArgument.TRANSACTION_TYPE]
+         */
         val transactions = TopLevelDestination(
             route = "${DestinationRoute.TRANSACTIONS}?" +
                     "${DestinationArgument.TRANSACTION_TYPE}={${DestinationArgument.TRANSACTION_TYPE}}",
@@ -155,8 +162,33 @@ object TopLevelDestinations {
             )
         )
 
+        /**
+         * Required argument:
+         * - [DestinationArgument.TRANSACTION_ID]
+         * - [DestinationArgument.TRANSACTION_MODE]
+         * - [DestinationArgument.TRANSACTION_TYPE]
+         */
         val transaction = TopLevelDestination(
-            route = DestinationRoute.TRANSACTION
+            route = "${DestinationRoute.TRANSACTION}?" +
+                    "${DestinationArgument.TRANSACTION_ID}={${DestinationArgument.TRANSACTION_ID}}" +
+                    "${DestinationArgument.TRANSACTION_MODE}={${DestinationArgument.TRANSACTION_MODE}}" +
+                    "${DestinationArgument.TRANSACTION_TYPE}={${DestinationArgument.TRANSACTION_TYPE}}",
+            arguments = listOf(
+                navArgument(DestinationArgument.TRANSACTION_ID) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+                navArgument(DestinationArgument.TRANSACTION_MODE) {
+                    type = NavType.TransactionModeNavType
+                    nullable = true
+                    defaultValue = TransactionMode.New
+                },
+                navArgument(DestinationArgument.TRANSACTION_TYPE) {
+                    type = NavType.TransactionTypeNavType
+                    nullable = true
+                    defaultValue = TransactionType.Income
+                }
+            )
         )
 
         val categories = TopLevelDestination(

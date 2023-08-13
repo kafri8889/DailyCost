@@ -97,4 +97,15 @@
     <string name="enter_email">Masukkan email</string>
     <string name="enter_password">Masukkan password</string>
     <string name="enter_name">Masukkan nama</string>
+    <string name="accessibility_delete_transaction">Hapus transaksi</string>
+    <string name="accessibility_pick_date">Pilih tanggal</string>
+    <string name="save">Simpan</string>
+    <string name="close">Tutup</string>
+    <string name="ok">Oke</string>
+    <string name="delete">Hapus</string>
+    <string name="are_you_sure_you_want_to_delete_this_transaction">Apakah kamu yakin kamu ingin menghapus transaksi ini?</string>
+    <string name="delete_transaction">Hapus transaksi</string>
+    <string name="deleteing">Menghapus...</string>
+    <string name="failed_to_delete">Gagal menghapus</string>
+    <string name="transaction_deleted">Transaksi dihapus</string>
 </resources>

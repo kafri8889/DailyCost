@@ -5,7 +5,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.dcns.dailycost.data.model.remote.request_body.IncomeRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.expense.AddExpenseRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
@@ -29,9 +29,9 @@ class PostExpenseWorker @AssistedInject constructor(
         val requestBody = inputData.getString(Workers.ARG_DATA_REQUEST_BODY)
 
         requestBody?.let { json ->
-            val body = json.fromJson(IncomeRequestBody::class.java)
+            val body = json.fromJson(AddExpenseRequestBody::class.java)
 
-            return postIncome(body.toRequestBody())
+            return postExpense(body.toRequestBody())
         }
 
         return Result.failure(
@@ -41,7 +41,7 @@ class PostExpenseWorker @AssistedInject constructor(
         )
     }
 
-    private suspend fun postIncome(requestBody: RequestBody): Result {
+    private suspend fun postExpense(requestBody: RequestBody): Result {
         val credential = userCredentialUseCases.getUserCredentialUseCase().firstOrNull()
 
         if (credential != null) {

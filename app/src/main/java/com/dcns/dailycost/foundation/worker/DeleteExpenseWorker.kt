@@ -5,9 +5,9 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.dcns.dailycost.data.model.remote.request_body.income.AddIncomeRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.expense.DeleteExpenseRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
-import com.dcns.dailycost.domain.use_case.IncomeUseCases
+import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.foundation.extension.fromJson
 import com.google.gson.Gson
@@ -18,10 +18,10 @@ import okhttp3.RequestBody
 import timber.log.Timber
 
 @HiltWorker
-class PostIncomeWorker @AssistedInject constructor(
+class DeleteExpenseWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted params: WorkerParameters,
-    private val incomeUseCases: IncomeUseCases,
+    private val expenseUseCases: ExpenseUseCases,
     private val userCredentialUseCases: UserCredentialUseCases
 ): CoroutineWorker(context, params) {
 
@@ -29,9 +29,9 @@ class PostIncomeWorker @AssistedInject constructor(
         val requestBody = inputData.getString(Workers.ARG_DATA_REQUEST_BODY)
 
         requestBody?.let { json ->
-            val body = json.fromJson(AddIncomeRequestBody::class.java)
+            val body = json.fromJson(DeleteExpenseRequestBody::class.java)
 
-            return postIncome(body.toRequestBody())
+            return deleteExpense(body.toRequestBody())
         }
 
         return Result.failure(
@@ -41,21 +41,20 @@ class PostIncomeWorker @AssistedInject constructor(
         )
     }
 
-    private suspend fun postIncome(requestBody: RequestBody): Result {
+    private suspend fun deleteExpense(requestBody: RequestBody): Result {
         val credential = userCredentialUseCases.getUserCredentialUseCase().firstOrNull()
 
         if (credential != null) {
-            incomeUseCases.addRemoteIncomeUseCase(credential.id.toInt(), requestBody, credential.getAuthToken()).let {
-                if (it.isSuccessful) {
-                    Timber.i("post finished")
+            expenseUseCases.deleteRemoteExpenseUseCase(credential.id.toInt(), requestBody, credential.getAuthToken()).let {
+                return if (it.isSuccessful) {
+                    Timber.i("delete finished")
 
-                    return Result.success(
+                    Result.success(
                         workDataOf(
                             Workers.ARG_WORKER_IS_SUCCESS_KEY to true
                         )
                     )
-                }
-                else return try {
+                } else try {
                     val errorResponse = Gson().fromJson(it.errorBody()?.charStream(), ErrorResponse::class.java)
 
                     Result.failure(

@@ -11,6 +11,8 @@ import androidx.compose.material3.SnackbarDuration
  * @author kafri8889
  */
 open class UiEvent {
+
+	object DismissCurrentSnackbar: UiEvent()
 	
 	open class ShowToast(
 		open val message: String,

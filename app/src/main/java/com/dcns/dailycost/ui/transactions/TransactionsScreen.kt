@@ -2,10 +2,12 @@ package com.dcns.dailycost.ui.transactions
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,13 +25,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
+import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
+import com.dcns.dailycost.data.TransactionMode
+import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.TransactionItem
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionsScreen(
     viewModel: TransactionsViewModel,
@@ -46,7 +51,11 @@ fun TransactionsScreen(
                 containerColor = DailyCostTheme.colorScheme.primary,
                 onClick = {
                     navigationActions.navigateTo(
-                        destination = TopLevelDestinations.Home.transaction
+                        destination = TopLevelDestinations.Home.transaction.createRoute(
+                            DestinationArgument.TRANSACTION_ID to -1,
+                            DestinationArgument.TRANSACTION_MODE to TransactionMode.New,
+                            DestinationArgument.TRANSACTION_TYPE to (state.selectedTransactionType ?: TransactionType.Income)
+                        )
                     )
                 }
             ) {
@@ -60,8 +69,9 @@ fun TransactionsScreen(
     ) { _ ->
         TransactionsScreenContent(
             state = state,
-            onNavigationIconClicked = {
-                navigationActions.popBackStack()
+            onNavigationIconClicked = navigationActions::popBackStack,
+            onNavigateTo = { dest ->
+                navigationActions.navigateTo(dest)
             },
             modifier = Modifier
                 .statusBarsPadding()
@@ -74,6 +84,7 @@ fun TransactionsScreen(
 private fun TransactionsScreenContent(
     state: TransactionsState,
     modifier: Modifier = Modifier,
+    onNavigateTo: (TopLevelDestination) -> Unit,
     onNavigationIconClicked: () -> Unit
 ) {
 
@@ -102,11 +113,18 @@ private fun TransactionsScreenContent(
         ) { transaction ->
             TransactionItem(
                 transaction = transaction,
-                onClick = {
-
-                },
                 modifier = Modifier
-                    .fillMaxWidth(0.92f)
+                    .clickable {
+                        onNavigateTo(
+                            TopLevelDestinations.Home.transaction.createRoute(
+                                DestinationArgument.TRANSACTION_ID to transaction.id,
+                                DestinationArgument.TRANSACTION_TYPE to if (transaction.isIncome) TransactionType.Income else TransactionType.Expense,
+                                DestinationArgument.TRANSACTION_MODE to TransactionMode.Edit,
+                            )
+                        )
+                    }
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
                     .animateItemPlacement(tween(256))
             )
         }

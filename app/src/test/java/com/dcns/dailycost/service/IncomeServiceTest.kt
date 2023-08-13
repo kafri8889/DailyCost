@@ -2,7 +2,7 @@ package com.dcns.dailycost.service
 
 import com.dcns.dailycost.BuildConfig
 import com.dcns.dailycost.data.datasource.remote.services.IncomeService
-import com.dcns.dailycost.data.model.remote.request_body.IncomeRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.income.AddIncomeRequestBody
 import com.dcns.dailycost.foundation.util.TestUtil
 import com.google.common.truth.Truth
 import kotlinx.coroutines.test.runTest
@@ -27,7 +27,7 @@ class IncomeServiceTest {
 
     @Test
     fun `post income`() = runTest {
-        val reqBody = IncomeRequestBody(
+        val reqBody = AddIncomeRequestBody(
             amount = 50_000,
             category = "Makanan",
             name = "Kimbap",

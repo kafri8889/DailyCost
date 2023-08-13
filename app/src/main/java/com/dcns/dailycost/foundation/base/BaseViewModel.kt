@@ -59,5 +59,11 @@ abstract class BaseViewModel<STATE, ACTION>: ViewModel() {
 			_uiEventResult.send(result)
 		}
 	}
+
+	fun dismissCurrentSnackbar() {
+		viewModelScope.launch {
+			sendEvent(UiEvent.DismissCurrentSnackbar)
+		}
+	}
 	
 }

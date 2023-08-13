@@ -98,4 +98,16 @@
     <string name="enter_email">Enter email</string>
     <string name="enter_password">Enter password</string>
     <string name="enter_name">Enter name</string>
+    <string name="accessibility_delete_transaction">Delete transaction</string>
+    <string name="accessibility_pick_date">Pick date</string>
+    <string name="save">Save</string>
+    <string name="accessibility_expand_dropdown_menu">Expand dropdown menu</string>
+    <string name="close">Close</string>
+    <string name="ok">Ok</string>
+    <string name="delete">Delete</string>
+    <string name="are_you_sure_you_want_to_delete_this_transaction">Are you sure you want to delete this transaction?</string>
+    <string name="delete_transaction">Delete transaction</string>
+    <string name="deleteing">Deleting...</string>
+    <string name="failed_to_delete">Failed to delete</string>
+    <string name="transaction_deleted">Transaction deleted</string>
 </resources>
