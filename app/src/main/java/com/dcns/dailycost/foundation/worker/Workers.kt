@@ -8,6 +8,7 @@ import androidx.work.workDataOf
 import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.IncomeRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.expense.AddExpenseRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.expense.DeleteExpenseRequestBody
 
 object Workers {
 
@@ -25,8 +26,9 @@ object Workers {
      */
     const val ARG_DATA_REQUEST_BODY = "data_request_body"
 
-    const val TAG_POST_EXPENSE_BALANCE_WORKER = "worker_tag_post_expense_balance"
-    const val TAG_POST_INCOME_BALANCE_WORKER = "worker_tag_post_income_balance"
+    const val TAG_POST_INCOME_WORKER = "worker_tag_post_income"
+    const val TAG_POST_EXPENSE_WORKER = "worker_tag_post_expense"
+    const val TAG_DELETE_EXPENSE_WORKER = "worker_tag_delete_expense"
     const val TAG_EDIT_BALANCE_WORKER = "worker_tag_edit_balance"
     const val TAG_SYNC_WORKER = "worker_tag_sync_balance"
 
@@ -42,7 +44,7 @@ object Workers {
                     ARG_DATA_REQUEST_BODY to body.toJson()
                 )
             )
-            .addTag(TAG_POST_INCOME_BALANCE_WORKER)
+            .addTag(TAG_POST_INCOME_WORKER)
             .build()
     }
 
@@ -58,7 +60,23 @@ object Workers {
                     ARG_DATA_REQUEST_BODY to body.toJson()
                 )
             )
-            .addTag(TAG_POST_EXPENSE_BALANCE_WORKER)
+            .addTag(TAG_POST_EXPENSE_WORKER)
+            .build()
+    }
+
+    fun deleteExpenseWorker(body: DeleteExpenseRequestBody): OneTimeWorkRequest {
+        return OneTimeWorkRequestBuilder<DeleteExpenseWorker>()
+            .setConstraints(
+                Constraints(
+                    requiredNetworkType = NetworkType.CONNECTED
+                )
+            )
+            .setInputData(
+                workDataOf(
+                    ARG_DATA_REQUEST_BODY to body.toJson()
+                )
+            )
+            .addTag(TAG_DELETE_EXPENSE_WORKER)
             .build()
     }
 
