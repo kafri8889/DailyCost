@@ -2,8 +2,8 @@ package com.dcns.dailycost.service
 
 import com.dcns.dailycost.BuildConfig
 import com.dcns.dailycost.data.datasource.remote.services.ExpenseService
-import com.dcns.dailycost.data.model.remote.request_body.AddExpenseRequestBody
-import com.dcns.dailycost.data.model.remote.request_body.DeleteExpenseRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.expense.AddExpenseRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.expense.DeleteExpenseRequestBody
 import com.dcns.dailycost.foundation.util.TestUtil
 import com.google.common.truth.Truth
 import kotlinx.coroutines.test.runTest

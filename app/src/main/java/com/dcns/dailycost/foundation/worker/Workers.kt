@@ -5,9 +5,9 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.workDataOf
-import com.dcns.dailycost.data.model.remote.request_body.AddExpenseRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.IncomeRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.expense.AddExpenseRequestBody
 
 object Workers {
 
