@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
@@ -86,7 +87,7 @@ fun TransactionScreen(
             onSaveClicked = {
                 viewModel.onAction(TransactionAction.Save)
             },
-            onDeleteClicked = {
+            onDeleteTransaction = {
                 viewModel.onAction(TransactionAction.Delete)
             },
             onTransactionTypeChanged = { type ->
@@ -120,7 +121,7 @@ private fun TransactionScreenContent(
     state: TransactionState,
     modifier: Modifier = Modifier,
     onSaveClicked: () -> Unit,
-    onDeleteClicked: () -> Unit,
+    onDeleteTransaction: () -> Unit,
     onNavigationIconClicked: () -> Unit,
     onTransactionTypeChanged: (TransactionType) -> Unit,
     onCategoryChanged: (Category) -> Unit,
@@ -140,23 +141,24 @@ private fun TransactionScreenContent(
         categoryFocusRequester
     ) = remember { FocusRequester.createRefs() }
 
-    var showDatePicker by remember { mutableStateOf(false) }
+    var showDatePickerDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
-    if (showDatePicker) {
+    if (showDatePickerDialog) {
         val datePickerState = rememberDatePickerState(
             initialSelectedDateMillis = state.date
         )
 
         DatePickerDialog(
             onDismissRequest = {
-                showDatePicker = false
+                showDatePickerDialog = false
             },
             confirmButton = {
                 Button(
                     enabled = datePickerState.selectedDateMillis != null,
                     onClick = {
                         onDateChanged(datePickerState.selectedDateMillis!!)
-                        showDatePicker = false
+                        showDatePickerDialog = false
                     }
                 ) {
                     Text(stringResource(id = R.string.ok))
@@ -165,7 +167,7 @@ private fun TransactionScreenContent(
             dismissButton = {
                 TextButton(
                     onClick = {
-                        showDatePicker = false
+                        showDatePickerDialog = false
                     }
                 ) {
                     Text(stringResource(id = R.string.close))
@@ -174,6 +176,45 @@ private fun TransactionScreenContent(
         ) {
             DatePicker(state = datePickerState)
         }
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showDeleteDialog = false
+            },
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_trash),
+                    contentDescription = null
+                )
+            },
+            title = {
+                Text(stringResource(id = R.string.delete_transaction))
+            },
+            text = {
+                Text(stringResource(id = R.string.are_you_sure_you_want_to_delete_this_transaction))
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDeleteDialog = false
+                        onDeleteTransaction()
+                    }
+                ) {
+                    Text(stringResource(id = R.string.delete))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
+                    }
+                ) {
+                    Text(stringResource(id = R.string.cancel))
+                }
+            }
+        )
     }
 
     LazyColumn(
@@ -200,7 +241,7 @@ private fun TransactionScreenContent(
                 actions = {
                     IconButton(
                         onClick = {
-                            showDatePicker = true
+                            showDatePickerDialog = true
                         }
                     ) {
                         Icon(
@@ -210,7 +251,11 @@ private fun TransactionScreenContent(
                     }
 
                     if (state.transactionMode == TransactionMode.Edit) {
-                        IconButton(onClick = onDeleteClicked) {
+                        IconButton(
+                            onClick = {
+                                showDeleteDialog = true
+                            }
+                        ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_trash),
                                 contentDescription = stringResource(id = R.string.accessibility_delete_transaction)

@@ -14,4 +14,6 @@ sealed class TransactionUiEvent: UiEvent() {
         override val data: Any? = null,
     ): ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
 
+    object TransactionDeleted: UiEvent()
+
 }

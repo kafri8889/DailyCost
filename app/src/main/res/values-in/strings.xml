@@ -102,4 +102,7 @@
     <string name="save">Simpan</string>
     <string name="close">Tutup</string>
     <string name="ok">Oke</string>
+    <string name="delete">Hapus</string>
+    <string name="are_you_sure_you_want_to_delete_this_transaction">Apakah kamu yakin kamu ingin menghapus transaksi ini?</string>
+    <string name="delete_transaction">Hapus transaksi</string>
 </resources>
