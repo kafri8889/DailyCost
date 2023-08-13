@@ -12,6 +12,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.dcns.dailycost.foundation.extension.toast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.withContext
 
 /**
  * Kerangka dasar untuk screen
@@ -22,6 +25,7 @@ import com.dcns.dailycost.foundation.extension.toast
 fun <STATE, ACTION> BaseScreenWrapper(
 	viewModel: BaseViewModel<STATE, ACTION>,
 	modifier: Modifier = Modifier,
+	onEvent: (UiEvent) -> Unit = {},
 	topBar: @Composable () -> Unit = {},
 	bottomBar: @Composable () -> Unit = {},
 	floatingActionButton: @Composable () -> Unit = {},
@@ -35,27 +39,27 @@ fun <STATE, ACTION> BaseScreenWrapper(
 	}
 	
 	LaunchedEffect(Unit) {
-		viewModel.uiEvent.collect { event ->
-			event?.let {
-				when (event) {
-					is UiEvent.ShowSnackbar -> {
-						val result = hostState.showSnackbar(
-							message = event.getMessage(context),
-							actionLabel = event.getActionLabel(context),
-							withDismissAction = event.withDismissAction,
-							duration = event.duration
-						)
-						
-						viewModel.sendEventResult(
-							when (result) {
-								Dismissed -> UiEventResult.Dismissed(event)
-								ActionPerformed -> UiEventResult.ActionPerformed(event)
-							}
-						)
-					}
-					is UiEvent.ShowToast -> {
-						event.getMessage(context).toast(context, event.length)
-					}
+		viewModel.uiEvent.filterNotNull().collect { event ->
+			withContext(Dispatchers.Main) { onEvent(event) }
+			when (event) {
+				is UiEvent.DismissCurrentSnackbar -> hostState.currentSnackbarData?.dismiss()
+				is UiEvent.ShowSnackbar -> {
+					val result = hostState.showSnackbar(
+						message = event.getMessage(context),
+						actionLabel = event.getActionLabel(context),
+						withDismissAction = event.withDismissAction,
+						duration = event.duration
+					)
+
+					viewModel.sendEventResult(
+						when (result) {
+							Dismissed -> UiEventResult.Dismissed(event)
+							ActionPerformed -> UiEventResult.ActionPerformed(event)
+						}
+					)
+				}
+				is UiEvent.ShowToast -> {
+					event.getMessage(context).toast(context, event.length)
 				}
 			}
 		}
