@@ -1,33 +1,45 @@
 package com.dcns.dailycost.ui.transaction
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.TransactionMode
 import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.data.WalletType
 import com.dcns.dailycost.data.datasource.local.LocalCategoryDataProvider
-import com.dcns.dailycost.data.model.remote.request_body.AddExpenseRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.expense.AddExpenseRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.expense.DeleteExpenseRequestBody
 import com.dcns.dailycost.domain.use_case.CategoryUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.util.GetTransactionBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
+import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.worker.Workers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
     private val userCredentialUseCases: UserCredentialUseCases,
+    private val connectivityManager: ConnectivityManager,
     private val categoryUseCases: CategoryUseCases,
     private val expenseUseCases: ExpenseUseCases,
     private val incomeUseCases: IncomeUseCases,
@@ -38,6 +50,9 @@ class TransactionViewModel @Inject constructor(
     private val deliveredTransactionId = savedStateHandle.getStateFlow<Int?>(DestinationArgument.TRANSACTION_ID, null)
     private val deliveredTransactionMode = savedStateHandle.getStateFlow<TransactionMode?>(DestinationArgument.TRANSACTION_MODE, null)
     private val deliveredTransactionType = savedStateHandle.getStateFlow<TransactionType?>(DestinationArgument.TRANSACTION_TYPE, null)
+
+    private val _currentDeleteWorkId = MutableStateFlow<UUID?>(null)
+    private val currentDeleteWorkId: StateFlow<UUID?> = _currentDeleteWorkId
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -54,6 +69,7 @@ class TransactionViewModel @Inject constructor(
                     Timber.i("Received transaction: $transaction")
                     updateState {
                         copy(
+                            id = transaction?.id ?: id,
                             name = transaction?.name ?: name,
                             amount = transaction?.amount ?: amount,
                             payment = transaction?.payment ?: payment,
@@ -83,6 +99,25 @@ class TransactionViewModel @Inject constructor(
                     copy(
                         availableCategory = categories
                     )
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            currentDeleteWorkId.flatMapMerge { uuid ->
+                if (uuid != null) {
+                    workManager.getWorkInfoByIdLiveData(uuid).asFlow()
+                } else flowOf(null)
+            }.filterNotNull().collect { workInfo ->
+                when (workInfo.state) {
+                    WorkInfo.State.ENQUEUED -> {}
+                    WorkInfo.State.SUCCEEDED -> {
+                        sendEvent(TransactionUiEvent.TransactionDeleted())
+                    }
+                    WorkInfo.State.FAILED -> {
+                        sendEvent(TransactionUiEvent.FailedToDelete())
+                    }
+                    else -> {}
                 }
             }
         }
@@ -170,8 +205,24 @@ class TransactionViewModel @Inject constructor(
                 }
             }
             TransactionAction.Delete -> {
-                viewModelScope.launch(Dispatchers.IO) {
+                viewModelScope.launch {
+                    if (connectivityManager.isNetworkAvailable.value == false) {
+                        sendEvent(TransactionUiEvent.NoInternetConnection())
+                        return@launch
+                    }
 
+                    sendEvent(TransactionUiEvent.Deleting())
+
+                    userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.let { credential ->
+                        workManager.beginWith(
+                            Workers.deleteExpenseWorker(
+                                DeleteExpenseRequestBody(
+                                    expenseId = state.value.id,
+                                    userId = credential.id.toInt()
+                                )
+                            ).also { _currentDeleteWorkId.emit(it.id) }
+                        ).then(Workers.syncWorker()).enqueue()
+                    }
                 }
             }
             TransactionAction.Save -> {

@@ -74,12 +74,17 @@ fun TransactionScreen(
     navigationActions: NavigationActions,
 ) {
 
-    val context = LocalContext.current
-
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     BaseScreenWrapper(
         viewModel = viewModel,
+        onEvent = { event ->
+            when (event) {
+                is TransactionUiEvent.TransactionDeleted -> {
+                    navigationActions.popBackStack()
+                }
+            }
+        }
     ) { _ ->
         TransactionScreenContent(
             state = state,

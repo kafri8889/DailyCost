@@ -105,4 +105,7 @@
     <string name="delete">Hapus</string>
     <string name="are_you_sure_you_want_to_delete_this_transaction">Apakah kamu yakin kamu ingin menghapus transaksi ini?</string>
     <string name="delete_transaction">Hapus transaksi</string>
+    <string name="deleteing">Menghapus...</string>
+    <string name="failed_to_delete">Gagal menghapus</string>
+    <string name="transaction_deleted">Transaksi dihapus</string>
 </resources>

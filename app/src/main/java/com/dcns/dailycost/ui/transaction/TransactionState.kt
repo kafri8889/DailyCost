@@ -8,6 +8,7 @@ import com.dcns.dailycost.data.model.Category
 
 data class TransactionState(
     // Transaction part
+    val id: Int = -1,
     val name: String = "",
     val amount: Double = 0.0,
     val payment: WalletType = WalletType.Cash,
