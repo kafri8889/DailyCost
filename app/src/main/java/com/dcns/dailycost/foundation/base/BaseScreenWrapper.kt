@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.dcns.dailycost.foundation.extension.toast
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.withContext
 
@@ -39,7 +40,7 @@ fun <STATE, ACTION> BaseScreenWrapper(
 	}
 	
 	LaunchedEffect(Unit) {
-		viewModel.uiEvent.filterNotNull().collect { event ->
+		viewModel.uiEvent.filterNotNull().collectLatest { event ->
 			withContext(Dispatchers.Main) { onEvent(event) }
 			when (event) {
 				is UiEvent.DismissCurrentSnackbar -> hostState.currentSnackbarData?.dismiss()
