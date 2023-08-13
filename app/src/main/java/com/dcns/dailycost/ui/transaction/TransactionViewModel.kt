@@ -49,16 +49,16 @@ class TransactionViewModel @Inject constructor(
                         TransactionType.Expense -> expenseUseCases.getLocalExpenseUseCase(GetTransactionBy.ID(id)).firstOrNull()
                     }
 
-                    if (li != null) li[0] to type else null
+                    if (!li.isNullOrEmpty()) li[0] to type else null to type
                 }.filterNotNull().collect { (transaction, type) ->
                     Timber.i("Received transaction: $transaction")
                     updateState {
                         copy(
-                            name = transaction.name,
-                            amount = transaction.amount,
-                            payment = transaction.payment,
-                            date = transaction.date,
-                            category = transaction.category,
+                            name = transaction?.name ?: name,
+                            amount = transaction?.amount ?: amount,
+                            payment = transaction?.payment ?: payment,
+                            date = transaction?.date ?: date,
+                            category = transaction?.category ?: category,
                             transactionType = type
                         )
                     }

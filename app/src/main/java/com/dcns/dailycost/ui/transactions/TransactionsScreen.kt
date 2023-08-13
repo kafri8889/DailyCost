@@ -35,7 +35,6 @@ import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.TransactionItem
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionsScreen(
     viewModel: TransactionsViewModel,
@@ -52,7 +51,11 @@ fun TransactionsScreen(
                 containerColor = DailyCostTheme.colorScheme.primary,
                 onClick = {
                     navigationActions.navigateTo(
-                        destination = TopLevelDestinations.Home.transaction
+                        destination = TopLevelDestinations.Home.transaction.createRoute(
+                            DestinationArgument.TRANSACTION_ID to -1,
+                            DestinationArgument.TRANSACTION_MODE to TransactionMode.New,
+                            DestinationArgument.TRANSACTION_TYPE to (state.selectedTransactionType ?: TransactionType.Income)
+                        )
                     )
                 }
             ) {

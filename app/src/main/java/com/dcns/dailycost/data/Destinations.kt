@@ -176,14 +176,17 @@ object TopLevelDestinations {
             arguments = listOf(
                 navArgument(DestinationArgument.TRANSACTION_ID) {
                     type = NavType.IntType
+                    defaultValue = -1
                 },
                 navArgument(DestinationArgument.TRANSACTION_MODE) {
                     type = NavType.TransactionModeNavType
                     nullable = true
+                    defaultValue = TransactionMode.New
                 },
                 navArgument(DestinationArgument.TRANSACTION_TYPE) {
                     type = NavType.TransactionTypeNavType
                     nullable = true
+                    defaultValue = TransactionType.Income
                 }
             )
         )

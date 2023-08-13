@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.TransactionMode
 import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.data.WalletType
 import com.dcns.dailycost.data.model.Category
@@ -64,7 +65,6 @@ import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.LocalCurrency
 import com.dcns.dailycost.foundation.extension.dailyCostColor
 import com.dcns.dailycost.foundation.extension.primaryLocale
-import com.dcns.dailycost.foundation.extension.toast
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 
 @Composable
@@ -82,16 +82,12 @@ fun TransactionScreen(
     ) { _ ->
         TransactionScreenContent(
             state = state,
+            onNavigationIconClicked = navigationActions::popBackStack,
             onSaveClicked = {
                 viewModel.onAction(TransactionAction.Save)
             },
             onDeleteClicked = {
                 viewModel.onAction(TransactionAction.Delete)
-            },
-            onNavigationIconClicked = {
-                viewModel.performInsertTransaction()
-                "perform insert".toast(context)
-//                navigationActions.popBackStack()
             },
             onTransactionTypeChanged = { type ->
                 viewModel.onAction(TransactionAction.SetTransactionType(type))
@@ -213,11 +209,13 @@ private fun TransactionScreenContent(
                         )
                     }
 
-                    IconButton(onClick = onDeleteClicked) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_trash),
-                            contentDescription = stringResource(id = R.string.accessibility_delete_transaction)
-                        )
+                    if (state.transactionMode == TransactionMode.Edit) {
+                        IconButton(onClick = onDeleteClicked) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_trash),
+                                contentDescription = stringResource(id = R.string.accessibility_delete_transaction)
+                            )
+                        }
                     }
                 }
             )
