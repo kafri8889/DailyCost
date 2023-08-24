@@ -2,7 +2,6 @@ package com.dcns.dailycost.ui.transactions
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -115,15 +114,15 @@ private fun TransactionsScreenContent(
 			TransactionItem(
 				transaction = transaction,
 				modifier = Modifier
-					.clickable {
-						onNavigateTo(
-							TopLevelDestinations.Home.transaction.createRoute(
-								DestinationArgument.TRANSACTION_ID to transaction.id,
-								DestinationArgument.TRANSACTION_TYPE to if (transaction.isIncome) TransactionType.Income else TransactionType.Expense,
-								DestinationArgument.TRANSACTION_MODE to TransactionMode.Edit,
-							)
-						)
-					}
+//					.clickable {
+//						onNavigateTo(
+//							TopLevelDestinations.Home.transaction.createRoute(
+//								DestinationArgument.TRANSACTION_ID to transaction.id,
+//								DestinationArgument.TRANSACTION_TYPE to if (transaction.isIncome) TransactionType.Income else TransactionType.Expense,
+//								DestinationArgument.TRANSACTION_MODE to TransactionMode.Edit,
+//							)
+//						)
+//					}
 					.fillMaxWidth()
 					.padding(horizontal = 16.dp)
 					.animateItemPlacement(tween(256))
