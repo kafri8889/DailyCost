@@ -2,6 +2,7 @@ package com.dcns.dailycost.domain.repository
 
 import com.dcns.dailycost.data.model.local.IncomeDb
 import com.dcns.dailycost.data.model.local.relation.IncomeDbWithCategoryDb
+import com.dcns.dailycost.data.model.remote.response.DeleteResponse
 import com.dcns.dailycost.data.model.remote.response.IncomeGetResponse
 import com.dcns.dailycost.data.model.remote.response.IncomePostResponse
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +27,15 @@ interface IIncomeRepository {
         userId: Int,
         token: String
     ): Response<IncomeGetResponse>
+
+    /**
+     * Hapus pemasukan dari database server
+     */
+    suspend fun deleteRemoteIncome(
+        userId: Int,
+        body: RequestBody,
+        token: String
+    ): Response<DeleteResponse>
 
     /**
      * Dapatkan semua pemasukan dari database lokal

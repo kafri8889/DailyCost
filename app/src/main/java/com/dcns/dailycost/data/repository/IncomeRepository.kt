@@ -4,6 +4,7 @@ import com.dcns.dailycost.data.datasource.local.dao.IncomeDao
 import com.dcns.dailycost.data.datasource.remote.handlers.IncomeHandler
 import com.dcns.dailycost.data.model.local.IncomeDb
 import com.dcns.dailycost.data.model.local.relation.IncomeDbWithCategoryDb
+import com.dcns.dailycost.data.model.remote.response.DeleteResponse
 import com.dcns.dailycost.data.model.remote.response.IncomeGetResponse
 import com.dcns.dailycost.data.model.remote.response.IncomePostResponse
 import com.dcns.dailycost.domain.repository.IIncomeRepository
@@ -27,6 +28,14 @@ class IncomeRepository @Inject constructor(
 
     override suspend fun getRemoteIncome(userId: Int, token: String): Response<IncomeGetResponse> {
         return incomeHandler.getIncome(userId, token)
+    }
+
+    override suspend fun deleteRemoteIncome(
+        userId: Int,
+        body: RequestBody,
+        token: String
+    ): Response<DeleteResponse> {
+        return incomeHandler.deleteIncome(userId, body, token)
     }
 
     override fun getAllIncomes(): Flow<List<IncomeDbWithCategoryDb>> {

@@ -9,6 +9,7 @@ import com.dcns.dailycost.data.model.remote.request_body.DepoRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.expense.AddExpenseRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.expense.DeleteExpenseRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.income.AddIncomeRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.income.DeleteIncomeRequestBody
 
 object Workers {
 
@@ -28,6 +29,7 @@ object Workers {
 
     const val TAG_POST_INCOME_WORKER = "worker_tag_post_income"
     const val TAG_POST_EXPENSE_WORKER = "worker_tag_post_expense"
+    const val TAG_DELETE_INCOME_WORKER = "worker_tag_delete_income"
     const val TAG_DELETE_EXPENSE_WORKER = "worker_tag_delete_expense"
     const val TAG_EDIT_BALANCE_WORKER = "worker_tag_edit_balance"
     const val TAG_SYNC_WORKER = "worker_tag_sync_balance"
@@ -77,6 +79,22 @@ object Workers {
                 )
             )
             .addTag(TAG_DELETE_EXPENSE_WORKER)
+            .build()
+    }
+
+    fun deleteIncomeWorker(body: DeleteIncomeRequestBody): OneTimeWorkRequest {
+        return OneTimeWorkRequestBuilder<DeleteIncomeWorker>()
+            .setConstraints(
+                Constraints(
+                    requiredNetworkType = NetworkType.CONNECTED
+                )
+            )
+            .setInputData(
+                workDataOf(
+                    ARG_DATA_REQUEST_BODY to body.toJson()
+                )
+            )
+            .addTag(TAG_DELETE_INCOME_WORKER)
             .build()
     }
 
