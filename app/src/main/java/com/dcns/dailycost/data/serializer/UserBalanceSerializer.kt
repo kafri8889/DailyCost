@@ -7,14 +7,14 @@ import java.io.OutputStream
 
 object UserBalanceSerializer: Serializer<ProtoUserBalance> {
 
-    override val defaultValue: ProtoUserBalance
-        get() = ProtoUserBalance()
+	override val defaultValue: ProtoUserBalance
+		get() = ProtoUserBalance()
 
-    override suspend fun readFrom(input: InputStream): ProtoUserBalance {
-        return ProtoUserBalance.ADAPTER.decode(input)
-    }
+	override suspend fun readFrom(input: InputStream): ProtoUserBalance {
+		return ProtoUserBalance.ADAPTER.decode(input)
+	}
 
-    override suspend fun writeTo(t: ProtoUserBalance, output: OutputStream) {
-        ProtoUserBalance.ADAPTER.encode(output, t)
-    }
+	override suspend fun writeTo(t: ProtoUserBalance, output: OutputStream) {
+		ProtoUserBalance.ADAPTER.encode(output, t)
+	}
 }

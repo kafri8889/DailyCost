@@ -6,13 +6,13 @@ import okhttp3.RequestBody
 import retrofit2.Response
 
 class UserRegisterUseCase(
-    private val loginRegisterRepository: ILoginRegisterRepository
+	private val loginRegisterRepository: ILoginRegisterRepository
 ) {
 
-    suspend operator fun invoke(
-        body: RequestBody
-    ): Response<RegisterResponse> {
-        return loginRegisterRepository.register(body)
-    }
+	suspend operator fun invoke(
+		body: RequestBody
+	): Response<RegisterResponse> {
+		return loginRegisterRepository.register(body)
+	}
 
 }

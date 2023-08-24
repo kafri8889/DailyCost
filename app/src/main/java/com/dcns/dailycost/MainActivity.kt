@@ -28,75 +28,80 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity: LocalizedActivity() {
 
-    @Inject lateinit var connectivityManager: ConnectivityManager
-    @Inject lateinit var userCredentialUseCases: UserCredentialUseCases
+	@Inject
+	lateinit var connectivityManager: ConnectivityManager
 
-    private val dailyCostAppViewModel: DailyCostAppViewModel by viewModels()
+	@Inject
+	lateinit var userCredentialUseCases: UserCredentialUseCases
 
-    private lateinit var biometricManager: DailyCostBiometricManager
+	private val dailyCostAppViewModel: DailyCostAppViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+	private lateinit var biometricManager: DailyCostBiometricManager
 
-        biometricManager = DailyCostBiometricManager(this).apply {
-            setListener(object : DailyCostBiometricManager.BiometricListener {
-                override fun onSuccess(result: BiometricPrompt.AuthenticationResult) {
-                    dailyCostAppViewModel.onAction(DailyCostAppAction.IsBiometricAuthenticated(true))
-                    Timber.i("Biometric auth: success :D")
-                }
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
 
-                override fun onError(errorCode: Int, errString: CharSequence) {
-                    Timber.i("Biometric auth: error $errorCode | $errString")
+		biometricManager = DailyCostBiometricManager(this).apply {
+			setListener(object: DailyCostBiometricManager.BiometricListener {
+				override fun onSuccess(result: BiometricPrompt.AuthenticationResult) {
+					dailyCostAppViewModel.onAction(DailyCostAppAction.IsBiometricAuthenticated(true))
+					Timber.i("Biometric auth: success :D")
+				}
 
-                    when (errorCode) {
-                        // Kalo user nge cancel, keluar aplikasi
-                        BiometricPrompt.ERROR_NEGATIVE_BUTTON, BiometricPrompt.ERROR_USER_CANCELED -> {
-                            this@MainActivity.finishAffinity()
-                        }
-                    }
-                }
+				override fun onError(errorCode: Int, errString: CharSequence) {
+					Timber.i("Biometric auth: error $errorCode | $errString")
 
-                override fun onFailed() {
-                    Timber.i("Biometric auth: failed! :(")
-                }
-            })
-        }
+					when (errorCode) {
+						// Kalo user nge cancel, keluar aplikasi
+						BiometricPrompt.ERROR_NEGATIVE_BUTTON, BiometricPrompt.ERROR_USER_CANCELED -> {
+							this@MainActivity.finishAffinity()
+						}
+					}
+				}
 
-        connectivityManager.initialize()
+				override fun onFailed() {
+					Timber.i("Biometric auth: failed! :(")
+				}
+			})
+		}
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+		connectivityManager.initialize()
 
-        setListener(object : OnLocaleChangedListener {
-            override fun onChanged() {
-                dailyCostAppViewModel.sendEvent(DailyCostAppUiEvent.LanguageChanged)
-            }
-        })
+		WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                if (userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.isLoggedIn == true) {
-                    Workers.syncWorker().enqueue(this@MainActivity)
-                }
-            }
-        }
+		setListener(object: OnLocaleChangedListener {
+			override fun onChanged() {
+				dailyCostAppViewModel.sendEvent(DailyCostAppUiEvent.LanguageChanged)
+			}
+		})
 
-        setContent {
-            DailyCostApp(
-                viewModel = dailyCostAppViewModel,
-                biometricManager = biometricManager
-            )
-        }
-    }
+		lifecycleScope.launch {
+			lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+				if (userCredentialUseCases.getUserCredentialUseCase()
+						.firstOrNull()?.isLoggedIn == true
+				) {
+					Workers.syncWorker().enqueue(this@MainActivity)
+				}
+			}
+		}
 
-    override fun onStart() {
-        super.onStart()
+		setContent {
+			DailyCostApp(
+				viewModel = dailyCostAppViewModel,
+				biometricManager = biometricManager
+			)
+		}
+	}
 
-        connectivityManager.registerConnectionObserver(this)
-    }
+	override fun onStart() {
+		super.onStart()
 
-    override fun onStop() {
-        super.onStop()
+		connectivityManager.registerConnectionObserver(this)
+	}
 
-        connectivityManager.unregisterConnectionObserver(this)
-    }
+	override fun onStop() {
+		super.onStop()
+
+		connectivityManager.unregisterConnectionObserver(this)
+	}
 }

@@ -9,24 +9,24 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
-    private val categoryUseCases: CategoryUseCases
+	private val categoryUseCases: CategoryUseCases
 ): BaseViewModel<CategoriesState, CategoriesAction>() {
 
-    init {
-        viewModelScope.launch {
-            categoryUseCases.getLocalCategoryUseCase().collect { categoryList ->
-                updateState {
-                    copy(
-                        categories = categoryList
-                    )
-                }
-            }
-        }
-    }
+	init {
+		viewModelScope.launch {
+			categoryUseCases.getLocalCategoryUseCase().collect { categoryList ->
+				updateState {
+					copy(
+						categories = categoryList
+					)
+				}
+			}
+		}
+	}
 
-    override fun defaultState(): CategoriesState = CategoriesState()
+	override fun defaultState(): CategoriesState = CategoriesState()
 
-    override fun onAction(action: CategoriesAction) {
+	override fun onAction(action: CategoriesAction) {
 
-    }
+	}
 }

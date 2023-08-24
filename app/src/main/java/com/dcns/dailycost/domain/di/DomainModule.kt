@@ -29,6 +29,7 @@ import com.dcns.dailycost.domain.use_case.expense.GetLocalExpenseUseCase
 import com.dcns.dailycost.domain.use_case.expense.GetRemoteExpenseUseCase
 import com.dcns.dailycost.domain.use_case.expense.SyncLocalWithRemoteExpenseUseCase
 import com.dcns.dailycost.domain.use_case.income.AddRemoteIncomeUseCase
+import com.dcns.dailycost.domain.use_case.income.DeleteRemoteIncomeUseCase
 import com.dcns.dailycost.domain.use_case.income.GetLocalIncomeUseCase
 import com.dcns.dailycost.domain.use_case.income.GetRemoteIncomeUseCase
 import com.dcns.dailycost.domain.use_case.income.SyncLocalWithRemoteIncomeUseCase
@@ -53,87 +54,88 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class DomainModule {
 
-    @Provides
-    @Singleton
-    fun provideLoginRegisterUseCase(
-        loginRegisterRepository: ILoginRegisterRepository
-    ): LoginRegisterUseCases = LoginRegisterUseCases(
-        userRegisterUseCase = UserRegisterUseCase(loginRegisterRepository),
-        userLoginUseCase = UserLoginUseCase(loginRegisterRepository)
-    )
+	@Provides
+	@Singleton
+	fun provideLoginRegisterUseCase(
+		loginRegisterRepository: ILoginRegisterRepository
+	): LoginRegisterUseCases = LoginRegisterUseCases(
+		userRegisterUseCase = UserRegisterUseCase(loginRegisterRepository),
+		userLoginUseCase = UserLoginUseCase(loginRegisterRepository)
+	)
 
-    @Provides
-    @Singleton
-    fun provideDepoUseCases(
-        depoRepository: IDepoRepository,
-        balanceRepository: IBalanceRepository
-    ): DepoUseCases = DepoUseCases(
-        editDepoUseCase = EditDepoUseCase(depoRepository),
-        updateLocalBalanceUseCase = UpdateLocalBalanceUseCase(balanceRepository),
-        getRemoteBalanceUseCase = GetRemoteBalanceUseCase(balanceRepository),
-        getLocalBalanceUseCase = GetLocalBalanceUseCase(balanceRepository)
-    )
+	@Provides
+	@Singleton
+	fun provideDepoUseCases(
+		depoRepository: IDepoRepository,
+		balanceRepository: IBalanceRepository
+	): DepoUseCases = DepoUseCases(
+		editDepoUseCase = EditDepoUseCase(depoRepository),
+		updateLocalBalanceUseCase = UpdateLocalBalanceUseCase(balanceRepository),
+		getRemoteBalanceUseCase = GetRemoteBalanceUseCase(balanceRepository),
+		getLocalBalanceUseCase = GetLocalBalanceUseCase(balanceRepository)
+	)
 
-    @Provides
-    @Singleton
-    fun provideNoteUseCases(
-        noteRepository: INoteRepository
-    ): NoteUseCases = NoteUseCases(
-        getRemoteNoteUseCase = GetRemoteNoteUseCase(noteRepository),
-        getLocalNoteUseCase = GetLocalNoteUseCase(noteRepository),
-        addRemoteNoteUseCase = AddRemoteNoteUseCase(noteRepository),
-        upsertLocalNoteUseCase = UpsertLocalNoteUseCase(noteRepository),
-        syncLocalWithRemoteNoteUseCase = SyncLocalWithRemoteNoteUseCase(noteRepository)
-    )
+	@Provides
+	@Singleton
+	fun provideNoteUseCases(
+		noteRepository: INoteRepository
+	): NoteUseCases = NoteUseCases(
+		getRemoteNoteUseCase = GetRemoteNoteUseCase(noteRepository),
+		getLocalNoteUseCase = GetLocalNoteUseCase(noteRepository),
+		addRemoteNoteUseCase = AddRemoteNoteUseCase(noteRepository),
+		upsertLocalNoteUseCase = UpsertLocalNoteUseCase(noteRepository),
+		syncLocalWithRemoteNoteUseCase = SyncLocalWithRemoteNoteUseCase(noteRepository)
+	)
 
-    @Provides
-    @Singleton
-    fun provideCategoryUseCases(
-        categoryRepository: ICategoryRepository
-    ): CategoryUseCases = CategoryUseCases(
-        getLocalCategoryUseCase = GetLocalCategoryUseCase(categoryRepository),
-        inputLocalCategoryUseCase = InputLocalCategoryUseCase(categoryRepository)
-    )
+	@Provides
+	@Singleton
+	fun provideCategoryUseCases(
+		categoryRepository: ICategoryRepository
+	): CategoryUseCases = CategoryUseCases(
+		getLocalCategoryUseCase = GetLocalCategoryUseCase(categoryRepository),
+		inputLocalCategoryUseCase = InputLocalCategoryUseCase(categoryRepository)
+	)
 
-    @Provides
-    @Singleton
-    fun provideExpenseUseCases(
-        expenseRepository: IExpenseRepository
-    ): ExpenseUseCases = ExpenseUseCases(
-        addRemoteExpenseUseCase = AddRemoteExpenseUseCase(expenseRepository),
-        deleteRemoteExpenseUseCase = DeleteRemoteExpenseUseCase(expenseRepository),
-        getRemoteExpenseUseCase = GetRemoteExpenseUseCase(expenseRepository),
-        getLocalExpenseUseCase = GetLocalExpenseUseCase(expenseRepository),
-        syncLocalWithRemoteExpenseUseCase = SyncLocalWithRemoteExpenseUseCase(expenseRepository)
-    )
+	@Provides
+	@Singleton
+	fun provideExpenseUseCases(
+		expenseRepository: IExpenseRepository
+	): ExpenseUseCases = ExpenseUseCases(
+		addRemoteExpenseUseCase = AddRemoteExpenseUseCase(expenseRepository),
+		deleteRemoteExpenseUseCase = DeleteRemoteExpenseUseCase(expenseRepository),
+		getRemoteExpenseUseCase = GetRemoteExpenseUseCase(expenseRepository),
+		getLocalExpenseUseCase = GetLocalExpenseUseCase(expenseRepository),
+		syncLocalWithRemoteExpenseUseCase = SyncLocalWithRemoteExpenseUseCase(expenseRepository)
+	)
 
-    @Provides
-    @Singleton
-    fun provideIncomeUseCases(
-        incomeRepository: IIncomeRepository
-    ): IncomeUseCases = IncomeUseCases(
-        addRemoteIncomeUseCase = AddRemoteIncomeUseCase(incomeRepository),
-        getRemoteIncomeUseCase = GetRemoteIncomeUseCase(incomeRepository),
-        getLocalIncomeUseCase = GetLocalIncomeUseCase(incomeRepository),
-        syncLocalWithRemoteIncomeUseCase = SyncLocalWithRemoteIncomeUseCase(incomeRepository)
-    )
+	@Provides
+	@Singleton
+	fun provideIncomeUseCases(
+		incomeRepository: IIncomeRepository
+	): IncomeUseCases = IncomeUseCases(
+		addRemoteIncomeUseCase = AddRemoteIncomeUseCase(incomeRepository),
+		deleteRemoteIncomeUseCase = DeleteRemoteIncomeUseCase(incomeRepository),
+		getRemoteIncomeUseCase = GetRemoteIncomeUseCase(incomeRepository),
+		getLocalIncomeUseCase = GetLocalIncomeUseCase(incomeRepository),
+		syncLocalWithRemoteIncomeUseCase = SyncLocalWithRemoteIncomeUseCase(incomeRepository)
+	)
 
-    @Provides
-    @Singleton
-    fun provideUserCredentialUseCases(
-        userCredentialRepository: IUserCredentialRepository
-    ): UserCredentialUseCases = UserCredentialUseCases(
-        editUserCredentialUseCase = EditUserCredentialUseCase(userCredentialRepository),
-        getUserCredentialUseCase = GetUserCredentialUseCase(userCredentialRepository)
-    )
+	@Provides
+	@Singleton
+	fun provideUserCredentialUseCases(
+		userCredentialRepository: IUserCredentialRepository
+	): UserCredentialUseCases = UserCredentialUseCases(
+		editUserCredentialUseCase = EditUserCredentialUseCase(userCredentialRepository),
+		getUserCredentialUseCase = GetUserCredentialUseCase(userCredentialRepository)
+	)
 
-    @Provides
-    @Singleton
-    fun provideUserPreferenceUseCases(
-        userPreferenceRepository: IUserPreferenceRepository
-    ): UserPreferenceUseCases = UserPreferenceUseCases(
-        editUserPreferenceUseCase = EditUserPreferenceUseCase(userPreferenceRepository),
-        getUserPreferenceUseCase = GetUserPreferenceUseCase(userPreferenceRepository)
-    )
+	@Provides
+	@Singleton
+	fun provideUserPreferenceUseCases(
+		userPreferenceRepository: IUserPreferenceRepository
+	): UserPreferenceUseCases = UserPreferenceUseCases(
+		editUserPreferenceUseCase = EditUserPreferenceUseCase(userPreferenceRepository),
+		getUserPreferenceUseCase = GetUserPreferenceUseCase(userPreferenceRepository)
+	)
 
 }

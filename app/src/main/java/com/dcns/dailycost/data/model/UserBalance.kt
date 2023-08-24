@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class UserBalance(
-    val cash: Double,
-    val eWallet: Double,
-    val bankAccount: Double
+	val cash: Double,
+	val eWallet: Double,
+	val bankAccount: Double
 ): Parcelable

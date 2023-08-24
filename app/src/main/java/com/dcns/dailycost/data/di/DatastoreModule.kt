@@ -26,35 +26,35 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class DatastoreModule {
 
-    @Provides
-    @Singleton
-    fun provideUserCredentialDataStore(
-        @ApplicationContext context: Context,
-        encryptionManager: EncryptionManager
-    ): DataStore<ProtoUserCredential> = DataStoreFactory.create(
-        serializer = UserCredentialSerializer(encryptionManager),
-        corruptionHandler = UserCredentialRepository.corruptionHandler,
-        produceFile = { context.dataStoreFile(Constant.USER_CREDENTIAL) }
-    )
+	@Provides
+	@Singleton
+	fun provideUserCredentialDataStore(
+		@ApplicationContext context: Context,
+		encryptionManager: EncryptionManager
+	): DataStore<ProtoUserCredential> = DataStoreFactory.create(
+		serializer = UserCredentialSerializer(encryptionManager),
+		corruptionHandler = UserCredentialRepository.corruptionHandler,
+		produceFile = { context.dataStoreFile(Constant.USER_CREDENTIAL) }
+	)
 
-    @Provides
-    @Singleton
-    fun provideUserPreferenceDataStore(
-        @ApplicationContext context: Context
-    ): DataStore<ProtoUserPreference> = DataStoreFactory.create(
-        serializer = UserPreferenceSerializer,
-        corruptionHandler = UserPreferenceRepository.corruptionHandler,
-        produceFile = { context.dataStoreFile(Constant.USER_PREFERENCE) }
-    )
+	@Provides
+	@Singleton
+	fun provideUserPreferenceDataStore(
+		@ApplicationContext context: Context
+	): DataStore<ProtoUserPreference> = DataStoreFactory.create(
+		serializer = UserPreferenceSerializer,
+		corruptionHandler = UserPreferenceRepository.corruptionHandler,
+		produceFile = { context.dataStoreFile(Constant.USER_PREFERENCE) }
+	)
 
-    @Provides
-    @Singleton
-    fun provideUserBalanceDataStore(
-        @ApplicationContext context: Context
-    ): DataStore<ProtoUserBalance> = DataStoreFactory.create(
-        serializer = UserBalanceSerializer,
-        corruptionHandler = BalanceRepository.corruptionHandler,
-        produceFile = { context.dataStoreFile(Constant.USER_BALANCE) }
-    )
+	@Provides
+	@Singleton
+	fun provideUserBalanceDataStore(
+		@ApplicationContext context: Context
+	): DataStore<ProtoUserBalance> = DataStoreFactory.create(
+		serializer = UserBalanceSerializer,
+		corruptionHandler = BalanceRepository.corruptionHandler,
+		produceFile = { context.dataStoreFile(Constant.USER_BALANCE) }
+	)
 
 }

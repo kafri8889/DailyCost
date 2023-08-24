@@ -8,14 +8,14 @@ import retrofit2.Response
  * Use case untuk mendapatkan pemsaukan dari database server
  */
 class GetRemoteIncomeUseCase(
-    private val incomeRepository: IIncomeRepository
+	private val incomeRepository: IIncomeRepository
 ) {
 
-    suspend operator fun invoke(
-        userId: Int,
-        token: String
-    ): Response<IncomeGetResponse> {
-        return incomeRepository.getRemoteIncome(userId, token)
-    }
+	suspend operator fun invoke(
+		userId: Int,
+		token: String
+	): Response<IncomeGetResponse> {
+		return incomeRepository.getRemoteIncome(userId, token)
+	}
 
 }

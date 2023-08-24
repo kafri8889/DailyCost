@@ -10,26 +10,26 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class ExpenseHandlerImpl @Inject constructor(
-    private val expenseService: ExpenseService
+	private val expenseService: ExpenseService
 ): ExpenseHandler {
-    override suspend fun addExpense(
-        userId: Int,
-        body: RequestBody,
-        token: String
-    ): Response<AddExpenseResponse> {
-        return expenseService.addExpense(userId, body, token)
-    }
+	override suspend fun addExpense(
+		userId: Int,
+		body: RequestBody,
+		token: String
+	): Response<AddExpenseResponse> {
+		return expenseService.addExpense(userId, body, token)
+	}
 
-    override suspend fun getExpense(userId: Int, token: String): Response<GetExpenseResponse> {
-        return expenseService.getExpense(userId, token)
-    }
+	override suspend fun getExpense(userId: Int, token: String): Response<GetExpenseResponse> {
+		return expenseService.getExpense(userId, token)
+	}
 
-    override suspend fun deleteExpense(
-        userId: Int,
-        body: RequestBody,
-        token: String
-    ): Response<DeleteResponse> {
-        return expenseService.deleteExpense(userId, body, token)
-    }
+	override suspend fun deleteExpense(
+		userId: Int,
+		body: RequestBody,
+		token: String
+	): Response<DeleteResponse> {
+		return expenseService.deleteExpense(userId, body, token)
+	}
 
 }

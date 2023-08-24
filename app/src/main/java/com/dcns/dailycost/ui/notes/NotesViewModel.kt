@@ -16,89 +16,89 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotesViewModel @Inject constructor(
-    private val userCredentialUseCases: UserCredentialUseCases,
-    private val noteUseCases: NoteUseCases
+	private val userCredentialUseCases: UserCredentialUseCases,
+	private val noteUseCases: NoteUseCases
 ): BaseViewModel<NotesState, NotesAction>() {
 
-    init {
-        viewModelScope.launch {
-            userCredentialUseCases.getUserCredentialUseCase().collect { cred ->
-                updateState {
-                    copy(
-                        credential = cred
-                    )
-                }
-            }
-        }
+	init {
+		viewModelScope.launch {
+			userCredentialUseCases.getUserCredentialUseCase().collect { cred ->
+				updateState {
+					copy(
+						credential = cred
+					)
+				}
+			}
+		}
 
-        viewModelScope.launch {
-            noteUseCases.getLocalNoteUseCase().collect { notes ->
-                updateState {
-                    copy(
-                        notes = notes
-                    )
-                }
-            }
-        }
-    }
+		viewModelScope.launch {
+			noteUseCases.getLocalNoteUseCase().collect { notes ->
+				updateState {
+					copy(
+						notes = notes
+					)
+				}
+			}
+		}
+	}
 
-    override fun defaultState(): NotesState = NotesState()
+	override fun defaultState(): NotesState = NotesState()
 
-    override fun onAction(action: NotesAction) {
-        when (action) {
-            NotesAction.Refresh -> {
-                viewModelScope.launch {
-                    val mState = state.value
+	override fun onAction(action: NotesAction) {
+		when (action) {
+			NotesAction.Refresh -> {
+				viewModelScope.launch {
+					val mState = state.value
 
-                    updateState {
-                        copy(
-                            isRefreshing = true
-                        )
-                    }
+					updateState {
+						copy(
+							isRefreshing = true
+						)
+					}
 
-                    noteUseCases.getRemoteNoteUseCase(
-                        token = mState.credential.getAuthToken(),
-                        getNoteBy = GetNoteBy.UserID(mState.credential.id.toInt())
-                    ).let { response ->
-                        // 401: data not found
-                        if (response.isSuccessful) {
-                            val noteResponse = response.body()
+					noteUseCases.getRemoteNoteUseCase(
+						token = mState.credential.getAuthToken(),
+						getNoteBy = GetNoteBy.UserID(mState.credential.id.toInt())
+					).let { response ->
+						// 401: data not found
+						if (response.isSuccessful) {
+							val noteResponse = response.body()
 
-                            noteResponse?.let {
-                                Timber.i("upserting notes to db...")
-                                launch(Dispatchers.IO) {
-                                    noteUseCases.upsertLocalNoteUseCase(
-                                        *noteResponse.data
-                                            .map { it.toNote() }
-                                            .toTypedArray()
-                                    )
-                                }
-                            }
+							noteResponse?.let {
+								Timber.i("upserting notes to db...")
+								launch(Dispatchers.IO) {
+									noteUseCases.upsertLocalNoteUseCase(
+										*noteResponse.data
+											.map { it.toNote() }
+											.toTypedArray()
+									)
+								}
+							}
 
-                            updateState {
-                                copy(
-                                    isRefreshing = false
-                                )
-                            }
+							updateState {
+								copy(
+									isRefreshing = false
+								)
+							}
 
-                            return@launch
-                        }
+							return@launch
+						}
 
-                        val errorResponse = Gson().fromJson(
-                            response.errorBody()?.charStream(),
-                            ErrorResponse::class.java
-                        )
+						val errorResponse = Gson().fromJson(
+							response.errorBody()?.charStream(),
+							ErrorResponse::class.java
+						)
 
-                        sendEvent(NotesUiEvent.GetRemoteNoteFailed(errorResponse.message))
+						sendEvent(NotesUiEvent.GetRemoteNoteFailed(errorResponse.message))
 
-                        updateState {
-                            copy(
-                                isRefreshing = false
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
+						updateState {
+							copy(
+								isRefreshing = false
+							)
+						}
+					}
+				}
+			}
+		}
+	}
 }

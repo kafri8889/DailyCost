@@ -21,93 +21,93 @@ import androidx.compose.ui.text.TextStyle
 
 @Composable
 fun AnimatedText(
-    text: String,
-    modifier: Modifier = Modifier,
-    style: TextStyle = LocalTextStyle.current
+	text: String,
+	modifier: Modifier = Modifier,
+	style: TextStyle = LocalTextStyle.current
 ) {
 
-    AnimatedContent(
-        label = "animated_text",
-        targetState = text,
-        transitionSpec = {
-            // Compare the incoming number with the previous number.
-            if (targetState > initialState) {
-                // If the target number is larger, it slides up and fades in
-                // while the initial (smaller) number slides up and fades out.
-                slideInVertically { height -> height } + fadeIn() togetherWith
-                        slideOutVertically { height -> -height } + fadeOut()
-            } else {
-                // If the target number is smaller, it slides down and fades in
-                // while the initial number slides down and fades out.
-                slideInVertically { height -> -height } + fadeIn() togetherWith
-                        slideOutVertically { height -> height } + fadeOut()
-            }.using(
-                // Disable clipping since the faded slide-in/out should
-                // be displayed out of bounds.
-                SizeTransform(clip = false)
-            )
-        }
-    ) { targetCount ->
-        Text(
-            text = targetCount,
-            style = style,
-            modifier = modifier
-        )
-    }
+	AnimatedContent(
+		label = "animated_text",
+		targetState = text,
+		transitionSpec = {
+			// Compare the incoming number with the previous number.
+			if (targetState > initialState) {
+				// If the target number is larger, it slides up and fades in
+				// while the initial (smaller) number slides up and fades out.
+				slideInVertically { height -> height } + fadeIn() togetherWith
+					slideOutVertically { height -> -height } + fadeOut()
+			} else {
+				// If the target number is smaller, it slides down and fades in
+				// while the initial number slides down and fades out.
+				slideInVertically { height -> -height } + fadeIn() togetherWith
+					slideOutVertically { height -> height } + fadeOut()
+			}.using(
+				// Disable clipping since the faded slide-in/out should
+				// be displayed out of bounds.
+				SizeTransform(clip = false)
+			)
+		}
+	) { targetCount ->
+		Text(
+			text = targetCount,
+			style = style,
+			modifier = modifier
+		)
+	}
 }
 
 @Composable
 fun AnimatedTextByChar(
-    text: String,
-    modifier: Modifier = Modifier,
-    style: TextStyle = LocalTextStyle.current
+	text: String,
+	modifier: Modifier = Modifier,
+	style: TextStyle = LocalTextStyle.current
 ) {
-    var oldCount by remember { mutableStateOf(text) }
+	var oldCount by remember { mutableStateOf(text) }
 
-    SideEffect {
-        oldCount = text
-    }
+	SideEffect {
+		oldCount = text
+	}
 
-    Row(modifier = modifier) {
-        val oldCountString = oldCount
+	Row(modifier = modifier) {
+		val oldCountString = oldCount
 
-        for (i in text.indices) {
-            val oldChar = oldCountString.getOrNull(i)
-            val newChar = text[i]
-            val char = if (oldChar == newChar) {
-                oldCountString[i]
-            } else {
-                text[i]
-            }
+		for (i in text.indices) {
+			val oldChar = oldCountString.getOrNull(i)
+			val newChar = text[i]
+			val char = if (oldChar == newChar) {
+				oldCountString[i]
+			} else {
+				text[i]
+			}
 
-            AnimatedContent(
-                label = "animated_text_by_char",
-                targetState = char,
-                transitionSpec = {
-                    // Compare the incoming number with the previous number.
-                    if (targetState > initialState) {
-                        // If the target number is larger, it slides up and fades in
-                        // while the initial (smaller) number slides up and fades out.
-                        slideInVertically { height -> height } + fadeIn() togetherWith
-                                slideOutVertically { height -> -height } + fadeOut()
-                    } else {
-                        // If the target number is smaller, it slides down and fades in
-                        // while the initial number slides down and fades out.
-                        slideInVertically { height -> -height } + fadeIn() togetherWith
-                                slideOutVertically { height -> height } + fadeOut()
-                    }.using(
-                        // Disable clipping since the faded slide-in/out should
-                        // be displayed out of bounds.
-                        SizeTransform(clip = false)
-                    )
-                }
-            ) { mChar ->
-                Text(
-                    text = mChar.toString(),
-                    style = style,
-                    softWrap = false
-                )
-            }
-        }
-    }
+			AnimatedContent(
+				label = "animated_text_by_char",
+				targetState = char,
+				transitionSpec = {
+					// Compare the incoming number with the previous number.
+					if (targetState > initialState) {
+						// If the target number is larger, it slides up and fades in
+						// while the initial (smaller) number slides up and fades out.
+						slideInVertically { height -> height } + fadeIn() togetherWith
+							slideOutVertically { height -> -height } + fadeOut()
+					} else {
+						// If the target number is smaller, it slides down and fades in
+						// while the initial number slides down and fades out.
+						slideInVertically { height -> -height } + fadeIn() togetherWith
+							slideOutVertically { height -> height } + fadeOut()
+					}.using(
+						// Disable clipping since the faded slide-in/out should
+						// be displayed out of bounds.
+						SizeTransform(clip = false)
+					)
+				}
+			) { mChar ->
+				Text(
+					text = mChar.toString(),
+					style = style,
+					softWrap = false
+				)
+			}
+		}
+	}
 }

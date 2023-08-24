@@ -4,9 +4,9 @@ import com.dcns.dailycost.data.model.Category
 import com.dcns.dailycost.data.model.local.CategoryDb
 
 fun CategoryDb.toCategory(): Category {
-    return Category(id, name, icon, defaultCategory)
+	return Category(id, name, icon, defaultCategory)
 }
 
 fun Category.toCategoryDb(): CategoryDb {
-    return CategoryDb(id, name, icon, defaultCategory)
+	return CategoryDb(id, name, icon, defaultCategory)
 }

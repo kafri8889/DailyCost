@@ -15,18 +15,18 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class CommonModule {
 
-    @Provides
-    @Singleton
-    fun provideConnectivityManager(
-        @ApplicationContext context: Context
-    ): ConnectivityManager = ConnectivityManager(context)
+	@Provides
+	@Singleton
+	fun provideConnectivityManager(
+		@ApplicationContext context: Context
+	): ConnectivityManager = ConnectivityManager(context)
 
-    @Provides
-    @Singleton
-    fun provideEncryptionManager(): EncryptionManager = EncryptionManager()
+	@Provides
+	@Singleton
+	fun provideEncryptionManager(): EncryptionManager = EncryptionManager()
 
-    @Provides
-    @Singleton
-    fun provideSharedUiEvent(): SharedUiEvent = SharedUiEvent()
+	@Provides
+	@Singleton
+	fun provideSharedUiEvent(): SharedUiEvent = SharedUiEvent()
 
 }

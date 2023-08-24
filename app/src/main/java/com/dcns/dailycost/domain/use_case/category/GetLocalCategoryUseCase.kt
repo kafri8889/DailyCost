@@ -12,27 +12,29 @@ import kotlinx.coroutines.flow.map
  * Use case untuk mendapatkan kategori dari database lokal
  */
 class GetLocalCategoryUseCase(
-    private val categoryRepository: ICategoryRepository
+	private val categoryRepository: ICategoryRepository
 ) {
 
-    operator fun invoke(
-        getCategoryBy: GetCategoryBy = GetCategoryBy.All
-    ): Flow<List<Category>> {
-        return when (getCategoryBy) {
-            is GetCategoryBy.Name -> {
-                categoryRepository.getCategoryByName(getCategoryBy.name)
-                    .filterNotNull() // Filter value yg tidak null
-                    .map { listOf(it.toCategory()) }
-            }
-            is GetCategoryBy.ID -> {
-                categoryRepository.getCategoryByID(getCategoryBy.id)
-                    .filterNotNull() // Filter value yg tidak null
-                    .map { listOf(it.toCategory()) }
-            }
-            GetCategoryBy.All -> categoryRepository.getAllCategory()
-                .filterNotNull() // Filter value yg tidak null
-                .map { it.map { it.toCategory() } }
-        }
-    }
+	operator fun invoke(
+		getCategoryBy: GetCategoryBy = GetCategoryBy.All
+	): Flow<List<Category>> {
+		return when (getCategoryBy) {
+			is GetCategoryBy.Name -> {
+				categoryRepository.getCategoryByName(getCategoryBy.name)
+					.filterNotNull() // Filter value yg tidak null
+					.map { listOf(it.toCategory()) }
+			}
+
+			is GetCategoryBy.ID -> {
+				categoryRepository.getCategoryByID(getCategoryBy.id)
+					.filterNotNull() // Filter value yg tidak null
+					.map { listOf(it.toCategory()) }
+			}
+
+			GetCategoryBy.All -> categoryRepository.getAllCategory()
+				.filterNotNull() // Filter value yg tidak null
+				.map { it.map { it.toCategory() } }
+		}
+	}
 
 }

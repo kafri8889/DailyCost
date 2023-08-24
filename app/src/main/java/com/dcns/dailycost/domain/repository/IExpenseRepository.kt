@@ -11,66 +11,66 @@ import retrofit2.Response
 
 interface IExpenseRepository {
 
-    /**
-     * Tambahkan pengeluaran baru ke database server
-     */
-    suspend fun addRemoteExpense(
-        userId: Int,
-        body: RequestBody,
-        token: String
-    ): Response<AddExpenseResponse>
+	/**
+	 * Tambahkan pengeluaran baru ke database server
+	 */
+	suspend fun addRemoteExpense(
+		userId: Int,
+		body: RequestBody,
+		token: String
+	): Response<AddExpenseResponse>
 
-    /**
-     * Dapatkan pengeluaran dengan user id dari database server
-     */
-    suspend fun getRemoteExpense(
-        userId: Int,
-        token: String
-    ): Response<GetExpenseResponse>
+	/**
+	 * Dapatkan pengeluaran dengan user id dari database server
+	 */
+	suspend fun getRemoteExpense(
+		userId: Int,
+		token: String
+	): Response<GetExpenseResponse>
 
-    /**
-     * Hapus pengeluaran dari database server
-     */
-    suspend fun deleteRemoteExpense(
-        userId: Int,
-        body: RequestBody,
-        token: String
-    ): Response<DeleteResponse>
+	/**
+	 * Hapus pengeluaran dari database server
+	 */
+	suspend fun deleteRemoteExpense(
+		userId: Int,
+		body: RequestBody,
+		token: String
+	): Response<DeleteResponse>
 
-    /**
-     * Dapatkan semua pengeluaran dari database lokal
-     */
-    fun getAllExpenses(): Flow<List<ExpenseDbWithCategoryDb>>
+	/**
+	 * Dapatkan semua pengeluaran dari database lokal
+	 */
+	fun getAllExpenses(): Flow<List<ExpenseDbWithCategoryDb>>
 
-    /**
-     * Dapatkan pengeluaran by id dari database lokal
-     */
-    fun getExpenseById(id: Int): Flow<ExpenseDbWithCategoryDb?>
+	/**
+	 * Dapatkan pengeluaran by id dari database lokal
+	 */
+	fun getExpenseById(id: Int): Flow<ExpenseDbWithCategoryDb?>
 
-    /**
-     * Hapus semua pengeluaran dari database lokal, kecuali dari id yang diberikan
-     * @param ids id pengeluaran yg dikecualikan
-     */
-    suspend fun deleteExpenseExcept(ids: List<Int>)
+	/**
+	 * Hapus semua pengeluaran dari database lokal, kecuali dari id yang diberikan
+	 * @param ids id pengeluaran yg dikecualikan
+	 */
+	suspend fun deleteExpenseExcept(ids: List<Int>)
 
-    /**
-     * Update pengeluaran ke database lokal
-     */
-    suspend fun updateExpense(vararg expense: ExpenseDb)
+	/**
+	 * Update pengeluaran ke database lokal
+	 */
+	suspend fun updateExpense(vararg expense: ExpenseDb)
 
-    /**
-     * Update atau insert pengeluaran ke database lokal
-     */
-    suspend fun upsertExpense(vararg expense: ExpenseDb)
+	/**
+	 * Update atau insert pengeluaran ke database lokal
+	 */
+	suspend fun upsertExpense(vararg expense: ExpenseDb)
 
-    /**
-     * Hapus pengeluaran dari database lokal
-     */
-    suspend fun deleteExpense(vararg expense: ExpenseDb)
+	/**
+	 * Hapus pengeluaran dari database lokal
+	 */
+	suspend fun deleteExpense(vararg expense: ExpenseDb)
 
-    /**
-     * Insert pengeluaran ke database lokal
-     */
-    suspend fun insertExpense(vararg expense: ExpenseDb)
+	/**
+	 * Insert pengeluaran ke database lokal
+	 */
+	suspend fun insertExpense(vararg expense: ExpenseDb)
 
 }

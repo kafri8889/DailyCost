@@ -8,20 +8,20 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class DepoRepository @Inject constructor(
-    private val depoHandler: DepoHandler
+	private val depoHandler: DepoHandler
 ): IDepoRepository {
 
-    override suspend fun editDepo(body: RequestBody, token: String): Response<DepoResponse> {
-        return depoHandler.editDepo(body, token)
-    }
+	override suspend fun editDepo(body: RequestBody, token: String): Response<DepoResponse> {
+		return depoHandler.editDepo(body, token)
+	}
 
-    @Deprecated("otomatis ditambahkan saat user register")
-    override suspend fun addDepo(body: RequestBody, token: String): Response<DepoResponse> {
-        return depoHandler.addDepo(body, token)
-    }
+	@Deprecated("otomatis ditambahkan saat user register")
+	override suspend fun addDepo(body: RequestBody, token: String): Response<DepoResponse> {
+		return depoHandler.addDepo(body, token)
+	}
 
-    @Deprecated("gunakan fitur Income")
-    override suspend fun topup(body: RequestBody, token: String): Response<DepoResponse> {
-        return depoHandler.topup(body, token)
-    }
+	@Deprecated("gunakan fitur Income")
+	override suspend fun topup(body: RequestBody, token: String): Response<DepoResponse> {
+		return depoHandler.topup(body, token)
+	}
 }

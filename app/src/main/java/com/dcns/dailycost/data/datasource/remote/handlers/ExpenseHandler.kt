@@ -8,30 +8,30 @@ import retrofit2.Response
 
 interface ExpenseHandler {
 
-    /**
-     * Tambahkan pengeluaran baru
-     */
-    suspend fun addExpense(
-        userId: Int,
-        body: RequestBody,
-        token: String
-    ): Response<AddExpenseResponse>
+	/**
+	 * Tambahkan pengeluaran baru
+	 */
+	suspend fun addExpense(
+		userId: Int,
+		body: RequestBody,
+		token: String
+	): Response<AddExpenseResponse>
 
-    /**
-     * Dapatkan pengeluaran dengan user id
-     */
-    suspend fun getExpense(
-        userId: Int,
-        token: String
-    ): Response<GetExpenseResponse>
+	/**
+	 * Dapatkan pengeluaran dengan user id
+	 */
+	suspend fun getExpense(
+		userId: Int,
+		token: String
+	): Response<GetExpenseResponse>
 
-    /**
-     * Hapus pengeluaran
-     */
-    suspend fun deleteExpense(
-        userId: Int,
-        body: RequestBody,
-        token: String
-    ): Response<DeleteResponse>
+	/**
+	 * Hapus pengeluaran
+	 */
+	suspend fun deleteExpense(
+		userId: Int,
+		body: RequestBody,
+		token: String
+	): Response<DeleteResponse>
 
 }

@@ -19,67 +19,71 @@ import timber.log.Timber
 
 @HiltWorker
 class PostIncomeWorker @AssistedInject constructor(
-    @Assisted private val context: Context,
-    @Assisted params: WorkerParameters,
-    private val incomeUseCases: IncomeUseCases,
-    private val userCredentialUseCases: UserCredentialUseCases
+	@Assisted private val context: Context,
+	@Assisted params: WorkerParameters,
+	private val incomeUseCases: IncomeUseCases,
+	private val userCredentialUseCases: UserCredentialUseCases
 ): CoroutineWorker(context, params) {
 
-    override suspend fun doWork(): Result {
-        val requestBody = inputData.getString(Workers.ARG_DATA_REQUEST_BODY)
+	override suspend fun doWork(): Result {
+		val requestBody = inputData.getString(Workers.ARG_DATA_REQUEST_BODY)
 
-        requestBody?.let { json ->
-            val body = json.fromJson(AddIncomeRequestBody::class.java)
+		requestBody?.let { json ->
+			val body = json.fromJson(AddIncomeRequestBody::class.java)
 
-            return postIncome(body.toRequestBody())
-        }
+			return postIncome(body.toRequestBody())
+		}
 
-        return Result.failure(
-            workDataOf(
-                Workers.ARG_WORKER_MESSAGE_KEY to "Request body not found, please insert request body into worker data"
-            )
-        )
-    }
+		return Result.failure(
+			workDataOf(
+				Workers.ARG_WORKER_MESSAGE_KEY to "Request body not found, please insert request body into worker data"
+			)
+		)
+	}
 
-    private suspend fun postIncome(requestBody: RequestBody): Result {
-        val credential = userCredentialUseCases.getUserCredentialUseCase().firstOrNull()
+	private suspend fun postIncome(requestBody: RequestBody): Result {
+		val credential = userCredentialUseCases.getUserCredentialUseCase().firstOrNull()
 
-        if (credential != null) {
-            incomeUseCases.addRemoteIncomeUseCase(credential.id.toInt(), requestBody, credential.getAuthToken()).let {
-                if (it.isSuccessful) {
-                    Timber.i("post finished")
+		if (credential != null) {
+			incomeUseCases.addRemoteIncomeUseCase(
+				credential.id.toInt(),
+				requestBody,
+				credential.getAuthToken()
+			).let {
+				if (it.isSuccessful) {
+					Timber.i("post finished")
 
-                    return Result.success(
-                        workDataOf(
-                            Workers.ARG_WORKER_IS_SUCCESS_KEY to true
-                        )
-                    )
-                }
-                else return try {
-                    val errorResponse = Gson().fromJson(it.errorBody()?.charStream(), ErrorResponse::class.java)
+					return Result.success(
+						workDataOf(
+							Workers.ARG_WORKER_IS_SUCCESS_KEY to true
+						)
+					)
+				} else return try {
+					val errorResponse =
+						Gson().fromJson(it.errorBody()?.charStream(), ErrorResponse::class.java)
 
-                    Result.failure(
-                        workDataOf(
-                            Workers.ARG_WORKER_MESSAGE_KEY to errorResponse.message
-                        )
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
+					Result.failure(
+						workDataOf(
+							Workers.ARG_WORKER_MESSAGE_KEY to errorResponse.message
+						)
+					)
+				} catch (e: Exception) {
+					e.printStackTrace()
 
-                    Result.failure(
-                        workDataOf(
-                            Workers.ARG_WORKER_MESSAGE_KEY to "Nothing :("
-                        )
-                    )
-                }
-            }
-        }
+					Result.failure(
+						workDataOf(
+							Workers.ARG_WORKER_MESSAGE_KEY to "Nothing :("
+						)
+					)
+				}
+			}
+		}
 
-        return Result.failure(
-            workDataOf(
-                Workers.ARG_WORKER_MESSAGE_KEY to "Null token"
-            )
-        )
-    }
+		return Result.failure(
+			workDataOf(
+				Workers.ARG_WORKER_MESSAGE_KEY to "Null token"
+			)
+		)
+	}
 
 }

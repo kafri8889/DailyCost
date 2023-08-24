@@ -2,7 +2,6 @@ package com.dcns.dailycost.ui.transactions
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,101 +36,102 @@ import com.dcns.dailycost.foundation.uicomponent.TransactionItem
 
 @Composable
 fun TransactionsScreen(
-    viewModel: TransactionsViewModel,
-    navigationActions: NavigationActions
+	viewModel: TransactionsViewModel,
+	navigationActions: NavigationActions
 ) {
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
+	val state by viewModel.state.collectAsStateWithLifecycle()
 
-    BaseScreenWrapper(
-        viewModel = viewModel,
-        floatingActionButton = {
-            FloatingActionButton(
-                shape = CircleShape,
-                containerColor = DailyCostTheme.colorScheme.primary,
-                onClick = {
-                    navigationActions.navigateTo(
-                        destination = TopLevelDestinations.Home.transaction.createRoute(
-                            DestinationArgument.TRANSACTION_ID to -1,
-                            DestinationArgument.TRANSACTION_MODE to TransactionMode.New,
-                            DestinationArgument.TRANSACTION_TYPE to (state.selectedTransactionType ?: TransactionType.Income)
-                        )
-                    )
-                }
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_add),
-                    contentDescription = null,
-                    tint = DailyCostTheme.colorScheme.onPrimary
-                )
-            }
-        }
-    ) { _ ->
-        TransactionsScreenContent(
-            state = state,
-            onNavigationIconClicked = navigationActions::popBackStack,
-            onNavigateTo = { dest ->
-                navigationActions.navigateTo(dest)
-            },
-            modifier = Modifier
-                .statusBarsPadding()
-        )
-    }
+	BaseScreenWrapper(
+		viewModel = viewModel,
+		floatingActionButton = {
+			FloatingActionButton(
+				shape = CircleShape,
+				containerColor = DailyCostTheme.colorScheme.primary,
+				onClick = {
+					navigationActions.navigateTo(
+						destination = TopLevelDestinations.Home.transaction.createRoute(
+							DestinationArgument.TRANSACTION_ID to -1,
+							DestinationArgument.TRANSACTION_MODE to TransactionMode.New,
+							DestinationArgument.TRANSACTION_TYPE to (state.selectedTransactionType
+								?: TransactionType.Income)
+						)
+					)
+				}
+			) {
+				Icon(
+					painter = painterResource(id = R.drawable.ic_add),
+					contentDescription = null,
+					tint = DailyCostTheme.colorScheme.onPrimary
+				)
+			}
+		}
+	) { _ ->
+		TransactionsScreenContent(
+			state = state,
+			onNavigationIconClicked = navigationActions::popBackStack,
+			onNavigateTo = { dest ->
+				navigationActions.navigateTo(dest)
+			},
+			modifier = Modifier
+				.statusBarsPadding()
+		)
+	}
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun TransactionsScreenContent(
-    state: TransactionsState,
-    modifier: Modifier = Modifier,
-    onNavigateTo: (TopLevelDestination) -> Unit,
-    onNavigationIconClicked: () -> Unit
+	state: TransactionsState,
+	modifier: Modifier = Modifier,
+	onNavigateTo: (TopLevelDestination) -> Unit,
+	onNavigationIconClicked: () -> Unit
 ) {
 
-    LazyColumn(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-    ) {
-        item {
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(onClick = onNavigationIconClicked) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_arrow_left),
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-        }
+	LazyColumn(
+		horizontalAlignment = Alignment.CenterHorizontally,
+		verticalArrangement = Arrangement.spacedBy(8.dp),
+		modifier = modifier
+	) {
+		item {
+			TopAppBar(
+				title = {},
+				navigationIcon = {
+					IconButton(onClick = onNavigationIconClicked) {
+						Icon(
+							painter = painterResource(id = R.drawable.ic_arrow_left),
+							contentDescription = null
+						)
+					}
+				}
+			)
+		}
 
-        items(
-            items = state.transactions,
-            key = { item -> item.id }
-        ) { transaction ->
-            TransactionItem(
-                transaction = transaction,
-                modifier = Modifier
-                    .clickable {
-                        onNavigateTo(
-                            TopLevelDestinations.Home.transaction.createRoute(
-                                DestinationArgument.TRANSACTION_ID to transaction.id,
-                                DestinationArgument.TRANSACTION_TYPE to if (transaction.isIncome) TransactionType.Income else TransactionType.Expense,
-                                DestinationArgument.TRANSACTION_MODE to TransactionMode.Edit,
-                            )
-                        )
-                    }
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .animateItemPlacement(tween(256))
-            )
-        }
+		items(
+			items = state.transactions,
+			key = { item -> item.id }
+		) { transaction ->
+			TransactionItem(
+				transaction = transaction,
+				modifier = Modifier
+//					.clickable {
+//						onNavigateTo(
+//							TopLevelDestinations.Home.transaction.createRoute(
+//								DestinationArgument.TRANSACTION_ID to transaction.id,
+//								DestinationArgument.TRANSACTION_TYPE to if (transaction.isIncome) TransactionType.Income else TransactionType.Expense,
+//								DestinationArgument.TRANSACTION_MODE to TransactionMode.Edit,
+//							)
+//						)
+//					}
+					.fillMaxWidth()
+					.padding(horizontal = 16.dp)
+					.animateItemPlacement(tween(256))
+			)
+		}
 
-        item {
-            // Fab size: 56.dp
-            Spacer(modifier = Modifier.height(56.dp + 16.dp))
-        }
-    }
+		item {
+			// Fab size: 56.dp
+			Spacer(modifier = Modifier.height(56.dp + 16.dp))
+		}
+	}
 }

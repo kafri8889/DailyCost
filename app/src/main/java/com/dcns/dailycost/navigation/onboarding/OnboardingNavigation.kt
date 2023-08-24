@@ -9,15 +9,15 @@ import com.dcns.dailycost.ui.onboarding.OnboardingScreen
 import com.dcns.dailycost.ui.onboarding.OnboardingViewModel
 
 fun NavGraphBuilder.OnboardingNavigation(navigationActions: NavigationActions) {
-    composable(
-        route = TopLevelDestinations.Onboarding.onboarding.route
-    ) { backEntry ->
-        val mViewModel =
-            hiltViewModel<OnboardingViewModel>(backEntry)
+	composable(
+		route = TopLevelDestinations.Onboarding.onboarding.route
+	) { backEntry ->
+		val mViewModel =
+			hiltViewModel<OnboardingViewModel>(backEntry)
 
-        OnboardingScreen(
-            viewModel = mViewModel,
-            navigationActions = navigationActions
-        )
-    }
+		OnboardingScreen(
+			viewModel = mViewModel,
+			navigationActions = navigationActions
+		)
+	}
 }

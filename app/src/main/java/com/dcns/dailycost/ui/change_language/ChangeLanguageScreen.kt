@@ -21,43 +21,43 @@ import com.dcns.dailycost.foundation.uicomponent.LanguageItem
 
 @Composable
 fun ChangeLanguageScreen(
-    viewModel: ChangeLanguageViewModel,
-    navigationActions: NavigationActions
+	viewModel: ChangeLanguageViewModel,
+	navigationActions: NavigationActions
 ) {
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
+	val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LazyColumn(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-    ) {
-        item {
-            DragHandle(
-                modifier = Modifier
-                    .padding(
-                        top = 16.dp,
-                        bottom = 8.dp
-                    )
-            )
-        }
+	LazyColumn(
+		horizontalAlignment = Alignment.CenterHorizontally,
+		verticalArrangement = Arrangement.spacedBy(8.dp),
+		modifier = Modifier
+			.fillMaxWidth()
+			.navigationBarsPadding()
+	) {
+		item {
+			DragHandle(
+				modifier = Modifier
+					.padding(
+						top = 16.dp,
+						bottom = 8.dp
+					)
+			)
+		}
 
-        items(Language.values()) { language ->
-            LanguageItem(
-                language = language,
-                selected = state.selectedLanguage == language,
-                onClick = {
-                    viewModel.onAction(ChangeLanguageAction.ChangeLanguage(language))
-                },
-                modifier = Modifier
-                    .fillMaxWidth(0.96f)
-            )
-        }
+		items(Language.values()) { language ->
+			LanguageItem(
+				language = language,
+				selected = state.selectedLanguage == language,
+				onClick = {
+					viewModel.onAction(ChangeLanguageAction.ChangeLanguage(language))
+				},
+				modifier = Modifier
+					.fillMaxWidth(0.96f)
+			)
+		}
 
-        item {
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-    }
+		item {
+			Spacer(modifier = Modifier.height(8.dp))
+		}
+	}
 }

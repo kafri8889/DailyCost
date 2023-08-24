@@ -12,31 +12,31 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class NoteHandlerImpl @Inject constructor(
-    private val noteService: NoteService
+	private val noteService: NoteService
 ): NoteHandler {
-    override suspend fun addNote(
-        token: String,
-        title: RequestBody,
-        body: RequestBody,
-        date: RequestBody,
-        userId: RequestBody,
-        file: MultipartBody.Part
-    ): Response<AddNoteResponse> {
-        return noteService.addNote(token, title, body, date, userId, file)
-    }
+	override suspend fun addNote(
+		token: String,
+		title: RequestBody,
+		body: RequestBody,
+		date: RequestBody,
+		userId: RequestBody,
+		file: MultipartBody.Part
+	): Response<AddNoteResponse> {
+		return noteService.addNote(token, title, body, date, userId, file)
+	}
 
 
-    override suspend fun editNote(token: String, body: RequestBody): Response<EditNoteResponse> {
-        return noteService.editNote(token, body)
-    }
+	override suspend fun editNote(token: String, body: RequestBody): Response<EditNoteResponse> {
+		return noteService.editNote(token, body)
+	}
 
-    override suspend fun deleteNote(token: String, body: RequestBody): Response<DeleteResponse> {
-        return noteService.deleteNote(token, body)
-    }
+	override suspend fun deleteNote(token: String, body: RequestBody): Response<DeleteResponse> {
+		return noteService.deleteNote(token, body)
+	}
 
-    override suspend fun getNoteById(userId: Int, token: String): Response<GetNoteResponse> {
-        return noteService.getNoteById(userId, token)
-    }
+	override suspend fun getNoteById(userId: Int, token: String): Response<GetNoteResponse> {
+		return noteService.getNoteById(userId, token)
+	}
 
 
 }

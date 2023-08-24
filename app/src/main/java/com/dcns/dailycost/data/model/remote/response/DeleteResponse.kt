@@ -4,6 +4,6 @@ import com.dcns.dailycost.foundation.common.IResponse
 import com.google.gson.annotations.SerializedName
 
 data class DeleteResponse(
-    @SerializedName("status") val status: String,
-    @SerializedName("message") val message: String
+	@SerializedName("status") val status: String,
+	@SerializedName("message") val message: String
 ): IResponse

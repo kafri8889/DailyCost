@@ -14,55 +14,58 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class ExpenseRepository @Inject constructor(
-    private val expenseHandler: ExpenseHandler,
-    private val expenseDao: ExpenseDao
+	private val expenseHandler: ExpenseHandler,
+	private val expenseDao: ExpenseDao
 ): IExpenseRepository {
-    override suspend fun addRemoteExpense(
-        userId: Int,
-        body: RequestBody,
-        token: String
-    ): Response<AddExpenseResponse> {
-        return expenseHandler.addExpense(userId, body, token)
-    }
+	override suspend fun addRemoteExpense(
+		userId: Int,
+		body: RequestBody,
+		token: String
+	): Response<AddExpenseResponse> {
+		return expenseHandler.addExpense(userId, body, token)
+	}
 
-    override suspend fun getRemoteExpense(userId: Int, token: String): Response<GetExpenseResponse> {
-        return expenseHandler.getExpense(userId, token)
-    }
+	override suspend fun getRemoteExpense(
+		userId: Int,
+		token: String
+	): Response<GetExpenseResponse> {
+		return expenseHandler.getExpense(userId, token)
+	}
 
-    override suspend fun deleteRemoteExpense(
-        userId: Int,
-        body: RequestBody,
-        token: String
-    ): Response<DeleteResponse> {
-        return expenseHandler.deleteExpense(userId, body, token)
-    }
+	override suspend fun deleteRemoteExpense(
+		userId: Int,
+		body: RequestBody,
+		token: String
+	): Response<DeleteResponse> {
+		return expenseHandler.deleteExpense(userId, body, token)
+	}
 
-    override fun getAllExpenses(): Flow<List<ExpenseDbWithCategoryDb>> {
-        return expenseDao.getAllExpenses()
-    }
+	override fun getAllExpenses(): Flow<List<ExpenseDbWithCategoryDb>> {
+		return expenseDao.getAllExpenses()
+	}
 
-    override fun getExpenseById(id: Int): Flow<ExpenseDbWithCategoryDb?> {
-        return expenseDao.getExpenseById(id)
-    }
+	override fun getExpenseById(id: Int): Flow<ExpenseDbWithCategoryDb?> {
+		return expenseDao.getExpenseById(id)
+	}
 
-    override suspend fun deleteExpenseExcept(ids: List<Int>) {
-        expenseDao.deleteExpenseExcept(ids)
-    }
+	override suspend fun deleteExpenseExcept(ids: List<Int>) {
+		expenseDao.deleteExpenseExcept(ids)
+	}
 
-    override suspend fun updateExpense(vararg expense: ExpenseDb) {
-        expenseDao.updateExpense(*expense)
-    }
+	override suspend fun updateExpense(vararg expense: ExpenseDb) {
+		expenseDao.updateExpense(*expense)
+	}
 
-    override suspend fun upsertExpense(vararg expense: ExpenseDb) {
-        expenseDao.upsertExpense(*expense)
-    }
+	override suspend fun upsertExpense(vararg expense: ExpenseDb) {
+		expenseDao.upsertExpense(*expense)
+	}
 
-    override suspend fun deleteExpense(vararg expense: ExpenseDb) {
-        expenseDao.deleteExpense(*expense)
-    }
+	override suspend fun deleteExpense(vararg expense: ExpenseDb) {
+		expenseDao.deleteExpense(*expense)
+	}
 
-    override suspend fun insertExpense(vararg expense: ExpenseDb) {
-        expenseDao.insertExpense(*expense)
-    }
+	override suspend fun insertExpense(vararg expense: ExpenseDb) {
+		expenseDao.insertExpense(*expense)
+	}
 
 }

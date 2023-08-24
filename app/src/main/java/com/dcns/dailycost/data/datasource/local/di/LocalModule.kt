@@ -17,34 +17,34 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class LocalModule {
 
-    @Provides
-    @Singleton
-    fun provideAppDatabase(
-        @ApplicationContext context: Context
-    ): AppDatabase = AppDatabase.getInstance(context)
+	@Provides
+	@Singleton
+	fun provideAppDatabase(
+		@ApplicationContext context: Context
+	): AppDatabase = AppDatabase.getInstance(context)
 
-    @Provides
-    @Singleton
-    fun provideNoteDao(
-        appDatabase: AppDatabase
-    ): NoteDao = appDatabase.noteDao()
+	@Provides
+	@Singleton
+	fun provideNoteDao(
+		appDatabase: AppDatabase
+	): NoteDao = appDatabase.noteDao()
 
-    @Provides
-    @Singleton
-    fun provideIncomeDao(
-        appDatabase: AppDatabase
-    ): IncomeDao = appDatabase.incomeDao()
+	@Provides
+	@Singleton
+	fun provideIncomeDao(
+		appDatabase: AppDatabase
+	): IncomeDao = appDatabase.incomeDao()
 
-    @Provides
-    @Singleton
-    fun provideExpenseDao(
-        appDatabase: AppDatabase
-    ): ExpenseDao = appDatabase.expenseDao()
+	@Provides
+	@Singleton
+	fun provideExpenseDao(
+		appDatabase: AppDatabase
+	): ExpenseDao = appDatabase.expenseDao()
 
-    @Provides
-    @Singleton
-    fun provideCategoryDao(
-        appDatabase: AppDatabase
-    ): CategoryDao = appDatabase.categoryDao()
+	@Provides
+	@Singleton
+	fun provideCategoryDao(
+		appDatabase: AppDatabase
+	): CategoryDao = appDatabase.categoryDao()
 
 }

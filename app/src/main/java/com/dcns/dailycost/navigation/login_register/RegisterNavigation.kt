@@ -9,14 +9,14 @@ import com.dcns.dailycost.ui.register.RegisterScreen
 import com.dcns.dailycost.ui.register.RegisterViewModel
 
 fun NavGraphBuilder.RegisterNavigation(navigationActions: NavigationActions) {
-    composable(
-        route = TopLevelDestinations.LoginRegister.register.route
-    ) { backEntry ->
-        val mViewModel = hiltViewModel<RegisterViewModel>(backEntry)
+	composable(
+		route = TopLevelDestinations.LoginRegister.register.route
+	) { backEntry ->
+		val mViewModel = hiltViewModel<RegisterViewModel>(backEntry)
 
-        RegisterScreen(
-            viewModel = mViewModel,
-            navigationActions = navigationActions
-        )
-    }
+		RegisterScreen(
+			viewModel = mViewModel,
+			navigationActions = navigationActions
+		)
+	}
 }

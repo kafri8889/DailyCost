@@ -20,27 +20,27 @@ import timber.log.Timber
 
 @HiltWorker
 class EditBalanceWorker @AssistedInject constructor(
-    @Assisted private val context: Context,
-    @Assisted params: WorkerParameters,
-    private val depoUseCases: DepoUseCases,
-    private val userCredentialUseCases: UserCredentialUseCases
+	@Assisted private val context: Context,
+	@Assisted params: WorkerParameters,
+	private val depoUseCases: DepoUseCases,
+	private val userCredentialUseCases: UserCredentialUseCases
 ): CoroutineWorker(context, params) {
 
-    override suspend fun doWork(): Result {
-        val requestBody = inputData.getString(Workers.ARG_DATA_REQUEST_BODY)
+	override suspend fun doWork(): Result {
+		val requestBody = inputData.getString(Workers.ARG_DATA_REQUEST_BODY)
 
-        requestBody?.let { json ->
-            val body = json.fromJson(DepoRequestBody::class.java)
+		requestBody?.let { json ->
+			val body = json.fromJson(DepoRequestBody::class.java)
 
-            return editBalance(body.toRequestBody())
-        }
+			return editBalance(body.toRequestBody())
+		}
 
-        return Result.failure(
-            workDataOf(
-                Workers.ARG_WORKER_MESSAGE_KEY to "Request body not found, please insert request body into worker data"
-            )
-        )
-    }
+		return Result.failure(
+			workDataOf(
+				Workers.ARG_WORKER_MESSAGE_KEY to "Request body not found, please insert request body into worker data"
+			)
+		)
+	}
 
 //    override suspend fun getForegroundInfo(): ForegroundInfo {
 //
@@ -55,53 +55,53 @@ class EditBalanceWorker @AssistedInject constructor(
 //        }.build()
 //    }
 
-    private suspend fun editBalance(requestBody: RequestBody): Result {
-        val token = userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.getAuthToken()
+	private suspend fun editBalance(requestBody: RequestBody): Result {
+		val token = userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.getAuthToken()
 
-        if (token != null) {
-            depoUseCases.editDepoUseCase(requestBody, token).let {
-                if (it.isSuccessful) {
-                    val body = it.body() as DepoResponse
+		if (token != null) {
+			depoUseCases.editDepoUseCase(requestBody, token).let {
+				if (it.isSuccessful) {
+					val body = it.body() as DepoResponse
 
-                    // Save to local
-                    depoUseCases.updateLocalBalanceUseCase(
-                        cash = body.data.cash.toDouble(),
-                        eWallet = body.data.eWallet.toDouble(),
-                        bankAccount = body.data.bankAccount.toDouble(),
-                    )
+					// Save to local
+					depoUseCases.updateLocalBalanceUseCase(
+						cash = body.data.cash.toDouble(),
+						eWallet = body.data.eWallet.toDouble(),
+						bankAccount = body.data.bankAccount.toDouble(),
+					)
 
-                    Timber.i("edit finished")
+					Timber.i("edit finished")
 
-                    return Result.success(
-                        workDataOf(
-                            Workers.ARG_WORKER_IS_SUCCESS_KEY to true
-                        )
-                    )
-                }
-                else return try {
-                    val errorResponse = Gson().fromJson(it.errorBody()?.charStream(), ErrorResponse::class.java)
+					return Result.success(
+						workDataOf(
+							Workers.ARG_WORKER_IS_SUCCESS_KEY to true
+						)
+					)
+				} else return try {
+					val errorResponse =
+						Gson().fromJson(it.errorBody()?.charStream(), ErrorResponse::class.java)
 
-                    Result.failure(
-                        workDataOf(
-                            Workers.ARG_WORKER_MESSAGE_KEY to errorResponse.message
-                        )
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
+					Result.failure(
+						workDataOf(
+							Workers.ARG_WORKER_MESSAGE_KEY to errorResponse.message
+						)
+					)
+				} catch (e: Exception) {
+					e.printStackTrace()
 
-                    Result.failure(
-                        workDataOf(
-                            Workers.ARG_WORKER_MESSAGE_KEY to "Nothing :("
-                        )
-                    )
-                }
-            }
-        }
+					Result.failure(
+						workDataOf(
+							Workers.ARG_WORKER_MESSAGE_KEY to "Nothing :("
+						)
+					)
+				}
+			}
+		}
 
-        return Result.failure(
-            workDataOf(
-                Workers.ARG_WORKER_MESSAGE_KEY to "Null token"
-            )
-        )
-    }
+		return Result.failure(
+			workDataOf(
+				Workers.ARG_WORKER_MESSAGE_KEY to "Null token"
+			)
+		)
+	}
 }

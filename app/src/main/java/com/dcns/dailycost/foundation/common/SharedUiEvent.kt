@@ -13,11 +13,11 @@ import javax.inject.Inject
  */
 class SharedUiEvent @Inject constructor() {
 
-    private val _uiEvent = MutableStateFlow<UiEvent?>(null)
-    val uiEvent: StateFlow<UiEvent?> = _uiEvent
+	private val _uiEvent = MutableStateFlow<UiEvent?>(null)
+	val uiEvent: StateFlow<UiEvent?> = _uiEvent
 
-    fun sendUiEvent(event: UiEvent?) {
-        _uiEvent.update { event }
-    }
+	fun sendUiEvent(event: UiEvent?) {
+		_uiEvent.update { event }
+	}
 
 }

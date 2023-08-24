@@ -10,19 +10,19 @@ import com.dcns.dailycost.foundation.theme.DailyCostTheme
 
 @Composable
 fun OutlinedTextFieldDefaults.dailyCostColor(
-    cursorColor: Color = DailyCostTheme.colorScheme.primary,
-    focusedLabelColor: Color = DailyCostTheme.colorScheme.primary,
-    focusedBorderColor: Color = DailyCostTheme.colorScheme.primary,
-    unfocusedBorderColor: Color = DailyCostTheme.colorScheme.outline,
+	cursorColor: Color = DailyCostTheme.colorScheme.primary,
+	focusedLabelColor: Color = DailyCostTheme.colorScheme.primary,
+	focusedBorderColor: Color = DailyCostTheme.colorScheme.primary,
+	unfocusedBorderColor: Color = DailyCostTheme.colorScheme.outline,
 ): TextFieldColors {
-    return colors(
-        cursorColor = cursorColor,
-        focusedLabelColor = focusedLabelColor,
-        focusedBorderColor = focusedBorderColor,
-        unfocusedBorderColor = unfocusedBorderColor,
-        selectionColors = TextSelectionColors(
-            handleColor = DailyCostTheme.colorScheme.primary,
-            backgroundColor = LocalTextSelectionColors.current.backgroundColor
-        )
-    )
+	return colors(
+		cursorColor = cursorColor,
+		focusedLabelColor = focusedLabelColor,
+		focusedBorderColor = focusedBorderColor,
+		unfocusedBorderColor = unfocusedBorderColor,
+		selectionColors = TextSelectionColors(
+			handleColor = DailyCostTheme.colorScheme.primary,
+			backgroundColor = LocalTextSelectionColors.current.backgroundColor
+		)
+	)
 }

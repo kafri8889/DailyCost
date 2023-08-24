@@ -10,10 +10,10 @@ import com.dcns.dailycost.foundation.extension.toUserBalance
 import com.dcns.dailycost.foundation.extension.toUserCredential
 
 data class DashboardState(
-    val credential: UserCredential = ProtoUserCredential().toUserCredential(),
-    val balance: UserBalance = ProtoUserBalance().toUserBalance(),
-    val internetConnectionAvailable: Boolean = true,
-    val isRefreshing: Boolean = false,
-    val expenses: List<Expense> = emptyList(),
-    val incomes: List<Income> = emptyList(),
+	val credential: UserCredential = ProtoUserCredential().toUserCredential(),
+	val balance: UserBalance = ProtoUserBalance().toUserBalance(),
+	val internetConnectionAvailable: Boolean = true,
+	val isRefreshing: Boolean = false,
+	val expenses: List<Expense> = emptyList(),
+	val incomes: List<Income> = emptyList(),
 )

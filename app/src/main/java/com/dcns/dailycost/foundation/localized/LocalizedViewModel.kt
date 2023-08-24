@@ -12,7 +12,7 @@ import javax.inject.Inject
 class LocalizedViewModel @Inject constructor(
 	private val userPreferenceUseCases: UserPreferenceUseCases
 ): BaseViewModel<LocalizedState, LocalizedAction>() {
-	
+
 	init {
 		viewModelScope.launch {
 			userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->

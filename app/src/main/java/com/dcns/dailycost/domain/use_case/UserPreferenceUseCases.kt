@@ -4,6 +4,6 @@ import com.dcns.dailycost.domain.use_case.user_preference.EditUserPreferenceUseC
 import com.dcns.dailycost.domain.use_case.user_preference.GetUserPreferenceUseCase
 
 data class UserPreferenceUseCases(
-    val editUserPreferenceUseCase: EditUserPreferenceUseCase,
-    val getUserPreferenceUseCase: GetUserPreferenceUseCase
+	val editUserPreferenceUseCase: EditUserPreferenceUseCase,
+	val getUserPreferenceUseCase: GetUserPreferenceUseCase
 )

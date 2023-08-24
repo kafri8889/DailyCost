@@ -11,22 +11,22 @@ import com.dcns.dailycost.foundation.common.NoRippleTheme
 
 @Composable
 fun NoRippleIconButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    content: @Composable () -> Unit
+	onClick: () -> Unit,
+	modifier: Modifier = Modifier,
+	enabled: Boolean = true,
+	interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+	content: @Composable () -> Unit
 ) {
-    CompositionLocalProvider(
-        LocalRippleTheme provides NoRippleTheme
-    ) {
-        IconButton(
-            onClick = onClick,
-            interactionSource = interactionSource,
-            modifier = modifier,
-            enabled = enabled
-        ) {
-            content()
-        }
-    }
+	CompositionLocalProvider(
+		LocalRippleTheme provides NoRippleTheme
+	) {
+		IconButton(
+			onClick = onClick,
+			interactionSource = interactionSource,
+			modifier = modifier,
+			enabled = enabled
+		) {
+			content()
+		}
+	}
 }

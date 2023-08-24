@@ -27,79 +27,79 @@ import com.dcns.dailycost.data.Language
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 
 private class SelectablePreviewParameter: PreviewParameterProvider<Boolean> {
-    override val values: Sequence<Boolean>
-        get() = sequenceOf(true, false)
+	override val values: Sequence<Boolean>
+		get() = sequenceOf(true, false)
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun LanguageItemPreview(
-    @PreviewParameter(SelectablePreviewParameter::class) selected: Boolean
+	@PreviewParameter(SelectablePreviewParameter::class) selected: Boolean
 ) {
-    DailyCostTheme {
-        LanguageItem(
-            language = Language.English,
-            selected = selected,
-            onClick = {}
-        )
-    }
+	DailyCostTheme {
+		LanguageItem(
+			language = Language.English,
+			selected = selected,
+			onClick = {}
+		)
+	}
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LanguageItem(
-    language: Language,
-    selected: Boolean,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+	language: Language,
+	selected: Boolean,
+	modifier: Modifier = Modifier,
+	onClick: () -> Unit
 ) {
 
-    val scaleAnimatable = remember { Animatable(1f) }
+	val scaleAnimatable = remember { Animatable(1f) }
 
-    LaunchedEffect(selected) {
-        if (selected) {
-            scaleAnimatable.animateTo(
-                targetValue = 0.88f,
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy
-                )
-            )
+	LaunchedEffect(selected) {
+		if (selected) {
+			scaleAnimatable.animateTo(
+				targetValue = 0.88f,
+				animationSpec = spring(
+					dampingRatio = Spring.DampingRatioMediumBouncy
+				)
+			)
 
-            scaleAnimatable.animateTo(
-                targetValue = 1f,
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy
-                )
-            )
-        }
-    }
+			scaleAnimatable.animateTo(
+				targetValue = 1f,
+				animationSpec = spring(
+					dampingRatio = Spring.DampingRatioMediumBouncy
+				)
+			)
+		}
+	}
 
-    Card(
-        onClick = onClick,
-        border = if (!selected) BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outline
-        ) else null,
-        colors = CardDefaults.cardColors(
-            containerColor = if (selected) MaterialTheme.colorScheme.primary
-            else Color.Transparent
-        ),
-        modifier = modifier
-            .graphicsLayer {
-                scaleX = scaleAnimatable.value
-                scaleY = scaleAnimatable.value
-            }
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(
-                text = language.name,
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-    }
+	Card(
+		onClick = onClick,
+		border = if (!selected) BorderStroke(
+			width = 1.dp,
+			color = MaterialTheme.colorScheme.outline
+		) else null,
+		colors = CardDefaults.cardColors(
+			containerColor = if (selected) MaterialTheme.colorScheme.primary
+			else Color.Transparent
+		),
+		modifier = modifier
+			.graphicsLayer {
+				scaleX = scaleAnimatable.value
+				scaleY = scaleAnimatable.value
+			}
+	) {
+		Box(
+			contentAlignment = Alignment.Center,
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(16.dp)
+		) {
+			Text(
+				text = language.name,
+				style = MaterialTheme.typography.titleMedium
+			)
+		}
+	}
 }

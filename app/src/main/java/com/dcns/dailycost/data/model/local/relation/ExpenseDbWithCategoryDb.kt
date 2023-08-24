@@ -6,12 +6,12 @@ import com.dcns.dailycost.data.model.local.CategoryDb
 import com.dcns.dailycost.data.model.local.ExpenseDb
 
 data class ExpenseDbWithCategoryDb(
-    @Embedded val expenseDb: ExpenseDb,
+	@Embedded val expenseDb: ExpenseDb,
 
-    @Relation(
-        entity = CategoryDb::class,
-        parentColumn = "categoryId_expense",
-        entityColumn = "category_id"
-    )
-    val categoryDb: CategoryDb
+	@Relation(
+		entity = CategoryDb::class,
+		parentColumn = "categoryId_expense",
+		entityColumn = "category_id"
+	)
+	val categoryDb: CategoryDb
 )

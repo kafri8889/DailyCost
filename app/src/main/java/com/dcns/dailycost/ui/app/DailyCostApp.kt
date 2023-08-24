@@ -74,425 +74,427 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialNavigationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun DailyCostApp(
-    darkTheme: Boolean = false,
-    viewModel: DailyCostAppViewModel = hiltViewModel(),
-    biometricManager: DailyCostBiometricManager
+	darkTheme: Boolean = false,
+	viewModel: DailyCostAppViewModel = hiltViewModel(),
+	biometricManager: DailyCostBiometricManager
 ) {
 
-    val context = LocalContext.current
-    val density = LocalDensity.current
+	val context = LocalContext.current
+	val density = LocalDensity.current
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
+	val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val scope = rememberCoroutineScope()
-    val systemUiController = rememberSystemUiController()
+	val scope = rememberCoroutineScope()
+	val systemUiController = rememberSystemUiController()
 
-    val bottomSheetNavigator = remember {
-        BottomSheetNavigator(
-            ModalBottomSheetState(
-                density = density,
-                isSkipHalfExpanded = true,
-                initialValue = ModalBottomSheetValue.Hidden
-            )
-        )
-    }
+	val bottomSheetNavigator = remember {
+		BottomSheetNavigator(
+			ModalBottomSheetState(
+				density = density,
+				isSkipHalfExpanded = true,
+				initialValue = ModalBottomSheetValue.Hidden
+			)
+		)
+	}
 
-    val navController = rememberNavController(bottomSheetNavigator)
+	val navController = rememberNavController(bottomSheetNavigator)
 
-    val navActions = remember(navController) {
-        NavigationActions(navController)
-    }
+	val navActions = remember(navController) {
+		NavigationActions(navController)
+	}
 
-    val drawerState = rememberDrawerState(
-        initialValue = DrawerValue.Closed
-    )
+	val drawerState = rememberDrawerState(
+		initialValue = DrawerValue.Closed
+	)
 
-    val closeDrawer: () -> Unit = {
-        scope.launch {
-            drawerState.close()
-        }
-    }
+	val closeDrawer: () -> Unit = {
+		scope.launch {
+			drawerState.close()
+		}
+	}
 
-    val onNavigationIconClicked: () -> Unit = {
-        scope.launch {
-            if (drawerState.isOpen) drawerState.close()
-            else drawerState.open()
-        }
-    }
+	val onNavigationIconClicked: () -> Unit = {
+		scope.launch {
+			if (drawerState.isOpen) drawerState.close()
+			else drawerState.open()
+		}
+	}
 
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+	val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-    // Update current destination
-    // digunakan di drawer
-    LaunchedEffect(navBackStackEntry) {
-        navBackStackEntry?.destination?.route?.let { route ->
-            viewModel.onAction(DailyCostAppAction.UpdateCurrentDestinationRoute(route))
-        }
-    }
+	// Update current destination
+	// digunakan di drawer
+	LaunchedEffect(navBackStackEntry) {
+		navBackStackEntry?.destination?.route?.let { route ->
+			viewModel.onAction(DailyCostAppAction.UpdateCurrentDestinationRoute(route))
+		}
+	}
 
-    LaunchedEffect(state.isSecureAppEnabled, state.isBiometricAuthenticated) {
-        val canAuth = DailyCostBiometricManager.canAuthenticateWithAuthenticators(context)
+	LaunchedEffect(state.isSecureAppEnabled, state.isBiometricAuthenticated) {
+		val canAuth = DailyCostBiometricManager.canAuthenticateWithAuthenticators(context)
 
-        // Jika user mengaktifkan secure app, dan
-        // belum terautentikasi (awal membuka aplikasi), dan
-        // device support biometric authentication
-        if (state.isSecureAppEnabled && !state.isBiometricAuthenticated && canAuth) {
-            // Tampilkan autentikasi
-            biometricManager.showAuthentication(
-                title = context.getString(R.string.authentication),
-                subtitle = "",
-                description = "",
-                negativeButtonText = context.getString(R.string.cancel)
-            )
-        } else viewModel.onAction(DailyCostAppAction.IsBiometricAuthenticated(true))
-    }
+		// Jika user mengaktifkan secure app, dan
+		// belum terautentikasi (awal membuka aplikasi), dan
+		// device support biometric authentication
+		if (state.isSecureAppEnabled && !state.isBiometricAuthenticated && canAuth) {
+			// Tampilkan autentikasi
+			biometricManager.showAuthentication(
+				title = context.getString(R.string.authentication),
+				subtitle = "",
+				description = "",
+				negativeButtonText = context.getString(R.string.cancel)
+			)
+		} else viewModel.onAction(DailyCostAppAction.IsBiometricAuthenticated(true))
+	}
 
-    LaunchedEffect(state.userCredential, state.isFirstInstall, state.userFirstEnteredApp) {
-        // Jika user pertama kali masuk ke aplikasi, dan
-        // first install tidak null (true atau false), dan
-        // user credential tidak null.
-        // Jika salah satunya null, maka user akan tetap berada di `SplashScreen`
-        if (state.userFirstEnteredApp && state.isFirstInstall != null && state.userCredential != null) {
-            val dest = when {
-                // Jika pertama kali install, ke onboarding
-                state.isFirstInstall == true -> TopLevelDestinations.Onboarding.onboarding
-                // Jika user sudah login, ke dashboard
-                state.userCredential!!.isLoggedIn -> TopLevelDestinations.Home.dashboard
-                // Jika tidak keduanya, ke login screen
-                else -> TopLevelDestinations.LoginRegister.login
-            }
+	LaunchedEffect(state.userCredential, state.isFirstInstall, state.userFirstEnteredApp) {
+		// Jika user pertama kali masuk ke aplikasi, dan
+		// first install tidak null (true atau false), dan
+		// user credential tidak null.
+		// Jika salah satunya null, maka user akan tetap berada di `SplashScreen`
+		if (state.userFirstEnteredApp && state.isFirstInstall != null && state.userCredential != null) {
+			val dest = when {
+				// Jika pertama kali install, ke onboarding
+				state.isFirstInstall == true -> TopLevelDestinations.Onboarding.onboarding
+				// Jika user sudah login, ke dashboard
+				state.userCredential!!.isLoggedIn -> TopLevelDestinations.Home.dashboard
+				// Jika tidak keduanya, ke login screen
+				else -> TopLevelDestinations.LoginRegister.login
+			}
 
-            navActions.navigateTo(dest)
+			navActions.navigateTo(dest)
 
-            // Update user pertama kali masuk ke aplikasi ke false
-            viewModel.onAction(DailyCostAppAction.UpdateUserFirstEnteredApp(false))
-        }
-    }
+			// Update user pertama kali masuk ke aplikasi ke false
+			viewModel.onAction(DailyCostAppAction.UpdateUserFirstEnteredApp(false))
+		}
+	}
 
-    LaunchedEffect(viewModel) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is DailyCostAppUiEvent.LanguageChanged -> {
-                    if (state.userCredential?.isLoggedIn == true) {
-                        navActions.navigateTo(TopLevelDestinations.Home.dashboard)
-                    }
-                }
-                is DailyCostAppUiEvent.NavigateTo -> {
-                    navActions.navigateTo(event.dest)
-                }
-            }
-        }
-    }
+	LaunchedEffect(viewModel) {
+		viewModel.uiEvent.collect { event ->
+			when (event) {
+				is DailyCostAppUiEvent.LanguageChanged -> {
+					if (state.userCredential?.isLoggedIn == true) {
+						navActions.navigateTo(TopLevelDestinations.Home.dashboard)
+					}
+				}
 
-    DailyCostTheme(darkTheme) {
+				is DailyCostAppUiEvent.NavigateTo -> {
+					navActions.navigateTo(event.dest)
+				}
+			}
+		}
+	}
 
-        SideEffect {
-            systemUiController.setSystemBarsColor(
-                color = Color.Transparent,
-                darkIcons = !darkTheme
-            )
-        }
+	DailyCostTheme(darkTheme) {
 
-        BaseScreenWrapper(viewModel) {
-            Surface(color = MaterialTheme.colorScheme.background) {
-                DailyCostDrawer(
-                    state = drawerState,
-                    email = state.userCredential?.email ?: "",
-                    language = state.language,
-                    onNavigationIconClicked = onNavigationIconClicked,
-                    onCategoriesClicked = {
-                        navActions.navigateTo(
-                            destination = TopLevelDestinations.Home.categories,
-                            builder = defaultNavOptionsBuilder(
-                                popTo = TopLevelDestinations.Home.dashboard
-                            )
-                        )
-                        closeDrawer()
-                    },
-                    onSettingClicked = {
-                        navActions.navigateTo(
-                            destination = TopLevelDestinations.Home.setting,
-                            builder = defaultNavOptionsBuilder(
-                                popTo = TopLevelDestinations.Home.dashboard
-                            )
-                        )
-                        closeDrawer()
-                    },
-                    onLanguageClicked = {
-                        navActions.navigateTo(TopLevelDestinations.Home.changeLanguage)
-                        closeDrawer()
-                    },
-                    onSignOutClicked = {
-                        navActions.navigateTo(TopLevelDestinations.LoginRegister.login)
-                        closeDrawer()
-                    }
-                ) {
-                    DailyCostBottomSheetLayout(bottomSheetNavigator) {
-                        BackHandler(drawerState.isOpen || state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route) {
-                            when {
-                                drawerState.isOpen -> {
-                                    scope.launch {
-                                        drawerState.close()
-                                    }
-                                }
-                                state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route -> {
-                                    (context as MainActivity).finishAndRemoveTask()
-                                }
-                            }
-                        }
+		SideEffect {
+			systemUiController.setSystemBarsColor(
+				color = Color.Transparent,
+				darkIcons = !darkTheme
+			)
+		}
 
-                        DailyCostNavHost(
-                            navController = navController,
-                            navActions = navActions,
-                            onNavigationIconClicked = onNavigationIconClicked
-                        )
-                    }
-                }
-            }
-        }
-    }
+		BaseScreenWrapper(viewModel) {
+			Surface(color = MaterialTheme.colorScheme.background) {
+				DailyCostDrawer(
+					state = drawerState,
+					email = state.userCredential?.email ?: "",
+					language = state.language,
+					onNavigationIconClicked = onNavigationIconClicked,
+					onCategoriesClicked = {
+						navActions.navigateTo(
+							destination = TopLevelDestinations.Home.categories,
+							builder = defaultNavOptionsBuilder(
+								popTo = TopLevelDestinations.Home.dashboard
+							)
+						)
+						closeDrawer()
+					},
+					onSettingClicked = {
+						navActions.navigateTo(
+							destination = TopLevelDestinations.Home.setting,
+							builder = defaultNavOptionsBuilder(
+								popTo = TopLevelDestinations.Home.dashboard
+							)
+						)
+						closeDrawer()
+					},
+					onLanguageClicked = {
+						navActions.navigateTo(TopLevelDestinations.Home.changeLanguage)
+						closeDrawer()
+					},
+					onSignOutClicked = {
+						navActions.navigateTo(TopLevelDestinations.LoginRegister.login)
+						closeDrawer()
+					}
+				) {
+					DailyCostBottomSheetLayout(bottomSheetNavigator) {
+						BackHandler(drawerState.isOpen || state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route) {
+							when {
+								drawerState.isOpen -> {
+									scope.launch {
+										drawerState.close()
+									}
+								}
+
+								state.currentDestinationRoute == TopLevelDestinations.Home.dashboard.route -> {
+									(context as MainActivity).finishAndRemoveTask()
+								}
+							}
+						}
+
+						DailyCostNavHost(
+							navController = navController,
+							navActions = navActions,
+							onNavigationIconClicked = onNavigationIconClicked
+						)
+					}
+				}
+			}
+		}
+	}
 
 }
 
 @Composable
 private fun DailyCostNavHost(
-    navController: NavHostController,
-    navActions: NavigationActions,
-    onNavigationIconClicked: () -> Unit
+	navController: NavHostController,
+	navActions: NavigationActions,
+	onNavigationIconClicked: () -> Unit
 ) {
 
-    NavHost(
-        navController = navController,
-        startDestination = TopLevelDestinations.splash.route
-    ) {
-        SplashNavigation()
+	NavHost(
+		navController = navController,
+		startDestination = TopLevelDestinations.splash.route
+	) {
+		SplashNavigation()
 
-        // Nested navigasi untuk onboarding
-        OnboardingNavHost {
-            OnboardingNavigation(navActions)
-        }
+		// Nested navigasi untuk onboarding
+		OnboardingNavHost {
+			OnboardingNavigation(navActions)
+		}
 
-        // Nested navigasi untuk login atau register
-        LoginRegisterNavHost {
-            LoginNavigation(navActions)
-            RegisterNavigation(navActions)
-        }
+		// Nested navigasi untuk login atau register
+		LoginRegisterNavHost {
+			LoginNavigation(navActions)
+			RegisterNavigation(navActions)
+		}
 
-        // Nested navigasi untuk dashboard (ketika user berhasil login)
-        HomeNavHost {
-            ChangeLanguageNavigation(navActions)
-            TransactionsNavigation(navActions)
-            TransactionNavigation(navActions)
-            CategoriesNavigation(navActions)
-            NoteNavigation(navActions)
+		// Nested navigasi untuk dashboard (ketika user berhasil login)
+		HomeNavHost {
+			ChangeLanguageNavigation(navActions)
+			TransactionsNavigation(navActions)
+			TransactionNavigation(navActions)
+			CategoriesNavigation(navActions)
+			NoteNavigation(navActions)
 
-            DashboardNavigation(
-                navigationActions = navActions,
-                onNavigationIconClicked = onNavigationIconClicked
-            )
+			DashboardNavigation(
+				navigationActions = navActions,
+				onNavigationIconClicked = onNavigationIconClicked
+			)
 
-            NotesNavigation(
-                navigationActions = navActions,
-                onNavigationIconClicked = onNavigationIconClicked
-            )
+			NotesNavigation(
+				navigationActions = navActions,
+				onNavigationIconClicked = onNavigationIconClicked
+			)
 
-            SettingNavigation(
-                navigationActions = navActions,
-                onNavigationIconClicked = onNavigationIconClicked
-            )
-        }
-    }
+			SettingNavigation(
+				navigationActions = navActions,
+				onNavigationIconClicked = onNavigationIconClicked
+			)
+		}
+	}
 }
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 private fun DailyCostBottomSheetLayout(
-    navigator: BottomSheetNavigator,
-    content: @Composable () -> Unit
+	navigator: BottomSheetNavigator,
+	content: @Composable () -> Unit
 ) {
-    ModalBottomSheetLayout(
-        bottomSheetNavigator = navigator,
-        sheetShape = MaterialTheme.shapes.large,
-        sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-        sheetContentColor = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface),
-        scrimColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.64f),
-        content = content
-    )
+	ModalBottomSheetLayout(
+		bottomSheetNavigator = navigator,
+		sheetShape = MaterialTheme.shapes.large,
+		sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+		sheetContentColor = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface),
+		scrimColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.64f),
+		content = content
+	)
 }
 
 @Composable
 private fun DailyCostDrawer(
-    state: DrawerState,
-    email: String,
-    language: Language,
-    onNavigationIconClicked: () -> Unit,
-    onCategoriesClicked: () -> Unit,
-    onLanguageClicked: () -> Unit,
-    onSignOutClicked: () -> Unit,
-    onSettingClicked: () -> Unit,
-    content: @Composable () -> Unit
+	state: DrawerState,
+	email: String,
+	language: Language,
+	onNavigationIconClicked: () -> Unit,
+	onCategoriesClicked: () -> Unit,
+	onLanguageClicked: () -> Unit,
+	onSignOutClicked: () -> Unit,
+	onSettingClicked: () -> Unit,
+	content: @Composable () -> Unit
 ) {
-    ModalNavigationDrawer(
-        content = content,
-        drawerState = state,
-        gesturesEnabled = state.isOpen,
-        drawerContent = {
-            DailyCostDrawerContent(
-                email = email,
-                language = language,
-                onCategoriesClicked = onCategoriesClicked,
-                onNavigationIconClicked = onNavigationIconClicked,
-                onSettingClicked = onSettingClicked,
-                onLanguageClicked = onLanguageClicked,
-                onSignOutClicked = onSignOutClicked
-            )
-        }
-    )
+	ModalNavigationDrawer(
+		content = content,
+		drawerState = state,
+		gesturesEnabled = state.isOpen,
+		drawerContent = {
+			DailyCostDrawerContent(
+				email = email,
+				language = language,
+				onCategoriesClicked = onCategoriesClicked,
+				onNavigationIconClicked = onNavigationIconClicked,
+				onSettingClicked = onSettingClicked,
+				onLanguageClicked = onLanguageClicked,
+				onSignOutClicked = onSignOutClicked
+			)
+		}
+	)
 }
 
 @Composable
 private fun DailyCostDrawerContent(
-    email: String,
-    language: Language,
-    onNavigationIconClicked: () -> Unit,
-    onCategoriesClicked: () -> Unit,
-    onLanguageClicked: () -> Unit,
-    onSignOutClicked: () -> Unit,
-    onSettingClicked: () -> Unit
+	email: String,
+	language: Language,
+	onNavigationIconClicked: () -> Unit,
+	onCategoriesClicked: () -> Unit,
+	onLanguageClicked: () -> Unit,
+	onSignOutClicked: () -> Unit,
+	onSettingClicked: () -> Unit
 ) {
-    val context = LocalContext.current
+	val context = LocalContext.current
 
-    ModalDrawerSheet {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .weight(1f)
-        ) {
-            item {
-                Box(
-                    modifier = Modifier
-                        .clickable(onClick = onNavigationIconClicked)
-                ) {
-                    DrawerItem(
-                        title = {
-                            Text(context.getString(R.string.dashboard))
-                        },
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_arrow_left),
-                                contentDescription = null
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                start = 16.dp,
-                                bottom = 8.dp,
-                                top = 8.dp
-                            )
-                    )
-                }
-            }
+	ModalDrawerSheet {
+		LazyColumn(
+			verticalArrangement = Arrangement.spacedBy(8.dp),
+			modifier = Modifier
+				.weight(1f)
+		) {
+			item {
+				Box(
+					modifier = Modifier
+						.clickable(onClick = onNavigationIconClicked)
+				) {
+					DrawerItem(
+						title = {
+							Text(context.getString(R.string.dashboard))
+						},
+						icon = {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_arrow_left),
+								contentDescription = null
+							)
+						},
+						modifier = Modifier
+							.fillMaxWidth()
+							.padding(
+								start = 16.dp,
+								bottom = 8.dp,
+								top = 8.dp
+							)
+					)
+				}
+			}
 
-            item {
-                Box(
-                    modifier = Modifier
-                        .clickable(onClick = onCategoriesClicked)
-                ) {
-                    DrawerItem(
-                        title = {
-                            Text(context.getString(R.string.categories))
-                        },
-                        summary = {
-                            Text(context.getString(R.string.manage_categories_change_icon_color))
-                        },
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_pie_chart),
-                                contentDescription = null
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp)
-                    )
-                }
-            }
+			item {
+				Box(
+					modifier = Modifier
+						.clickable(onClick = onCategoriesClicked)
+				) {
+					DrawerItem(
+						title = {
+							Text(context.getString(R.string.categories))
+						},
+						summary = {
+							Text(context.getString(R.string.manage_categories_change_icon_color))
+						},
+						icon = {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_pie_chart),
+								contentDescription = null
+							)
+						},
+						modifier = Modifier
+							.fillMaxWidth()
+							.padding(start = 16.dp)
+					)
+				}
+			}
 
-            item {
-                Box(
-                    modifier = Modifier
-                        .clickable(onClick = onSettingClicked)
-                ) {
-                    DrawerItem(
-                        title = {
-                            Text(context.getString(R.string.advance_setting))
-                        },
-                        summary = {
-                            Text(context.getString(R.string.set_number_format_locale_and_app_security))
-                        },
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_setting),
-                                contentDescription = null
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp)
-                    )
-                }
-            }
+			item {
+				Box(
+					modifier = Modifier
+						.clickable(onClick = onSettingClicked)
+				) {
+					DrawerItem(
+						title = {
+							Text(context.getString(R.string.advance_setting))
+						},
+						summary = {
+							Text(context.getString(R.string.set_number_format_locale_and_app_security))
+						},
+						icon = {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_setting),
+								contentDescription = null
+							)
+						},
+						modifier = Modifier
+							.fillMaxWidth()
+							.padding(start = 16.dp)
+					)
+				}
+			}
 
-            item {
-                Box(
-                    modifier = Modifier
-                        .clickable(onClick = onLanguageClicked)
-                ) {
-                    DrawerItem(
-                        title = {
-                            Text(context.getString(R.string.language))
-                        },
-                        summary = {
-                            Text(language.name)
-                        },
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_global),
-                                contentDescription = null
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp)
-                    )
-                }
-            }
-        }
+			item {
+				Box(
+					modifier = Modifier
+						.clickable(onClick = onLanguageClicked)
+				) {
+					DrawerItem(
+						title = {
+							Text(context.getString(R.string.language))
+						},
+						summary = {
+							Text(language.name)
+						},
+						icon = {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_global),
+								contentDescription = null
+							)
+						},
+						modifier = Modifier
+							.fillMaxWidth()
+							.padding(start = 16.dp)
+					)
+				}
+			}
+		}
 
-        Box(
-            modifier = Modifier
-                .clickable(onClick = onSignOutClicked)
-        ) {
-            DrawerItem(
-                title = {
-                    Text(context.getString(R.string.sign_out))
-                },
-                summary = {
-                    Text(email)
-                },
-                icon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_logout),
-                        contentDescription = null
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp)
-            )
-        }
+		Box(
+			modifier = Modifier
+				.clickable(onClick = onSignOutClicked)
+		) {
+			DrawerItem(
+				title = {
+					Text(context.getString(R.string.sign_out))
+				},
+				summary = {
+					Text(email)
+				},
+				icon = {
+					Icon(
+						painter = painterResource(id = R.drawable.ic_logout),
+						contentDescription = null
+					)
+				},
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(start = 16.dp)
+			)
+		}
 
-        Spacer(modifier = Modifier.height(16.dp))
-    }
+		Spacer(modifier = Modifier.height(16.dp))
+	}
 }

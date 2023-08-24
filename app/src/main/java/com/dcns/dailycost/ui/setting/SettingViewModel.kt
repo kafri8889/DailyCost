@@ -11,44 +11,44 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val userCredentialUseCases: UserCredentialUseCases,
-    private val userPreferenceUseCases: UserPreferenceUseCases,
+	private val userCredentialUseCases: UserCredentialUseCases,
+	private val userPreferenceUseCases: UserPreferenceUseCases,
 ): BaseViewModel<SettingState, SettingAction>() {
 
-    init {
-        viewModelScope.launch {
-            userCredentialUseCases.getUserCredentialUseCase().collect { cred ->
-                updateState {
-                    copy(
-                        userCredential = cred
-                    )
-                }
-            }
-        }
+	init {
+		viewModelScope.launch {
+			userCredentialUseCases.getUserCredentialUseCase().collect { cred ->
+				updateState {
+					copy(
+						userCredential = cred
+					)
+				}
+			}
+		}
 
-        viewModelScope.launch {
-            userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
-                updateState {
-                    copy(
-                        language = pref.language,
-                        isSecureAppEnabled = pref.secureApp
-                    )
-                }
-            }
-        }
-    }
+		viewModelScope.launch {
+			userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
+				updateState {
+					copy(
+						language = pref.language,
+						isSecureAppEnabled = pref.secureApp
+					)
+				}
+			}
+		}
+	}
 
-    override fun defaultState(): SettingState = SettingState()
+	override fun defaultState(): SettingState = SettingState()
 
-    override fun onAction(action: SettingAction) {
-        when (action) {
-            is SettingAction.UpdateIsSecureAppEnabled -> {
-                viewModelScope.launch {
-                    userPreferenceUseCases.editUserPreferenceUseCase(
-                        type = EditUserPreferenceType.SecureApp(action.enabled)
-                    )
-                }
-            }
-        }
-    }
+	override fun onAction(action: SettingAction) {
+		when (action) {
+			is SettingAction.UpdateIsSecureAppEnabled -> {
+				viewModelScope.launch {
+					userPreferenceUseCases.editUserPreferenceUseCase(
+						type = EditUserPreferenceType.SecureApp(action.enabled)
+					)
+				}
+			}
+		}
+	}
 }

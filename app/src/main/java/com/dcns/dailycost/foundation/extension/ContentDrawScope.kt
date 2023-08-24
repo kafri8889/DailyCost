@@ -9,18 +9,18 @@ import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.unit.Dp
 
 fun ContentDrawScope.drawFadedEdge(
-    edgeWidth: Dp,
-    leftEdge: Boolean
+	edgeWidth: Dp,
+	leftEdge: Boolean
 ) {
-    val edgeWidthPx = edgeWidth.toPx()
-    drawRect(
-        size = Size(edgeWidthPx, size.height),
-        topLeft = Offset(if (leftEdge) 0f else size.width - edgeWidthPx, 0f),
-        blendMode = BlendMode.DstIn,
-        brush = Brush.horizontalGradient(
-            colors = listOf(Color.Transparent, Color.Black),
-            startX = if (leftEdge) 0f else size.width,
-            endX = if (leftEdge) edgeWidthPx else size.width - edgeWidthPx
-        )
-    )
+	val edgeWidthPx = edgeWidth.toPx()
+	drawRect(
+		size = Size(edgeWidthPx, size.height),
+		topLeft = Offset(if (leftEdge) 0f else size.width - edgeWidthPx, 0f),
+		blendMode = BlendMode.DstIn,
+		brush = Brush.horizontalGradient(
+			colors = listOf(Color.Transparent, Color.Black),
+			startX = if (leftEdge) 0f else size.width,
+			endX = if (leftEdge) edgeWidthPx else size.width - edgeWidthPx
+		)
+	)
 }

@@ -13,7 +13,7 @@ import androidx.compose.material3.SnackbarDuration
 open class UiEvent {
 
 	object DismissCurrentSnackbar: UiEvent()
-	
+
 	open class ShowToast(
 		open val message: String,
 		open val length: Int = Toast.LENGTH_SHORT
@@ -68,5 +68,5 @@ open class UiEvent {
 			return "$AS_STRING_RES_ID|$resId"
 		}
 	}
-	
+
 }

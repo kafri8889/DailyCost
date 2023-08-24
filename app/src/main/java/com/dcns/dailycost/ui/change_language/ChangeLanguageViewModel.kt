@@ -10,32 +10,32 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChangeLanguageViewModel @Inject constructor(
-    private val userPreferenceUseCases: UserPreferenceUseCases
+	private val userPreferenceUseCases: UserPreferenceUseCases
 ): BaseViewModel<ChangeLanguageState, ChangeLanguageAction>() {
 
-    init {
-        viewModelScope.launch {
-            userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
-                updateState {
-                    copy(
-                        selectedLanguage = pref.language
-                    )
-                }
-            }
-        }
-    }
+	init {
+		viewModelScope.launch {
+			userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
+				updateState {
+					copy(
+						selectedLanguage = pref.language
+					)
+				}
+			}
+		}
+	}
 
-    override fun defaultState(): ChangeLanguageState = ChangeLanguageState()
+	override fun defaultState(): ChangeLanguageState = ChangeLanguageState()
 
-    override fun onAction(action: ChangeLanguageAction) {
-        when (action) {
-            is ChangeLanguageAction.ChangeLanguage -> {
-                viewModelScope.launch {
-                    userPreferenceUseCases.editUserPreferenceUseCase(
-                        type = EditUserPreferenceType.Language(action.language)
-                    )
-                }
-            }
-        }
-    }
+	override fun onAction(action: ChangeLanguageAction) {
+		when (action) {
+			is ChangeLanguageAction.ChangeLanguage -> {
+				viewModelScope.launch {
+					userPreferenceUseCases.editUserPreferenceUseCase(
+						type = EditUserPreferenceType.Language(action.language)
+					)
+				}
+			}
+		}
+	}
 }

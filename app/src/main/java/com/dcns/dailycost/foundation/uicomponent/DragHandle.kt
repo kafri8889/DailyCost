@@ -12,12 +12,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun DragHandle(
-    modifier: Modifier = Modifier
+	modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier
-            .sizeIn(minWidth = 32.dp, minHeight = 4.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
-    )
+	Box(
+		modifier = modifier
+			.sizeIn(minWidth = 32.dp, minHeight = 4.dp)
+			.clip(CircleShape)
+			.background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
+	)
 }

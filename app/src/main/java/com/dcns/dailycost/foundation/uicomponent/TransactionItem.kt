@@ -38,126 +38,127 @@ import com.dcns.dailycost.foundation.theme.DailyCostTheme
 
 @Composable
 fun TransactionItem(
-    transaction: Transaction,
-    modifier: Modifier = Modifier
+	transaction: Transaction,
+	modifier: Modifier = Modifier
 ) {
 
-    val context = LocalContext.current
+	val context = LocalContext.current
 
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent
-        )
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    vertical = 8.dp
-                )
-        ) {
-            Icon(
-                painter = painterResource(id = transaction.category.icon.iconResId),
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
-            )
+	Card(
+		modifier = modifier,
+		colors = CardDefaults.cardColors(
+			containerColor = Color.Transparent
+		)
+	) {
+		Row(
+			verticalAlignment = Alignment.CenterVertically,
+			horizontalArrangement = Arrangement.spacedBy(8.dp),
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(
+					vertical = 8.dp
+				)
+		) {
+			Icon(
+				painter = painterResource(id = transaction.category.icon.iconResId),
+				contentDescription = null,
+				modifier = Modifier
+					.clip(CircleShape)
+			)
 
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier
-                    .weight(1f)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = transaction.name,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.Medium,
-                            color = DailyCostTheme.colorScheme.text
-                        ),
-                        modifier = Modifier
-                            .weight(1f)
-                            .dailyCostMarquee(
-                                edgeWidth = 8.dp
-                            )
-                    )
+			Column(
+				verticalArrangement = Arrangement.spacedBy(4.dp),
+				modifier = Modifier
+					.weight(1f)
+			) {
+				Row(
+					verticalAlignment = Alignment.CenterVertically,
+					horizontalArrangement = Arrangement.SpaceBetween,
+					modifier = Modifier
+						.fillMaxWidth()
+				) {
+					Text(
+						text = transaction.name,
+						style = MaterialTheme.typography.titleMedium.copy(
+							fontWeight = FontWeight.Medium,
+							color = DailyCostTheme.colorScheme.text
+						),
+						modifier = Modifier
+							.weight(1f)
+							.dailyCostMarquee(
+								edgeWidth = 8.dp
+							)
+					)
 
-                    Spacer(modifier = Modifier.width(8.dp))
+					Spacer(modifier = Modifier.width(8.dp))
 
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.tertiaryContainer)
-                    ) {
-                        Text(
-                            text = stringResource(
-                                id = if (transaction.isExpense) R.string.expenses
-                                else R.string.income
-                            ),
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                color = MaterialTheme.colorScheme.tertiary
-                            ),
-                            modifier = Modifier
-                                .padding(
-                                    vertical = 4.dp,
-                                    horizontal = 8.dp
-                                )
-                        )
-                    }
-                }
+					Box(
+						contentAlignment = Alignment.Center,
+						modifier = Modifier
+							.clip(CircleShape)
+							.background(MaterialTheme.colorScheme.tertiaryContainer)
+					) {
+						Text(
+							text = stringResource(
+								id = if (transaction.isExpense) R.string.expenses
+								else R.string.income
+							),
+							style = MaterialTheme.typography.bodyMedium.copy(
+								color = MaterialTheme.colorScheme.tertiary
+							),
+							modifier = Modifier
+								.padding(
+									vertical = 4.dp,
+									horizontal = 8.dp
+								)
+						)
+					}
+				}
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = CommonDateFormatter.edmy(context.primaryLocale).format(transaction.date),
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontWeight = FontWeight.Normal,
-                            color = DailyCostTheme.colorScheme.labelText
-                        ),
-                        modifier = Modifier
-                            .weight(0.5f)
-                    )
+				Row(
+					verticalAlignment = Alignment.CenterVertically,
+					horizontalArrangement = Arrangement.spacedBy(8.dp),
+					modifier = Modifier
+						.fillMaxWidth()
+				) {
+					Text(
+						text = CommonDateFormatter.edmy(context.primaryLocale)
+							.format(transaction.date),
+						style = MaterialTheme.typography.labelSmall.copy(
+							fontWeight = FontWeight.Normal,
+							color = DailyCostTheme.colorScheme.labelText
+						),
+						modifier = Modifier
+							.weight(0.5f)
+					)
 
-                    Text(
-                        text = transaction.parseAmount(LocalCurrency.current.countryCode),
-                        textAlign = TextAlign.End,
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontWeight = FontWeight.SemiBold,
-                            color = DailyCostTheme.colorScheme.text
-                        ),
-                        modifier = Modifier
-                            .weight(0.5f)
-                            .dailyCostMarquee(
-                                edgeWidth = 0.dp
-                            )
-                    )
-                }
-            }
-        }
-    }
+					Text(
+						text = transaction.parseAmount(LocalCurrency.current.countryCode),
+						textAlign = TextAlign.End,
+						style = MaterialTheme.typography.bodyMedium.copy(
+							fontWeight = FontWeight.SemiBold,
+							color = DailyCostTheme.colorScheme.text
+						),
+						modifier = Modifier
+							.weight(0.5f)
+							.dailyCostMarquee(
+								edgeWidth = 0.dp
+							)
+					)
+				}
+			}
+		}
+	}
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun TransactionCardPreview() {
-    DailyCostTheme {
-        TransactionItem(
-            transaction = LocalExpenseDataProvider.expense1.copy(
-                name = "Loooooooooooooooooonnnnnnnnnnnnnnnggggggggggg tttteeeeeeekkkkkk"
-            )
-        )
-    }
+	DailyCostTheme {
+		TransactionItem(
+			transaction = LocalExpenseDataProvider.expense1.copy(
+				name = "Loooooooooooooooooonnnnnnnnnnnnnnnggggggggggg tttteeeeeeekkkkkk"
+			)
+		)
+	}
 }

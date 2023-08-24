@@ -32,13 +32,13 @@ fun <STATE, ACTION> BaseScreenWrapper(
 	floatingActionButton: @Composable () -> Unit = {},
 	content: @Composable (scaffoldPadding: PaddingValues) -> Unit
 ) {
-	
+
 	val context = LocalContext.current
-	
+
 	val hostState = remember {
 		SnackbarHostState()
 	}
-	
+
 	LaunchedEffect(Unit) {
 		viewModel.uiEvent.filterNotNull().collectLatest { event ->
 			withContext(Dispatchers.Main) { onEvent(event) }
@@ -59,13 +59,14 @@ fun <STATE, ACTION> BaseScreenWrapper(
 						}
 					)
 				}
+
 				is UiEvent.ShowToast -> {
 					event.getMessage(context).toast(context, event.length)
 				}
 			}
 		}
 	}
-	
+
 	Scaffold(
 		topBar = topBar,
 		bottomBar = bottomBar,
@@ -77,5 +78,5 @@ fun <STATE, ACTION> BaseScreenWrapper(
 	) { scaffoldPadding ->
 		content(scaffoldPadding)
 	}
-	
+
 }

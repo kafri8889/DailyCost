@@ -20,37 +20,37 @@ import retrofit2.http.Path
 
 interface NoteService {
 
-    @POST("/api/catatan")
-    @Multipart
-    suspend fun addNote(
+	@POST("/api/catatan")
+	@Multipart
+	suspend fun addNote(
 //        @Header("accept") accept: String = "application/json",
-        @Header("Authorization") token: String,
-        @Part("title") title: RequestBody,
-        @Part("body") body: RequestBody,
-        @Part("date") date: RequestBody,
-        @Part("user_id") userId: RequestBody,
-        @Part img: MultipartBody.Part
-    ): Response<AddNoteResponse>
+		@Header("Authorization") token: String,
+		@Part("title") title: RequestBody,
+		@Part("body") body: RequestBody,
+		@Part("date") date: RequestBody,
+		@Part("user_id") userId: RequestBody,
+		@Part img: MultipartBody.Part
+	): Response<AddNoteResponse>
 
-    @Headers("Content-Type: application/json;charset=UTF-8")
-    @PUT("/api/catatan")
-    suspend fun editNote(
-        @Header("Authorization") token: String,
-        @Body body: RequestBody
-    ): Response<EditNoteResponse>
+	@Headers("Content-Type: application/json;charset=UTF-8")
+	@PUT("/api/catatan")
+	suspend fun editNote(
+		@Header("Authorization") token: String,
+		@Body body: RequestBody
+	): Response<EditNoteResponse>
 
-    @Headers("Content-Type: application/json;charset=UTF-8")
-    @HTTP(method = "DELETE", path = "/api/catatan", hasBody = true)
-    suspend fun deleteNote(
-        @Header("Authorization") token: String,
-        @Body body: RequestBody
-    ): Response<DeleteResponse>
+	@Headers("Content-Type: application/json;charset=UTF-8")
+	@HTTP(method = "DELETE", path = "/api/catatan", hasBody = true)
+	suspend fun deleteNote(
+		@Header("Authorization") token: String,
+		@Body body: RequestBody
+	): Response<DeleteResponse>
 
-    @Headers("Content-Type: application/json;charset=UTF-8")
-    @GET("/api/catatan/{id}")
-    suspend fun getNoteById(
-        @Path("id") userId: Int,
-        @Header("Authorization") token: String
-    ): Response<GetNoteResponse>
+	@Headers("Content-Type: application/json;charset=UTF-8")
+	@GET("/api/catatan/{id}")
+	suspend fun getNoteById(
+		@Path("id") userId: Int,
+		@Header("Authorization") token: String
+	): Response<GetNoteResponse>
 
 }

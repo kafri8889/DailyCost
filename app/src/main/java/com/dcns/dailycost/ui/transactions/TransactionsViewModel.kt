@@ -15,42 +15,42 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
-    private val expenseUseCases: ExpenseUseCases,
-    private val incomeUseCases: IncomeUseCases,
-    savedStateHandle: SavedStateHandle
+	private val expenseUseCases: ExpenseUseCases,
+	private val incomeUseCases: IncomeUseCases,
+	savedStateHandle: SavedStateHandle
 ): BaseViewModel<TransactionsState, TransactionsAction>() {
 
-    private val deliveredTransactionType = savedStateHandle.getStateFlow<TransactionType?>(
-        DestinationArgument.TRANSACTION_TYPE,
-        null
-    )
+	private val deliveredTransactionType = savedStateHandle.getStateFlow<TransactionType?>(
+		DestinationArgument.TRANSACTION_TYPE,
+		null
+	)
 
-    init {
-        viewModelScope.launch {
-            combine(
-                expenseUseCases.getLocalExpenseUseCase(),
-                incomeUseCases.getLocalIncomeUseCase(),
-                deliveredTransactionType
-            ) { expenses, incomes, transactionType ->
-                Triple(expenses, incomes, transactionType)
-            }.collect { (expenses, incomes, transactionType) ->
-                Timber.i("Transaction type: $transactionType")
-                updateState {
-                    copy(
-                        transactions = when (transactionType) {
-                            TransactionType.Income -> incomes
-                            TransactionType.Expense -> expenses
-                            null -> incomes + expenses
-                        }
-                    )
-                }
-            }
-        }
-    }
+	init {
+		viewModelScope.launch {
+			combine(
+				expenseUseCases.getLocalExpenseUseCase(),
+				incomeUseCases.getLocalIncomeUseCase(),
+				deliveredTransactionType
+			) { expenses, incomes, transactionType ->
+				Triple(expenses, incomes, transactionType)
+			}.collect { (expenses, incomes, transactionType) ->
+				Timber.i("Transaction type: $transactionType")
+				updateState {
+					copy(
+						transactions = when (transactionType) {
+							TransactionType.Income -> incomes
+							TransactionType.Expense -> expenses
+							null -> incomes + expenses
+						}
+					)
+				}
+			}
+		}
+	}
 
-    override fun defaultState(): TransactionsState = TransactionsState()
+	override fun defaultState(): TransactionsState = TransactionsState()
 
-    override fun onAction(action: TransactionsAction) {
+	override fun onAction(action: TransactionsAction) {
 
-    }
+	}
 }

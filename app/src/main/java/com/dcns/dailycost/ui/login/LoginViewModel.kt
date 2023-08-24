@@ -30,208 +30,228 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val userPreferenceUseCases: UserPreferenceUseCases,
-    private val userCredentialUseCases: UserCredentialUseCases,
-    private val userBalanceRepository: IBalanceRepository,
-    private val loginRegisterUseCases: LoginRegisterUseCases,
-    private val connectivityManager: ConnectivityManager,
-    private val depoUseCases: DepoUseCases,
-    private val appDatabase: AppDatabase
+	private val userPreferenceUseCases: UserPreferenceUseCases,
+	private val userCredentialUseCases: UserCredentialUseCases,
+	private val userBalanceRepository: IBalanceRepository,
+	private val loginRegisterUseCases: LoginRegisterUseCases,
+	private val connectivityManager: ConnectivityManager,
+	private val depoUseCases: DepoUseCases,
+	private val appDatabase: AppDatabase
 ): BaseViewModel<LoginState, LoginAction>() {
 
-    init {
-        viewModelScope.launch {
-            connectivityManager.isNetworkAvailable.asFlow().collect { have ->
-                Timber.i("have internet: $have")
+	init {
+		viewModelScope.launch {
+			connectivityManager.isNetworkAvailable.asFlow().collect { have ->
+				Timber.i("have internet: $have")
 
-                updateState {
-                    copy(
-                        internetConnectionAvailable = have == true
-                    )
-                }
+				updateState {
+					copy(
+						internetConnectionAvailable = have == true
+					)
+				}
 
-                // Kalo ga ada koneksi internet, show snackbar
-                if (have == false) {
-                    sendEvent(LoginUiEvent.NoInternetConnection())
-                }
-            }
-        }
+				// Kalo ga ada koneksi internet, show snackbar
+				if (have == false) {
+					sendEvent(LoginUiEvent.NoInternetConnection())
+				}
+			}
+		}
 
-        viewModelScope.launch {
-            userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
-                updateState {
-                    copy(
-                        isFirstInstall = !pref.isNotFirstInstall
-                    )
-                }
-            }
-        }
-    }
+		viewModelScope.launch {
+			userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
+				updateState {
+					copy(
+						isFirstInstall = !pref.isNotFirstInstall
+					)
+				}
+			}
+		}
+	}
 
-    override fun defaultState(): LoginState = LoginState()
+	override fun defaultState(): LoginState = LoginState()
 
-    override fun onAction(action: LoginAction) {
-        when (action) {
-            is LoginAction.UpdateEmail -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            email = action.email,
-                            emailError = null // Clear error when email is changed
-                        )
-                    }
-                }
-            }
-            is LoginAction.UpdatePassword -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            password = action.password,
-                            passwordError = null // Clear error when password is changed
-                        )
-                    }
-                }
-            }
-            is LoginAction.UpdateRememberMe -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            rememberMe = action.remember
-                        )
-                    }
-                }
-            }
-            is LoginAction.UpdateShowPassword -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            showPassword = action.show
-                        )
-                    }
-                }
-            }
-            is LoginAction.ClearData -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    // Clear database
-                    appDatabase.clearAllTables()
+	override fun onAction(action: LoginAction) {
+		when (action) {
+			is LoginAction.UpdateEmail -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							email = action.email,
+							emailError = null // Clear error when email is changed
+						)
+					}
+				}
+			}
 
-                    // Clear cache
-                    action.context.cacheDir.deleteRecursively()
+			is LoginAction.UpdatePassword -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							password = action.password,
+							passwordError = null // Clear error when password is changed
+						)
+					}
+				}
+			}
 
-                    // Clear balance
-                    with(userBalanceRepository) {
-                        setCash(0.0)
-                        setEWallet(0.0)
-                        setBankAccount(0.0)
-                    }
+			is LoginAction.UpdateRememberMe -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							rememberMe = action.remember
+						)
+					}
+				}
+			}
 
-                    // Clear credential
-                    with(userCredentialUseCases.editUserCredentialUseCase) {
-                        invoke(EditUserCredentialType.ID(""))
-                        invoke(EditUserCredentialType.Name(""))
-                        invoke(EditUserCredentialType.Email(""))
-                        invoke(EditUserCredentialType.Token(""))
-                        invoke(EditUserCredentialType.Password(""))
-                    }
-                }
-            }
-            is LoginAction.SignIn -> {
-                viewModelScope.launch {
-                    val mState = state.value
+			is LoginAction.UpdateShowPassword -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							showPassword = action.show
+						)
+					}
+				}
+			}
 
-                    // Kalo ga ada koneksi internet, show snackbar
-                    if (!mState.internetConnectionAvailable) {
-                        sendEvent(LoginUiEvent.NoInternetConnection())
-                        return@launch
-                    }
+			is LoginAction.ClearData -> {
+				viewModelScope.launch(Dispatchers.IO) {
+					// Clear database
+					appDatabase.clearAllTables()
 
-                    val isValidEmail = EmailValidator.validate(mState.email)
-                    val isValidPassword = PasswordValidator.validate(mState.password)
+					// Clear cache
+					action.context.cacheDir.deleteRecursively()
 
-                    val emailErrorMessage = if (isValidEmail.isFailure) {
-                        when {
-                            mState.email.isBlank() -> action.context.getString(R.string.email_cant_be_empty)
-                            else -> action.context.getString(R.string.email_not_valid)
-                        }
-                    } else null
+					// Clear balance
+					with(userBalanceRepository) {
+						setCash(0.0)
+						setEWallet(0.0)
+						setBankAccount(0.0)
+					}
 
-                    val passwordErrorMessage = if (isValidPassword.isFailure) {
-                        when {
-                            mState.password.isBlank() -> action.context.getString(R.string.password_cant_be_empty)
-                            isValidPassword.exceptionOrNull() is PasswordValidator.DigitMissingException -> action.context.getString(R.string.digit_missing_exception_msg)
-                            isValidPassword.exceptionOrNull() is PasswordValidator.BelowMinLengthException -> action.context.getString(R.string.below_min_length_exception_msg)
-                            isValidPassword.exceptionOrNull() is PasswordValidator.LowerCaseMissingException -> action.context.getString(R.string.lowercase_missing_exception_msg)
-                            isValidPassword.exceptionOrNull() is PasswordValidator.UpperCaseMissingException -> action.context.getString(R.string.uppercase_missing_exception_msg)
-                            else -> null
-                        }
-                    } else null
+					// Clear credential
+					with(userCredentialUseCases.editUserCredentialUseCase) {
+						invoke(EditUserCredentialType.ID(""))
+						invoke(EditUserCredentialType.Name(""))
+						invoke(EditUserCredentialType.Email(""))
+						invoke(EditUserCredentialType.Token(""))
+						invoke(EditUserCredentialType.Password(""))
+					}
+				}
+			}
 
-                    updateState {
-                        copy(
-                            emailError = emailErrorMessage,
-                            passwordError = passwordErrorMessage
-                        )
-                    }
+			is LoginAction.SignIn -> {
+				viewModelScope.launch {
+					val mState = state.value
 
-                    // Jika emailErrorMessage dan passwordErrorMessage null
-                    // Berarti tidak ada error, langsung login ke api
-                    if (emailErrorMessage == null && passwordErrorMessage == null) {
-                        updateState {
-                            copy(
-                                resource = Resource.loading(null)
-                            )
-                        }
+					// Kalo ga ada koneksi internet, show snackbar
+					if (!mState.internetConnectionAvailable) {
+						sendEvent(LoginUiEvent.NoInternetConnection())
+						return@launch
+					}
 
-                        loginRegisterUseCases.userLoginUseCase(
-                            LoginRequestBody(
-                                email = mState.email,
-                                password = mState.password
-                            ).toRequestBody()
-                        ).let { response ->
-                            if (response.isSuccessful) {
-                                val body = response.body() as LoginResponse
+					val isValidEmail = EmailValidator.validate(mState.email)
+					val isValidPassword = PasswordValidator.validate(mState.password)
 
-                                if (mState.rememberMe) {
-                                    with(userCredentialUseCases.editUserCredentialUseCase) {
-                                        invoke(EditUserCredentialType.Name(body.data.name))
-                                        invoke(EditUserCredentialType.Email(mState.email))
-                                        invoke(EditUserCredentialType.Password(mState.password))
-                                    }
-                                }
+					val emailErrorMessage = if (isValidEmail.isFailure) {
+						when {
+							mState.email.isBlank() -> action.context.getString(R.string.email_cant_be_empty)
+							else -> action.context.getString(R.string.email_not_valid)
+						}
+					} else null
 
-                                with(userCredentialUseCases.editUserCredentialUseCase) {
-                                    invoke(EditUserCredentialType.ID(body.data.id.toString()))
-                                    invoke(EditUserCredentialType.Token(body.token))
-                                }
+					val passwordErrorMessage = if (isValidPassword.isFailure) {
+						when {
+							mState.password.isBlank() -> action.context.getString(R.string.password_cant_be_empty)
+							isValidPassword.exceptionOrNull() is PasswordValidator.DigitMissingException -> action.context.getString(
+								R.string.digit_missing_exception_msg
+							)
 
-                                userPreferenceUseCases.editUserPreferenceUseCase(
-                                    type = EditUserPreferenceType.IsNotFirstInstall(true)
-                                )
+							isValidPassword.exceptionOrNull() is PasswordValidator.BelowMinLengthException -> action.context.getString(
+								R.string.below_min_length_exception_msg
+							)
 
-                                updateState {
-                                    copy(
-                                        resource = Resource.success(response.body())
-                                    )
-                                }
+							isValidPassword.exceptionOrNull() is PasswordValidator.LowerCaseMissingException -> action.context.getString(
+								R.string.lowercase_missing_exception_msg
+							)
 
-                                Workers.syncWorker().enqueue(action.context)
+							isValidPassword.exceptionOrNull() is PasswordValidator.UpperCaseMissingException -> action.context.getString(
+								R.string.uppercase_missing_exception_msg
+							)
 
-                                return@launch
-                            }
+							else -> null
+						}
+					} else null
 
-                            // Response not success
+					updateState {
+						copy(
+							emailError = emailErrorMessage,
+							passwordError = passwordErrorMessage
+						)
+					}
 
-                            val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ErrorResponse::class.java)
+					// Jika emailErrorMessage dan passwordErrorMessage null
+					// Berarti tidak ada error, langsung login ke api
+					if (emailErrorMessage == null && passwordErrorMessage == null) {
+						updateState {
+							copy(
+								resource = Resource.loading(null)
+							)
+						}
 
-                            updateState {
-                                copy(
-                                    resource = Resource.error(errorResponse.message, errorResponse)
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+						loginRegisterUseCases.userLoginUseCase(
+							LoginRequestBody(
+								email = mState.email,
+								password = mState.password
+							).toRequestBody()
+						).let { response ->
+							if (response.isSuccessful) {
+								val body = response.body() as LoginResponse
+
+								if (mState.rememberMe) {
+									with(userCredentialUseCases.editUserCredentialUseCase) {
+										invoke(EditUserCredentialType.Name(body.data.name))
+										invoke(EditUserCredentialType.Email(mState.email))
+										invoke(EditUserCredentialType.Password(mState.password))
+									}
+								}
+
+								with(userCredentialUseCases.editUserCredentialUseCase) {
+									invoke(EditUserCredentialType.ID(body.data.id.toString()))
+									invoke(EditUserCredentialType.Token(body.token))
+								}
+
+								userPreferenceUseCases.editUserPreferenceUseCase(
+									type = EditUserPreferenceType.IsNotFirstInstall(true)
+								)
+
+								updateState {
+									copy(
+										resource = Resource.success(response.body())
+									)
+								}
+
+								Workers.syncWorker().enqueue(action.context)
+
+								return@launch
+							}
+
+							// Response not success
+
+							val errorResponse = Gson().fromJson(
+								response.errorBody()?.charStream(),
+								ErrorResponse::class.java
+							)
+
+							updateState {
+								copy(
+									resource = Resource.error(errorResponse.message, errorResponse)
+								)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }

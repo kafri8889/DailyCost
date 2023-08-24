@@ -75,505 +75,508 @@ import timber.log.Timber
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
-    viewModel: RegisterViewModel,
-    navigationActions: NavigationActions
+	viewModel: RegisterViewModel,
+	navigationActions: NavigationActions
 ) {
 
-    val context = LocalContext.current
+	val context = LocalContext.current
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
+	val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val useCaseState = rememberUseCaseState(
-        visible = false,
-        onCloseRequest = {}
-    )
+	val useCaseState = rememberUseCaseState(
+		visible = false,
+		onCloseRequest = {}
+	)
 
-    val stateDialogState = State.Loading(
-        "Wait a moment",
-        ProgressIndicator.Circular {
-            CircularProgressIndicator(
-                color = DailyCostTheme.colorScheme.primary,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(48.dp)
-            )
-        }
-    )
+	val stateDialogState = State.Loading(
+		"Wait a moment",
+		ProgressIndicator.Circular {
+			CircularProgressIndicator(
+				color = DailyCostTheme.colorScheme.primary,
+				modifier = Modifier
+					.padding(16.dp)
+					.size(48.dp)
+			)
+		}
+	)
 
-    LaunchedEffect(state.resource) {
-        when (state.resource?.status) {
-            Status.Success -> {
-                Timber.i("register success")
+	LaunchedEffect(state.resource) {
+		when (state.resource?.status) {
+			Status.Success -> {
+				Timber.i("register success")
 
-                context.getString(R.string.registration_success).toast(context)
+				context.getString(R.string.registration_success).toast(context)
 
-                useCaseState.hide()
+				useCaseState.hide()
 
-                navigationActions.navigateTo(TopLevelDestinations.LoginRegister.login)
-            }
-            Status.Error -> {
-                Timber.i("Register error: ${state.resource?.message}")
+				navigationActions.navigateTo(TopLevelDestinations.LoginRegister.login)
+			}
 
-                state.resource?.message.toast(context, Toast.LENGTH_LONG)
+			Status.Error -> {
+				Timber.i("Register error: ${state.resource?.message}")
 
-                useCaseState.hide()
-            }
-            Status.Loading -> {
-                useCaseState.show()
-            }
-            else -> {}
-        }
-    }
+				state.resource?.message.toast(context, Toast.LENGTH_LONG)
 
-    BackHandler {
-        navigationActions.navigateTo(
-            destination = TopLevelDestinations.LoginRegister.login
-        )
-    }
+				useCaseState.hide()
+			}
 
-    StateDialog(
-        state = useCaseState,
-        config = StateConfig(
-            state = stateDialogState
-        )
-    )
+			Status.Loading -> {
+				useCaseState.show()
+			}
 
-    BaseScreenWrapper(
-        viewModel = viewModel,
-        topBar = {
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            navigationActions.navigateTo(TopLevelDestinations.LoginRegister.login)
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_arrow_left),
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-        }
-    ) { scaffoldPadding ->
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .padding(scaffoldPadding)
-                .fillMaxSize()
-        ) {
-            RegisterScreenContent(
-                state = state,
-                onShowPasswordCheckedChanged = { show ->
-                    viewModel.onAction(RegisterAction.UpdateShowPassword(show))
-                },
-                onEmailChanged = { s ->
-                    viewModel.onAction(RegisterAction.UpdateEmail(s))
-                },
-                onPasswordChanged = { s ->
-                    viewModel.onAction(RegisterAction.UpdatePassword(s))
-                },
-                onSignUpClicked = {
-                    viewModel.onAction(RegisterAction.SignUp(context))
-                },
-                onSignInClicked = {
-                    navigationActions.navigateTo(TopLevelDestinations.LoginRegister.login)
-                },
-                modifier = Modifier
-                    .fillMaxWidth(0.92f)
-                    .fillMaxHeight()
-            )
-        }
-    }
+			else -> {}
+		}
+	}
+
+	BackHandler {
+		navigationActions.navigateTo(
+			destination = TopLevelDestinations.LoginRegister.login
+		)
+	}
+
+	StateDialog(
+		state = useCaseState,
+		config = StateConfig(
+			state = stateDialogState
+		)
+	)
+
+	BaseScreenWrapper(
+		viewModel = viewModel,
+		topBar = {
+			TopAppBar(
+				title = {},
+				navigationIcon = {
+					IconButton(
+						onClick = {
+							navigationActions.navigateTo(TopLevelDestinations.LoginRegister.login)
+						}
+					) {
+						Icon(
+							painter = painterResource(id = R.drawable.ic_arrow_left),
+							contentDescription = null
+						)
+					}
+				}
+			)
+		}
+	) { scaffoldPadding ->
+		Box(
+			contentAlignment = Alignment.Center,
+			modifier = Modifier
+				.padding(scaffoldPadding)
+				.fillMaxSize()
+		) {
+			RegisterScreenContent(
+				state = state,
+				onShowPasswordCheckedChanged = { show ->
+					viewModel.onAction(RegisterAction.UpdateShowPassword(show))
+				},
+				onEmailChanged = { s ->
+					viewModel.onAction(RegisterAction.UpdateEmail(s))
+				},
+				onPasswordChanged = { s ->
+					viewModel.onAction(RegisterAction.UpdatePassword(s))
+				},
+				onSignUpClicked = {
+					viewModel.onAction(RegisterAction.SignUp(context))
+				},
+				onSignInClicked = {
+					navigationActions.navigateTo(TopLevelDestinations.LoginRegister.login)
+				},
+				modifier = Modifier
+					.fillMaxWidth(0.92f)
+					.fillMaxHeight()
+			)
+		}
+	}
 }
 
 @Composable
 private fun RegisterScreenContent(
-    state: RegisterState,
-    modifier: Modifier = Modifier,
-    onShowPasswordCheckedChanged: (Boolean) -> Unit = {},
-    onUsernameChanged: (String) -> Unit = {},
-    onPasswordChanged: (String) -> Unit = {},
-    onSignInClicked: () -> Unit = {},
-    onSignUpClicked: () -> Unit = {},
-    onEmailChanged: (String) -> Unit = {}
+	state: RegisterState,
+	modifier: Modifier = Modifier,
+	onShowPasswordCheckedChanged: (Boolean) -> Unit = {},
+	onUsernameChanged: (String) -> Unit = {},
+	onPasswordChanged: (String) -> Unit = {},
+	onSignInClicked: () -> Unit = {},
+	onSignUpClicked: () -> Unit = {},
+	onEmailChanged: (String) -> Unit = {}
 ) {
 
-    val _48dp = dimensionResource(id = com.intuit.sdp.R.dimen._48sdp)
+	val _48dp = dimensionResource(id = com.intuit.sdp.R.dimen._48sdp)
 
-    val constraintSet = ConstraintSet {
-        val (
-            topContent,
-            centerContent,
-            bottomContent
-        ) = createRefsFor(
-            "topContent",
-            "centerContent",
-            "bottomContent",
-        )
+	val constraintSet = ConstraintSet {
+		val (
+			topContent,
+			centerContent,
+			bottomContent
+		) = createRefsFor(
+			"topContent",
+			"centerContent",
+			"bottomContent",
+		)
 
-        val gl1 = createGuidelineFromTop(_48dp)
+		val gl1 = createGuidelineFromTop(_48dp)
 
-        constrain(topContent) {
-            start.linkTo(parent.start)
-            top.linkTo(gl1)
-        }
+		constrain(topContent) {
+			start.linkTo(parent.start)
+			top.linkTo(gl1)
+		}
 
-        constrain(centerContent) {
-            centerHorizontallyTo(parent)
+		constrain(centerContent) {
+			centerHorizontallyTo(parent)
 
-            top.linkTo(topContent.bottom)
-            bottom.linkTo(bottomContent.top)
-        }
+			top.linkTo(topContent.bottom)
+			bottom.linkTo(bottomContent.top)
+		}
 
-        constrain(bottomContent) {
-            centerHorizontallyTo(parent)
+		constrain(bottomContent) {
+			centerHorizontallyTo(parent)
 
-            top.linkTo(centerContent.bottom)
-            bottom.linkTo(parent.bottom)
-        }
-    }
+			top.linkTo(centerContent.bottom)
+			bottom.linkTo(parent.bottom)
+		}
+	}
 
-    ConstraintLayout(
-        constraintSet = constraintSet,
-        modifier = modifier
-    ) {
-        TopContent(
-            modifier = Modifier
-                .layoutId("topContent")
-        )
+	ConstraintLayout(
+		constraintSet = constraintSet,
+		modifier = modifier
+	) {
+		TopContent(
+			modifier = Modifier
+				.layoutId("topContent")
+		)
 
-        CenterContent(
-            email = state.email,
-            password = state.password,
-            username = state.username,
-            emailError = state.emailError,
-            passwordError = state.passwordError,
-            showPassword = state.showPassword,
-            onShowPasswordCheckedChanged = onShowPasswordCheckedChanged,
-            onEmailChanged = onEmailChanged,
-            onPasswordChanged = onPasswordChanged,
-            onUsernameChanged = onUsernameChanged,
-            modifier = Modifier
-                .layoutId("centerContent")
-        )
+		CenterContent(
+			email = state.email,
+			password = state.password,
+			username = state.username,
+			emailError = state.emailError,
+			passwordError = state.passwordError,
+			showPassword = state.showPassword,
+			onShowPasswordCheckedChanged = onShowPasswordCheckedChanged,
+			onEmailChanged = onEmailChanged,
+			onPasswordChanged = onPasswordChanged,
+			onUsernameChanged = onUsernameChanged,
+			modifier = Modifier
+				.layoutId("centerContent")
+		)
 
-        BottomContent(
-            onSignInClicked = onSignInClicked,
-            onSignUpClicked = onSignUpClicked,
-            modifier = Modifier
-                .layoutId("bottomContent")
-        )
-    }
+		BottomContent(
+			onSignInClicked = onSignInClicked,
+			onSignUpClicked = onSignUpClicked,
+			modifier = Modifier
+				.layoutId("bottomContent")
+		)
+	}
 }
 
 @Composable
 private fun TopContent(
-    modifier: Modifier = Modifier
+	modifier: Modifier = Modifier
 ) {
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = modifier
-    ) {
-        Text(
-            text = stringResource(id = R.string.create_daily_cost_account),
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.SemiBold
-            )
-        )
+	Column(
+		verticalArrangement = Arrangement.spacedBy(16.dp),
+		modifier = modifier
+	) {
+		Text(
+			text = stringResource(id = R.string.create_daily_cost_account),
+			style = MaterialTheme.typography.titleLarge.copy(
+				fontWeight = FontWeight.SemiBold
+			)
+		)
 
-        Text(
-            text = stringResource(id = R.string.unlock_all_the_features_to_manage_income_expenses),
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Normal,
-                fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._16ssp).value.sp
-            )
-        )
-    }
+		Text(
+			text = stringResource(id = R.string.unlock_all_the_features_to_manage_income_expenses),
+			style = MaterialTheme.typography.titleMedium.copy(
+				fontWeight = FontWeight.Normal,
+				fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._16ssp).value.sp
+			)
+		)
+	}
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun CenterContent(
-    email: String,
-    password: String,
-    username: String,
-    emailError: String?,
-    passwordError: String?,
-    showPassword: Boolean,
-    modifier: Modifier = Modifier,
-    onShowPasswordCheckedChanged: (Boolean) -> Unit,
-    onUsernameChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
-    onEmailChanged: (String) -> Unit,
+	email: String,
+	password: String,
+	username: String,
+	emailError: String?,
+	passwordError: String?,
+	showPassword: Boolean,
+	modifier: Modifier = Modifier,
+	onShowPasswordCheckedChanged: (Boolean) -> Unit,
+	onUsernameChanged: (String) -> Unit,
+	onPasswordChanged: (String) -> Unit,
+	onEmailChanged: (String) -> Unit,
 ) {
 
-    val focusManager = LocalFocusManager.current
+	val focusManager = LocalFocusManager.current
 
-    val (
-        emailFocusRequester,
-        passwordFocusRequester,
-        usernameFocusRequester
-    ) = FocusRequester.createRefs()
+	val (
+		emailFocusRequester,
+		passwordFocusRequester,
+		usernameFocusRequester
+	) = FocusRequester.createRefs()
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = com.intuit.sdp.R.dimen._12sdp)),
-        modifier = modifier
-    ) {
-        RegisterOutlinedTextField(
-            text = username,
-            label = stringResource(id = R.string.enter_name),
-            placeholderText = stringResource(id = R.string.username),
-            focusRequester = usernameFocusRequester,
-            onValueChanged = onUsernameChanged,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Text
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    focusManager.moveFocus(FocusDirection.Next)
-                }
-            )
-        )
+	Column(
+		verticalArrangement = Arrangement.spacedBy(dimensionResource(id = com.intuit.sdp.R.dimen._12sdp)),
+		modifier = modifier
+	) {
+		RegisterOutlinedTextField(
+			text = username,
+			label = stringResource(id = R.string.enter_name),
+			placeholderText = stringResource(id = R.string.username),
+			focusRequester = usernameFocusRequester,
+			onValueChanged = onUsernameChanged,
+			keyboardOptions = KeyboardOptions(
+				imeAction = ImeAction.Next,
+				keyboardType = KeyboardType.Text
+			),
+			keyboardActions = KeyboardActions(
+				onNext = {
+					focusManager.moveFocus(FocusDirection.Next)
+				}
+			)
+		)
 
-        RegisterOutlinedTextField(
-            text = email,
-            label = stringResource(id = R.string.enter_email),
-            errorText = emailError,
-            placeholderText = stringResource(id = R.string.email),
-            focusRequester = emailFocusRequester,
-            onValueChanged = onEmailChanged,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Email
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    focusManager.moveFocus(FocusDirection.Next)
-                }
-            )
-        )
+		RegisterOutlinedTextField(
+			text = email,
+			label = stringResource(id = R.string.enter_email),
+			errorText = emailError,
+			placeholderText = stringResource(id = R.string.email),
+			focusRequester = emailFocusRequester,
+			onValueChanged = onEmailChanged,
+			keyboardOptions = KeyboardOptions(
+				imeAction = ImeAction.Next,
+				keyboardType = KeyboardType.Email
+			),
+			keyboardActions = KeyboardActions(
+				onNext = {
+					focusManager.moveFocus(FocusDirection.Next)
+				}
+			)
+		)
 
-        RegisterOutlinedTextField(
-            text = password,
-            label = stringResource(id = R.string.enter_password),
-            errorText = passwordError,
-            placeholderText = stringResource(id = R.string.password),
-            visualTransformation = if (!showPassword) PasswordVisualTransformation() else VisualTransformation.None,
-            focusRequester = passwordFocusRequester,
-            onValueChanged = onPasswordChanged,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Password
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    focusManager.clearFocus()
-                }
-            ),
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        onShowPasswordCheckedChanged(!showPassword)
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            id = if (showPassword) R.drawable.ic_eye
-                            else R.drawable.ic_eye_slash
-                        ),
-                        contentDescription = null
-                    )
-                }
-            },
-        )
-    }
+		RegisterOutlinedTextField(
+			text = password,
+			label = stringResource(id = R.string.enter_password),
+			errorText = passwordError,
+			placeholderText = stringResource(id = R.string.password),
+			visualTransformation = if (!showPassword) PasswordVisualTransformation() else VisualTransformation.None,
+			focusRequester = passwordFocusRequester,
+			onValueChanged = onPasswordChanged,
+			keyboardOptions = KeyboardOptions(
+				imeAction = ImeAction.Done,
+				keyboardType = KeyboardType.Password
+			),
+			keyboardActions = KeyboardActions(
+				onNext = {
+					focusManager.clearFocus()
+				}
+			),
+			trailingIcon = {
+				IconButton(
+					onClick = {
+						onShowPasswordCheckedChanged(!showPassword)
+					}
+				) {
+					Icon(
+						painter = painterResource(
+							id = if (showPassword) R.drawable.ic_eye
+							else R.drawable.ic_eye_slash
+						),
+						contentDescription = null
+					)
+				}
+			},
+		)
+	}
 }
 
 @Composable
 private fun BottomContent(
-    modifier: Modifier = Modifier,
-    onSignInClicked: () -> Unit,
-    onSignUpClicked: () -> Unit
+	modifier: Modifier = Modifier,
+	onSignInClicked: () -> Unit,
+	onSignUpClicked: () -> Unit
 ) {
 
-    val uriHandler = LocalUriHandler.current
+	val uriHandler = LocalUriHandler.current
 
-    val registerTouAndPpText = buildAnnotatedString {
-        val tou = stringResource(id = R.string.terms_of_use)
-        val pp = stringResource(id = R.string.privacy_policy)
-        var text = stringResource(
-            id = R.string.by_registering_txt,
-            tou,
-            pp
-        )
+	val registerTouAndPpText = buildAnnotatedString {
+		val tou = stringResource(id = R.string.terms_of_use)
+		val pp = stringResource(id = R.string.privacy_policy)
+		var text = stringResource(
+			id = R.string.by_registering_txt,
+			tou,
+			pp
+		)
 
-        text = text.replace(tou, "\n $tou")
+		text = text.replace(tou, "\n $tou")
 
-        withStyle(
-            MaterialTheme.typography.titleSmall.copy(
-                fontWeight = FontWeight.Normal,
-                color = DailyCostTheme.colorScheme.text
-            ).toSpanStyle()
-        ) {
-            append(text)
-        }
+		withStyle(
+			MaterialTheme.typography.titleSmall.copy(
+				fontWeight = FontWeight.Normal,
+				color = DailyCostTheme.colorScheme.text
+			).toSpanStyle()
+		) {
+			append(text)
+		}
 
-        val startTou = text.indexOf(tou)
-        val endTou = startTou + tou.length
+		val startTou = text.indexOf(tou)
+		val endTou = startTou + tou.length
 
-        val startPp = text.indexOf(pp)
-        val endPp = startPp + pp.length
+		val startPp = text.indexOf(pp)
+		val endPp = startPp + pp.length
 
-        addStyle(
-            end = endTou,
-            start = startTou,
-            style = MaterialTheme.typography.titleSmall.copy(
-                fontWeight = FontWeight.SemiBold,
-                color = DailyCostTheme.colorScheme.primary
-            ).toSpanStyle()
-        )
+		addStyle(
+			end = endTou,
+			start = startTou,
+			style = MaterialTheme.typography.titleSmall.copy(
+				fontWeight = FontWeight.SemiBold,
+				color = DailyCostTheme.colorScheme.primary
+			).toSpanStyle()
+		)
 
-        addStyle(
-            end = endPp,
-            start = startPp,
-            style = MaterialTheme.typography.titleSmall.copy(
-                fontWeight = FontWeight.SemiBold,
-                color = DailyCostTheme.colorScheme.primary
-            ).toSpanStyle()
-        )
+		addStyle(
+			end = endPp,
+			start = startPp,
+			style = MaterialTheme.typography.titleSmall.copy(
+				fontWeight = FontWeight.SemiBold,
+				color = DailyCostTheme.colorScheme.primary
+			).toSpanStyle()
+		)
 
-        addStringAnnotation(
-            tag = "tou",
-            annotation = Constant.TERMS_OF_USE_URL,
-            start = startTou,
-            end = endTou
-        )
+		addStringAnnotation(
+			tag = "tou",
+			annotation = Constant.TERMS_OF_USE_URL,
+			start = startTou,
+			end = endTou
+		)
 
-        addStringAnnotation(
-            tag = "pp",
-            annotation = Constant.PRIVACY_POLICY_URL,
-            start = startPp,
-            end = endPp
-        )
-    }
+		addStringAnnotation(
+			tag = "pp",
+			annotation = Constant.PRIVACY_POLICY_URL,
+			start = startPp,
+			end = endPp
+		)
+	}
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-    ) {
-        Button(
-            shape = RoundedCornerShape(25),
-            onClick = onSignUpClicked,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = DailyCostTheme.colorScheme.primary
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Text(stringResource(R.string.sign_up))
-        }
+	Column(
+		horizontalAlignment = Alignment.CenterHorizontally,
+		verticalArrangement = Arrangement.spacedBy(8.dp),
+		modifier = modifier
+	) {
+		Button(
+			shape = RoundedCornerShape(25),
+			onClick = onSignUpClicked,
+			colors = ButtonDefaults.buttonColors(
+				containerColor = DailyCostTheme.colorScheme.primary
+			),
+			modifier = Modifier
+				.fillMaxWidth()
+		) {
+			Text(stringResource(R.string.sign_up))
+		}
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.already_have_an_account),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    fontWeight = FontWeight.Normal
-                )
-            )
+		Row(
+			verticalAlignment = Alignment.CenterVertically,
+			horizontalArrangement = Arrangement.spacedBy(8.dp)
+		) {
+			Text(
+				text = stringResource(id = R.string.already_have_an_account),
+				style = MaterialTheme.typography.titleSmall.copy(
+					fontWeight = FontWeight.Normal
+				)
+			)
 
-            ClickableText(
-                text = buildAnnotatedString {
-                    append(stringResource(id = R.string.sign_in))
-                },
-                style = MaterialTheme.typography.titleSmall.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    color = DailyCostTheme.colorScheme.primary
-                ),
-                onClick = {
-                    onSignInClicked()
-                }
-            )
-        }
+			ClickableText(
+				text = buildAnnotatedString {
+					append(stringResource(id = R.string.sign_in))
+				},
+				style = MaterialTheme.typography.titleSmall.copy(
+					fontWeight = FontWeight.SemiBold,
+					color = DailyCostTheme.colorScheme.primary
+				),
+				onClick = {
+					onSignInClicked()
+				}
+			)
+		}
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = com.intuit.sdp.R.dimen._6sdp)))
+		Spacer(modifier = Modifier.height(dimensionResource(id = com.intuit.sdp.R.dimen._6sdp)))
 
-        ClickableText(
-            text = registerTouAndPpText,
-            onClick = { offset ->
-                registerTouAndPpText
-                    .getStringAnnotations("tou", offset, offset)
-                    .firstOrNull()?.let {
-                        uriHandler.openUri(it.item)
+		ClickableText(
+			text = registerTouAndPpText,
+			onClick = { offset ->
+				registerTouAndPpText
+					.getStringAnnotations("tou", offset, offset)
+					.firstOrNull()?.let {
+						uriHandler.openUri(it.item)
 
-                        return@ClickableText
-                    }
+						return@ClickableText
+					}
 
-                registerTouAndPpText
-                    .getStringAnnotations("pp", offset, offset)
-                    .firstOrNull()?.let {
-                        uriHandler.openUri(it.item)
-                    }
-            }
-        )
-    }
+				registerTouAndPpText
+					.getStringAnnotations("pp", offset, offset)
+					.firstOrNull()?.let {
+						uriHandler.openUri(it.item)
+					}
+			}
+		)
+	}
 }
 
 @Composable
 private fun RegisterOutlinedTextField(
-    text: String,
-    label: String,
-    placeholderText: String,
-    focusRequester: FocusRequester,
-    keyboardOptions: KeyboardOptions,
-    keyboardActions: KeyboardActions,
-    modifier: Modifier = Modifier,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    errorText: String? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    onValueChanged: (String) -> Unit
+	text: String,
+	label: String,
+	placeholderText: String,
+	focusRequester: FocusRequester,
+	keyboardOptions: KeyboardOptions,
+	keyboardActions: KeyboardActions,
+	modifier: Modifier = Modifier,
+	visualTransformation: VisualTransformation = VisualTransformation.None,
+	errorText: String? = null,
+	trailingIcon: @Composable (() -> Unit)? = null,
+	onValueChanged: (String) -> Unit
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = com.intuit.sdp.R.dimen._8sdp)),
-        modifier = modifier
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.titleSmall.copy(
-                fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._14ssp).value.sp
-            )
-        )
+	Column(
+		verticalArrangement = Arrangement.spacedBy(dimensionResource(id = com.intuit.sdp.R.dimen._8sdp)),
+		modifier = modifier
+	) {
+		Text(
+			text = label,
+			style = MaterialTheme.typography.titleSmall.copy(
+				fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._14ssp).value.sp
+			)
+		)
 
-        OutlinedTextField(
-            value = text,
-            singleLine = true,
-            isError = errorText != null,
-            onValueChange = onValueChanged,
-            shape = RoundedCornerShape(20),
-            colors = OutlinedTextFieldDefaults.dailyCostColor(),
-            visualTransformation = visualTransformation,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions,
-            trailingIcon = trailingIcon,
-            placeholder = {
-                Text(placeholderText)
-            },
-            supportingText = if (errorText != null) {
-                {
-                    Text(errorText)
-                }
-            } else null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester)
-        )
-    }
+		OutlinedTextField(
+			value = text,
+			singleLine = true,
+			isError = errorText != null,
+			onValueChange = onValueChanged,
+			shape = RoundedCornerShape(20),
+			colors = OutlinedTextFieldDefaults.dailyCostColor(),
+			visualTransformation = visualTransformation,
+			keyboardOptions = keyboardOptions,
+			keyboardActions = keyboardActions,
+			trailingIcon = trailingIcon,
+			placeholder = {
+				Text(placeholderText)
+			},
+			supportingText = if (errorText != null) {
+				{
+					Text(errorText)
+				}
+			} else null,
+			modifier = Modifier
+				.fillMaxWidth()
+				.focusRequester(focusRequester)
+		)
+	}
 }
