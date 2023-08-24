@@ -20,12 +20,12 @@ abstract class LocalizedActivity: AppCompatActivity() {
 
 	private val localizedViewModel: LocalizedViewModel by viewModels()
 	private var currentLocale: Locale? = null
-	
+
 	private var listener: OnLocaleChangedListener? = null
 
 	private val _language = MutableStateFlow(Language.English)
 	val language: StateFlow<Language> = _language
-	
+
 	init {
 		lifecycleScope.launch {
 			lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
@@ -34,6 +34,7 @@ abstract class LocalizedActivity: AppCompatActivity() {
 						is LocalizedUiEvent.LanguageChanged -> {
 							_language.update { event.language }
 						}
+
 						is LocalizedUiEvent.ApplyLanguage -> {
 							val newLocale = Locale(event.language.lang)
 
@@ -52,21 +53,21 @@ abstract class LocalizedActivity: AppCompatActivity() {
 			}
 		}
 	}
-	
+
 	override fun getApplicationContext(): Context {
 		val context = super.getApplicationContext()
 		return LocalizationUtil.applyLanguageContext(context, context.getLocale())
 	}
-	
+
 	override fun getBaseContext(): Context {
 		val context = super.getBaseContext()
 		return LocalizationUtil.applyLanguageContext(context, context.getLocale())
 	}
-	
+
 	override fun attachBaseContext(newBase: Context) {
 		super.attachBaseContext(LocalizationUtil.applyLanguageContext(newBase, newBase.getLocale()))
 	}
-	
+
 	private fun Context.getLocale(): Locale {
 		if (currentLocale == null) {
 			runBlocking {
@@ -77,18 +78,18 @@ abstract class LocalizedActivity: AppCompatActivity() {
 					}
 			}
 		}
-		
+
 		return currentLocale!!
 	}
-	
+
 	fun setListener(mListener: OnLocaleChangedListener) {
 		this.listener = mListener
 	}
-	
+
 	fun setLanguage(language: Language) {
 		localizedViewModel.onAction(
 			LocalizedAction.SetLanguage(language)
 		)
 	}
-	
+
 }

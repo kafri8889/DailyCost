@@ -6,8 +6,8 @@ import com.dcns.dailycost.domain.use_case.depo.GetRemoteBalanceUseCase
 import com.dcns.dailycost.domain.use_case.depo.UpdateLocalBalanceUseCase
 
 data class DepoUseCases(
-    val editDepoUseCase: EditDepoUseCase,
-    val updateLocalBalanceUseCase: UpdateLocalBalanceUseCase,
-    val getRemoteBalanceUseCase: GetRemoteBalanceUseCase,
-    val getLocalBalanceUseCase: GetLocalBalanceUseCase
+	val editDepoUseCase: EditDepoUseCase,
+	val updateLocalBalanceUseCase: UpdateLocalBalanceUseCase,
+	val getRemoteBalanceUseCase: GetRemoteBalanceUseCase,
+	val getLocalBalanceUseCase: GetLocalBalanceUseCase
 )

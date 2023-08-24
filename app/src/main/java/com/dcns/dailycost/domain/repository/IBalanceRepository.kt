@@ -7,29 +7,29 @@ import retrofit2.Response
 
 interface IBalanceRepository {
 
-    val getUserBalance: Flow<UserBalance>
+	val getUserBalance: Flow<UserBalance>
 
-    /**
-     * Set local cash balance
-     */
-    suspend fun setCash(value: Double)
+	/**
+	 * Set local cash balance
+	 */
+	suspend fun setCash(value: Double)
 
-    /**
-     * Set local e-wallet balance
-     */
-    suspend fun setEWallet(value: Double)
+	/**
+	 * Set local e-wallet balance
+	 */
+	suspend fun setEWallet(value: Double)
 
-    /**
-     * Set local bank account (rekening) balance
-     */
-    suspend fun setBankAccount(value: Double)
+	/**
+	 * Set local bank account (rekening) balance
+	 */
+	suspend fun setBankAccount(value: Double)
 
-    /**
-     * get remote user balance
-     */
-    suspend fun getRemoteBalance(
-        userId: Int,
-        token: String
-    ): Response<DepoResponse>
+	/**
+	 * get remote user balance
+	 */
+	suspend fun getRemoteBalance(
+		userId: Int,
+		token: String
+	): Response<DepoResponse>
 
 }

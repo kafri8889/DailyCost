@@ -5,16 +5,16 @@ import kotlinx.coroutines.flow.Flow
 
 interface IUserCredentialRepository {
 
-    val getUserCredential: Flow<UserCredential>
+	val getUserCredential: Flow<UserCredential>
 
-    suspend fun setId(id: String)
+	suspend fun setId(id: String)
 
-    suspend fun setName(name: String)
+	suspend fun setName(name: String)
 
-    suspend fun setEmail(email: String)
+	suspend fun setEmail(email: String)
 
-    suspend fun setToken(token: String)
+	suspend fun setToken(token: String)
 
-    suspend fun setPassword(password: String)
+	suspend fun setPassword(password: String)
 
 }

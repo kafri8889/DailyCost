@@ -9,14 +9,14 @@ import com.dcns.dailycost.ui.note.NoteScreen
 import com.dcns.dailycost.ui.note.NoteViewModel
 
 fun NavGraphBuilder.NoteNavigation(navigationActions: NavigationActions) {
-    composable(
-        route = TopLevelDestinations.Home.note.route
-    ) { backEntry ->
-        val mViewModel = hiltViewModel<NoteViewModel>(backEntry)
+	composable(
+		route = TopLevelDestinations.Home.note.route
+	) { backEntry ->
+		val mViewModel = hiltViewModel<NoteViewModel>(backEntry)
 
-        NoteScreen(
-            viewModel = mViewModel,
-            navigationActions = navigationActions
-        )
-    }
+		NoteScreen(
+			viewModel = mViewModel,
+			navigationActions = navigationActions
+		)
+	}
 }

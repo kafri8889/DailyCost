@@ -10,21 +10,21 @@ import javax.inject.Inject
 @HiltAndroidApp
 class DailyCostApplication: Application(), Configuration.Provider {
 
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
+	@Inject
+	lateinit var workerFactory: HiltWorkerFactory
 
-    override fun onCreate() {
-        super.onCreate()
+	override fun onCreate() {
+		super.onCreate()
 
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+		if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //            NotificationUtil.createChannel(this)
 //        }
-    }
+	}
 
-    override fun getWorkManagerConfiguration() =
-        Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
+	override fun getWorkManagerConfiguration() =
+		Configuration.Builder()
+			.setWorkerFactory(workerFactory)
+			.build()
 }

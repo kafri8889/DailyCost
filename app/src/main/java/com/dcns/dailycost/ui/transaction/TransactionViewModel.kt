@@ -39,209 +39,228 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
-    private val userCredentialUseCases: UserCredentialUseCases,
-    private val connectivityManager: ConnectivityManager,
-    private val categoryUseCases: CategoryUseCases,
-    private val expenseUseCases: ExpenseUseCases,
-    private val incomeUseCases: IncomeUseCases,
-    private val workManager: WorkManager,
-    savedStateHandle: SavedStateHandle
+	private val userCredentialUseCases: UserCredentialUseCases,
+	private val connectivityManager: ConnectivityManager,
+	private val categoryUseCases: CategoryUseCases,
+	private val expenseUseCases: ExpenseUseCases,
+	private val incomeUseCases: IncomeUseCases,
+	private val workManager: WorkManager,
+	savedStateHandle: SavedStateHandle
 ): BaseViewModel<TransactionState, TransactionAction>() {
 
-    private val deliveredTransactionId = savedStateHandle.getStateFlow<Int?>(DestinationArgument.TRANSACTION_ID, null)
-    private val deliveredTransactionMode = savedStateHandle.getStateFlow<TransactionMode?>(DestinationArgument.TRANSACTION_MODE, null)
-    private val deliveredTransactionType = savedStateHandle.getStateFlow<TransactionType?>(DestinationArgument.TRANSACTION_TYPE, null)
+	private val deliveredTransactionId =
+		savedStateHandle.getStateFlow<Int?>(DestinationArgument.TRANSACTION_ID, null)
+	private val deliveredTransactionMode =
+		savedStateHandle.getStateFlow<TransactionMode?>(DestinationArgument.TRANSACTION_MODE, null)
+	private val deliveredTransactionType =
+		savedStateHandle.getStateFlow<TransactionType?>(DestinationArgument.TRANSACTION_TYPE, null)
 
-    private val _currentDeleteWorkId = MutableStateFlow<UUID?>(null)
-    private val currentDeleteWorkId: StateFlow<UUID?> = _currentDeleteWorkId
+	private val _currentDeleteWorkId = MutableStateFlow<UUID?>(null)
+	private val currentDeleteWorkId: StateFlow<UUID?> = _currentDeleteWorkId
 
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            deliveredTransactionId
-                .filterNotNull()
-                .combine(deliveredTransactionType.filterNotNull()) { id, type ->
-                    val li =  when (type) {
-                        TransactionType.Income -> incomeUseCases.getLocalIncomeUseCase(GetTransactionBy.ID(id)).firstOrNull()
-                        TransactionType.Expense -> expenseUseCases.getLocalExpenseUseCase(GetTransactionBy.ID(id)).firstOrNull()
-                    }
+	init {
+		viewModelScope.launch(Dispatchers.IO) {
+			deliveredTransactionId
+				.filterNotNull()
+				.combine(deliveredTransactionType.filterNotNull()) { id, type ->
+					val li = when (type) {
+						TransactionType.Income -> incomeUseCases.getLocalIncomeUseCase(
+							GetTransactionBy.ID(id)
+						).firstOrNull()
 
-                    if (!li.isNullOrEmpty()) li[0] to type else null to type
-                }.filterNotNull().collect { (transaction, type) ->
-                    Timber.i("Received transaction: $transaction")
-                    updateState {
-                        copy(
-                            id = transaction?.id ?: id,
-                            name = transaction?.name ?: name,
-                            amount = transaction?.amount ?: amount,
-                            payment = transaction?.payment ?: payment,
-                            date = transaction?.date ?: date,
-                            category = transaction?.category ?: category,
-                            transactionType = type
-                        )
-                    }
-                }
-        }
+						TransactionType.Expense -> expenseUseCases.getLocalExpenseUseCase(
+							GetTransactionBy.ID(id)
+						).firstOrNull()
+					}
 
-        viewModelScope.launch(Dispatchers.IO) {
-            deliveredTransactionMode
-                .filterNotNull()
-                .collect { mode ->
-                    updateState {
-                        copy(
-                            transactionMode = mode
-                        )
-                    }
-                }
-        }
+					if (!li.isNullOrEmpty()) li[0] to type else null to type
+				}.filterNotNull().collect { (transaction, type) ->
+					Timber.i("Received transaction: $transaction")
+					updateState {
+						copy(
+							id = transaction?.id ?: id,
+							name = transaction?.name ?: name,
+							amount = transaction?.amount ?: amount,
+							payment = transaction?.payment ?: payment,
+							date = transaction?.date ?: date,
+							category = transaction?.category ?: category,
+							transactionType = type
+						)
+					}
+				}
+		}
 
-        viewModelScope.launch(Dispatchers.IO) {
-            categoryUseCases.getLocalCategoryUseCase().collect { categories ->
-                updateState {
-                    copy(
-                        availableCategory = categories
-                    )
-                }
-            }
-        }
+		viewModelScope.launch(Dispatchers.IO) {
+			deliveredTransactionMode
+				.filterNotNull()
+				.collect { mode ->
+					updateState {
+						copy(
+							transactionMode = mode
+						)
+					}
+				}
+		}
 
-        viewModelScope.launch {
-            currentDeleteWorkId.flatMapMerge { uuid ->
-                if (uuid != null) {
-                    workManager.getWorkInfoByIdLiveData(uuid).asFlow()
-                } else flowOf(null)
-            }.filterNotNull().collect { workInfo ->
-                when (workInfo.state) {
-                    WorkInfo.State.ENQUEUED -> {}
-                    WorkInfo.State.SUCCEEDED -> {
-                        sendEvent(TransactionUiEvent.TransactionDeleted())
-                    }
-                    WorkInfo.State.FAILED -> {
-                        sendEvent(TransactionUiEvent.FailedToDelete())
-                    }
-                    else -> {}
-                }
-            }
-        }
-    }
+		viewModelScope.launch(Dispatchers.IO) {
+			categoryUseCases.getLocalCategoryUseCase().collect { categories ->
+				updateState {
+					copy(
+						availableCategory = categories
+					)
+				}
+			}
+		}
 
-    /**
-     * For testing purpose
-     */
-    fun performInsertTransaction() {
-        viewModelScope.launch(Dispatchers.IO) {
-            userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.let { credential ->
-                // Chain works: Post -> Sync
-                workManager.beginWith(
-                    Workers.postExpenseWorker(
-                        AddExpenseRequestBody(
-                            amount = 1000,
-                            name = "performInsertTransaction",
-                            payment = WalletType.EWallet.apiName,
-                            category = LocalCategoryDataProvider.other.name,
-                            date = "2023-07-26",
-                            userId = credential.id.toInt()
-                        )
-                    )
-                ).then(Workers.syncWorker()).enqueue()
-            }
-        }
-    }
+		viewModelScope.launch {
+			currentDeleteWorkId.flatMapMerge { uuid ->
+				if (uuid != null) {
+					workManager.getWorkInfoByIdLiveData(uuid).asFlow()
+				} else flowOf(null)
+			}.filterNotNull().collect { workInfo ->
+				when (workInfo.state) {
+					WorkInfo.State.ENQUEUED -> {}
+					WorkInfo.State.SUCCEEDED -> {
+						sendEvent(TransactionUiEvent.TransactionDeleted())
+					}
 
-    override fun defaultState(): TransactionState = TransactionState()
+					WorkInfo.State.FAILED -> {
+						sendEvent(TransactionUiEvent.FailedToDelete())
+					}
 
-    override fun onAction(action: TransactionAction) {
-        when (action) {
-            is TransactionAction.SetTransactionType -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            transactionType = action.type
-                        )
-                    }
-                }
-            }
-            is TransactionAction.SetAmount -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            amount = action.amount
-                        )
-                    }
-                }
-            }
-            is TransactionAction.SetCategory -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            category = action.category
-                        )
-                    }
-                }
-            }
-            is TransactionAction.SetDate -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            date = action.date
-                        )
-                    }
-                }
-            }
-            is TransactionAction.SetPayment -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            payment = action.payment
-                        )
-                    }
-                }
-            }
-            is TransactionAction.SetName -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            name = action.name
-                        )
-                    }
-                }
-            }
-            TransactionAction.Delete -> { // Delete transaksi ke API
-                viewModelScope.launch {
-                    // Cek koneksi internet
-                    if (connectivityManager.isNetworkAvailable.value == false) {
-                        sendEvent(TransactionUiEvent.NoInternetConnection())
-                        return@launch
-                    }
+					else -> {}
+				}
+			}
+		}
+	}
 
-                    // Kirim event "Deleting"
-                    sendEvent(TransactionUiEvent.Deleting())
+	/**
+	 * For testing purpose
+	 */
+	fun performInsertTransaction() {
+		viewModelScope.launch(Dispatchers.IO) {
+			userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.let { credential ->
+				// Chain works: Post -> Sync
+				workManager.beginWith(
+					Workers.postExpenseWorker(
+						AddExpenseRequestBody(
+							amount = 1000,
+							name = "performInsertTransaction",
+							payment = WalletType.EWallet.apiName,
+							category = LocalCategoryDataProvider.other.name,
+							date = "2023-07-26",
+							userId = credential.id.toInt()
+						)
+					)
+				).then(Workers.syncWorker()).enqueue()
+			}
+		}
+	}
 
-                    // Request penghapusan, observe requestnya di atas (blok init)
-                    userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.let { credential ->
-                        workManager.beginWith(
-                            when (state.value.transactionType) {
-                                TransactionType.Income -> Workers.deleteIncomeWorker(
-                                    DeleteIncomeRequestBody(
-                                        incomeId = state.value.id,
-                                        userId = credential.id.toInt()
-                                    )
-                                ).also { _currentDeleteWorkId.emit(it.id) }
-                                TransactionType.Expense -> Workers.deleteExpenseWorker(
-                                    DeleteExpenseRequestBody(
-                                        expenseId = state.value.id,
-                                        userId = credential.id.toInt()
-                                    )
-                                ).also { _currentDeleteWorkId.emit(it.id) }
-                            }
-                        ).then(Workers.syncWorker()).enqueue()
-                    }
-                }
-            }
-            TransactionAction.Save -> {
-                viewModelScope.launch(Dispatchers.IO) {
+	override fun defaultState(): TransactionState = TransactionState()
 
-                }
-            }
-        }
-    }
+	override fun onAction(action: TransactionAction) {
+		when (action) {
+			is TransactionAction.SetTransactionType -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							transactionType = action.type
+						)
+					}
+				}
+			}
+
+			is TransactionAction.SetAmount -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							amount = action.amount
+						)
+					}
+				}
+			}
+
+			is TransactionAction.SetCategory -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							category = action.category
+						)
+					}
+				}
+			}
+
+			is TransactionAction.SetDate -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							date = action.date
+						)
+					}
+				}
+			}
+
+			is TransactionAction.SetPayment -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							payment = action.payment
+						)
+					}
+				}
+			}
+
+			is TransactionAction.SetName -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							name = action.name
+						)
+					}
+				}
+			}
+
+			TransactionAction.Delete -> { // Delete transaksi ke API
+				viewModelScope.launch {
+					// Cek koneksi internet
+					if (connectivityManager.isNetworkAvailable.value == false) {
+						sendEvent(TransactionUiEvent.NoInternetConnection())
+						return@launch
+					}
+
+					// Kirim event "Deleting"
+					sendEvent(TransactionUiEvent.Deleting())
+
+					// Request penghapusan, observe requestnya di atas (blok init)
+					userCredentialUseCases.getUserCredentialUseCase().firstOrNull()
+						?.let { credential ->
+							workManager.beginWith(
+								when (state.value.transactionType) {
+									TransactionType.Income -> Workers.deleteIncomeWorker(
+										DeleteIncomeRequestBody(
+											incomeId = state.value.id,
+											userId = credential.id.toInt()
+										)
+									).also { _currentDeleteWorkId.emit(it.id) }
+
+									TransactionType.Expense -> Workers.deleteExpenseWorker(
+										DeleteExpenseRequestBody(
+											expenseId = state.value.id,
+											userId = credential.id.toInt()
+										)
+									).also { _currentDeleteWorkId.emit(it.id) }
+								}
+							).then(Workers.syncWorker()).enqueue()
+						}
+				}
+			}
+
+			TransactionAction.Save -> {
+				viewModelScope.launch(Dispatchers.IO) {
+
+				}
+			}
+		}
+	}
 }

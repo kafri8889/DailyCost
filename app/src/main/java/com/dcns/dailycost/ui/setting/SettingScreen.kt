@@ -27,85 +27,85 @@ import com.dcns.dailycost.foundation.uicomponent.SwitchPreference
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
-    viewModel: SettingViewModel,
-    navigationActions: NavigationActions,
-    onNavigationIconClicked: () -> Unit
+	viewModel: SettingViewModel,
+	navigationActions: NavigationActions,
+	onNavigationIconClicked: () -> Unit
 ) {
 
-    val context = LocalContext.current
-    val uriHandler = LocalUriHandler.current
+	val context = LocalContext.current
+	val uriHandler = LocalUriHandler.current
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
+	val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val canAuth = remember(context) {
-        DailyCostBiometricManager.canAuthenticateWithAuthenticators(context)
-    }
+	val canAuth = remember(context) {
+		DailyCostBiometricManager.canAuthenticateWithAuthenticators(context)
+	}
 
-    BaseScreenWrapper(
-        viewModel = viewModel,
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(stringResource(id = R.string.advance_setting))
-                },
-                navigationIcon = {
-                    IconButton(onClick = onNavigationIconClicked) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_menu),
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-        }
-    ) { scaffoldPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(scaffoldPadding)
-        ) {
-            item {
-                SwitchPreference(
-                    enabled = canAuth,
-                    isChecked = state.isSecureAppEnabled,
-                    onCheckedChange = { checked ->
-                        viewModel.onAction(SettingAction.UpdateIsSecureAppEnabled(checked))
-                    },
-                    title = {
-                        Text(stringResource(id = R.string.secure_app))
-                    },
-                    summary = {
-                        Text(stringResource(id = R.string.secure_app_with_fingerprint))
-                    },
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_finger_scan),
-                            contentDescription = null
-                        )
-                    }
-                )
-            }
+	BaseScreenWrapper(
+		viewModel = viewModel,
+		topBar = {
+			CenterAlignedTopAppBar(
+				title = {
+					Text(stringResource(id = R.string.advance_setting))
+				},
+				navigationIcon = {
+					IconButton(onClick = onNavigationIconClicked) {
+						Icon(
+							painter = painterResource(id = R.drawable.ic_menu),
+							contentDescription = null
+						)
+					}
+				}
+			)
+		}
+	) { scaffoldPadding ->
+		LazyColumn(
+			modifier = Modifier
+				.padding(scaffoldPadding)
+		) {
+			item {
+				SwitchPreference(
+					enabled = canAuth,
+					isChecked = state.isSecureAppEnabled,
+					onCheckedChange = { checked ->
+						viewModel.onAction(SettingAction.UpdateIsSecureAppEnabled(checked))
+					},
+					title = {
+						Text(stringResource(id = R.string.secure_app))
+					},
+					summary = {
+						Text(stringResource(id = R.string.secure_app_with_fingerprint))
+					},
+					icon = {
+						Icon(
+							painter = painterResource(id = R.drawable.ic_finger_scan),
+							contentDescription = null
+						)
+					}
+				)
+			}
 
-            item {
-                BasicPreference(
-                    title = {
-                        Text(stringResource(id = R.string.terms_of_use))
-                    },
-                    onClick = {
-                        uriHandler.openUri(Constant.TERMS_OF_USE_URL)
-                    }
-                )
-            }
+			item {
+				BasicPreference(
+					title = {
+						Text(stringResource(id = R.string.terms_of_use))
+					},
+					onClick = {
+						uriHandler.openUri(Constant.TERMS_OF_USE_URL)
+					}
+				)
+			}
 
-            item {
-                BasicPreference(
-                    title = {
-                        Text(stringResource(id = R.string.privacy_policy))
-                    },
-                    onClick = {
-                        uriHandler.openUri(Constant.PRIVACY_POLICY_URL)
-                    }
-                )
-            }
-        }
-    }
+			item {
+				BasicPreference(
+					title = {
+						Text(stringResource(id = R.string.privacy_policy))
+					},
+					onClick = {
+						uriHandler.openUri(Constant.PRIVACY_POLICY_URL)
+					}
+				)
+			}
+		}
+	}
 }

@@ -7,7 +7,7 @@ import kotlinx.parcelize.RawValue
 
 @Parcelize
 data class UserPreference(
-    val language: @RawValue Language,
-    val secureApp: Boolean,
-    val isNotFirstInstall: Boolean
+	val language: @RawValue Language,
+	val secureApp: Boolean,
+	val isNotFirstInstall: Boolean
 ): Parcelable

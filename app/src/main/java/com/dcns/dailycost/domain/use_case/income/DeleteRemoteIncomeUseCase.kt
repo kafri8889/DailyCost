@@ -9,15 +9,15 @@ import retrofit2.Response
  * Use case untuk menghapus pemasukan dari database server
  */
 class DeleteRemoteIncomeUseCase(
-    private val incomeRepository: IIncomeRepository
+	private val incomeRepository: IIncomeRepository
 ) {
 
-    suspend operator fun invoke(
-        userId: Int,
-        body: RequestBody,
-        token: String
-    ): Response<DeleteResponse> {
-        return incomeRepository.deleteRemoteIncome(userId, body, token)
-    }
+	suspend operator fun invoke(
+		userId: Int,
+		body: RequestBody,
+		token: String
+	): Response<DeleteResponse> {
+		return incomeRepository.deleteRemoteIncome(userId, body, token)
+	}
 
 }

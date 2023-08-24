@@ -1,9 +1,9 @@
 package com.dcns.dailycost.data
 
 enum class TransactionMode {
-    New,
-    Edit;
+	New,
+	Edit;
 
-    fun isNew(): Boolean = this == New
-    fun isEdit(): Boolean = this == Edit
+	fun isNew(): Boolean = this == New
+	fun isEdit(): Boolean = this == Edit
 }

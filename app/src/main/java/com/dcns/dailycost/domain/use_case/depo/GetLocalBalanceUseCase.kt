@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
  * Use case untuk mendapatkan saldo lokal
  */
 class GetLocalBalanceUseCase(
-    private val balanceRepository: IBalanceRepository
+	private val balanceRepository: IBalanceRepository
 ) {
 
-    operator fun invoke(): Flow<UserBalance> {
-        return balanceRepository.getUserBalance
-    }
+	operator fun invoke(): Flow<UserBalance> {
+		return balanceRepository.getUserBalance
+	}
 
 }

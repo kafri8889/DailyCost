@@ -14,26 +14,26 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExpenseDao {
-    @Transaction
-    @Query("SELECT * FROM expense_table")
-    fun getAllExpenses(): Flow<List<ExpenseDbWithCategoryDb>>
+	@Transaction
+	@Query("SELECT * FROM expense_table")
+	fun getAllExpenses(): Flow<List<ExpenseDbWithCategoryDb>>
 
-    @Transaction
-    @Query("SELECT * FROM expense_table WHERE id_expense = :id")
-    fun getExpenseById(id: Int): Flow<ExpenseDbWithCategoryDb?>
+	@Transaction
+	@Query("SELECT * FROM expense_table WHERE id_expense = :id")
+	fun getExpenseById(id: Int): Flow<ExpenseDbWithCategoryDb?>
 
-    @Query("DELETE FROM expense_table WHERE id_expense NOT IN (:ids)")
-    suspend fun deleteExpenseExcept(ids: List<Int>)
+	@Query("DELETE FROM expense_table WHERE id_expense NOT IN (:ids)")
+	suspend fun deleteExpenseExcept(ids: List<Int>)
 
-    @Update
-    suspend fun updateExpense(vararg expense: ExpenseDb)
+	@Update
+	suspend fun updateExpense(vararg expense: ExpenseDb)
 
-    @Upsert
-    suspend fun upsertExpense(vararg expense: ExpenseDb)
+	@Upsert
+	suspend fun upsertExpense(vararg expense: ExpenseDb)
 
-    @Delete
-    suspend fun deleteExpense(vararg expense: ExpenseDb)
+	@Delete
+	suspend fun deleteExpense(vararg expense: ExpenseDb)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertExpense(vararg expense: ExpenseDb)
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	suspend fun insertExpense(vararg expense: ExpenseDb)
 }

@@ -13,25 +13,25 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CategoryDao {
 
-    @Query("SELECT * FROM category_table")
-    fun getAllCategory(): Flow<List<CategoryDb>>
+	@Query("SELECT * FROM category_table")
+	fun getAllCategory(): Flow<List<CategoryDb>>
 
-    @Query("SELECT * FROM category_table WHERE category_id LIKE :mID")
-    fun getCategoryByID(mID: Int): Flow<CategoryDb?>
+	@Query("SELECT * FROM category_table WHERE category_id LIKE :mID")
+	fun getCategoryByID(mID: Int): Flow<CategoryDb?>
 
-    @Query("SELECT * FROM category_table WHERE category_name LIKE :name")
-    fun getCategoryByName(name: String): Flow<CategoryDb?>
+	@Query("SELECT * FROM category_table WHERE category_name LIKE :name")
+	fun getCategoryByName(name: String): Flow<CategoryDb?>
 
-    @Delete
-    suspend fun deleteCategoryDb(vararg categoryDb: CategoryDb)
+	@Delete
+	suspend fun deleteCategoryDb(vararg categoryDb: CategoryDb)
 
-    @Update
-    suspend fun updateCategoryDb(vararg categoryDb: CategoryDb)
+	@Update
+	suspend fun updateCategoryDb(vararg categoryDb: CategoryDb)
 
-    @Upsert
-    suspend fun upsertCategoryDb(vararg categoryDb: CategoryDb)
+	@Upsert
+	suspend fun upsertCategoryDb(vararg categoryDb: CategoryDb)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCategoryDb(vararg categoryDb: CategoryDb)
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	suspend fun insertCategoryDb(vararg categoryDb: CategoryDb)
 
 }

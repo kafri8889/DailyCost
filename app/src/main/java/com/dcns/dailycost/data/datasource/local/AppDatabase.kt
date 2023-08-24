@@ -18,37 +18,37 @@ import com.dcns.dailycost.data.model.local.NoteDb
  * Database untuk aplikasi ini
  */
 @Database(
-    entities = [
-        NoteDb::class,
-        IncomeDb::class,
-        ExpenseDb::class,
-        CategoryDb::class
-    ],
-    version = 2
+	entities = [
+		NoteDb::class,
+		IncomeDb::class,
+		ExpenseDb::class,
+		CategoryDb::class
+	],
+	version = 2
 )
 @TypeConverters(DatabaseTypeConverter::class)
 abstract class AppDatabase: RoomDatabase() {
 
-    abstract fun noteDao(): NoteDao
-    abstract fun incomeDao(): IncomeDao
-    abstract fun expenseDao(): ExpenseDao
-    abstract fun categoryDao(): CategoryDao
+	abstract fun noteDao(): NoteDao
+	abstract fun incomeDao(): IncomeDao
+	abstract fun expenseDao(): ExpenseDao
+	abstract fun categoryDao(): CategoryDao
 
-    companion object {
-        private var INSTANCE: AppDatabase? = null
+	companion object {
+		private var INSTANCE: AppDatabase? = null
 
-        fun getInstance(context: Context): AppDatabase {
-            if (INSTANCE == null) {
-                synchronized(AppDatabase::class) {
-                    INSTANCE = Room.databaseBuilder(
-                        context,
-                        AppDatabase::class.java,
-                        "app.db"
-                    ).build()
-                }
-            }
+		fun getInstance(context: Context): AppDatabase {
+			if (INSTANCE == null) {
+				synchronized(AppDatabase::class) {
+					INSTANCE = Room.databaseBuilder(
+						context,
+						AppDatabase::class.java,
+						"app.db"
+					).build()
+				}
+			}
 
-            return INSTANCE!!
-        }
-    }
+			return INSTANCE!!
+		}
+	}
 }

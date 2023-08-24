@@ -5,10 +5,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Note(
-    val id: String,
-    val body: String,
-    val createdAt: Long,
-    val imageUrl: String,
-    val title: String,
-    val userId: String,
+	val id: String,
+	val body: String,
+	val createdAt: Long,
+	val imageUrl: String,
+	val title: String,
+	val userId: String,
 ): Parcelable

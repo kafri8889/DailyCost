@@ -9,27 +9,27 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class ConnectivityManager @Inject constructor(
-    @ApplicationContext private val context: Context
+	@ApplicationContext private val context: Context
 ) {
 
-    private val connectionLiveData = NetworkConnectivity(context)
+	private val connectionLiveData = NetworkConnectivity(context)
 
-    private val _isNetworkAvailable: MutableLiveData<Boolean?> = MutableLiveData(null)
-    val isNetworkAvailable: LiveData<Boolean?> = _isNetworkAvailable
+	private val _isNetworkAvailable: MutableLiveData<Boolean?> = MutableLiveData(null)
+	val isNetworkAvailable: LiveData<Boolean?> = _isNetworkAvailable
 
-    fun initialize() {
-        connectionLiveData.initialize()
-    }
+	fun initialize() {
+		connectionLiveData.initialize()
+	}
 
-    fun registerConnectionObserver(lifecycleOwner: LifecycleOwner){
-        connectionLiveData.observe(lifecycleOwner) { isConnected ->
-            Timber.i("is connected: $isConnected")
-            _isNetworkAvailable.value = isConnected
-        }
-    }
+	fun registerConnectionObserver(lifecycleOwner: LifecycleOwner) {
+		connectionLiveData.observe(lifecycleOwner) { isConnected ->
+			Timber.i("is connected: $isConnected")
+			_isNetworkAvailable.value = isConnected
+		}
+	}
 
-    fun unregisterConnectionObserver(lifecycleOwner: LifecycleOwner){
-        connectionLiveData.removeObservers(lifecycleOwner)
-    }
+	fun unregisterConnectionObserver(lifecycleOwner: LifecycleOwner) {
+		connectionLiveData.removeObservers(lifecycleOwner)
+	}
 
 }

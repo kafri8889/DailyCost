@@ -9,23 +9,24 @@ import retrofit2.Response
  * Use case untuk mendapatkan catatan dari database server
  */
 class GetRemoteNoteUseCase(
-    private val noteRepository: INoteRepository
+	private val noteRepository: INoteRepository
 ) {
 
-    /**
-     * @param getNoteBy Get remote note only support [GetNoteBy.UserID]
-     */
-    suspend operator fun invoke(
-        token: String,
-        getNoteBy: GetNoteBy
-    ): Response<GetNoteResponse> {
-        return when (getNoteBy) {
-            is GetNoteBy.UserID -> noteRepository.getNoteByIdRemote(
-                token = token,
-                userId = getNoteBy.userId
-            )
-            else -> throw IllegalStateException("${getNoteBy.javaClass.name} not supported")
-        }
-    }
+	/**
+	 * @param getNoteBy Get remote note only support [GetNoteBy.UserID]
+	 */
+	suspend operator fun invoke(
+		token: String,
+		getNoteBy: GetNoteBy
+	): Response<GetNoteResponse> {
+		return when (getNoteBy) {
+			is GetNoteBy.UserID -> noteRepository.getNoteByIdRemote(
+				token = token,
+				userId = getNoteBy.userId
+			)
+
+			else -> throw IllegalStateException("${getNoteBy.javaClass.name} not supported")
+		}
+	}
 
 }

@@ -8,29 +8,29 @@ import com.dcns.dailycost.data.model.Expense
  */
 object LocalExpenseDataProvider {
 
-    val expense1 = Expense(
-        id = 0,
-        userId = 73,
-        name = "Expense 1",
-        amount = 0.0,
-        payment = WalletType.Cash,
-        date = System.currentTimeMillis(),
-        category = LocalCategoryDataProvider.other
-    )
+	val expense1 = Expense(
+		id = 0,
+		userId = 73,
+		name = "Expense 1",
+		amount = 0.0,
+		payment = WalletType.Cash,
+		date = System.currentTimeMillis(),
+		category = LocalCategoryDataProvider.other
+	)
 
-    val expense2 = Expense(
-        id = 1,
-        userId = 73,
-        name = "Expense 2",
-        amount = 1_000_000.0,
-        payment = WalletType.EWallet,
-        date = System.currentTimeMillis(),
-        category = LocalCategoryDataProvider.Expense.bill
-    )
+	val expense2 = Expense(
+		id = 1,
+		userId = 73,
+		name = "Expense 2",
+		amount = 1_000_000.0,
+		payment = WalletType.EWallet,
+		date = System.currentTimeMillis(),
+		category = LocalCategoryDataProvider.Expense.bill
+	)
 
-    val values = arrayOf(
-        expense1,
-        expense2
-    )
+	val values = arrayOf(
+		expense1,
+		expense2
+	)
 
 }

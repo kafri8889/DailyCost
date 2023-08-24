@@ -12,19 +12,21 @@ import kotlinx.coroutines.flow.map
  * Use case untuk mendapatkan pengeluaran lokal
  */
 class GetLocalExpenseUseCase(
-    private val expenseRepository: IExpenseRepository
+	private val expenseRepository: IExpenseRepository
 ) {
 
-    operator fun invoke(
-        getTransactionBy: GetTransactionBy = GetTransactionBy.All
-    ): Flow<List<Expense>> {
-        val flow = when (getTransactionBy) {
-            is GetTransactionBy.ID -> expenseRepository.getExpenseById(getTransactionBy.id).map { listOf(it) }
-            GetTransactionBy.All -> expenseRepository.getAllExpenses()
-        }
+	operator fun invoke(
+		getTransactionBy: GetTransactionBy = GetTransactionBy.All
+	): Flow<List<Expense>> {
+		val flow = when (getTransactionBy) {
+			is GetTransactionBy.ID -> expenseRepository.getExpenseById(getTransactionBy.id)
+				.map { listOf(it) }
 
-        return flow
-            .filterNotNull()
-            .map { it.filterNotNull().map { it.toExpense() } }
-    }
+			GetTransactionBy.All -> expenseRepository.getAllExpenses()
+		}
+
+		return flow
+			.filterNotNull()
+			.map { it.filterNotNull().map { it.toExpense() } }
+	}
 }

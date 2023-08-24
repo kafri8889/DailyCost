@@ -9,14 +9,14 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class LoginRegisterRepository @Inject constructor(
-    private val loginRegisterHandler: LoginRegisterHandler
+	private val loginRegisterHandler: LoginRegisterHandler
 ): ILoginRegisterRepository {
 
-    override suspend fun login(body: RequestBody): Response<LoginResponse> {
-        return loginRegisterHandler.login(body)
-    }
+	override suspend fun login(body: RequestBody): Response<LoginResponse> {
+		return loginRegisterHandler.login(body)
+	}
 
-    override suspend fun register(body: RequestBody): Response<RegisterResponse> {
-        return loginRegisterHandler.register(body)
-    }
+	override suspend fun register(body: RequestBody): Response<RegisterResponse> {
+		return loginRegisterHandler.register(body)
+	}
 }

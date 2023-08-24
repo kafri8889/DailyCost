@@ -25,43 +25,43 @@ import com.dcns.dailycost.foundation.theme.DailyCostTheme
 @Preview
 @Composable
 private fun LinearProgressIndicatorPreview() {
-    DailyCostTheme {
-        LinearProgressIndicator(
-            progress = 0.5f,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-    }
+	DailyCostTheme {
+		LinearProgressIndicator(
+			progress = 0.5f,
+			modifier = Modifier
+				.fillMaxWidth()
+		)
+	}
 }
 
 @Composable
 fun LinearProgressIndicator(
-    progress: Float,
-    modifier: Modifier = Modifier,
-    animationSpec: AnimationSpec<Float> = tween(256),
-    color: Color = ProgressIndicatorDefaults.linearColor,
-    trackColor: Color = ProgressIndicatorDefaults.linearTrackColor
+	progress: Float,
+	modifier: Modifier = Modifier,
+	animationSpec: AnimationSpec<Float> = tween(256),
+	color: Color = ProgressIndicatorDefaults.linearColor,
+	trackColor: Color = ProgressIndicatorDefaults.linearTrackColor
 ) {
 
-    Box(
-        modifier = modifier
-            .heightIn(min = 4.dp)
-            .clip(CircleShape)
-            .background(trackColor)
-            .composed {
-                val mProgress by animateFloatAsState(
-                    label = "progress",
-                    targetValue = progress.coerceIn(0f..1f),
-                    animationSpec = animationSpec
-                )
+	Box(
+		modifier = modifier
+			.heightIn(min = 4.dp)
+			.clip(CircleShape)
+			.background(trackColor)
+			.composed {
+				val mProgress by animateFloatAsState(
+					label = "progress",
+					targetValue = progress.coerceIn(0f..1f),
+					animationSpec = animationSpec
+				)
 
-                drawBehind {
-                    drawRoundRect(
-                        color = color,
-                        size = Size(size.width * mProgress, size.height),
-                        cornerRadius = CornerRadius(100f, 100f)
-                    )
-                }
-            }
-    )
+				drawBehind {
+					drawRoundRect(
+						color = color,
+						size = Size(size.width * mProgress, size.height),
+						cornerRadius = CornerRadius(100f, 100f)
+					)
+				}
+			}
+	)
 }

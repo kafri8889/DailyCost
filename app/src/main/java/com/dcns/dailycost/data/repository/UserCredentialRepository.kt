@@ -11,56 +11,56 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserCredentialRepository @Inject constructor(
-    private val userCredentialDataStore: DataStore<ProtoUserCredential>
+	private val userCredentialDataStore: DataStore<ProtoUserCredential>
 ): IUserCredentialRepository {
 
-    override val getUserCredential: Flow<UserCredential>
-        get() = userCredentialDataStore.data
-            .map { it.toUserCredential() }
+	override val getUserCredential: Flow<UserCredential>
+		get() = userCredentialDataStore.data
+			.map { it.toUserCredential() }
 
-    override suspend fun setId(id: String) {
-        userCredentialDataStore.updateData { cred ->
-            cred.copy(
-                id = id
-            )
-        }
-    }
+	override suspend fun setId(id: String) {
+		userCredentialDataStore.updateData { cred ->
+			cred.copy(
+				id = id
+			)
+		}
+	}
 
-    override suspend fun setName(name: String) {
-        userCredentialDataStore.updateData { cred ->
-            cred.copy(
-                name = name
-            )
-        }
-    }
+	override suspend fun setName(name: String) {
+		userCredentialDataStore.updateData { cred ->
+			cred.copy(
+				name = name
+			)
+		}
+	}
 
-    override suspend fun setEmail(email: String) {
-        userCredentialDataStore.updateData { cred ->
-            cred.copy(
-                email = email
-            )
-        }
-    }
+	override suspend fun setEmail(email: String) {
+		userCredentialDataStore.updateData { cred ->
+			cred.copy(
+				email = email
+			)
+		}
+	}
 
-    override suspend fun setToken(token: String) {
-        userCredentialDataStore.updateData { cred ->
-            cred.copy(
-                token = token
-            )
-        }
-    }
+	override suspend fun setToken(token: String) {
+		userCredentialDataStore.updateData { cred ->
+			cred.copy(
+				token = token
+			)
+		}
+	}
 
-    override suspend fun setPassword(password: String) {
-        userCredentialDataStore.updateData { cred ->
-            cred.copy(
-                password = password
-            )
-        }
-    }
+	override suspend fun setPassword(password: String) {
+		userCredentialDataStore.updateData { cred ->
+			cred.copy(
+				password = password
+			)
+		}
+	}
 
-    companion object {
-        val corruptionHandler = ReplaceFileCorruptionHandler(
-            produceNewData = { ProtoUserCredential() }
-        )
-    }
+	companion object {
+		val corruptionHandler = ReplaceFileCorruptionHandler(
+			produceNewData = { ProtoUserCredential() }
+		)
+	}
 }

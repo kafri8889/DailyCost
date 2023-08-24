@@ -12,81 +12,81 @@ import retrofit2.Response
 
 interface INoteRepository {
 
-    /**
-     * Tambah catatan baru ke database server
-     */
-    suspend fun addNote(
-        token: String,
-        title: RequestBody,
-        body: RequestBody,
-        date: RequestBody,
-        userId: RequestBody,
-        file: MultipartBody.Part,
-    ): Response<AddNoteResponse>
+	/**
+	 * Tambah catatan baru ke database server
+	 */
+	suspend fun addNote(
+		token: String,
+		title: RequestBody,
+		body: RequestBody,
+		date: RequestBody,
+		userId: RequestBody,
+		file: MultipartBody.Part,
+	): Response<AddNoteResponse>
 
-    /**
-     * Edit catatan ke database server
-     */
-    suspend fun editNoteRemote(
-        token: String,
-        body: RequestBody
-    ): Response<EditNoteResponse>
+	/**
+	 * Edit catatan ke database server
+	 */
+	suspend fun editNoteRemote(
+		token: String,
+		body: RequestBody
+	): Response<EditNoteResponse>
 
-    /**
-     * Hapus catatan dari database server
-     */
-    suspend fun deleteNoteRemote(
-        token: String,
-        body: RequestBody
-    ): Response<DeleteResponse>
+	/**
+	 * Hapus catatan dari database server
+	 */
+	suspend fun deleteNoteRemote(
+		token: String,
+		body: RequestBody
+	): Response<DeleteResponse>
 
-    /**
-     * Dapatkan catatan by id dari database server
-     */
-    suspend fun getNoteByIdRemote(
-        userId: Int,
-        token: String
-    ): Response<GetNoteResponse>
+	/**
+	 * Dapatkan catatan by id dari database server
+	 */
+	suspend fun getNoteByIdRemote(
+		userId: Int,
+		token: String
+	): Response<GetNoteResponse>
 
-    /**
-     * Update catatan ke database lokal
-     */
-    suspend fun updateNote(vararg note: NoteDb)
+	/**
+	 * Update catatan ke database lokal
+	 */
+	suspend fun updateNote(vararg note: NoteDb)
 
-    /**
-     * Update atau insert catatan ke database lokal
-     */
-    suspend fun upsertNote(vararg note: NoteDb)
+	/**
+	 * Update atau insert catatan ke database lokal
+	 */
+	suspend fun upsertNote(vararg note: NoteDb)
 
-    /**
-     * Hapus catatan dari database lokal
-     */
-    suspend fun deleteNote(vararg note: NoteDb)
+	/**
+	 * Hapus catatan dari database lokal
+	 */
+	suspend fun deleteNote(vararg note: NoteDb)
 
-    /**
-     * Insert catatan ke database lokal
-     */
-    suspend fun insertNote(vararg note: NoteDb)
+	/**
+	 * Insert catatan ke database lokal
+	 */
+	suspend fun insertNote(vararg note: NoteDb)
 
-    /**
-     * Hapus semua catatan dari database lokal, kecuali id yang diberikan
-     * @param ids id yang di kecualikan
-     */
-    suspend fun deleteNoteExcept(ids: List<String>)
+	/**
+	 * Hapus semua catatan dari database lokal, kecuali id yang diberikan
+	 * @param ids id yang di kecualikan
+	 */
+	suspend fun deleteNoteExcept(ids: List<String>)
 
-    /**
-     * Dapatkan semua catatan dari database lokal
-     */
-    fun getAllNoteLocal(): Flow<List<NoteDb>>
+	/**
+	 * Dapatkan semua catatan dari database lokal
+	 */
+	fun getAllNoteLocal(): Flow<List<NoteDb>>
 
-    /**
-     * Dapatkan catatan by id dari database lokal
-     */
-    fun getNoteByIdLocal(id: Int): Flow<NoteDb?>
+	/**
+	 * Dapatkan catatan by id dari database lokal
+	 */
+	fun getNoteByIdLocal(id: Int): Flow<NoteDb?>
 
-    /**
-     * Dapatkan catatan by user id dari database lokal
-     */
-    fun getNoteByUserIdLocal(id: Int): Flow<List<NoteDb>>
+	/**
+	 * Dapatkan catatan by user id dari database lokal
+	 */
+	fun getNoteByUserIdLocal(id: Int): Flow<List<NoteDb>>
 
 }

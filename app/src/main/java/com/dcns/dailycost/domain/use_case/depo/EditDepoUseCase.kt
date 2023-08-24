@@ -9,14 +9,14 @@ import retrofit2.Response
  * Use case untuk mengedit depo ke database server
  */
 class EditDepoUseCase(
-    private val depoRepository: IDepoRepository
+	private val depoRepository: IDepoRepository
 ) {
 
-    suspend operator fun invoke(
-        body: RequestBody,
-        token: String
-    ): Response<DepoResponse> {
-        return depoRepository.editDepo(body, token)
-    }
+	suspend operator fun invoke(
+		body: RequestBody,
+		token: String
+	): Response<DepoResponse> {
+		return depoRepository.editDepo(body, token)
+	}
 
 }

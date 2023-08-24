@@ -30,98 +30,98 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class RemoteModule {
 
-    @Provides
-    fun provideBaseUrl(): String = BuildConfig.API_BASE_URL
+	@Provides
+	fun provideBaseUrl(): String = BuildConfig.API_BASE_URL
 
-    @Singleton
-    @Provides
-    fun provideOkHttpClient(): OkHttpClient {
-        return if (BuildConfig.DEBUG) {
-            val loggingInterceptor = HttpLoggingInterceptor().apply {
-                setLevel(HttpLoggingInterceptor.Level.BODY)
-            }
+	@Singleton
+	@Provides
+	fun provideOkHttpClient(): OkHttpClient {
+		return if (BuildConfig.DEBUG) {
+			val loggingInterceptor = HttpLoggingInterceptor().apply {
+				setLevel(HttpLoggingInterceptor.Level.BODY)
+			}
 
-            OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .build()
-        } else {
-            OkHttpClient
-                .Builder()
-                .build()
-        }
-    }
+			OkHttpClient.Builder()
+				.addInterceptor(loggingInterceptor)
+				.build()
+		} else {
+			OkHttpClient
+				.Builder()
+				.build()
+		}
+	}
 
-    @Singleton
-    @Provides
-    fun provideRetrofit(
-        okHttpClient: OkHttpClient,
-        baseUrl :String
-    ): Retrofit {
-        return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(baseUrl)
-            .client(okHttpClient)
-            .build()
-    }
+	@Singleton
+	@Provides
+	fun provideRetrofit(
+		okHttpClient: OkHttpClient,
+		baseUrl: String
+	): Retrofit {
+		return Retrofit.Builder()
+			.addConverterFactory(GsonConverterFactory.create())
+			.baseUrl(baseUrl)
+			.client(okHttpClient)
+			.build()
+	}
 
-    @Provides
-    @Singleton
-    fun provideLoginRegisterService(
-        retrofit: Retrofit
-    ): LoginRegisterService = retrofit.create(LoginRegisterService::class.java)
+	@Provides
+	@Singleton
+	fun provideLoginRegisterService(
+		retrofit: Retrofit
+	): LoginRegisterService = retrofit.create(LoginRegisterService::class.java)
 
-    @Provides
-    @Singleton
-    fun provideDepoService(
-        retrofit: Retrofit
-    ): DepoService = retrofit.create(DepoService::class.java)
+	@Provides
+	@Singleton
+	fun provideDepoService(
+		retrofit: Retrofit
+	): DepoService = retrofit.create(DepoService::class.java)
 
-    @Provides
-    @Singleton
-    fun provideNoteService(
-        retrofit: Retrofit
-    ): NoteService = retrofit.create(NoteService::class.java)
+	@Provides
+	@Singleton
+	fun provideNoteService(
+		retrofit: Retrofit
+	): NoteService = retrofit.create(NoteService::class.java)
 
-    @Provides
-    @Singleton
-    fun provideIncomeService(
-        retrofit: Retrofit
-    ): IncomeService = retrofit.create(IncomeService::class.java)
+	@Provides
+	@Singleton
+	fun provideIncomeService(
+		retrofit: Retrofit
+	): IncomeService = retrofit.create(IncomeService::class.java)
 
-    @Provides
-    @Singleton
-    fun provideExpenseService(
-        retrofit: Retrofit
-    ): ExpenseService = retrofit.create(ExpenseService::class.java)
+	@Provides
+	@Singleton
+	fun provideExpenseService(
+		retrofit: Retrofit
+	): ExpenseService = retrofit.create(ExpenseService::class.java)
 
-    @Provides
-    @Singleton
-    fun provideLoginRegisterHandler(
-        impl: LoginRegisterHandlerImpl
-    ): LoginRegisterHandler = impl
+	@Provides
+	@Singleton
+	fun provideLoginRegisterHandler(
+		impl: LoginRegisterHandlerImpl
+	): LoginRegisterHandler = impl
 
-    @Provides
-    @Singleton
-    fun provideIncomeHandler(
-        impl: IncomeHandlerImpl
-    ): IncomeHandler = impl
+	@Provides
+	@Singleton
+	fun provideIncomeHandler(
+		impl: IncomeHandlerImpl
+	): IncomeHandler = impl
 
-    @Provides
-    @Singleton
-    fun provideDepoHandler(
-        impl: DepoHandlerImpl
-    ): DepoHandler = impl
+	@Provides
+	@Singleton
+	fun provideDepoHandler(
+		impl: DepoHandlerImpl
+	): DepoHandler = impl
 
-    @Provides
-    @Singleton
-    fun provideNoteHandler(
-        impl: NoteHandlerImpl
-    ): NoteHandler = impl
+	@Provides
+	@Singleton
+	fun provideNoteHandler(
+		impl: NoteHandlerImpl
+	): NoteHandler = impl
 
-    @Provides
-    @Singleton
-    fun provideExpenseHandler(
-        impl: ExpenseHandlerImpl
-    ): ExpenseHandler = impl
+	@Provides
+	@Singleton
+	fun provideExpenseHandler(
+		impl: ExpenseHandlerImpl
+	): ExpenseHandler = impl
 
 }

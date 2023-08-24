@@ -7,12 +7,12 @@ import org.json.JSONObject
 
 abstract class RetrofitRequestBody: Jsonable() {
 
-    abstract fun getBody(): Map<String, Any>
+	abstract fun getBody(): Map<String, Any>
 
-    fun toRequestBody(): RequestBody {
-        return JSONObject(getBody())
-            .toString()
-            .toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-    }
+	fun toRequestBody(): RequestBody {
+		return JSONObject(getBody())
+			.toString()
+			.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+	}
 
 }

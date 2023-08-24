@@ -15,27 +15,27 @@ import retrofit2.http.Path
 
 interface IncomeService {
 
-    @Headers("Content-Type: application/json;charset=UTF-8")
-    @POST("/api/pemasukan/{id}")
-    suspend fun addIncome(
-        @Path("id") userId: Int,
-        @Body body: RequestBody,
-        @Header("Authorization") token: String
-    ): Response<IncomePostResponse>
+	@Headers("Content-Type: application/json;charset=UTF-8")
+	@POST("/api/pemasukan/{id}")
+	suspend fun addIncome(
+		@Path("id") userId: Int,
+		@Body body: RequestBody,
+		@Header("Authorization") token: String
+	): Response<IncomePostResponse>
 
-    @Headers("Content-Type: application/json;charset=UTF-8")
-    @GET("/api/pemasukan/{id}")
-    suspend fun getIncome(
-        @Path("id") userId: Int,
-        @Header("Authorization") token: String
-    ): Response<IncomeGetResponse>
+	@Headers("Content-Type: application/json;charset=UTF-8")
+	@GET("/api/pemasukan/{id}")
+	suspend fun getIncome(
+		@Path("id") userId: Int,
+		@Header("Authorization") token: String
+	): Response<IncomeGetResponse>
 
-    @Headers("Content-Type: application/json;charset=UTF-8")
-    @HTTP(method = "DELETE", path = "/api/pemasukan/{id}", hasBody = true)
-    suspend fun deleteIncome(
-        @Path("id") userId: Int,
-        @Body body: RequestBody,
-        @Header("Authorization") token: String
-    ): Response<DeleteResponse>
+	@Headers("Content-Type: application/json;charset=UTF-8")
+	@HTTP(method = "DELETE", path = "/api/pemasukan/{id}", hasBody = true)
+	suspend fun deleteIncome(
+		@Path("id") userId: Int,
+		@Body body: RequestBody,
+		@Header("Authorization") token: String
+	): Response<DeleteResponse>
 
 }

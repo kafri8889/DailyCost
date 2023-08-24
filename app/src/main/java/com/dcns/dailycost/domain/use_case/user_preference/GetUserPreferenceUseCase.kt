@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
  * Use case untuk mendapatkan user preference
  */
 class GetUserPreferenceUseCase(
-    private val userPreferenceRepository: IUserPreferenceRepository
+	private val userPreferenceRepository: IUserPreferenceRepository
 ) {
 
-    operator fun invoke(): Flow<UserPreference> {
-        return userPreferenceRepository.getUserPreference
-    }
+	operator fun invoke(): Flow<UserPreference> {
+		return userPreferenceRepository.getUserPreference
+	}
 
 }

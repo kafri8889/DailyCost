@@ -7,13 +7,13 @@ import com.dcns.dailycost.foundation.base.UiEvent
 
 sealed class DailyCostAppUiEvent: UiEvent() {
 
-    data class NavigateTo(val dest: TopLevelDestination): UiEvent()
+	data class NavigateTo(val dest: TopLevelDestination): UiEvent()
 
-    object LanguageChanged: UiEvent()
+	object LanguageChanged: UiEvent()
 
-    object TokenExpired: ShowToast(
-        message = asStringResource(R.string.token_expired),
-        length = Toast.LENGTH_LONG
-    )
+	object TokenExpired: ShowToast(
+		message = asStringResource(R.string.token_expired),
+		length = Toast.LENGTH_LONG
+	)
 
 }

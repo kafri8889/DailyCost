@@ -8,22 +8,22 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class DepoHandlerImpl @Inject constructor(
-    private val depoService: DepoService
+	private val depoService: DepoService
 ): DepoHandler {
 
-    override suspend fun getBalance(userId: Int, token: String): Response<DepoResponse> {
-        return depoService.getBalance(userId, token)
-    }
+	override suspend fun getBalance(userId: Int, token: String): Response<DepoResponse> {
+		return depoService.getBalance(userId, token)
+	}
 
-    override suspend fun editDepo(body: RequestBody, token: String): Response<DepoResponse> {
-        return depoService.editDepo(body, token)
-    }
+	override suspend fun editDepo(body: RequestBody, token: String): Response<DepoResponse> {
+		return depoService.editDepo(body, token)
+	}
 
-    override suspend fun addDepo(body: RequestBody, token: String): Response<DepoResponse> {
-        return depoService.addDepo(body, token)
-    }
+	override suspend fun addDepo(body: RequestBody, token: String): Response<DepoResponse> {
+		return depoService.addDepo(body, token)
+	}
 
-    override suspend fun topup(body: RequestBody, token: String): Response<DepoResponse> {
-        return depoService.topup(body, token)
-    }
+	override suspend fun topup(body: RequestBody, token: String): Response<DepoResponse> {
+		return depoService.topup(body, token)
+	}
 }

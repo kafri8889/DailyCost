@@ -14,45 +14,45 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class BalanceRepository @Inject constructor(
-    private val depoHandler: DepoHandler,
-    private val balanceDataStore: DataStore<ProtoUserBalance>
+	private val depoHandler: DepoHandler,
+	private val balanceDataStore: DataStore<ProtoUserBalance>
 ): IBalanceRepository {
 
-    override val getUserBalance: Flow<UserBalance>
-        get() = balanceDataStore.data
-            .map { it.toUserBalance() }
+	override val getUserBalance: Flow<UserBalance>
+		get() = balanceDataStore.data
+			.map { it.toUserBalance() }
 
-    override suspend fun setCash(value: Double) {
-        balanceDataStore.updateData {
-            it.copy(
-                cash = value
-            )
-        }
-    }
+	override suspend fun setCash(value: Double) {
+		balanceDataStore.updateData {
+			it.copy(
+				cash = value
+			)
+		}
+	}
 
-    override suspend fun setEWallet(value: Double) {
-        balanceDataStore.updateData {
-            it.copy(
-                eWallet = value
-            )
-        }
-    }
+	override suspend fun setEWallet(value: Double) {
+		balanceDataStore.updateData {
+			it.copy(
+				eWallet = value
+			)
+		}
+	}
 
-    override suspend fun setBankAccount(value: Double) {
-        balanceDataStore.updateData {
-            it.copy(
-                bankAccount = value
-            )
-        }
-    }
+	override suspend fun setBankAccount(value: Double) {
+		balanceDataStore.updateData {
+			it.copy(
+				bankAccount = value
+			)
+		}
+	}
 
-    override suspend fun getRemoteBalance(userId: Int, token: String): Response<DepoResponse> {
-        return depoHandler.getBalance(userId, token)
-    }
+	override suspend fun getRemoteBalance(userId: Int, token: String): Response<DepoResponse> {
+		return depoHandler.getBalance(userId, token)
+	}
 
-    companion object {
-        val corruptionHandler = ReplaceFileCorruptionHandler(
-            produceNewData = { ProtoUserBalance() }
-        )
-    }
+	companion object {
+		val corruptionHandler = ReplaceFileCorruptionHandler(
+			produceNewData = { ProtoUserBalance() }
+		)
+	}
 }

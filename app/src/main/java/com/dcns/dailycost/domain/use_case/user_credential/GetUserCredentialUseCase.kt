@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
  * Use case untuk mendapatkan user credential
  */
 class GetUserCredentialUseCase(
-    private val userCredentialRepository: IUserCredentialRepository
+	private val userCredentialRepository: IUserCredentialRepository
 ) {
 
-    operator fun invoke(): Flow<UserCredential> {
-        return userCredentialRepository.getUserCredential
-    }
+	operator fun invoke(): Flow<UserCredential> {
+		return userCredentialRepository.getUserCredential
+	}
 
 }

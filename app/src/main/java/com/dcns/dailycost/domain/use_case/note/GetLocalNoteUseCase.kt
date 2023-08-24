@@ -12,22 +12,23 @@ import kotlinx.coroutines.flow.map
  * Use case untuk mendapatkan catatan dari lokal database
  */
 class GetLocalNoteUseCase(
-    private val noteRepository: INoteRepository
+	private val noteRepository: INoteRepository
 ) {
 
-    operator fun invoke(
-        getNoteBy: GetNoteBy = GetNoteBy.All
-    ): Flow<List<Note>> {
-        val flow = when (getNoteBy) {
-            is GetNoteBy.UserID -> noteRepository.getNoteByUserIdLocal(getNoteBy.userId)
-            is GetNoteBy.ID -> noteRepository.getNoteByIdLocal(getNoteBy.id)
-                .filterNotNull() // Filter value yg tidak null
-                .map { listOf(it) }
-            GetNoteBy.All -> noteRepository.getAllNoteLocal()
-        }
+	operator fun invoke(
+		getNoteBy: GetNoteBy = GetNoteBy.All
+	): Flow<List<Note>> {
+		val flow = when (getNoteBy) {
+			is GetNoteBy.UserID -> noteRepository.getNoteByUserIdLocal(getNoteBy.userId)
+			is GetNoteBy.ID -> noteRepository.getNoteByIdLocal(getNoteBy.id)
+				.filterNotNull() // Filter value yg tidak null
+				.map { listOf(it) }
 
-        return flow
-            .map { it.map { it.toNote() } }
-    }
+			GetNoteBy.All -> noteRepository.getAllNoteLocal()
+		}
+
+		return flow
+			.map { it.map { it.toNote() } }
+	}
 
 }

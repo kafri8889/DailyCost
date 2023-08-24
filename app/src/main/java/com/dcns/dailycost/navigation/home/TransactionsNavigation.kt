@@ -9,15 +9,15 @@ import com.dcns.dailycost.ui.transactions.TransactionsScreen
 import com.dcns.dailycost.ui.transactions.TransactionsViewModel
 
 fun NavGraphBuilder.TransactionsNavigation(navActions: NavigationActions) {
-    composable(
-        route = TopLevelDestinations.Home.transactions.route,
-        arguments = TopLevelDestinations.Home.transactions.arguments
-    ) { backEntry ->
-        val viewModel = hiltViewModel<TransactionsViewModel>(backEntry)
+	composable(
+		route = TopLevelDestinations.Home.transactions.route,
+		arguments = TopLevelDestinations.Home.transactions.arguments
+	) { backEntry ->
+		val viewModel = hiltViewModel<TransactionsViewModel>(backEntry)
 
-        TransactionsScreen(
-            viewModel = viewModel,
-            navigationActions = navActions
-        )
-    }
+		TransactionsScreen(
+			viewModel = viewModel,
+			navigationActions = navActions
+		)
+	}
 }

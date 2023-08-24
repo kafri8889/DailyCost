@@ -6,6 +6,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Wallet(
-    val walletType: WalletType,
-    val amount: Double
+	val walletType: WalletType,
+	val amount: Double
 ): Parcelable

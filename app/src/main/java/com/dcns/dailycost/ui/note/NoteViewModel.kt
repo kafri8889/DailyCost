@@ -13,87 +13,92 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NoteViewModel @Inject constructor(
-    private val userCredentialUseCases: UserCredentialUseCases,
-    private val noteUseCases: NoteUseCases
+	private val userCredentialUseCases: UserCredentialUseCases,
+	private val noteUseCases: NoteUseCases
 ): BaseViewModel<NoteState, NoteAction>() {
 
-    init {
-    }
+	init {
+	}
 
-    override fun defaultState(): NoteState = NoteState()
+	override fun defaultState(): NoteState = NoteState()
 
-    override fun onAction(action: NoteAction) {
-        when(action) {
-            is NoteAction.UpdateTitle -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            title = action.title
-                        )
-                    }
-                }
-            }
-            is NoteAction.UpdateDescription -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            description = action.description
-                        )
-                    }
-                }
-            }
-            is NoteAction.UpdateDate -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            date = action.date
-                        )
-                    }
-                }
-            }
-            is NoteAction.UpdateImage -> {
-                viewModelScope.launch {
-                    updateState {
-                        copy(
-                            uri = action.uri
-                        )
-                    }
-                }
-            }
-            is NoteAction.CreateNote -> {
-                viewModelScope.launch {
-                    val mState = state.value
+	override fun onAction(action: NoteAction) {
+		when (action) {
+			is NoteAction.UpdateTitle -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							title = action.title
+						)
+					}
+				}
+			}
+
+			is NoteAction.UpdateDescription -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							description = action.description
+						)
+					}
+				}
+			}
+
+			is NoteAction.UpdateDate -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							date = action.date
+						)
+					}
+				}
+			}
+
+			is NoteAction.UpdateImage -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							uri = action.uri
+						)
+					}
+				}
+			}
+
+			is NoteAction.CreateNote -> {
+				viewModelScope.launch {
+					val mState = state.value
 //                  Create Post Request
-                    val file = File(mState.uri?.path ?: "")
-                    val note = mState.date?.let {
-                        Note(
-                            id = "1",
-                            body = mState.description,
-                            createdAt = it,
-                            imageUrl = "blah",
-                            title = mState.title,
-                            userId = "3"
-                        )
-                    }
-                    if (note != null) {
-                        launch {
+					val file = File(mState.uri?.path ?: "")
+					val note = mState.date?.let {
+						Note(
+							id = "1",
+							body = mState.description,
+							createdAt = it,
+							imageUrl = "blah",
+							title = mState.title,
+							userId = "3"
+						)
+					}
+					if (note != null) {
+						launch {
 //                            noteUseCases.addRemoteNoteUseCase(
 //                                image = file,
 //                                note = note,
 //                                token = "Hello token",
 //                                userId = mState
 //                            )
-                        }
-                    }
+						}
+					}
 
-                }
-            }
-            is NoteAction.EditNote -> {
-                viewModelScope.launch {
+				}
+			}
+
+			is NoteAction.EditNote -> {
+				viewModelScope.launch {
 //                    todo
-                }
-            }
-        }
-    }
+				}
+			}
+		}
+	}
 
 }

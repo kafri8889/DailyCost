@@ -7,14 +7,14 @@ import retrofit2.Response
 
 interface LoginRegisterHandler {
 
-    /**
-     * Login
-     */
-    suspend fun login(body: RequestBody): Response<LoginResponse>
+	/**
+	 * Login
+	 */
+	suspend fun login(body: RequestBody): Response<LoginResponse>
 
-    /**
-     * Register
-     */
-    suspend fun register(body: RequestBody): Response<RegisterResponse>
+	/**
+	 * Register
+	 */
+	suspend fun register(body: RequestBody): Response<RegisterResponse>
 
 }

@@ -15,12 +15,12 @@ import com.dcns.dailycost.ui.app.DailyCostAppViewModel
 @Composable
 fun SplashScreen() {
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Text("splash")
-    }
+	Column(
+		horizontalAlignment = Alignment.CenterHorizontally,
+		verticalArrangement = Arrangement.Center,
+		modifier = Modifier
+			.fillMaxSize()
+	) {
+		Text("splash")
+	}
 }

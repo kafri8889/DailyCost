@@ -23,45 +23,45 @@ import com.dcns.dailycost.foundation.theme.DailyCostTheme
 @Preview
 @Composable
 private fun CategoryItemPreview() {
-    DailyCostTheme {
-        CategoryItem(
-            category = LocalCategoryDataProvider.other,
-            onClick = {}
-        )
-    }
+	DailyCostTheme {
+		CategoryItem(
+			category = LocalCategoryDataProvider.other,
+			onClick = {}
+		)
+	}
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryItem(
-    category: Category,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+	category: Category,
+	modifier: Modifier = Modifier,
+	onClick: () -> Unit
 ) {
 
-    Card(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(48.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = category.icon.iconResId),
-                    contentDescription = null
-                )
-            }
+	Card(
+		onClick = onClick,
+		modifier = modifier
+	) {
+		Row(
+			verticalAlignment = Alignment.CenterVertically,
+			horizontalArrangement = Arrangement.spacedBy(8.dp),
+			modifier = Modifier
+				.padding(8.dp)
+				.fillMaxWidth()
+		) {
+			Box(
+				contentAlignment = Alignment.Center,
+				modifier = Modifier
+					.size(48.dp)
+			) {
+				Icon(
+					painter = painterResource(id = category.icon.iconResId),
+					contentDescription = null
+				)
+			}
 
-            Text(category.name)
-        }
-    }
+			Text(category.name)
+		}
+	}
 }

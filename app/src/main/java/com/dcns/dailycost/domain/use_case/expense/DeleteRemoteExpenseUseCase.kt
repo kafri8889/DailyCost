@@ -9,15 +9,15 @@ import retrofit2.Response
  * Use case untuk menghapus pengeluaran dari database server
  */
 class DeleteRemoteExpenseUseCase(
-    private val expenseRepository: IExpenseRepository
+	private val expenseRepository: IExpenseRepository
 ) {
 
-    suspend operator fun invoke(
-        userId: Int,
-        body: RequestBody,
-        token: String
-    ): Response<DeleteResponse> {
-        return expenseRepository.deleteRemoteExpense(userId, body, token)
-    }
+	suspend operator fun invoke(
+		userId: Int,
+		body: RequestBody,
+		token: String
+	): Response<DeleteResponse> {
+		return expenseRepository.deleteRemoteExpense(userId, body, token)
+	}
 
 }

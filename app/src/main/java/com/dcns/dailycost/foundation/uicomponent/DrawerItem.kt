@@ -23,62 +23,62 @@ import com.dcns.dailycost.foundation.theme.DailyCostTheme
 @Preview(showBackground = true)
 @Composable
 private fun DrawerItemPreview() {
-    DailyCostTheme {
-        DrawerItem(
-            summary = {
-                Text("summary")
-            },
-            title = {
-                Text("title")
-            },
-            icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_setting),
-                    contentDescription = null
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-    }
+	DailyCostTheme {
+		DrawerItem(
+			summary = {
+				Text("summary")
+			},
+			title = {
+				Text("title")
+			},
+			icon = {
+				Icon(
+					painter = painterResource(id = R.drawable.ic_setting),
+					contentDescription = null
+				)
+			},
+			modifier = Modifier
+				.fillMaxWidth()
+		)
+	}
 }
 
 @Composable
 fun DrawerItem(
-    modifier: Modifier = Modifier,
-    summary: @Composable () -> Unit = {},
-    title: @Composable () -> Unit,
-    icon: @Composable () -> Unit
+	modifier: Modifier = Modifier,
+	summary: @Composable () -> Unit = {},
+	title: @Composable () -> Unit,
+	icon: @Composable () -> Unit
 ) {
 
-    Box(modifier = modifier) {
-        Row(
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .padding(8.dp)
-        ) {
-            icon()
+	Box(modifier = modifier) {
+		Row(
+			verticalAlignment = Alignment.Top,
+			horizontalArrangement = Arrangement.spacedBy(8.dp),
+			modifier = Modifier
+				.padding(8.dp)
+		) {
+			icon()
 
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                ProvideTextStyle(
-                    content = title,
-                    value = MaterialTheme.typography.bodyLarge.copy(
-                        color = DailyCostTheme.colorScheme.text,
-                        fontWeight = FontWeight.Medium
-                    )
-                )
+			Column(
+				verticalArrangement = Arrangement.spacedBy(4.dp)
+			) {
+				ProvideTextStyle(
+					content = title,
+					value = MaterialTheme.typography.bodyLarge.copy(
+						color = DailyCostTheme.colorScheme.text,
+						fontWeight = FontWeight.Medium
+					)
+				)
 
-                ProvideTextStyle(
-                    content = summary,
-                    value = MaterialTheme.typography.bodyMedium.copy(
-                        color = DailyCostTheme.colorScheme.labelText,
-                        fontWeight = FontWeight.Normal
-                    )
-                )
-            }
-        }
-    }
+				ProvideTextStyle(
+					content = summary,
+					value = MaterialTheme.typography.bodyMedium.copy(
+						color = DailyCostTheme.colorScheme.labelText,
+						fontWeight = FontWeight.Normal
+					)
+				)
+			}
+		}
+	}
 }

@@ -12,19 +12,21 @@ import kotlinx.coroutines.flow.map
  * Use case untuk mendapatkan pemasukan lokal
  */
 class GetLocalIncomeUseCase(
-    private val incomeRepository: IIncomeRepository
+	private val incomeRepository: IIncomeRepository
 ) {
 
-    operator fun invoke(
-        getTransactionBy: GetTransactionBy = GetTransactionBy.All
-    ): Flow<List<Income>> {
-        val flow = when (getTransactionBy) {
-            is GetTransactionBy.ID -> incomeRepository.getIncomeById(getTransactionBy.id).map { listOf(it) }
-            GetTransactionBy.All -> incomeRepository.getAllIncomes()
-        }
+	operator fun invoke(
+		getTransactionBy: GetTransactionBy = GetTransactionBy.All
+	): Flow<List<Income>> {
+		val flow = when (getTransactionBy) {
+			is GetTransactionBy.ID -> incomeRepository.getIncomeById(getTransactionBy.id)
+				.map { listOf(it) }
 
-        return flow
-            .filterNotNull()
-            .map { it.filterNotNull().map { it.toIncome() } }
-    }
+			GetTransactionBy.All -> incomeRepository.getAllIncomes()
+		}
+
+		return flow
+			.filterNotNull()
+			.map { it.filterNotNull().map { it.toIncome() } }
+	}
 }

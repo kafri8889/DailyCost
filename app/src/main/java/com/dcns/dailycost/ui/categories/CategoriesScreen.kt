@@ -27,62 +27,62 @@ import com.dcns.dailycost.foundation.uicomponent.CategoryItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesScreen(
-    viewModel: CategoriesViewModel,
-    navigationActions: NavigationActions
+	viewModel: CategoriesViewModel,
+	navigationActions: NavigationActions
 ) {
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
+	val state by viewModel.state.collectAsStateWithLifecycle()
 
-    BaseScreenWrapper(
-        viewModel = viewModel,
-        topBar = {
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(onClick = navigationActions::popBackStack) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_arrow_left),
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-        }
-    ) { scaffoldPadding ->
-        CategoriesScreenContent(
-            state = state,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(scaffoldPadding)
-        )
-    }
+	BaseScreenWrapper(
+		viewModel = viewModel,
+		topBar = {
+			TopAppBar(
+				title = {},
+				navigationIcon = {
+					IconButton(onClick = navigationActions::popBackStack) {
+						Icon(
+							painter = painterResource(id = R.drawable.ic_arrow_left),
+							contentDescription = null
+						)
+					}
+				}
+			)
+		}
+	) { scaffoldPadding ->
+		CategoriesScreenContent(
+			state = state,
+			modifier = Modifier
+				.fillMaxSize()
+				.padding(scaffoldPadding)
+		)
+	}
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CategoriesScreenContent(
-    state: CategoriesState,
-    modifier: Modifier = Modifier
+	state: CategoriesState,
+	modifier: Modifier = Modifier
 ) {
 
-    LazyColumn(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-    ) {
-        items(
-            items = state.categories,
-            key = { item -> item.id }
-        ) { category ->
-            CategoryItem(
-                category = category,
-                onClick = {
+	LazyColumn(
+		horizontalAlignment = Alignment.CenterHorizontally,
+		verticalArrangement = Arrangement.spacedBy(8.dp),
+		modifier = modifier
+	) {
+		items(
+			items = state.categories,
+			key = { item -> item.id }
+		) { category ->
+			CategoryItem(
+				category = category,
+				onClick = {
 
-                },
-                modifier = Modifier
-                    .fillMaxWidth(0.92f)
-                    .animateItemPlacement(tween(256))
-            )
-        }
-    }
+				},
+				modifier = Modifier
+					.fillMaxWidth(0.92f)
+					.animateItemPlacement(tween(256))
+			)
+		}
+	}
 }

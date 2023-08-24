@@ -5,5 +5,5 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 
 fun OneTimeWorkRequest.enqueue(context: Context) {
-    WorkManager.getInstance(context).enqueue(this)
+	WorkManager.getInstance(context).enqueue(this)
 }

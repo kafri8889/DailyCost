@@ -10,40 +10,40 @@ import retrofit2.Response
 
 interface NoteHandler {
 
-    /**
-     * Tambah catatan baru
-     */
-    suspend fun addNote(
-        token: String,
-        title: RequestBody,
-        body: RequestBody,
-        date: RequestBody,
-        userId: RequestBody,
-        file: MultipartBody.Part,
-    ): Response<AddNoteResponse>
+	/**
+	 * Tambah catatan baru
+	 */
+	suspend fun addNote(
+		token: String,
+		title: RequestBody,
+		body: RequestBody,
+		date: RequestBody,
+		userId: RequestBody,
+		file: MultipartBody.Part,
+	): Response<AddNoteResponse>
 
-    /**
-     * Edit catatan
-     */
-    suspend fun editNote(
-        token: String,
-        body: RequestBody
-    ): Response<EditNoteResponse>
+	/**
+	 * Edit catatan
+	 */
+	suspend fun editNote(
+		token: String,
+		body: RequestBody
+	): Response<EditNoteResponse>
 
-    /**
-     * Hapus catatan
-     */
-    suspend fun deleteNote(
-        token: String,
-        body: RequestBody
-    ): Response<DeleteResponse>
+	/**
+	 * Hapus catatan
+	 */
+	suspend fun deleteNote(
+		token: String,
+		body: RequestBody
+	): Response<DeleteResponse>
 
-    /**
-     * Dapatkan catatan by id
-     */
-    suspend fun getNoteById(
-        userId: Int,
-        token: String
-    ): Response<GetNoteResponse>
+	/**
+	 * Dapatkan catatan by id
+	 */
+	suspend fun getNoteById(
+		userId: Int,
+		token: String
+	): Response<GetNoteResponse>
 
 }

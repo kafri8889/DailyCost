@@ -36,107 +36,107 @@ import com.dcns.dailycost.foundation.uicomponent.NoteItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteScreen(
-    viewModel: NotesViewModel,
-    navigationActions: NavigationActions,
-    onNavigationIconClicked: () -> Unit
+	viewModel: NotesViewModel,
+	navigationActions: NavigationActions,
+	onNavigationIconClicked: () -> Unit
 ) {
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
+	val state by viewModel.state.collectAsStateWithLifecycle()
 
-    BackHandler {
-        navigationActions.navigateTo(TopLevelDestinations.Home.dashboard)
-    }
+	BackHandler {
+		navigationActions.navigateTo(TopLevelDestinations.Home.dashboard)
+	}
 
-    BaseScreenWrapper(
-        viewModel = viewModel,
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        overflow = TextOverflow.Ellipsis,
-                        text = stringResource(id = R.string.notes)
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onNavigationIconClicked) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_menu),
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
+	BaseScreenWrapper(
+		viewModel = viewModel,
+		topBar = {
+			CenterAlignedTopAppBar(
+				title = {
+					Text(
+						overflow = TextOverflow.Ellipsis,
+						text = stringResource(id = R.string.notes)
+					)
+				},
+				navigationIcon = {
+					IconButton(onClick = onNavigationIconClicked) {
+						Icon(
+							painter = painterResource(id = R.drawable.ic_menu),
+							contentDescription = null
+						)
+					}
+				}
+			)
+		},
+		floatingActionButton = {
+			FloatingActionButton(
+				onClick = {
 
-                },
-                modifier = Modifier
-                    .padding(16.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_add),
-                    contentDescription = "Add"
-                )
-            }
-        }
-    ) { scaffoldPadding ->
-        NotesScreenContent(
-            state = state,
-            onRefresh = {
-                viewModel.onAction(NotesAction.Refresh)
-            },
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(scaffoldPadding)
-        )
-    }
+				},
+				modifier = Modifier
+					.padding(16.dp)
+			) {
+				Icon(
+					painter = painterResource(id = R.drawable.ic_add),
+					contentDescription = "Add"
+				)
+			}
+		}
+	) { scaffoldPadding ->
+		NotesScreenContent(
+			state = state,
+			onRefresh = {
+				viewModel.onAction(NotesAction.Refresh)
+			},
+			modifier = Modifier
+				.fillMaxSize()
+				.padding(scaffoldPadding)
+		)
+	}
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun NotesScreenContent(
-    state: NotesState,
-    modifier: Modifier = Modifier,
-    onRefresh: () -> Unit
+	state: NotesState,
+	modifier: Modifier = Modifier,
+	onRefresh: () -> Unit
 ) {
 
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = state.isRefreshing,
-        onRefresh = onRefresh
-    )
+	val pullRefreshState = rememberPullRefreshState(
+		refreshing = state.isRefreshing,
+		onRefresh = onRefresh
+	)
 
-    Box(
-        modifier = modifier
-            .pullRefresh(pullRefreshState)
-    ) {
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            items(
-                items = state.notes,
-                key = { note -> note.id }
-            ) { note ->
-                NoteItem(
-                    note = note,
-                    onClick = {
+	Box(
+		modifier = modifier
+			.pullRefresh(pullRefreshState)
+	) {
+		LazyColumn(
+			horizontalAlignment = Alignment.CenterHorizontally,
+			verticalArrangement = Arrangement.spacedBy(8.dp),
+			modifier = Modifier
+				.fillMaxWidth()
+		) {
+			items(
+				items = state.notes,
+				key = { note -> note.id }
+			) { note ->
+				NoteItem(
+					note = note,
+					onClick = {
 
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(0.96f)
-                )
-            }
-        }
+					},
+					modifier = Modifier
+						.fillMaxWidth(0.96f)
+				)
+			}
+		}
 
-        PullRefreshIndicator(
-            refreshing = state.isRefreshing,
-            state = pullRefreshState,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-        )
-    }
+		PullRefreshIndicator(
+			refreshing = state.isRefreshing,
+			state = pullRefreshState,
+			modifier = Modifier
+				.align(Alignment.TopCenter)
+		)
+	}
 }

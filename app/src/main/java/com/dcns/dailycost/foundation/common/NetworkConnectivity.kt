@@ -14,71 +14,71 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class NetworkConnectivity(
-    private val context: Context
+	private val context: Context
 ): LiveData<Boolean>() {
 
-    private lateinit var networkCallback: ConnectivityManager.NetworkCallback
-    private val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-    private val validNetworks: MutableSet<Network> = HashSet()
+	private lateinit var networkCallback: ConnectivityManager.NetworkCallback
+	private val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+	private val validNetworks: MutableSet<Network> = HashSet()
 
-    fun initialize() {
-        checkValidNetworks()
-        // Assume the device is now online
+	fun initialize() {
+		checkValidNetworks()
+		// Assume the device is now online
 //        postValue(true)
-    }
+	}
 
-    private fun checkValidNetworks() {
-        Timber.i("has internet? -> ${validNetworks.size > 0}")
-        postValue(validNetworks.size > 0)
-    }
+	private fun checkValidNetworks() {
+		Timber.i("has internet? -> ${validNetworks.size > 0}")
+		postValue(validNetworks.size > 0)
+	}
 
-    override fun onActive() {
-        networkCallback = createNetworkCallback()
-        val networkRequest = NetworkRequest.Builder()
-            .addCapability(NET_CAPABILITY_INTERNET)
-            .build()
-        cm.registerNetworkCallback(networkRequest, networkCallback)
-    }
+	override fun onActive() {
+		networkCallback = createNetworkCallback()
+		val networkRequest = NetworkRequest.Builder()
+			.addCapability(NET_CAPABILITY_INTERNET)
+			.build()
+		cm.registerNetworkCallback(networkRequest, networkCallback)
+	}
 
-    override fun onInactive() {
-        cm.unregisterNetworkCallback(networkCallback)
-    }
+	override fun onInactive() {
+		cm.unregisterNetworkCallback(networkCallback)
+	}
 
-    private fun createNetworkCallback() = object : ConnectivityManager.NetworkCallback() {
+	private fun createNetworkCallback() = object: ConnectivityManager.NetworkCallback() {
 
-        /*
-          Called when a network is detected. If that network has internet, save it in the Set.
-          Source: https://developer.android.com/reference/android/net/ConnectivityManager.NetworkCallback#onAvailable(android.net.Network)
-         */
-        override fun onAvailable(network: Network) {
-            val networkCapabilities = cm.getNetworkCapabilities(network)
-            val hasInternetCapability = networkCapabilities?.hasCapability(NET_CAPABILITY_INTERNET)
+		/*
+		  Called when a network is detected. If that network has internet, save it in the Set.
+		  Source: https://developer.android.com/reference/android/net/ConnectivityManager.NetworkCallback#onAvailable(android.net.Network)
+		 */
+		override fun onAvailable(network: Network) {
+			val networkCapabilities = cm.getNetworkCapabilities(network)
+			val hasInternetCapability = networkCapabilities?.hasCapability(NET_CAPABILITY_INTERNET)
 
-            if (hasInternetCapability == true) {
-                // check if this network actually has internet
-                CoroutineScope(Dispatchers.IO).launch {
-                    val hasInternet = DoesNetworkHaveInternet.execute(network.socketFactory)
-                    if(hasInternet){
-                        withContext(Dispatchers.Main){
+			if (hasInternetCapability == true) {
+				// check if this network actually has internet
+				CoroutineScope(Dispatchers.IO).launch {
+					val hasInternet = DoesNetworkHaveInternet.execute(network.socketFactory)
+					if (hasInternet) {
+						withContext(Dispatchers.Main) {
 
-                            validNetworks.add(network)
-                            checkValidNetworks()
-                        }
-                    }
-                }
-            }
-        }
+							validNetworks.add(network)
+							checkValidNetworks()
+						}
+					}
+				}
+			}
+		}
 
-        /*
-          If the callback was registered with registerNetworkCallback() it will be called for each network which no longer satisfies the criteria of the callback.
-          Source: https://developer.android.com/reference/android/net/ConnectivityManager.NetworkCallback#onLost(android.net.Network)
-         */
-        override fun onLost(network: Network) {
-            Timber.i("onLost: $network")
-            validNetworks.remove(network)
-            checkValidNetworks()
-        }
+		/*
+		  If the callback was registered with registerNetworkCallback() it will be called for each network which no longer satisfies the criteria of the callback.
+		  Source: https://developer.android.com/reference/android/net/ConnectivityManager.NetworkCallback#onLost(android.net.Network)
+		 */
+		override fun onLost(network: Network) {
+			Timber.i("onLost: $network")
+			validNetworks.remove(network)
+			checkValidNetworks()
+		}
 
-    }
+	}
 
 }

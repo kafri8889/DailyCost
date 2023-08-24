@@ -9,18 +9,18 @@ import com.dcns.dailycost.ui.dashboard.DashboardScreen
 import com.dcns.dailycost.ui.dashboard.DashboardViewModel
 
 fun NavGraphBuilder.DashboardNavigation(
-    navigationActions: NavigationActions,
-    onNavigationIconClicked: () -> Unit
+	navigationActions: NavigationActions,
+	onNavigationIconClicked: () -> Unit
 ) {
-    composable(
-        route = TopLevelDestinations.Home.dashboard.route
-    ) { backEntry ->
-        val mViewModel = hiltViewModel<DashboardViewModel>(backEntry)
+	composable(
+		route = TopLevelDestinations.Home.dashboard.route
+	) { backEntry ->
+		val mViewModel = hiltViewModel<DashboardViewModel>(backEntry)
 
-        DashboardScreen(
-            viewModel = mViewModel,
-            navigationActions = navigationActions,
-            onNavigationIconClicked = onNavigationIconClicked
-        )
-    }
+		DashboardScreen(
+			viewModel = mViewModel,
+			navigationActions = navigationActions,
+			onNavigationIconClicked = onNavigationIconClicked
+		)
+	}
 }

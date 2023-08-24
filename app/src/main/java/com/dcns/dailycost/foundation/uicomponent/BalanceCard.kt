@@ -42,187 +42,189 @@ import com.dcns.dailycost.foundation.theme.DailyCostTheme
 @Preview(showBackground = true)
 @Composable
 private fun BalanceCardPreview() {
-    DailyCostTheme {
-        BalanceCard(
-            onTopUpClicked = {},
-            balance = UserBalance(
-                cash = 90_000.0,
-                eWallet = 0.0,
-                bankAccount = 1_000_000_000_000_000_000_000_000.0
-            )
-        )
-    }
+	DailyCostTheme {
+		BalanceCard(
+			onTopUpClicked = {},
+			balance = UserBalance(
+				cash = 90_000.0,
+				eWallet = 0.0,
+				bankAccount = 1_000_000_000_000_000_000_000_000.0
+			)
+		)
+	}
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BalanceCard(
-    balance: UserBalance,
-    modifier: Modifier = Modifier,
-    onTopUpClicked: () -> Unit
+	balance: UserBalance,
+	modifier: Modifier = Modifier,
+	onTopUpClicked: () -> Unit
 ) {
 
-    val pagerState = rememberPagerState { 3 }
+	val pagerState = rememberPagerState { 3 }
 
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xff7E7E7E)
-        )
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .padding(8.dp)
-        ) {
-            Measurer(
-                contentToMeasure = {
-                    // Ukur size untuk PagerItem
-                    PagerItem(
-                        amount = balance.cash,
-                        monthlyExpense = 0.0,
-                        walletType = WalletType.Cash
-                    )
-                }
-            ) { (_, height) ->
-                VerticalPager(
-                    state = pagerState,
-                    pageSpacing = 8.dp,
-                    modifier = Modifier
-                        // Set pager height sesuai ukuran dari [PagerItem]
-                        .height(height)
-                ) { page ->
-                    when (page) {
-                        0 -> PagerItem(
-                            amount = balance.cash,
-                            monthlyExpense = 0.0,
-                            walletType = WalletType.Cash
-                        )
-                        1 -> PagerItem(
-                            amount = balance.eWallet,
-                            monthlyExpense = 0.0,
-                            walletType = WalletType.EWallet
-                        )
-                        2 -> PagerItem(
-                            amount = balance.bankAccount,
-                            monthlyExpense = 0.0,
-                            walletType = WalletType.BankAccount
-                        )
-                    }
-                }
-            }
+	Card(
+		modifier = modifier,
+		colors = CardDefaults.cardColors(
+			containerColor = Color(0xff7E7E7E)
+		)
+	) {
+		Column(
+			verticalArrangement = Arrangement.spacedBy(8.dp),
+			modifier = Modifier
+				.padding(8.dp)
+		) {
+			Measurer(
+				contentToMeasure = {
+					// Ukur size untuk PagerItem
+					PagerItem(
+						amount = balance.cash,
+						monthlyExpense = 0.0,
+						walletType = WalletType.Cash
+					)
+				}
+			) { (_, height) ->
+				VerticalPager(
+					state = pagerState,
+					pageSpacing = 8.dp,
+					modifier = Modifier
+						// Set pager height sesuai ukuran dari [PagerItem]
+						.height(height)
+				) { page ->
+					when (page) {
+						0 -> PagerItem(
+							amount = balance.cash,
+							monthlyExpense = 0.0,
+							walletType = WalletType.Cash
+						)
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(25))
-                        .clickable { onTopUpClicked() }
-                        .padding(4.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_money_send),
-                        contentDescription = null
-                    )
+						1 -> PagerItem(
+							amount = balance.eWallet,
+							monthlyExpense = 0.0,
+							walletType = WalletType.EWallet
+						)
 
-                    Spacer(modifier = Modifier.width(8.dp))
+						2 -> PagerItem(
+							amount = balance.bankAccount,
+							monthlyExpense = 0.0,
+							walletType = WalletType.BankAccount
+						)
+					}
+				}
+			}
 
-                    Text(
-                        text = stringResource(id = R.string.top_up),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-        }
-    }
+			Row(
+				modifier = Modifier
+					.fillMaxWidth()
+			) {
+				Row(
+					verticalAlignment = Alignment.CenterVertically,
+					modifier = Modifier
+						.clip(RoundedCornerShape(25))
+						.clickable { onTopUpClicked() }
+						.padding(4.dp)
+				) {
+					Icon(
+						painter = painterResource(id = R.drawable.ic_money_send),
+						contentDescription = null
+					)
+
+					Spacer(modifier = Modifier.width(8.dp))
+
+					Text(
+						text = stringResource(id = R.string.top_up),
+						style = MaterialTheme.typography.bodySmall
+					)
+				}
+			}
+		}
+	}
 }
 
 @Composable
 private fun PagerItem(
-    amount: Double,
-    monthlyExpense: Double,
-    walletType: WalletType,
-    modifier: Modifier = Modifier
+	amount: Double,
+	monthlyExpense: Double,
+	walletType: WalletType,
+	modifier: Modifier = Modifier
 ) {
-    val currency = LocalCurrency.current
+	val currency = LocalCurrency.current
 
-    val formattedAmount = remember(amount) {
-        CurrencyFormatter.format(
-            locale = primarySystemLocale,
-            amount = amount,
-            countryCode = currency.countryCode
-        )
-    }
+	val formattedAmount = remember(amount) {
+		CurrencyFormatter.format(
+			locale = primarySystemLocale,
+			amount = amount,
+			countryCode = currency.countryCode
+		)
+	}
 
-    val formattedMonthlyExpense = remember(monthlyExpense) {
-        CurrencyFormatter.format(
-            locale = primarySystemLocale,
-            amount = monthlyExpense,
-            countryCode = currency.countryCode
-        )
-    }
+	val formattedMonthlyExpense = remember(monthlyExpense) {
+		CurrencyFormatter.format(
+			locale = primarySystemLocale,
+			amount = monthlyExpense,
+			countryCode = currency.countryCode
+		)
+	}
 
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xffAEAEAE)
-        )
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .padding(16.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_empty_wallet),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(16.dp)
-                )
+	Card(
+		modifier = modifier,
+		colors = CardDefaults.cardColors(
+			containerColor = Color(0xffAEAEAE)
+		)
+	) {
+		Column(
+			verticalArrangement = Arrangement.spacedBy(8.dp),
+			modifier = Modifier
+				.padding(16.dp)
+		) {
+			Row(
+				verticalAlignment = Alignment.CenterVertically,
+				horizontalArrangement = Arrangement.spacedBy(8.dp)
+			) {
+				Icon(
+					painter = painterResource(id = R.drawable.ic_empty_wallet),
+					contentDescription = null,
+					modifier = Modifier
+						.size(16.dp)
+				)
 
-                Text(
-                    text = walletType.localizedName,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
+				Text(
+					text = walletType.localizedName,
+					style = MaterialTheme.typography.bodyMedium
+				)
+			}
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = formattedAmount,
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.SemiBold
-                    ),
-                    modifier = Modifier
-                        .weight(1f)
-                        .dailyCostMarquee()
-                )
+			Row(
+				horizontalArrangement = Arrangement.spacedBy(8.dp),
+				modifier = Modifier
+					.fillMaxWidth()
+			) {
+				Text(
+					text = formattedAmount,
+					style = MaterialTheme.typography.titleLarge.copy(
+						fontWeight = FontWeight.SemiBold
+					),
+					modifier = Modifier
+						.weight(1f)
+						.dailyCostMarquee()
+				)
 
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_eye),
-                    contentDescription = null
-                )
-            }
+				Icon(
+					painter = painterResource(id = R.drawable.ic_eye),
+					contentDescription = null
+				)
+			}
 
-            Text(
-                text = stringResource(
-                    id = R.string.monthly_expenses_x,
-                    formattedMonthlyExpense
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .dailyCostMarquee()
-            )
-        }
-    }
+			Text(
+				text = stringResource(
+					id = R.string.monthly_expenses_x,
+					formattedMonthlyExpense
+				),
+				modifier = Modifier
+					.fillMaxWidth()
+					.dailyCostMarquee()
+			)
+		}
+	}
 }

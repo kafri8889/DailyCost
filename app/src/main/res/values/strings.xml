@@ -110,4 +110,5 @@
     <string name="deleteing">Deleting...</string>
     <string name="failed_to_delete">Failed to delete</string>
     <string name="transaction_deleted">Transaction deleted</string>
+    <string name="accessibility_save">Save</string>
 </resources>

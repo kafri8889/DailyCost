@@ -15,67 +15,67 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class NoteRepository @Inject constructor(
-    private val noteHandler: NoteHandler,
-    private val noteDao: NoteDao
+	private val noteHandler: NoteHandler,
+	private val noteDao: NoteDao
 ): INoteRepository {
-    override suspend fun addNote(
-        token: String,
-        title: RequestBody,
-        body: RequestBody,
-        date: RequestBody,
-        userId: RequestBody,
-        file: MultipartBody.Part
-    ): Response<AddNoteResponse> {
-        return noteHandler.addNote(token, title, body, date, userId, file)
-    }
+	override suspend fun addNote(
+		token: String,
+		title: RequestBody,
+		body: RequestBody,
+		date: RequestBody,
+		userId: RequestBody,
+		file: MultipartBody.Part
+	): Response<AddNoteResponse> {
+		return noteHandler.addNote(token, title, body, date, userId, file)
+	}
 
-    override suspend fun editNoteRemote(
-        token: String,
-        body: RequestBody
-    ): Response<EditNoteResponse> {
-        return noteHandler.editNote(token, body)
-    }
+	override suspend fun editNoteRemote(
+		token: String,
+		body: RequestBody
+	): Response<EditNoteResponse> {
+		return noteHandler.editNote(token, body)
+	}
 
-    override suspend fun deleteNoteRemote(
-        token: String,
-        body: RequestBody
-    ): Response<DeleteResponse> {
-        return noteHandler.deleteNote(token, body)
-    }
+	override suspend fun deleteNoteRemote(
+		token: String,
+		body: RequestBody
+	): Response<DeleteResponse> {
+		return noteHandler.deleteNote(token, body)
+	}
 
-    override suspend fun getNoteByIdRemote(userId: Int, token: String): Response<GetNoteResponse> {
-        return noteHandler.getNoteById(userId, token)
-    }
+	override suspend fun getNoteByIdRemote(userId: Int, token: String): Response<GetNoteResponse> {
+		return noteHandler.getNoteById(userId, token)
+	}
 
-    override suspend fun updateNote(vararg note: NoteDb) {
-        noteDao.updateNote(*note)
-    }
+	override suspend fun updateNote(vararg note: NoteDb) {
+		noteDao.updateNote(*note)
+	}
 
-    override suspend fun upsertNote(vararg note: NoteDb) {
-        noteDao.upsertNote(*note)
-    }
+	override suspend fun upsertNote(vararg note: NoteDb) {
+		noteDao.upsertNote(*note)
+	}
 
-    override suspend fun deleteNote(vararg note: NoteDb) {
-        noteDao.deleteNote(*note)
-    }
+	override suspend fun deleteNote(vararg note: NoteDb) {
+		noteDao.deleteNote(*note)
+	}
 
-    override suspend fun insertNote(vararg note: NoteDb) {
-        noteDao.insertNote(*note)
-    }
+	override suspend fun insertNote(vararg note: NoteDb) {
+		noteDao.insertNote(*note)
+	}
 
-    override suspend fun deleteNoteExcept(ids: List<String>) {
-        noteDao.deleteNoteExcept(ids)
-    }
+	override suspend fun deleteNoteExcept(ids: List<String>) {
+		noteDao.deleteNoteExcept(ids)
+	}
 
-    override fun getAllNoteLocal(): Flow<List<NoteDb>> {
-        return noteDao.getAllNote()
-    }
+	override fun getAllNoteLocal(): Flow<List<NoteDb>> {
+		return noteDao.getAllNote()
+	}
 
-    override fun getNoteByIdLocal(id: Int): Flow<NoteDb?> {
-        return noteDao.getNoteById(id)
-    }
+	override fun getNoteByIdLocal(id: Int): Flow<NoteDb?> {
+		return noteDao.getNoteById(id)
+	}
 
-    override fun getNoteByUserIdLocal(id: Int): Flow<List<NoteDb>> {
-        return noteDao.getNoteByUserId(id)
-    }
+	override fun getNoteByUserIdLocal(id: Int): Flow<List<NoteDb>> {
+		return noteDao.getNoteByUserId(id)
+	}
 }

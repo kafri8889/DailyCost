@@ -8,14 +8,14 @@ import retrofit2.Response
  * Use case untuk mendapatkan pengeluaran dari database server
  */
 class GetRemoteExpenseUseCase(
-    private val expenseRepository: IExpenseRepository
+	private val expenseRepository: IExpenseRepository
 ) {
 
-    suspend operator fun invoke(
-        userId: Int,
-        token: String
-    ): Response<GetExpenseResponse> {
-        return expenseRepository.getRemoteExpense(userId, token)
-    }
+	suspend operator fun invoke(
+		userId: Int,
+		token: String
+	): Response<GetExpenseResponse> {
+		return expenseRepository.getRemoteExpense(userId, token)
+	}
 
 }

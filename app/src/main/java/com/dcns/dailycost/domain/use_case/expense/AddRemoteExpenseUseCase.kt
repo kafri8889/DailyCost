@@ -9,15 +9,15 @@ import retrofit2.Response
  * Use case untuk menambahkan pengeluaran ke database server
  */
 class AddRemoteExpenseUseCase(
-    private val expenseRepository: IExpenseRepository
+	private val expenseRepository: IExpenseRepository
 ) {
 
-    suspend operator fun invoke(
-        userId: Int,
-        body: RequestBody,
-        token: String
-    ): Response<AddExpenseResponse> {
-        return expenseRepository.addRemoteExpense(userId, body, token)
-    }
+	suspend operator fun invoke(
+		userId: Int,
+		body: RequestBody,
+		token: String
+	): Response<AddExpenseResponse> {
+		return expenseRepository.addRemoteExpense(userId, body, token)
+	}
 
 }

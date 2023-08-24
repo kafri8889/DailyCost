@@ -41,84 +41,84 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class RepositoryModule {
 
-    @Provides
-    @Singleton
-    fun provideUserCredentialRepository(
-        userCredentialDataStore: DataStore<ProtoUserCredential>
-    ): IUserCredentialRepository = UserCredentialRepository(
-        userCredentialDataStore = userCredentialDataStore
-    )
+	@Provides
+	@Singleton
+	fun provideUserCredentialRepository(
+		userCredentialDataStore: DataStore<ProtoUserCredential>
+	): IUserCredentialRepository = UserCredentialRepository(
+		userCredentialDataStore = userCredentialDataStore
+	)
 
-    @Provides
-    @Singleton
-    fun provideUserPreferenceRepository(
-        userPreferenceDataStore: DataStore<ProtoUserPreference>
-    ): IUserPreferenceRepository = UserPreferenceRepository(
-        userPreferenceDataStore = userPreferenceDataStore
-    )
+	@Provides
+	@Singleton
+	fun provideUserPreferenceRepository(
+		userPreferenceDataStore: DataStore<ProtoUserPreference>
+	): IUserPreferenceRepository = UserPreferenceRepository(
+		userPreferenceDataStore = userPreferenceDataStore
+	)
 
-    @Provides
-    @Singleton
-    fun provideLoginRegisterRepository(
-        loginRegisterHandler: LoginRegisterHandler
-    ): ILoginRegisterRepository = LoginRegisterRepository(
-        loginRegisterHandler = loginRegisterHandler
-    )
+	@Provides
+	@Singleton
+	fun provideLoginRegisterRepository(
+		loginRegisterHandler: LoginRegisterHandler
+	): ILoginRegisterRepository = LoginRegisterRepository(
+		loginRegisterHandler = loginRegisterHandler
+	)
 
-    @Provides
-    @Singleton
-    fun provideBalanceRepository(
-        depoHandler: DepoHandler,
-        balanceDataStore: DataStore<ProtoUserBalance>
-    ): IBalanceRepository = BalanceRepository(
-        depoHandler = depoHandler,
-        balanceDataStore = balanceDataStore
-    )
+	@Provides
+	@Singleton
+	fun provideBalanceRepository(
+		depoHandler: DepoHandler,
+		balanceDataStore: DataStore<ProtoUserBalance>
+	): IBalanceRepository = BalanceRepository(
+		depoHandler = depoHandler,
+		balanceDataStore = balanceDataStore
+	)
 
-    @Provides
-    @Singleton
-    fun provideIncomeRepository(
-        incomeHandler: IncomeHandler,
-        incomeDao: IncomeDao
-    ): IIncomeRepository = IncomeRepository(
-        incomeHandler = incomeHandler,
-        incomeDao = incomeDao
-    )
+	@Provides
+	@Singleton
+	fun provideIncomeRepository(
+		incomeHandler: IncomeHandler,
+		incomeDao: IncomeDao
+	): IIncomeRepository = IncomeRepository(
+		incomeHandler = incomeHandler,
+		incomeDao = incomeDao
+	)
 
-    @Provides
-    @Singleton
-    fun provideExpenseRepository(
-        expenseHandler: ExpenseHandler,
-        expenseDao: ExpenseDao
-    ): IExpenseRepository = ExpenseRepository(
-        expenseHandler = expenseHandler,
-        expenseDao = expenseDao
-    )
+	@Provides
+	@Singleton
+	fun provideExpenseRepository(
+		expenseHandler: ExpenseHandler,
+		expenseDao: ExpenseDao
+	): IExpenseRepository = ExpenseRepository(
+		expenseHandler = expenseHandler,
+		expenseDao = expenseDao
+	)
 
-    @Provides
-    @Singleton
-    fun provideDepoRepository(
-        depoHandler: DepoHandler
-    ): IDepoRepository = DepoRepository(
-        depoHandler = depoHandler
-    )
+	@Provides
+	@Singleton
+	fun provideDepoRepository(
+		depoHandler: DepoHandler
+	): IDepoRepository = DepoRepository(
+		depoHandler = depoHandler
+	)
 
-    @Provides
-    @Singleton
-    fun provideNoteRepository(
-        noteHandler: NoteHandler,
-        noteDao: NoteDao
-    ): INoteRepository = NoteRepository(
-        noteHandler = noteHandler,
-        noteDao = noteDao
-    )
+	@Provides
+	@Singleton
+	fun provideNoteRepository(
+		noteHandler: NoteHandler,
+		noteDao: NoteDao
+	): INoteRepository = NoteRepository(
+		noteHandler = noteHandler,
+		noteDao = noteDao
+	)
 
-    @Provides
-    @Singleton
-    fun provideCategoryRepository(
-        categoryDao: CategoryDao
-    ): ICategoryRepository = CategoryRepository(
-        categoryDao = categoryDao
-    )
+	@Provides
+	@Singleton
+	fun provideCategoryRepository(
+		categoryDao: CategoryDao
+	): ICategoryRepository = CategoryRepository(
+		categoryDao = categoryDao
+	)
 
 }

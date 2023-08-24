@@ -9,23 +9,23 @@ import com.dcns.dailycost.foundation.extension.toCategoryDb
  * Create, Upsert, Update and Delete kategori ke database lokal
  */
 class InputLocalCategoryUseCase(
-    private val categoryRepository: ICategoryRepository
+	private val categoryRepository: ICategoryRepository
 ) {
 
-    suspend operator fun invoke(
-        inputActionType: InputActionType,
-        vararg category: Category
-    ) {
-        val categoryDb = category
-            .map { it.toCategoryDb() }
-            .toTypedArray()
+	suspend operator fun invoke(
+		inputActionType: InputActionType,
+		vararg category: Category
+	) {
+		val categoryDb = category
+			.map { it.toCategoryDb() }
+			.toTypedArray()
 
-        when (inputActionType) {
-            InputActionType.Insert -> categoryRepository.insertCategoryDb(*categoryDb)
-            InputActionType.Upsert -> categoryRepository.upsertCategoryDb(*categoryDb)
-            InputActionType.Update -> categoryRepository.updateCategoryDb(*categoryDb)
-            InputActionType.Delete -> categoryRepository.deleteCategoryDb(*categoryDb)
-        }
-    }
+		when (inputActionType) {
+			InputActionType.Insert -> categoryRepository.insertCategoryDb(*categoryDb)
+			InputActionType.Upsert -> categoryRepository.upsertCategoryDb(*categoryDb)
+			InputActionType.Update -> categoryRepository.updateCategoryDb(*categoryDb)
+			InputActionType.Delete -> categoryRepository.deleteCategoryDb(*categoryDb)
+		}
+	}
 
 }

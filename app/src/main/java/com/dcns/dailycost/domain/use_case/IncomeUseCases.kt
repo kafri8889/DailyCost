@@ -7,9 +7,9 @@ import com.dcns.dailycost.domain.use_case.income.GetRemoteIncomeUseCase
 import com.dcns.dailycost.domain.use_case.income.SyncLocalWithRemoteIncomeUseCase
 
 data class IncomeUseCases(
-    val addRemoteIncomeUseCase: AddRemoteIncomeUseCase,
-    val deleteRemoteIncomeUseCase: DeleteRemoteIncomeUseCase,
-    val getRemoteIncomeUseCase: GetRemoteIncomeUseCase,
-    val getLocalIncomeUseCase: GetLocalIncomeUseCase,
-    val syncLocalWithRemoteIncomeUseCase: SyncLocalWithRemoteIncomeUseCase
+	val addRemoteIncomeUseCase: AddRemoteIncomeUseCase,
+	val deleteRemoteIncomeUseCase: DeleteRemoteIncomeUseCase,
+	val getRemoteIncomeUseCase: GetRemoteIncomeUseCase,
+	val getLocalIncomeUseCase: GetLocalIncomeUseCase,
+	val syncLocalWithRemoteIncomeUseCase: SyncLocalWithRemoteIncomeUseCase
 )

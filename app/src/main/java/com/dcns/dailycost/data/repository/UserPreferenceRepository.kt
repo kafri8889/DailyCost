@@ -12,40 +12,40 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserPreferenceRepository @Inject constructor(
-    private val userPreferenceDataStore: DataStore<ProtoUserPreference>
+	private val userPreferenceDataStore: DataStore<ProtoUserPreference>
 ): IUserPreferenceRepository {
 
-    override val getUserPreference: Flow<UserPreference>
-        get() = userPreferenceDataStore.data
-            .map { it.toUserPreference() }
+	override val getUserPreference: Flow<UserPreference>
+		get() = userPreferenceDataStore.data
+			.map { it.toUserPreference() }
 
-    override suspend fun setLanguage(language: Language) {
-        userPreferenceDataStore.updateData {
-            it.copy(
-                language = language.ordinal
-            )
-        }
-    }
+	override suspend fun setLanguage(language: Language) {
+		userPreferenceDataStore.updateData {
+			it.copy(
+				language = language.ordinal
+			)
+		}
+	}
 
-    override suspend fun setSecureApp(secure: Boolean) {
-        userPreferenceDataStore.updateData {
-            it.copy(
-                secureApp = secure
-            )
-        }
-    }
+	override suspend fun setSecureApp(secure: Boolean) {
+		userPreferenceDataStore.updateData {
+			it.copy(
+				secureApp = secure
+			)
+		}
+	}
 
-    override suspend fun setIsNotFirstInstall(notFirst: Boolean) {
-        userPreferenceDataStore.updateData {
-            it.copy(
-                isNotFirstInstall = notFirst
-            )
-        }
-    }
+	override suspend fun setIsNotFirstInstall(notFirst: Boolean) {
+		userPreferenceDataStore.updateData {
+			it.copy(
+				isNotFirstInstall = notFirst
+			)
+		}
+	}
 
-    companion object {
-        val corruptionHandler = ReplaceFileCorruptionHandler(
-            produceNewData = { ProtoUserPreference() }
-        )
-    }
+	companion object {
+		val corruptionHandler = ReplaceFileCorruptionHandler(
+			produceNewData = { ProtoUserPreference() }
+		)
+	}
 }

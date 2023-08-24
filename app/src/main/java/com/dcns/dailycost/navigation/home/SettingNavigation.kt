@@ -9,18 +9,18 @@ import com.dcns.dailycost.ui.setting.SettingScreen
 import com.dcns.dailycost.ui.setting.SettingViewModel
 
 fun NavGraphBuilder.SettingNavigation(
-    navigationActions: NavigationActions,
-    onNavigationIconClicked: () -> Unit
+	navigationActions: NavigationActions,
+	onNavigationIconClicked: () -> Unit
 ) {
-    composable(
-        route = TopLevelDestinations.Home.setting.route
-    ) { backEntry ->
-        val mViewModel = hiltViewModel<SettingViewModel>(backEntry)
+	composable(
+		route = TopLevelDestinations.Home.setting.route
+	) { backEntry ->
+		val mViewModel = hiltViewModel<SettingViewModel>(backEntry)
 
-        SettingScreen(
-            viewModel = mViewModel,
-            navigationActions = navigationActions,
-            onNavigationIconClicked = onNavigationIconClicked
-        )
-    }
+		SettingScreen(
+			viewModel = mViewModel,
+			navigationActions = navigationActions,
+			onNavigationIconClicked = onNavigationIconClicked
+		)
+	}
 }

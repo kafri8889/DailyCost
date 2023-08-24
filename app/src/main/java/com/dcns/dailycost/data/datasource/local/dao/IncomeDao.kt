@@ -15,27 +15,27 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface IncomeDao {
 
-    @Transaction
-    @Query("SELECT * FROM income_table")
-    fun getAllIncomes(): Flow<List<IncomeDbWithCategoryDb>>
+	@Transaction
+	@Query("SELECT * FROM income_table")
+	fun getAllIncomes(): Flow<List<IncomeDbWithCategoryDb>>
 
-    @Transaction
-    @Query("SELECT * FROM income_table WHERE id_income = :id")
-    fun getIncomeById(id: Int): Flow<IncomeDbWithCategoryDb?>
+	@Transaction
+	@Query("SELECT * FROM income_table WHERE id_income = :id")
+	fun getIncomeById(id: Int): Flow<IncomeDbWithCategoryDb?>
 
-    @Query("DELETE FROM income_table WHERE id_income NOT IN (:ids)")
-    suspend fun deleteIncomeExcept(ids: List<Int>)
+	@Query("DELETE FROM income_table WHERE id_income NOT IN (:ids)")
+	suspend fun deleteIncomeExcept(ids: List<Int>)
 
-    @Update
-    suspend fun updateIncome(vararg income: IncomeDb)
+	@Update
+	suspend fun updateIncome(vararg income: IncomeDb)
 
-    @Upsert
-    suspend fun upsertIncome(vararg income: IncomeDb)
+	@Upsert
+	suspend fun upsertIncome(vararg income: IncomeDb)
 
-    @Delete
-    suspend fun deleteIncome(vararg income: IncomeDb)
+	@Delete
+	suspend fun deleteIncome(vararg income: IncomeDb)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertIncome(vararg income: IncomeDb)
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	suspend fun insertIncome(vararg income: IncomeDb)
 
 }

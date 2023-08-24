@@ -49,140 +49,140 @@ import java.text.DateFormat
 @Preview(device = "spec:width=360dp,height=700dp,dpi=440")
 @Composable
 private fun NoteItemPreview() {
-    DailyCostTheme {
-        NoteItem(
-            note = LocalNoteDataProvider.note2,
-            onClick = {
+	DailyCostTheme {
+		NoteItem(
+			note = LocalNoteDataProvider.note2,
+			onClick = {
 
-            }
-        )
-    }
+			}
+		)
+	}
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun NoteItem(
-    note: Note,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+	note: Note,
+	modifier: Modifier = Modifier,
+	onClick: () -> Unit
 ) {
 
-    val secondaryColor = MaterialTheme.colorScheme.tertiaryContainer
+	val secondaryColor = MaterialTheme.colorScheme.tertiaryContainer
 
-    val context = LocalContext.current
+	val context = LocalContext.current
 
-    var isError by remember { mutableStateOf(true) }
-    var isLoading by remember { mutableStateOf(true) }
+	var isError by remember { mutableStateOf(true) }
+	var isLoading by remember { mutableStateOf(true) }
 
-    val date = remember(note) {
-        DateFormat
-            .getDateInstance(DateFormat.MEDIUM)
-            .format(note.createdAt * 1000) // convert to epoch milli
-    }
+	val date = remember(note) {
+		DateFormat
+			.getDateInstance(DateFormat.MEDIUM)
+			.format(note.createdAt * 1000) // convert to epoch milli
+	}
 
-    val imageRequest = remember(note.imageUrl) {
-        ImageRequest.Builder(context)
-            .data(note.imageUrl)
-            .crossfade(true)
-            .crossfade(1000)
-            .error(
-                GradientDrawable().apply {
-                    setColor(secondaryColor.toArgb())
-                }
-            )
-            .listener(
-                onError = { _, e ->
-                    Timber.e(e.throwable, "request failed: ${e.throwable.message}")
+	val imageRequest = remember(note.imageUrl) {
+		ImageRequest.Builder(context)
+			.data(note.imageUrl)
+			.crossfade(true)
+			.crossfade(1000)
+			.error(
+				GradientDrawable().apply {
+					setColor(secondaryColor.toArgb())
+				}
+			)
+			.listener(
+				onError = { _, e ->
+					Timber.e(e.throwable, "request failed: ${e.throwable.message}")
 
-                    isError = true
-                    isLoading = false
-                },
-                onStart = { _ ->
-                    isError = false
-                    isLoading = true
-                },
-                onSuccess = { _, _ ->
-                    isError = false
-                    isLoading = false
-                }
-            )
-            .build()
-    }
+					isError = true
+					isLoading = false
+				},
+				onStart = { _ ->
+					isError = false
+					isLoading = true
+				},
+				onSuccess = { _, _ ->
+					isError = false
+					isLoading = false
+				}
+			)
+			.build()
+	}
 
-    Card(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            AnimatedVisibility(
-                visible = note.imageUrl.isNotBlank(),
-                enter = expandHorizontally(tween(512)),
-                exit = shrinkHorizontally(tween(512)),
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    AsyncImage(
-                        model = imageRequest,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(96.dp)
-                            .placeholder(
-                                visible = isLoading,
-                                color = MaterialTheme.colorScheme.outline,
-                                highlight = PlaceholderHighlight.shimmer(
-                                    highlightColor = Color.White
-                                )
-                            )
-                    )
+	Card(
+		onClick = onClick,
+		modifier = modifier
+	) {
+		Row(
+			modifier = Modifier
+				.fillMaxWidth()
+		) {
+			AnimatedVisibility(
+				visible = note.imageUrl.isNotBlank(),
+				enter = expandHorizontally(tween(512)),
+				exit = shrinkHorizontally(tween(512)),
+			) {
+				Box(contentAlignment = Alignment.Center) {
+					AsyncImage(
+						model = imageRequest,
+						contentDescription = null,
+						contentScale = ContentScale.Crop,
+						modifier = Modifier
+							.size(96.dp)
+							.placeholder(
+								visible = isLoading,
+								color = MaterialTheme.colorScheme.outline,
+								highlight = PlaceholderHighlight.shimmer(
+									highlightColor = Color.White
+								)
+							)
+					)
 
-                    if (isError) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_danger),
-                            contentDescription = null
-                        )
-                    }
-                }
-            }
+					if (isError) {
+						Icon(
+							painter = painterResource(id = R.drawable.ic_danger),
+							contentDescription = null
+						)
+					}
+				}
+			}
 
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier
-                    .padding(8.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    // Title
-                    Text(
-                        text = note.title,
-                        style = MaterialTheme.typography.titleSmall,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1,
-                        modifier = Modifier
-                            .weight(1f)
-                            .dailyCostMarquee()
-                    )
+			Column(
+				verticalArrangement = Arrangement.spacedBy(4.dp),
+				modifier = Modifier
+					.padding(8.dp)
+			) {
+				Row(
+					verticalAlignment = Alignment.CenterVertically,
+					horizontalArrangement = Arrangement.spacedBy(8.dp)
+				) {
+					// Title
+					Text(
+						text = note.title,
+						style = MaterialTheme.typography.titleSmall,
+						overflow = TextOverflow.Ellipsis,
+						maxLines = 1,
+						modifier = Modifier
+							.weight(1f)
+							.dailyCostMarquee()
+					)
 
-                    // Date
-                    Text(
-                        text = date,
-                        style = MaterialTheme.typography.labelMedium,
-                        maxLines = 1
-                    )
-                }
+					// Date
+					Text(
+						text = date,
+						style = MaterialTheme.typography.labelMedium,
+						maxLines = 1
+					)
+				}
 
-                // Body
-                Text(
-                    text = note.body,
-                    style = MaterialTheme.typography.bodySmall,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 3
-                )
-            }
-        }
-    }
+				// Body
+				Text(
+					text = note.body,
+					style = MaterialTheme.typography.bodySmall,
+					overflow = TextOverflow.Ellipsis,
+					maxLines = 3
+				)
+			}
+		}
+	}
 }

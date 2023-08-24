@@ -9,11 +9,11 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = "note_table")
 data class NoteDb(
-    @PrimaryKey
-    @ColumnInfo(name = "id_note") val id: String,
-    @ColumnInfo(name = "body_note") val body: String,
-    @ColumnInfo(name = "createdAt_note") val createdAt: Long,
-    @ColumnInfo(name = "imageUrl_note") val imageUrl: String,
-    @ColumnInfo(name = "title_note") val title: String,
-    @ColumnInfo(name = "userId_note") val userId: String,
+	@PrimaryKey
+	@ColumnInfo(name = "id_note") val id: String,
+	@ColumnInfo(name = "body_note") val body: String,
+	@ColumnInfo(name = "createdAt_note") val createdAt: Long,
+	@ColumnInfo(name = "imageUrl_note") val imageUrl: String,
+	@ColumnInfo(name = "title_note") val title: String,
+	@ColumnInfo(name = "userId_note") val userId: String,
 ): Parcelable

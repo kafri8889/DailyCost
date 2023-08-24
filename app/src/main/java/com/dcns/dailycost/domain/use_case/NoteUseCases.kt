@@ -7,9 +7,9 @@ import com.dcns.dailycost.domain.use_case.note.SyncLocalWithRemoteNoteUseCase
 import com.dcns.dailycost.domain.use_case.note.UpsertLocalNoteUseCase
 
 data class NoteUseCases(
-    val getRemoteNoteUseCase: GetRemoteNoteUseCase,
-    val getLocalNoteUseCase: GetLocalNoteUseCase,
-    val addRemoteNoteUseCase: AddRemoteNoteUseCase,
-    val upsertLocalNoteUseCase: UpsertLocalNoteUseCase,
-    val syncLocalWithRemoteNoteUseCase: SyncLocalWithRemoteNoteUseCase
+	val getRemoteNoteUseCase: GetRemoteNoteUseCase,
+	val getLocalNoteUseCase: GetLocalNoteUseCase,
+	val addRemoteNoteUseCase: AddRemoteNoteUseCase,
+	val upsertLocalNoteUseCase: UpsertLocalNoteUseCase,
+	val syncLocalWithRemoteNoteUseCase: SyncLocalWithRemoteNoteUseCase
 )

@@ -6,7 +6,7 @@ import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.ui.splash.SplashScreen
 
 fun NavGraphBuilder.SplashNavigation() {
-    composable(TopLevelDestinations.splash.route) {
-        SplashScreen()
-    }
+	composable(TopLevelDestinations.splash.route) {
+		SplashScreen()
+	}
 }

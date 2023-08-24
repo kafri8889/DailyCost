@@ -11,12 +11,12 @@ import com.google.accompanist.navigation.material.bottomSheet
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 fun NavGraphBuilder.ChangeLanguageNavigation(navigationActions: NavigationActions) {
-    bottomSheet(TopLevelDestinations.Home.changeLanguage.route) { backEntry ->
-        val mViewModel = hiltViewModel<ChangeLanguageViewModel>(backEntry)
+	bottomSheet(TopLevelDestinations.Home.changeLanguage.route) { backEntry ->
+		val mViewModel = hiltViewModel<ChangeLanguageViewModel>(backEntry)
 
-        ChangeLanguageScreen(
-            viewModel = mViewModel,
-            navigationActions = navigationActions
-        )
-    }
+		ChangeLanguageScreen(
+			viewModel = mViewModel,
+			navigationActions = navigationActions
+		)
+	}
 }

@@ -33,115 +33,115 @@ import com.dcns.dailycost.foundation.extension.dailyCostMarquee
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectableWalletItem(
-    wallet: Wallet,
-    selected: Boolean,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+	wallet: Wallet,
+	selected: Boolean,
+	modifier: Modifier = Modifier,
+	onClick: () -> Unit
 ) {
 
-    val scaleAnimatable = remember { Animatable(1f) }
+	val scaleAnimatable = remember { Animatable(1f) }
 
-    LaunchedEffect(selected) {
-        if (selected) {
-            scaleAnimatable.animateTo(
-                targetValue = 0.88f,
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy
-                )
-            )
+	LaunchedEffect(selected) {
+		if (selected) {
+			scaleAnimatable.animateTo(
+				targetValue = 0.88f,
+				animationSpec = spring(
+					dampingRatio = Spring.DampingRatioMediumBouncy
+				)
+			)
 
-            scaleAnimatable.animateTo(
-                targetValue = 1f,
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy
-                )
-            )
-        }
-    }
+			scaleAnimatable.animateTo(
+				targetValue = 1f,
+				animationSpec = spring(
+					dampingRatio = Spring.DampingRatioMediumBouncy
+				)
+			)
+		}
+	}
 
-    Card(
-        onClick = onClick,
-        border = if (selected) BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outline
-        ) else null,
-        modifier = modifier
-            .graphicsLayer {
-                scaleX = scaleAnimatable.value
-                scaleY = scaleAnimatable.value
-            }
-    ) {
-        WalletItemContent(
-            wallet = wallet,
-            trailingIcon = {
-                RadioButton(
-                    selected = selected,
-                    onClick = onClick
-                )
-            }
-        )
-    }
+	Card(
+		onClick = onClick,
+		border = if (selected) BorderStroke(
+			width = 1.dp,
+			color = MaterialTheme.colorScheme.outline
+		) else null,
+		modifier = modifier
+			.graphicsLayer {
+				scaleX = scaleAnimatable.value
+				scaleY = scaleAnimatable.value
+			}
+	) {
+		WalletItemContent(
+			wallet = wallet,
+			trailingIcon = {
+				RadioButton(
+					selected = selected,
+					onClick = onClick
+				)
+			}
+		)
+	}
 }
 
 @Composable
 fun WalletItem(
-    wallet: Wallet,
-    modifier: Modifier = Modifier
+	wallet: Wallet,
+	modifier: Modifier = Modifier
 ) {
 
-    Card(modifier = modifier) {
-        WalletItemContent(wallet = wallet)
-    }
+	Card(modifier = modifier) {
+		WalletItemContent(wallet = wallet)
+	}
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun WalletItemContent(
-    wallet: Wallet,
-    trailingIcon: @Composable () -> Unit = {}
+	wallet: Wallet,
+	trailingIcon: @Composable () -> Unit = {}
 ) {
 
-    val currency = LocalCurrency.current
+	val currency = LocalCurrency.current
 
-    val balance = remember(wallet.amount) {
-        CurrencyFormatter.format(
-            locale = primarySystemLocale,
-            amount = wallet.amount,
-            countryCode = currency.countryCode
-        )
-    }
+	val balance = remember(wallet.amount) {
+		CurrencyFormatter.format(
+			locale = primarySystemLocale,
+			amount = wallet.amount,
+			countryCode = currency.countryCode
+		)
+	}
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
-        Icon(
-            painter = painterResource(wallet.walletType.icon),
-            contentDescription = null
-        )
+	Row(
+		verticalAlignment = Alignment.CenterVertically,
+		horizontalArrangement = Arrangement.spacedBy(16.dp),
+		modifier = Modifier
+			.fillMaxWidth()
+			.padding(8.dp)
+	) {
+		Icon(
+			painter = painterResource(wallet.walletType.icon),
+			contentDescription = null
+		)
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .weight(1f)
-        ) {
-            Text(
-                text = wallet.walletType.localizedName,
-                style = MaterialTheme.typography.bodySmall
-            )
+		Column(
+			verticalArrangement = Arrangement.spacedBy(8.dp),
+			modifier = Modifier
+				.weight(1f)
+		) {
+			Text(
+				text = wallet.walletType.localizedName,
+				style = MaterialTheme.typography.bodySmall
+			)
 
-            AnimatedTextByChar(
-                text = balance,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .dailyCostMarquee()
-            )
-        }
+			AnimatedTextByChar(
+				text = balance,
+				style = MaterialTheme.typography.titleMedium,
+				modifier = Modifier
+					.fillMaxWidth()
+					.dailyCostMarquee()
+			)
+		}
 
-        trailingIcon()
-    }
+		trailingIcon()
+	}
 }

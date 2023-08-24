@@ -17,40 +17,41 @@ import java.io.File
  * Use case untuk menambahkan catatan ke database server
  */
 class AddRemoteNoteUseCase(
-    private val noteRepository: INoteRepository
+	private val noteRepository: INoteRepository
 ) {
 
-    /**
-     * @param image file imagenya, usahain dari cache dan sudah di compress
-     */
-    suspend operator fun invoke(
-        userId: String,
-        token: String,
-        note: Note,
-        image: File
-    ): Response<AddNoteResponse> {
-        noteRepository.upsertNote(note.toNoteDb())
+	/**
+	 * @param image file imagenya, usahain dari cache dan sudah di compress
+	 */
+	suspend operator fun invoke(
+		userId: String,
+		token: String,
+		note: Note,
+		image: File
+	): Response<AddNoteResponse> {
+		noteRepository.upsertNote(note.toNoteDb())
 
-        val mTitle = note.title.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val mBody = note.body.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val mDate = CommonDateFormatter.api.format(note.createdAt).toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val mUserId = userId.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+		val mTitle = note.title.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+		val mBody = note.body.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+		val mDate = CommonDateFormatter.api.format(note.createdAt)
+			.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+		val mUserId = userId.toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-        val reqFile = image.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val mFile = MultipartBody.Part.createFormData(
-            "file",
-            image.name,
-            reqFile
-        )
+		val reqFile = image.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+		val mFile = MultipartBody.Part.createFormData(
+			"file",
+			image.name,
+			reqFile
+		)
 
-        return noteRepository.addNote(
-            token = token,
-            title = mTitle,
-            body = mBody,
-            date = mDate,
-            userId = mUserId,
-            file = mFile
-        )
-    }
+		return noteRepository.addNote(
+			token = token,
+			title = mTitle,
+			body = mBody,
+			date = mDate,
+			userId = mUserId,
+			file = mFile
+		)
+	}
 
 }

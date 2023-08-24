@@ -8,30 +8,30 @@ import retrofit2.Response
 
 interface IncomeHandler {
 
-    /**
-     * Tambah pemasukan baru
-     */
-    suspend fun addIncome(
-        userId: Int,
-        body: RequestBody,
-        token: String
-    ): Response<IncomePostResponse>
+	/**
+	 * Tambah pemasukan baru
+	 */
+	suspend fun addIncome(
+		userId: Int,
+		body: RequestBody,
+		token: String
+	): Response<IncomePostResponse>
 
-    /**
-     * Dapatkan pemasukan dari id yang diberikan
-     */
-    suspend fun getIncome(
-        userId: Int,
-        token: String
-    ): Response<IncomeGetResponse>
+	/**
+	 * Dapatkan pemasukan dari id yang diberikan
+	 */
+	suspend fun getIncome(
+		userId: Int,
+		token: String
+	): Response<IncomeGetResponse>
 
-    /**
-     * Hapus pemasukan
-     */
-    suspend fun deleteIncome(
-        userId: Int,
-        body: RequestBody,
-        token: String
-    ): Response<DeleteResponse>
+	/**
+	 * Hapus pemasukan
+	 */
+	suspend fun deleteIncome(
+		userId: Int,
+		body: RequestBody,
+		token: String
+	): Response<DeleteResponse>
 
 }
