@@ -255,8 +255,7 @@ private fun TransactionScreenContent(
                         )
                     }
 
-                    // TODO: api ngga support buat hapus income
-                    if (state.transactionMode == TransactionMode.Edit && state.transactionType.isExpense) {
+                    if (state.transactionMode == TransactionMode.Edit) {
                         IconButton(
                             onClick = {
                                 showDeleteDialog = true
