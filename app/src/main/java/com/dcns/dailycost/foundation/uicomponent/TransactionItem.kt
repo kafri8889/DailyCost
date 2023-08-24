@@ -1,8 +1,6 @@
 package com.dcns.dailycost.foundation.uicomponent
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,12 +20,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dcns.dailycost.R
 import com.dcns.dailycost.data.datasource.local.LocalExpenseDataProvider
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.LocalCurrency
@@ -67,7 +63,7 @@ fun TransactionItem(
 			)
 
 			Column(
-				verticalArrangement = Arrangement.spacedBy(4.dp),
+				verticalArrangement = Arrangement.spacedBy(8.dp),
 				modifier = Modifier
 					.weight(1f)
 			) {
@@ -92,27 +88,13 @@ fun TransactionItem(
 
 					Spacer(modifier = Modifier.width(8.dp))
 
-					Box(
-						contentAlignment = Alignment.Center,
-						modifier = Modifier
-							.clip(CircleShape)
-							.background(MaterialTheme.colorScheme.tertiaryContainer)
-					) {
-						Text(
-							text = stringResource(
-								id = if (transaction.isExpense) R.string.expenses
-								else R.string.income
-							),
-							style = MaterialTheme.typography.bodyMedium.copy(
-								color = MaterialTheme.colorScheme.tertiary
-							),
-							modifier = Modifier
-								.padding(
-									vertical = 4.dp,
-									horizontal = 8.dp
-								)
+					Text(
+						text = CommonDateFormatter.edmy(context.primaryLocale)
+							.format(transaction.date),
+						style = MaterialTheme.typography.labelSmall.copy(
+							color = DailyCostTheme.colorScheme.labelText
 						)
-					}
+					)
 				}
 
 				Row(
@@ -122,9 +104,8 @@ fun TransactionItem(
 						.fillMaxWidth()
 				) {
 					Text(
-						text = CommonDateFormatter.edmy(context.primaryLocale)
-							.format(transaction.date),
-						style = MaterialTheme.typography.labelSmall.copy(
+						text = transaction.category.name,
+						style = MaterialTheme.typography.bodyMedium.copy(
 							fontWeight = FontWeight.Normal,
 							color = DailyCostTheme.colorScheme.labelText
 						),
@@ -135,7 +116,7 @@ fun TransactionItem(
 					Text(
 						text = transaction.parseAmount(LocalCurrency.current.countryCode),
 						textAlign = TextAlign.End,
-						style = MaterialTheme.typography.bodyMedium.copy(
+						style = MaterialTheme.typography.titleSmall.copy(
 							fontWeight = FontWeight.SemiBold,
 							color = DailyCostTheme.colorScheme.text
 						),
