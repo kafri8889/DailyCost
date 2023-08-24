@@ -12,6 +12,7 @@ import com.dcns.dailycost.data.WalletType
 import com.dcns.dailycost.data.datasource.local.LocalCategoryDataProvider
 import com.dcns.dailycost.data.model.remote.request_body.expense.AddExpenseRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.expense.DeleteExpenseRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.income.DeleteIncomeRequestBody
 import com.dcns.dailycost.domain.use_case.CategoryUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
@@ -204,23 +205,34 @@ class TransactionViewModel @Inject constructor(
                     }
                 }
             }
-            TransactionAction.Delete -> {
+            TransactionAction.Delete -> { // Delete transaksi ke API
                 viewModelScope.launch {
+                    // Cek koneksi internet
                     if (connectivityManager.isNetworkAvailable.value == false) {
                         sendEvent(TransactionUiEvent.NoInternetConnection())
                         return@launch
                     }
 
+                    // Kirim event "Deleting"
                     sendEvent(TransactionUiEvent.Deleting())
 
+                    // Request penghapusan, observe requestnya di atas (blok init)
                     userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.let { credential ->
                         workManager.beginWith(
-                            Workers.deleteExpenseWorker(
-                                DeleteExpenseRequestBody(
-                                    expenseId = state.value.id,
-                                    userId = credential.id.toInt()
-                                )
-                            ).also { _currentDeleteWorkId.emit(it.id) }
+                            when (state.value.transactionType) {
+                                TransactionType.Income -> Workers.deleteIncomeWorker(
+                                    DeleteIncomeRequestBody(
+                                        incomeId = state.value.id,
+                                        userId = credential.id.toInt()
+                                    )
+                                ).also { _currentDeleteWorkId.emit(it.id) }
+                                TransactionType.Expense -> Workers.deleteExpenseWorker(
+                                    DeleteExpenseRequestBody(
+                                        expenseId = state.value.id,
+                                        userId = credential.id.toInt()
+                                    )
+                                ).also { _currentDeleteWorkId.emit(it.id) }
+                            }
                         ).then(Workers.syncWorker()).enqueue()
                     }
                 }
