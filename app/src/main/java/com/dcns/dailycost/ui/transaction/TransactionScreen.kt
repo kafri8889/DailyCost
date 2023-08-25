@@ -2,6 +2,7 @@ package com.dcns.dailycost.ui.transaction
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,10 +25,9 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -67,6 +68,7 @@ import com.dcns.dailycost.foundation.common.LocalCurrency
 import com.dcns.dailycost.foundation.extension.dailyCostColor
 import com.dcns.dailycost.foundation.extension.primaryLocale
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
+import com.dcns.dailycost.foundation.uicomponent.TransactionSegmentedButton
 
 @Composable
 fun TransactionScreen(
@@ -238,7 +240,12 @@ private fun TransactionScreenContent(
 	) {
 		item {
 			TopAppBar(
-				title = {},
+				title = {
+					Text(
+						text = stringResource(id = R.string.new_transaction),
+						style = MaterialTheme.typography.titleMedium
+					)
+				},
 				navigationIcon = {
 					IconButton(onClick = onNavigationIconClicked) {
 						Icon(
@@ -261,11 +268,13 @@ private fun TransactionScreenContent(
 						}
 					}
 
-					IconButton(onClick = onSave) {
-						Icon(
-							painter = painterResource(id = R.drawable.ic_check),
-							contentDescription = stringResource(id = R.string.accessibility_save)
-						)
+					if (state.transactionMode == TransactionMode.New) {
+						IconButton(onClick = onSave) {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_check),
+								contentDescription = stringResource(id = R.string.accessibility_save)
+							)
+						}
 					}
 				}
 			)
@@ -273,38 +282,14 @@ private fun TransactionScreenContent(
 
 		if (state.transactionMode.isNew()) {
 			item {
-				SingleChoiceSegmentedButtonRow(
+				TransactionSegmentedButton(
+					selectedTransactionType = state.transactionType,
+					onTransactionTypeChanged = onTransactionTypeChanged,
 					modifier = Modifier
 						.fillMaxWidth(0.92f)
-				) {
-					SegmentedButton(
-						shape = RoundedCornerShape(
-							topStartPercent = 100,
-							bottomStartPercent = 100
-						),
-						selected = state.transactionType.isIncome,
-						icon = {},
-						onClick = {
-							onTransactionTypeChanged(TransactionType.Income)
-						}
-					) {
-						Text(TransactionType.Income.name)
-					}
-
-					SegmentedButton(
-						shape = RoundedCornerShape(
-							topEndPercent = 100,
-							bottomEndPercent = 100
-						),
-						selected = state.transactionType.isExpense,
-						icon = {},
-						onClick = {
-							onTransactionTypeChanged(TransactionType.Expense)
-						}
-					) {
-						Text(TransactionType.Expense.name)
-					}
-				}
+						.clip(RoundedCornerShape(25))
+						.background(MaterialTheme.colorScheme.primaryContainer)
+				)
 			}
 		}
 

@@ -113,4 +113,5 @@
     <string name="accessibility_save">Save</string>
     <string name="deleting_transaction">Deleting transaction...</string>
     <string name="undo">Undo</string>
+    <string name="new_transaction">New transaction</string>
 </resources>
