@@ -111,4 +111,6 @@
     <string name="failed_to_delete">Failed to delete</string>
     <string name="transaction_deleted">Transaction deleted</string>
     <string name="accessibility_save">Save</string>
+    <string name="deleting_transaction">Deleting transaction...</string>
+    <string name="undo">Undo</string>
 </resources>

@@ -63,6 +63,7 @@ import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
+import com.dcns.dailycost.data.TransactionMode
 import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.data.defaultNavOptionsBuilder
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
@@ -206,15 +207,15 @@ private fun DashboardScreenContent(
 				TransactionItem(
 					transaction = expense,
 					modifier = Modifier
-//						.clickable {
-//							onNavigateTo(
-//								TopLevelDestinations.Home.transaction.createRoute(
-//									DestinationArgument.TRANSACTION_ID to expense.id,
-//									DestinationArgument.TRANSACTION_TYPE to TransactionType.Expense,
-//									DestinationArgument.TRANSACTION_MODE to TransactionMode.Edit,
-//								)
-//							)
-//						}
+						.clickable {
+							onNavigateTo(
+								TopLevelDestinations.Home.transaction.createRoute(
+									DestinationArgument.TRANSACTION_ID to expense.id,
+									DestinationArgument.TRANSACTION_TYPE to TransactionType.Expense,
+									DestinationArgument.TRANSACTION_MODE to TransactionMode.Edit,
+								)
+							)
+						}
 						.fillMaxWidth()
 						.padding(horizontal = 16.dp)
 						.animateItemPlacement(tween(256))
@@ -244,15 +245,15 @@ private fun DashboardScreenContent(
 				TransactionItem(
 					transaction = income,
 					modifier = Modifier
-//						.clickable {
-//							onNavigateTo(
-//								TopLevelDestinations.Home.transaction.createRoute(
-//									DestinationArgument.TRANSACTION_ID to income.id,
-//									DestinationArgument.TRANSACTION_TYPE to TransactionType.Income,
-//									DestinationArgument.TRANSACTION_MODE to TransactionMode.Edit,
-//								)
-//							)
-//						}
+						.clickable {
+							onNavigateTo(
+								TopLevelDestinations.Home.transaction.createRoute(
+									DestinationArgument.TRANSACTION_ID to income.id,
+									DestinationArgument.TRANSACTION_TYPE to TransactionType.Income,
+									DestinationArgument.TRANSACTION_MODE to TransactionMode.Edit,
+								)
+							)
+						}
 						.fillMaxWidth()
 						.padding(horizontal = 16.dp)
 						.animateItemPlacement(tween(256))

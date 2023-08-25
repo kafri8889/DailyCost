@@ -36,7 +36,7 @@ class IncomeServiceTest {
             userId = TestUtil.adminUserId
         ).toRequestBody()
 
-        incomeService.addIncome(reqBody, TestUtil.adminToken).let { response ->
+        incomeService.addIncome(TestUtil.adminUserId, reqBody, TestUtil.adminToken).let { response ->
             TestUtil.printResponse(response)
 
             Truth.assertThat(response.isSuccessful).isTrue()
