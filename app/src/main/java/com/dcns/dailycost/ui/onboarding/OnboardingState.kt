@@ -9,4 +9,5 @@ data class OnboardingState(
 	val titleText: Int = R.string.its_easy_to_spot_the_categories,
 	val primaryButtonText: Int = R.string.next,
 	val secondaryButtonText: Int = R.string.skip,
+	val imageAssetPath: String = "wallet_with_cash.png"
 )

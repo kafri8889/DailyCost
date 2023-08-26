@@ -1,11 +1,12 @@
 package com.dcns.dailycost.ui.onboarding
 
+import android.graphics.BitmapFactory
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -29,11 +30,12 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -81,6 +83,7 @@ private fun OnboardingScreenContentPreview() {
 				titleText = stringResource(id = R.string.you_can_see_where_the_money_goes),
 				primaryButtonText = "Next",
 				secondaryButtonText = "Skip",
+				imageAssetPath = "wallet_with_cash.png",
 				onPrimaryButtonClicked = {},
 				onSecondaryButtonClicked = {},
 				windowSizeClass = WindowSizeClass.calculateFromSize(
@@ -131,6 +134,7 @@ fun OnboardingScreen(
 			titleText = stringResource(id = state.titleText),
 			primaryButtonText = stringResource(id = state.primaryButtonText),
 			secondaryButtonText = stringResource(id = state.secondaryButtonText),
+			imageAssetPath = state.imageAssetPath,
 			windowSizeClass = windowSizeClass,
 			onPrimaryButtonClicked = {
 				if (state.currentPage == state.pageCount) {
@@ -163,13 +167,17 @@ private fun OnboardingScreenContent(
 	titleText: String,
 	primaryButtonText: String,
 	secondaryButtonText: String,
+	imageAssetPath: String,
 	windowSizeClass: WindowSizeClass,
 	modifier: Modifier = Modifier,
 	onPrimaryButtonClicked: () -> Unit,
 	onSecondaryButtonClicked: () -> Unit
 ) {
 
+	val context = LocalContext.current
 	val config = LocalConfiguration.current
+
+	val imageAssetBitmap by rememberUpdatedState(newValue = BitmapFactory.decodeStream(context.assets.open(imageAssetPath)).asImageBitmap())
 
 	Column(
 		horizontalAlignment = Alignment.CenterHorizontally,
@@ -194,16 +202,23 @@ private fun OnboardingScreenContent(
 				)
 		)
 
-		Image(
-			painter = ColorPainter(Color.LightGray),
-			contentDescription = null,
+		Box(
+			contentAlignment = Alignment.Center,
 			modifier = Modifier
 				.width(config.smallestScreenWidthDp.dp - 16.dp)
 				.aspectRatio(
 					if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded || config.screenHeightDp >= 700) 1f
 					else 1f / 0.8f
 				)
-		)
+				.background(DailyCostTheme.colorScheme.primaryContainer.copy(alpha = 0.3f))
+		) {
+			Image(
+				bitmap = imageAssetBitmap,
+				contentDescription = null,
+				modifier = Modifier
+					.matchParentSize()
+			)
+		}
 
 		Spacer(
 			modifier = Modifier
@@ -227,9 +242,7 @@ private fun OnboardingScreenContent(
 						else -> com.intuit.ssp.R.dimen._18ssp
 					}
 				).value.sp
-			),
-			modifier = Modifier
-				.animateContentSize(tween(256))
+			)
 		)
 
 		Spacer(modifier = Modifier.height(dimensionResource(id = com.intuit.sdp.R.dimen._16sdp)))
@@ -246,9 +259,7 @@ private fun OnboardingScreenContent(
 						else -> com.intuit.ssp.R.dimen._14ssp
 					}
 				).value.sp
-			),
-			modifier = Modifier
-				.animateContentSize(tween(256))
+			)
 		)
 
 		Spacer(
@@ -296,7 +307,7 @@ private fun OnboardingLinearProgressIndicator(
 	LinearProgressIndicator(
 		progress = progress(),
 		color = DailyCostTheme.colorScheme.primary,
-		trackColor = DailyCostTheme.colorScheme.primary.copy(alpha = 0.3f), // Opacity 30%
+		trackColor = DailyCostTheme.colorScheme.primaryContainer, // Opacity 30%
 		modifier = modifier
 	)
 }
