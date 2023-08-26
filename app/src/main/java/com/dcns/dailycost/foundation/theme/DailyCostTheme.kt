@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 
 data class DailyCostColorScheme(
 	val primary: Color,
+	val primaryContainer: Color,
 	val onPrimary: Color,
 	val labelText: Color,
 	val text: Color,
@@ -15,6 +16,7 @@ data class DailyCostColorScheme(
 val LocalDailyCostColorScheme = staticCompositionLocalOf {
 	DailyCostColorScheme(
 		primary = Color.Unspecified,
+		primaryContainer = Color.Unspecified,
 		onPrimary = Color.Unspecified,
 		labelText = Color.Unspecified,
 		text = Color.Unspecified,
