@@ -1,5 +1,10 @@
 package com.dcns.dailycost.ui.transaction
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -41,7 +46,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
@@ -61,10 +65,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TransactionMode
 import com.dcns.dailycost.data.TransactionType
-import com.dcns.dailycost.data.WalletType
-import com.dcns.dailycost.data.model.Category
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.LocalCurrency
@@ -84,7 +87,7 @@ fun TransactionScreen(
 		viewModel = viewModel,
 		onEvent = { event ->
 			when (event) {
-				is TransactionUiEvent.TransactionDeleted -> {
+				is TransactionUiEvent.TransactionDeleted, is TransactionUiEvent.TransactionSaved -> {
 					navigationActions.popBackStack()
 				}
 			}
@@ -93,6 +96,9 @@ fun TransactionScreen(
 		TransactionScreenContent(
 			state = state,
 			onNavigationIconClicked = navigationActions::popBackStack,
+			onNavigateTo = { destination ->
+				navigationActions.navigateTo(destination)
+			},
 			onSaveClicked = {
 				viewModel.onAction(TransactionAction.Save)
 			},
@@ -102,23 +108,14 @@ fun TransactionScreen(
 			onTransactionTypeChanged = { type ->
 				viewModel.onAction(TransactionAction.SetTransactionType(type))
 			},
-			onCategoryChanged = { category ->
-				viewModel.onAction(TransactionAction.SetCategory(category))
-			},
 			onTitleChanged = { username ->
 				viewModel.onAction(TransactionAction.SetName(username))
-			},
-			onPaymentChanged = { walletType ->
-				viewModel.onAction(TransactionAction.SetPayment(walletType))
 			},
 			onAmountChanged = { amount ->
 				viewModel.onAction(TransactionAction.SetAmount(amount))
 			},
 			onDateChanged = { date ->
 				viewModel.onAction(TransactionAction.SetDate(date))
-			},
-			onSave = {
-				viewModel.onAction(TransactionAction.Save)
 			},
 			modifier = Modifier
 				.systemBarsPadding()
@@ -127,7 +124,7 @@ fun TransactionScreen(
 	}
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TransactionScreenContent(
 	state: TransactionState,
@@ -135,13 +132,11 @@ private fun TransactionScreenContent(
 	onSaveClicked: () -> Unit,
 	onDeleteTransaction: () -> Unit,
 	onNavigationIconClicked: () -> Unit,
+	onNavigateTo: (TopLevelDestination) -> Unit,
 	onTransactionTypeChanged: (TransactionType) -> Unit,
-	onCategoryChanged: (Category) -> Unit,
 	onTitleChanged: (String) -> Unit,
-	onPaymentChanged: (WalletType) -> Unit,
 	onAmountChanged: (Double) -> Unit,
-	onDateChanged: (Long) -> Unit,
-	onSave: () -> Unit
+	onDateChanged: (Long) -> Unit
 ) {
 
 	val focusManager = LocalFocusManager.current
@@ -265,7 +260,7 @@ private fun TransactionScreenContent(
 					}
 
 					if (state.transactionMode == TransactionMode.New) {
-						IconButton(onClick = onSave) {
+						IconButton(onClick = onSaveClicked) {
 							Icon(
 								painter = painterResource(id = R.drawable.ic_check),
 								contentDescription = stringResource(id = R.string.accessibility_save)
@@ -320,7 +315,7 @@ private fun TransactionScreenContent(
 				titleActionIcon = if (state.transactionMode.isNew()) painterResource(id = R.drawable.ic_arrow_down) else null,
 				onValueChange = {},
 				onTitleActionClicked = {
-
+					// TODO: Navigate to wallet selector screen
 				},
 				modifier = Modifier
 					.fillMaxWidth(0.92f)
@@ -336,7 +331,7 @@ private fun TransactionScreenContent(
 				titleActionIcon = if (state.transactionMode.isNew()) painterResource(id = R.drawable.ic_arrow_down) else null,
 				onValueChange = {},
 				onTitleActionClicked = {
-
+					// TODO: Navigate to category selector screen
 				},
 				modifier = Modifier
 					.fillMaxWidth(0.92f)
@@ -381,13 +376,15 @@ private fun TransactionScreenContent(
 					modifier = Modifier
 						.fillMaxWidth()
 				) {
-					Box(
-						contentAlignment = Alignment.BottomCenter,
-						modifier = Modifier
-							.size(32.dp)
-					) {
+					AnimatedContent(
+						label = "transaction icon",
+						targetState = state.transactionType,
+						transitionSpec = {
+							scaleIn(tween(256)) togetherWith scaleOut(tween(256))
+						}
+					) { type ->
 						Icon(
-							imageVector = if (state.transactionType.isIncome) Icons.Rounded.Add else Icons.Rounded.Remove,
+							imageVector = if (type.isIncome) Icons.Rounded.Add else Icons.Rounded.Remove,
 							contentDescription = null,
 							modifier = Modifier
 								.size(32.dp)

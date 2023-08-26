@@ -8,10 +8,9 @@ import androidx.work.WorkManager
 import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.TransactionMode
 import com.dcns.dailycost.data.TransactionType
-import com.dcns.dailycost.data.WalletType
-import com.dcns.dailycost.data.datasource.local.LocalCategoryDataProvider
 import com.dcns.dailycost.data.model.remote.request_body.expense.AddExpenseRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.expense.DeleteExpenseRequestBody
+import com.dcns.dailycost.data.model.remote.request_body.income.AddIncomeRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.income.DeleteIncomeRequestBody
 import com.dcns.dailycost.domain.use_case.CategoryUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
@@ -19,6 +18,7 @@ import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.util.GetTransactionBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
+import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.worker.Workers
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,6 +57,9 @@ class TransactionViewModel @Inject constructor(
 
 	private val _currentDeleteWorkId = MutableStateFlow<UUID?>(null)
 	private val currentDeleteWorkId: StateFlow<UUID?> = _currentDeleteWorkId
+
+	private val _currentSaveWorkId = MutableStateFlow<UUID?>(null)
+	private val currentSaveWorkId: StateFlow<UUID?> = _currentSaveWorkId
 
 	init {
 		viewModelScope.launch(Dispatchers.IO) {
@@ -127,32 +130,28 @@ class TransactionViewModel @Inject constructor(
 					WorkInfo.State.FAILED -> {
 						sendEvent(TransactionUiEvent.FailedToDelete())
 					}
-
 					else -> {}
 				}
 			}
 		}
-	}
 
-	/**
-	 * For testing purpose
-	 */
-	fun performInsertTransaction() {
-		viewModelScope.launch(Dispatchers.IO) {
-			userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.let { credential ->
-				// Chain works: Post -> Sync
-				workManager.beginWith(
-					Workers.postExpenseWorker(
-						AddExpenseRequestBody(
-							amount = 1000,
-							name = "performInsertTransaction",
-							payment = WalletType.EWallet.apiName,
-							category = LocalCategoryDataProvider.other.name,
-							date = "2023-07-26",
-							userId = credential.id.toInt()
-						)
-					)
-				).then(Workers.syncWorker()).enqueue()
+		viewModelScope.launch {
+			currentSaveWorkId.flatMapMerge { uuid ->
+				if (uuid != null) {
+					workManager.getWorkInfoByIdLiveData(uuid).asFlow()
+				} else flowOf(null)
+			}.filterNotNull().collect { workInfo ->
+				when (workInfo.state) {
+					WorkInfo.State.ENQUEUED -> {}
+					WorkInfo.State.SUCCEEDED -> {
+						sendEvent(TransactionUiEvent.TransactionSaved())
+					}
+
+					WorkInfo.State.FAILED -> {
+						sendEvent(TransactionUiEvent.FailedToSave())
+					}
+					else -> {}
+				}
 			}
 		}
 	}
@@ -258,7 +257,43 @@ class TransactionViewModel @Inject constructor(
 
 			TransactionAction.Save -> {
 				viewModelScope.launch(Dispatchers.IO) {
+					val mState = state.value
+					// Cek koneksi internet
+					if (connectivityManager.isNetworkAvailable.value == false) {
+						sendEvent(TransactionUiEvent.NoInternetConnection())
+						return@launch
+					}
 
+					// Kirim event "Saving"
+					sendEvent(TransactionUiEvent.Saving())
+
+					userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.let { credential ->
+						// Chain works: Post -> Sync
+						workManager.beginWith(
+							when (mState.transactionType) {
+								TransactionType.Income -> Workers.postIncomeWorker(
+									AddIncomeRequestBody(
+										amount = mState.amount.toInt(),
+										name = mState.name,
+										payment = mState.payment.apiName,
+										category = mState.category.name,
+										date = CommonDateFormatter.api2.format(mState.date),
+										userId = credential.id.toInt()
+									)
+								).also { _currentSaveWorkId.emit(it.id) }
+								TransactionType.Expense -> Workers.postExpenseWorker(
+									AddExpenseRequestBody(
+										amount = mState.amount.toInt(),
+										name = mState.name,
+										payment = mState.payment.apiName,
+										category = mState.category.name,
+										date = CommonDateFormatter.api2.format(mState.date),
+										userId = credential.id.toInt()
+									)
+								).also { _currentSaveWorkId.emit(it.id) }
+							}
+						).then(Workers.syncWorker()).enqueue()
+					}
 				}
 			}
 		}

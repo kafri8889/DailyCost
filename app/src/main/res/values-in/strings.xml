@@ -116,4 +116,6 @@
     <string name="wallet">Dompet</string>
     <string name="buy_food">Beli makanan</string>
     <string name="view_transaction">Lihat transaksi</string>
+    <string name="saving">Menyimpan...</string>
+    <string name="failed_to_save">Failed to save</string>
 </resources>

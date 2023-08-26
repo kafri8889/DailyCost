@@ -119,4 +119,7 @@
     <string name="wallet">Wallet</string>
     <string name="buy_food">Buy food</string>
     <string name="view_transaction">View transaction</string>
+    <string name="saving">Saving...</string>
+    <string name="failed_to_save">Failed to save</string>
+    <string name="transaction_saved">Transaction saved</string>
 </resources>
