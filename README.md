@@ -17,17 +17,17 @@ Dokumentasi: [GitBook](https://anafthdev.gitbook.io/dailycost-android-documentat
 Join discord untuk info lebih lengkap
 
 # Prerequisite
-Compose Version: 1.5.0-beta03
+Compose Version: 1.5.0
 
-Kotlin Version: 1.8.22
+Kotlin Version: 1.9.0
 
-Android Gradle Plugin Version: 8.2.0-alpha13
+Android Gradle Plugin Version: 8.2.0-beta01
 
 Gradle: gradle-8.2-bin.zip
 
 Java Version: 17
 
-Android Studio Version: Hedgehog Canary 13
+Android Studio Version: Hedgehog Beta 01
 
 # Project Structure
 ```
@@ -58,3 +58,4 @@ Aplikasi ini menggunakan **Clean Architecture**, lebih lengkapnya lihat disini h
 - [Rabih]([https://github.com/RobyCigar](https://twitter.com/Robycigar))
 - [Aziz](https://twitter.com/ihsanazz)
 - [deotamaaa](https://github.com/deotamaaa)
+- [Handika](https://twitter.com/kakhandika)
