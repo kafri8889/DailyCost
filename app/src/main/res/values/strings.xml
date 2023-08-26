@@ -114,4 +114,9 @@
     <string name="deleting_transaction">Deleting transaction...</string>
     <string name="undo">Undo</string>
     <string name="new_transaction">New transaction</string>
+    <string name="title">Title</string>
+    <string name="category">Category</string>
+    <string name="wallet">Wallet</string>
+    <string name="buy_food">Buy food</string>
+    <string name="view_transaction">View transaction</string>
 </resources>

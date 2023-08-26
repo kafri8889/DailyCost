@@ -108,4 +108,12 @@
     <string name="deleteing">Menghapus...</string>
     <string name="failed_to_delete">Gagal menghapus</string>
     <string name="transaction_deleted">Transaksi dihapus</string>
+    <string name="accessibility_save">Simpan</string>
+    <string name="deleting_transaction">Menghapus transaksi</string>
+    <string name="new_transaction">Transaksi baru</string>
+    <string name="title">Judul</string>
+    <string name="category">Kategori</string>
+    <string name="wallet">Dompet</string>
+    <string name="buy_food">Beli makanan</string>
+    <string name="view_transaction">Lihat transaksi</string>
 </resources>
