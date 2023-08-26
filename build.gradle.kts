@@ -1,14 +1,14 @@
 buildscript {
-    val kotlin_version by extra("1.8.22")
-    val compose_version by extra("1.5.0-beta03")
+    val kotlin_version by extra("1.9.0")
+    val compose_version by extra("1.5.0")
     val lifecycle_version by extra("2.6.1")
-    val accompanist_version by extra("0.31.4-beta")
+    val accompanist_version by extra("0.32.0")
 
     dependencies {
         classpath("com.android.tools.build:gradle:8.2.0-alpha15")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlin_version")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.44.2")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.47")
         classpath("com.squareup.wire:wire-gradle-plugin:4.4.3")
     }
 }

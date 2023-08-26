@@ -13,24 +13,28 @@ object DatabaseTypeConverter {
 	 * Convert category icon ke ordinal (enum index)
 	 */
 	@TypeConverter
+	@JvmStatic
 	fun categoryIconToOrdinal(categoryIcon: CategoryIcon): Int = categoryIcon.ordinal
 
 	/**
 	 * Convert ordninal (enum index) ke category icon
 	 */
 	@TypeConverter
+	@JvmStatic
 	fun categoryIconFromOrdinal(ordinal: Int): CategoryIcon = CategoryIcon.values()[ordinal]
 
 	/**
 	 * Convert wallet type ke ordinal (enum index)
 	 */
 	@TypeConverter
+	@JvmStatic
 	fun walletTypeToOrdinal(walletType: WalletType): Int = walletType.ordinal
 
 	/**
 	 * Convert ordninal (enum index) ke wallet tipe
 	 */
 	@TypeConverter
+	@JvmStatic
 	fun walletTypeFromOrdinal(ordinal: Int): WalletType = WalletType.values()[ordinal]
 
 }
