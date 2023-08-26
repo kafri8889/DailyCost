@@ -122,4 +122,6 @@
     <string name="saving">Saving...</string>
     <string name="failed_to_save">Failed to save</string>
     <string name="transaction_saved">Transaction saved</string>
+    <string name="add_wallet" >Add wallet</string>
+    <string name="more">More</string>
 </resources>

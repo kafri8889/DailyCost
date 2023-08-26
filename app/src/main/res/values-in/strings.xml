@@ -118,4 +118,7 @@
     <string name="view_transaction">Lihat transaksi</string>
     <string name="saving">Menyimpan...</string>
     <string name="failed_to_save">Failed to save</string>
+    <string name="transaction_saved">Transaksi disimpan</string>
+    <string name="add_wallet">Dompet baru</string>
+    <string name="more">Lainnya</string>
 </resources>

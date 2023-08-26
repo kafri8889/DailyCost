@@ -100,6 +100,8 @@ fun DailyCostTheme(
 		labelText = daily_cost_theme_light_labelText,
 		text = daily_cost_theme_light_text,
 		outline = daily_cost_theme_light_outline,
+		expense = daily_cost_theme_light_expense,
+		income = daily_cost_theme_light_income,
 	)
 
 	CompositionLocalProvider(

@@ -130,11 +130,11 @@ fun TransactionItem(
 					)
 
 					Text(
-						text = transaction.parseAmount(LocalCurrency.current.countryCode),
+						text = "${if (transaction.isExpense) "" else "+"}${transaction.parseAmount(LocalCurrency.current.countryCode)}",
 						textAlign = TextAlign.End,
 						style = MaterialTheme.typography.titleSmall.copy(
 							fontWeight = FontWeight.SemiBold,
-							color = DailyCostTheme.colorScheme.text
+							color = if (transaction.isExpense) DailyCostTheme.colorScheme.expense else DailyCostTheme.colorScheme.income
 						),
 						modifier = Modifier
 							.weight(0.5f)

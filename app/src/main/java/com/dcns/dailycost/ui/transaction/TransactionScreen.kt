@@ -279,7 +279,7 @@ private fun TransactionScreenContent(
 					modifier = Modifier
 						.fillMaxWidth(0.92f)
 						.clip(RoundedCornerShape(25))
-						.background(MaterialTheme.colorScheme.primaryContainer)
+						.background(DailyCostTheme.colorScheme.primaryContainer.copy(alpha = 0.48f))
 				)
 			}
 		}

@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -236,7 +237,7 @@ private fun LoginScreenContent(
 	onEmailChanged: (String) -> Unit = {}
 ) {
 
-	val _48dp = dimensionResource(id = com.intuit.sdp.R.dimen._48sdp)
+	val _32dp = dimensionResource(id = com.intuit.sdp.R.dimen._32sdp)
 
 	val constraintSet = ConstraintSet {
 		val (
@@ -249,7 +250,7 @@ private fun LoginScreenContent(
 			"bottomContent",
 		)
 
-		val gl1 = createGuidelineFromTop(_48dp)
+		val gl1 = createGuidelineFromTop(_32dp)
 
 		constrain(topContent) {
 			start.linkTo(parent.start)
@@ -324,7 +325,8 @@ private fun TopContent(
 			text = stringResource(id = R.string.record_all_your_financial_activities_anywhere),
 			style = MaterialTheme.typography.titleMedium.copy(
 				fontWeight = FontWeight.Normal,
-				fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._16ssp).value.sp
+				fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._16ssp).value.sp,
+				color = DailyCostTheme.colorScheme.labelText
 			)
 		)
 	}
@@ -447,7 +449,8 @@ private fun CenterContent(
 			text = stringResource(id = R.string.forgot_password),
 			style = MaterialTheme.typography.bodySmall.copy(
 				fontWeight = FontWeight.Medium,
-				fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._12ssp).value.sp
+				fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._12ssp).value.sp,
+				color = DailyCostTheme.colorScheme.primary
 			),
 			modifier = Modifier
 				.fillMaxWidth()
@@ -494,20 +497,26 @@ private fun CenterContent(
 				}
 			}
 
-			Text(
-				text = stringResource(id = R.string.keep_me_signed_in),
+			ClickableText(
+				text = buildAnnotatedString { append(stringResource(id = R.string.keep_me_signed_in)) },
 				style = MaterialTheme.typography.titleSmall.copy(
 					fontWeight = FontWeight.Medium
 				),
+				onClick = {
+					onRememberMeCheckedChanged(!rememberMe)
+				},
 				modifier = Modifier
 					.layoutId("titleText")
 			)
 
-			Text(
-				text = stringResource(id = R.string.by_checking_this_box_you_wont_to_sign),
+			ClickableText(
+				text = buildAnnotatedString { append(stringResource(id = R.string.by_checking_this_box_you_wont_to_sign)) },
 				style = MaterialTheme.typography.bodySmall.copy(
 					color = DailyCostTheme.colorScheme.text
 				),
+				onClick = {
+					onRememberMeCheckedChanged(!rememberMe)
+				},
 				modifier = Modifier
 					.layoutId("bodyText")
 			)
@@ -530,6 +539,7 @@ private fun BottomContent(
 		Button(
 			shape = RoundedCornerShape(25),
 			onClick = onSignInClicked,
+			contentPadding = PaddingValues(vertical = dimensionResource(id = com.intuit.sdp.R.dimen._12sdp)),
 			colors = ButtonDefaults.buttonColors(
 				containerColor = DailyCostTheme.colorScheme.primary
 			),

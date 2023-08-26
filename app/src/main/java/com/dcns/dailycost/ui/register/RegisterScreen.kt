@@ -5,6 +5,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -204,7 +205,7 @@ private fun RegisterScreenContent(
 	onEmailChanged: (String) -> Unit = {}
 ) {
 
-	val _48dp = dimensionResource(id = com.intuit.sdp.R.dimen._48sdp)
+	val _32dp = dimensionResource(id = com.intuit.sdp.R.dimen._32sdp)
 
 	val constraintSet = ConstraintSet {
 		val (
@@ -217,7 +218,7 @@ private fun RegisterScreenContent(
 			"bottomContent",
 		)
 
-		val gl1 = createGuidelineFromTop(_48dp)
+		val gl1 = createGuidelineFromTop(_32dp)
 
 		constrain(topContent) {
 			start.linkTo(parent.start)
@@ -292,7 +293,8 @@ private fun TopContent(
 			text = stringResource(id = R.string.unlock_all_the_features_to_manage_income_expenses),
 			style = MaterialTheme.typography.titleMedium.copy(
 				fontWeight = FontWeight.Normal,
-				fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._16ssp).value.sp
+				fontSize = dimensionResource(id = com.intuit.ssp.R.dimen._16ssp).value.sp,
+				color = DailyCostTheme.colorScheme.labelText
 			)
 		)
 	}
@@ -473,6 +475,7 @@ private fun BottomContent(
 		Button(
 			shape = RoundedCornerShape(25),
 			onClick = onSignUpClicked,
+			contentPadding = PaddingValues(vertical = dimensionResource(id = com.intuit.sdp.R.dimen._12sdp)),
 			colors = ButtonDefaults.buttonColors(
 				containerColor = DailyCostTheme.colorScheme.primary
 			),

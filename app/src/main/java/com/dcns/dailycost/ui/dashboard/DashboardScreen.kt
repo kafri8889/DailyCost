@@ -164,7 +164,13 @@ private fun DashboardScreenContent(
 			item {
 				BalanceCard(
 					balance = state.balance,
+					onAddWalletClicked = {
+
+					},
 					onTopUpClicked = {
+
+					},
+					onMoreClicked = {
 
 					},
 					modifier = Modifier
@@ -304,14 +310,14 @@ private fun TitleSection(
 			Text(
 				text = stringResource(id = R.string.see_all),
 				style = MaterialTheme.typography.labelLarge.copy(
-					color = DailyCostTheme.colorScheme.labelText
+					color = DailyCostTheme.colorScheme.text
 				)
 			)
 
 			Icon(
 				painter = painterResource(id = R.drawable.ic_arrow_right_new),
 				contentDescription = null,
-				tint = DailyCostTheme.colorScheme.labelText,
+				tint = DailyCostTheme.colorScheme.text,
 				modifier = Modifier
 					.size(16.dp)
 			)
