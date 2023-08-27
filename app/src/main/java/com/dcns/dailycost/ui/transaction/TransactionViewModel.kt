@@ -5,8 +5,8 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.dcns.dailycost.data.ActionMode
 import com.dcns.dailycost.data.DestinationArgument
-import com.dcns.dailycost.data.TransactionMode
 import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.data.model.remote.request_body.expense.AddExpenseRequestBody
 import com.dcns.dailycost.data.model.remote.request_body.expense.DeleteExpenseRequestBody
@@ -50,8 +50,8 @@ class TransactionViewModel @Inject constructor(
 
 	private val deliveredTransactionId =
 		savedStateHandle.getStateFlow<Int?>(DestinationArgument.TRANSACTION_ID, null)
-	private val deliveredTransactionMode =
-		savedStateHandle.getStateFlow<TransactionMode?>(DestinationArgument.TRANSACTION_MODE, null)
+	private val deliveredActionMode =
+		savedStateHandle.getStateFlow<ActionMode?>(DestinationArgument.ACTION_MODE, null)
 	private val deliveredTransactionType =
 		savedStateHandle.getStateFlow<TransactionType?>(DestinationArgument.TRANSACTION_TYPE, null)
 
@@ -94,12 +94,12 @@ class TransactionViewModel @Inject constructor(
 		}
 
 		viewModelScope.launch(Dispatchers.IO) {
-			deliveredTransactionMode
+			deliveredActionMode
 				.filterNotNull()
 				.collect { mode ->
 					updateState {
 						copy(
-							transactionMode = mode
+							actionMode = mode
 						)
 					}
 				}

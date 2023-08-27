@@ -1,6 +1,6 @@
 package com.dcns.dailycost.ui.transaction
 
-import com.dcns.dailycost.data.TransactionMode
+import com.dcns.dailycost.data.ActionMode
 import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.data.WalletType
 import com.dcns.dailycost.data.datasource.local.LocalCategoryDataProvider
@@ -19,7 +19,7 @@ data class TransactionState(
 	 * Available category in local db
 	 */
 	val availableCategory: List<Category> = emptyList(),
-	val transactionMode: TransactionMode = TransactionMode.New,
+	val actionMode: ActionMode = ActionMode.New,
 	val transactionType: TransactionType = TransactionType.Income,
 
 	val titleError: Boolean = false

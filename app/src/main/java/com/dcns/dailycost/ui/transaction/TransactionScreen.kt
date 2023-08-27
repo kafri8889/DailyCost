@@ -59,9 +59,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
+import com.dcns.dailycost.data.ActionMode
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestination
-import com.dcns.dailycost.data.TransactionMode
 import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
@@ -228,7 +228,7 @@ private fun TransactionScreenContent(
 				title = {
 					Text(
 						text = stringResource(
-							id = if (state.transactionMode.isNew()) R.string.new_transaction else R.string.view_transaction
+							id = if (state.actionMode.isNew()) R.string.new_transaction else R.string.view_transaction
 						),
 						style = MaterialTheme.typography.titleMedium
 					)
@@ -242,7 +242,7 @@ private fun TransactionScreenContent(
 					}
 				},
 				actions = {
-					if (state.transactionMode == TransactionMode.Edit) {
+					if (state.actionMode == ActionMode.View) {
 						IconButton(
 							onClick = {
 								showDeleteDialog = true
@@ -255,7 +255,7 @@ private fun TransactionScreenContent(
 						}
 					}
 
-					if (state.transactionMode == TransactionMode.New) {
+					if (state.actionMode == ActionMode.New) {
 						IconButton(onClick = onSaveClicked) {
 							Icon(
 								painter = painterResource(id = R.drawable.ic_check),
@@ -267,7 +267,7 @@ private fun TransactionScreenContent(
 			)
 		}
 
-		if (state.transactionMode.isNew()) {
+		if (state.actionMode.isNew()) {
 			item {
 				TransactionSegmentedButton(
 					selectedTransactionType = state.transactionType,
@@ -285,7 +285,7 @@ private fun TransactionScreenContent(
 				placeholder = stringResource(id = R.string.buy_food),
 				title = stringResource(id = R.string.title),
 				value = state.title,
-				readOnly = state.transactionMode.isEdit(),
+				readOnly = state.actionMode.isView(),
 				singleLine = true,
 				error = state.titleError,
 				errorText = stringResource(id = R.string.title_cant_be_empty),
@@ -310,7 +310,7 @@ private fun TransactionScreenContent(
 				value = state.payment.name,
 				readOnly = true,
 				singleLine = true,
-				titleActionIcon = if (state.transactionMode.isNew()) painterResource(id = R.drawable.ic_arrow_down) else null,
+				titleActionIcon = if (state.actionMode.isNew()) painterResource(id = R.drawable.ic_arrow_down) else null,
 				onValueChange = {},
 				onTitleActionClicked = {
 					// TODO: Navigate to wallet selector screen
@@ -326,7 +326,7 @@ private fun TransactionScreenContent(
 				value = state.category.name,
 				readOnly = true,
 				singleLine = true,
-				titleActionIcon = if (state.transactionMode.isNew()) painterResource(id = R.drawable.ic_arrow_down) else null,
+				titleActionIcon = if (state.actionMode.isNew()) painterResource(id = R.drawable.ic_arrow_down) else null,
 				onValueChange = {},
 				onTitleActionClicked = {
 					// TODO: Navigate to category selector screen
@@ -342,7 +342,7 @@ private fun TransactionScreenContent(
 				value = CommonDateFormatter.edmy(LocalContext.current.primaryLocale).format(state.date),
 				readOnly = true,
 				singleLine = true,
-				trailingIcon = if (state.transactionMode.isNew()) painterResource(id = R.drawable.ic_calendar) else null,
+				trailingIcon = if (state.actionMode.isNew()) painterResource(id = R.drawable.ic_calendar) else null,
 				onValueChange = {},
 				onTrailingIconClicked = {
 					showDatePickerDialog = true
@@ -391,7 +391,7 @@ private fun TransactionScreenContent(
 
 					BasicTextField(
 						value = amount,
-						readOnly = state.transactionMode.isEdit(),
+						readOnly = state.actionMode.isView(),
 						cursorBrush = Brush.horizontalGradient(
 							listOf(
 								DailyCostTheme.colorScheme.primary,

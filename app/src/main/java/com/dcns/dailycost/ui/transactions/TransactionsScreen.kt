@@ -25,11 +25,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
+import com.dcns.dailycost.data.ActionMode
 import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
-import com.dcns.dailycost.data.TransactionMode
 import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
@@ -53,7 +53,7 @@ fun TransactionsScreen(
 					navigationActions.navigateTo(
 						destination = TopLevelDestinations.Home.transaction.createRoute(
 							DestinationArgument.TRANSACTION_ID to -1,
-							DestinationArgument.TRANSACTION_MODE to TransactionMode.New,
+							DestinationArgument.ACTION_MODE to ActionMode.New,
 							DestinationArgument.TRANSACTION_TYPE to (state.selectedTransactionType
 								?: TransactionType.Income)
 						)
@@ -120,7 +120,7 @@ private fun TransactionsScreenContent(
 							TopLevelDestinations.Home.transaction.createRoute(
 								DestinationArgument.TRANSACTION_ID to transaction.id,
 								DestinationArgument.TRANSACTION_TYPE to if (transaction.isIncome) TransactionType.Income else TransactionType.Expense,
-								DestinationArgument.TRANSACTION_MODE to TransactionMode.Edit,
+								DestinationArgument.ACTION_MODE to ActionMode.View,
 							)
 						)
 					}
