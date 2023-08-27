@@ -1,4 +1,4 @@
-package com.dcns.dailycost.ui.add_category
+package com.dcns.dailycost.ui.category
 
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,14 +20,15 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
+import com.dcns.dailycost.data.ActionMode
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.uicomponent.DailyCostTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddCategoryScreen(
-	viewModel: AddCategoryViewModel,
+fun CategoryScreen(
+	viewModel: CategoryViewModel,
 	navigationActions: NavigationActions
 ) {
 	val state by viewModel.state.collectAsStateWithLifecycle()
@@ -35,7 +36,7 @@ fun AddCategoryScreen(
 	BaseScreenWrapper(
 		viewModel = viewModel,
 		onEvent = { event ->
-			if (event is AddCategoryUiEvent.Saved) {
+			if (event is CategoryUiEvent.Saved) {
 				navigationActions.popBackStack()
 			}
 		},
@@ -43,7 +44,13 @@ fun AddCategoryScreen(
 			TopAppBar(
 				title = {
 					Text(
-						text = stringResource(id = R.string.add_category),
+						text = stringResource(
+							id = when (state.actionMode) {
+								ActionMode.New -> R.string.add_category
+								ActionMode.Edit -> R.string.edit_category
+								ActionMode.View -> R.string.view_category
+							}
+						),
 						style = MaterialTheme.typography.titleMedium
 					)
 				},
@@ -56,15 +63,30 @@ fun AddCategoryScreen(
 					}
 				},
 				actions = {
-					IconButton(
-						onClick = {
-							viewModel.onAction(AddCategoryAction.Save)
+					if (state.actionMode.isView() && !state.default) {
+						IconButton(
+							onClick = {
+
+							}
+						) {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_trash),
+								contentDescription = stringResource(id = R.string.accessibility_delete)
+							)
 						}
-					) {
-						Icon(
-							painter = painterResource(id = R.drawable.ic_check),
-							contentDescription = stringResource(id = R.string.accessibility_save)
-						)
+					}
+
+					if (state.actionMode.isNew()) {
+						IconButton(
+							onClick = {
+								viewModel.onAction(CategoryAction.Save)
+							}
+						) {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_check),
+								contentDescription = stringResource(id = R.string.accessibility_save)
+							)
+						}
 					}
 				}
 			)
@@ -73,7 +95,7 @@ fun AddCategoryScreen(
 		AddCategoryScreenContent(
 			state = state,
 			onNameChanged = { name ->
-				viewModel.onAction(AddCategoryAction.SetName(name))
+				viewModel.onAction(CategoryAction.SetName(name))
 			},
 			modifier = Modifier
 				.fillMaxSize()
@@ -84,7 +106,7 @@ fun AddCategoryScreen(
 
 @Composable
 private fun AddCategoryScreenContent(
-	state: AddCategoryState,
+	state: CategoryState,
 	modifier: Modifier = Modifier,
 	onNameChanged: (String) -> Unit
 ) {
@@ -129,6 +151,7 @@ private fun AddCategoryScreenContent(
 		DailyCostTextField(
 			value = state.name,
 			error = state.nameError,
+			readOnly = state.actionMode.isView(),
 			title = stringResource(id = R.string.category_name),
 			errorText = stringResource(id = R.string.name_cant_be_empty),
 			placeholder = stringResource(id = R.string.my_category),

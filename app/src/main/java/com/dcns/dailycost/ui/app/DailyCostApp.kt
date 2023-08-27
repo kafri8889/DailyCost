@@ -53,8 +53,8 @@ import com.dcns.dailycost.foundation.uicomponent.DrawerItem
 import com.dcns.dailycost.navigation.HomeNavHost
 import com.dcns.dailycost.navigation.LoginRegisterNavHost
 import com.dcns.dailycost.navigation.OnboardingNavHost
-import com.dcns.dailycost.navigation.home.AddCategoryNavigation
 import com.dcns.dailycost.navigation.home.CategoriesNavigation
+import com.dcns.dailycost.navigation.home.CategoryNavigation
 import com.dcns.dailycost.navigation.home.ChangeLanguageNavigation
 import com.dcns.dailycost.navigation.home.DashboardNavigation
 import com.dcns.dailycost.navigation.home.NoteNavigation
@@ -285,7 +285,7 @@ private fun DailyCostNavHost(
 		HomeNavHost {
 			ChangeLanguageNavigation(navActions)
 			TransactionsNavigation(navActions)
-			AddCategoryNavigation(navActions)
+			CategoryNavigation(navActions)
 			TransactionNavigation(navActions)
 			CategoriesNavigation(navActions)
 			NoteNavigation(navActions)

@@ -22,8 +22,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
+import com.dcns.dailycost.data.ActionMode
+import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
+import com.dcns.dailycost.data.model.Category
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.CategoryItem
@@ -59,7 +62,7 @@ fun CategoriesScreen(
 				shape = CircleShape,
 				containerColor = DailyCostTheme.colorScheme.primary,
 				onClick = {
-					navigationActions.navigateTo(TopLevelDestinations.Home.addCategory)
+					navigationActions.navigateTo(TopLevelDestinations.Home.category)
 				}
 			) {
 				Icon(
@@ -72,6 +75,14 @@ fun CategoriesScreen(
 	) { scaffoldPadding ->
 		CategoriesScreenContent(
 			state = state,
+			onCategoryClicked = { category ->
+				navigationActions.navigateTo(
+					TopLevelDestinations.Home.category.createRoute(
+						DestinationArgument.CATEGORY_ID to category.id,
+						DestinationArgument.ACTION_MODE to ActionMode.View
+					)
+				)
+			},
 			modifier = Modifier
 				.fillMaxSize()
 				.padding(scaffoldPadding)
@@ -83,7 +94,8 @@ fun CategoriesScreen(
 @Composable
 private fun CategoriesScreenContent(
 	state: CategoriesState,
-	modifier: Modifier = Modifier
+	modifier: Modifier = Modifier,
+	onCategoryClicked: (Category) -> Unit
 ) {
 
 	LazyColumn(
@@ -97,7 +109,7 @@ private fun CategoriesScreenContent(
 			CategoryItem(
 				category = category,
 				onClick = {
-
+					onCategoryClicked(category)
 				},
 				modifier = Modifier
 					.fillMaxWidth()

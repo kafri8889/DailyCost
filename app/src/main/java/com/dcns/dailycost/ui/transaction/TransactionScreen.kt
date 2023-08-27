@@ -250,7 +250,7 @@ private fun TransactionScreenContent(
 						) {
 							Icon(
 								painter = painterResource(id = R.drawable.ic_trash),
-								contentDescription = stringResource(id = R.string.accessibility_delete_transaction)
+								contentDescription = stringResource(id = R.string.accessibility_delete)
 							)
 						}
 					}

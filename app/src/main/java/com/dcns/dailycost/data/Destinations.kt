@@ -13,13 +13,13 @@ import com.dcns.dailycost.foundation.nav_type.TransactionTypeNavType
 
 object DestinationRoute {
 	const val CHANGE_LANGUAGE = "change_language"
-	const val ADD_CATEGORY = "add_category"
 	const val TRANSACTIONS = "transactions"
 	const val TRANSACTION = "transaction"
 	const val CATEGORIES = "categories"
 	const val ONBOARDING = "onboarding"
 	const val DASHBOARD = "dashboard"
 	const val REGISTER = "register"
+	const val CATEGORY = "category"
 	const val SETTING = "setting"
 	const val SPLASH = "splash"
 	const val LOGIN = "login"
@@ -33,6 +33,7 @@ object DestinationRoute {
 object DestinationArgument {
 	const val TRANSACTION_ID = "transaction_id"
 	const val TRANSACTION_TYPE = "transaction_type"
+	const val CATEGORY_ID = "category_id"
 	const val ACTION_MODE = "transaction_mode"
 }
 
@@ -171,8 +172,8 @@ object TopLevelDestinations {
 		 */
 		val transaction = TopLevelDestination(
 			route = "${DestinationRoute.TRANSACTION}?" +
-				"${DestinationArgument.TRANSACTION_ID}={${DestinationArgument.TRANSACTION_ID}}" +
-				"${DestinationArgument.ACTION_MODE}={${DestinationArgument.ACTION_MODE}}" +
+				"${DestinationArgument.TRANSACTION_ID}={${DestinationArgument.TRANSACTION_ID}}&" +
+				"${DestinationArgument.ACTION_MODE}={${DestinationArgument.ACTION_MODE}}&" +
 				"${DestinationArgument.TRANSACTION_TYPE}={${DestinationArgument.TRANSACTION_TYPE}}",
 			arguments = listOf(
 				navArgument(DestinationArgument.TRANSACTION_ID) {
@@ -188,6 +189,28 @@ object TopLevelDestinations {
 					type = NavType.TransactionTypeNavType
 					nullable = true
 					defaultValue = TransactionType.Income
+				}
+			)
+		)
+
+		/**
+		 * Required argument:
+		 * - [DestinationArgument.CATEGORY_ID]
+		 * - [DestinationArgument.ACTION_MODE]
+		 */
+		val category = TopLevelDestination(
+			route = "${DestinationRoute.CATEGORY}?" +
+				"${DestinationArgument.CATEGORY_ID}={${DestinationArgument.CATEGORY_ID}}&" +
+				"${DestinationArgument.ACTION_MODE}={${DestinationArgument.ACTION_MODE}}",
+			arguments = listOf(
+				navArgument(DestinationArgument.CATEGORY_ID) {
+					type = NavType.IntType
+					defaultValue = -1
+				},
+				navArgument(DestinationArgument.ACTION_MODE) {
+					type = NavType.ActionModeNavType
+					nullable = true
+					defaultValue = ActionMode.New
 				}
 			)
 		)
@@ -216,10 +239,6 @@ object TopLevelDestinations {
 
 		val note = TopLevelDestination(
 			route = DestinationRoute.NOTE
-		)
-
-		val addCategory = TopLevelDestination(
-			route = DestinationRoute.ADD_CATEGORY
 		)
 	}
 
