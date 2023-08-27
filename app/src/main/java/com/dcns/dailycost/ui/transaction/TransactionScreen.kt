@@ -1,17 +1,13 @@
 package com.dcns.dailycost.ui.transaction
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,7 +33,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -47,15 +42,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -77,6 +68,7 @@ import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.LocalCurrency
 import com.dcns.dailycost.foundation.extension.primaryLocale
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
+import com.dcns.dailycost.foundation.uicomponent.DailyCostTextField
 import com.dcns.dailycost.foundation.uicomponent.TransactionSegmentedButton
 
 @Composable
@@ -289,7 +281,7 @@ private fun TransactionScreenContent(
 		}
 
 		item {
-			TransactionTextField(
+			DailyCostTextField(
 				placeholder = stringResource(id = R.string.buy_food),
 				title = stringResource(id = R.string.title),
 				value = state.title,
@@ -313,7 +305,7 @@ private fun TransactionScreenContent(
 		}
 
 		item {
-			TransactionTextField(
+			DailyCostTextField(
 				title = stringResource(id = R.string.wallet),
 				value = state.payment.name,
 				readOnly = true,
@@ -329,7 +321,7 @@ private fun TransactionScreenContent(
 		}
 
 		item {
-			TransactionTextField(
+			DailyCostTextField(
 				title = stringResource(id = R.string.category),
 				value = state.category.name,
 				readOnly = true,
@@ -345,7 +337,7 @@ private fun TransactionScreenContent(
 		}
 
 		item {
-			TransactionTextField(
+			DailyCostTextField(
 				title = stringResource(id = R.string.date),
 				value = CommonDateFormatter.edmy(LocalContext.current.primaryLocale).format(state.date),
 				readOnly = true,
@@ -445,118 +437,6 @@ private fun TransactionScreenContent(
 
 		item {
 			Spacer(modifier = Modifier.height(24.dp))
-		}
-	}
-}
-
-@Composable
-private fun TransactionTextField(
-	title: String,
-	value: String,
-	modifier: Modifier = Modifier,
-	placeholder: String? = null,
-	focusRequester: FocusRequester? = null,
-	titleActionIcon: Painter? = null,
-	trailingIcon: Painter? = null,
-	readOnly: Boolean = false,
-	singleLine: Boolean = false,
-	error: Boolean = false,
-	errorText: String = "",
-	keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-	keyboardActions: KeyboardActions = KeyboardActions.Default,
-	onTrailingIconClicked: () -> Unit = {},
-	onTitleActionClicked: () -> Unit = {},
-	onValueChange: (String) -> Unit
-) {
-	
-	val focusRequesterModifier = if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier
-	val usePlaceholder by rememberUpdatedState(newValue = placeholder != null && value.isBlank())
-
-	Column(modifier = modifier) {
-		Row(verticalAlignment = Alignment.CenterVertically) {
-			Text(
-				text = title,
-				style = MaterialTheme.typography.titleMedium.copy(
-					fontWeight = FontWeight.SemiBold
-				)
-			)
-
-			Spacer(modifier = Modifier.weight(1f))
-
-			IconButton(
-				enabled = titleActionIcon != null,
-				onClick = onTitleActionClicked
-			) {
-				if (titleActionIcon != null) {
-					Icon(
-						painter = titleActionIcon,
-						contentDescription = null
-					)
-				}
-			}
-		}
-
-		Row(
-			verticalAlignment = Alignment.CenterVertically,
-			horizontalArrangement = Arrangement.spacedBy(8.dp)
-		) {
-			BasicTextField(
-				value = value,
-				readOnly = readOnly,
-				singleLine = singleLine,
-				onValueChange = onValueChange,
-				keyboardActions = keyboardActions,
-				keyboardOptions = keyboardOptions,
-				textStyle = MaterialTheme.typography.titleMedium.copy(
-					fontWeight = FontWeight.Normal
-				),
-				decorationBox = { innerTextField ->
-					Box {
-						if (usePlaceholder && placeholder != null) {
-							Text(
-								text = placeholder,
-								style = LocalTextStyle.current.copy(color = LocalTextStyle.current.color.copy(alpha = 0.48f))
-							)
-						}
-
-						innerTextField()
-					}
-				},
-				modifier = Modifier
-					.weight(1f)
-					.then(focusRequesterModifier)
-			)
-
-			IconButton(
-				enabled = trailingIcon != null,
-				onClick = onTrailingIconClicked
-			) {
-				if (trailingIcon != null) {
-					Icon(
-						painter = trailingIcon,
-						contentDescription = null
-					)
-				}
-			}
-		}
-
-		HorizontalDivider(color = if (error) MaterialTheme.colorScheme.error else DailyCostTheme.colorScheme.outline)
-		
-		Spacer(modifier = Modifier.height(8.dp))
-
-		AnimatedVisibility(
-			visible = error,
-			enter = fadeIn(),
-			exit = fadeOut(),
-			modifier = Modifier
-				.align(Alignment.End)
-		) {
-			Text(
-				text = errorText,
-				style = MaterialTheme.typography.bodyMedium.copy(
-					color = MaterialTheme.colorScheme.error
-				)
-			)
 		}
 	}
 }
