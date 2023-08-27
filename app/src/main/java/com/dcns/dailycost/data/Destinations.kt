@@ -13,6 +13,7 @@ import com.dcns.dailycost.foundation.nav_type.TransactionTypeNavType
 
 object DestinationRoute {
 	const val CHANGE_LANGUAGE = "change_language"
+	const val ADD_CATEGORY = "add_category"
 	const val TRANSACTIONS = "transactions"
 	const val TRANSACTION = "transaction"
 	const val CATEGORIES = "categories"
@@ -215,6 +216,10 @@ object TopLevelDestinations {
 
 		val note = TopLevelDestination(
 			route = DestinationRoute.NOTE
+		)
+
+		val addCategory = TopLevelDestination(
+			route = DestinationRoute.ADD_CATEGORY
 		)
 	}
 
