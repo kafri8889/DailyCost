@@ -31,7 +31,8 @@ class SettingViewModel @Inject constructor(
 				updateState {
 					copy(
 						language = pref.language,
-						isSecureAppEnabled = pref.secureApp
+						isSecureAppEnabled = pref.secureApp,
+						defaultBalanceVisibility = pref.defaultBalanceVisibility
 					)
 				}
 			}
@@ -48,6 +49,11 @@ class SettingViewModel @Inject constructor(
 						type = EditUserPreferenceType.SecureApp(action.enabled)
 					)
 				}
+			}
+			is SettingAction.UpdateDefaultBalanceVisibility -> viewModelScope.launch {
+				userPreferenceUseCases.editUserPreferenceUseCase(
+					type = EditUserPreferenceType.DefaultBalanceVisibility(action.visible)
+				)
 			}
 		}
 	}

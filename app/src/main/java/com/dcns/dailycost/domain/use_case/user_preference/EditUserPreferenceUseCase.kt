@@ -10,15 +10,12 @@ class EditUserPreferenceUseCase(
 	private val userPreferenceRepository: IUserPreferenceRepository
 ) {
 
-	suspend operator fun invoke(
-		type: EditUserPreferenceType
-	) {
+	suspend operator fun invoke(type: EditUserPreferenceType) {
 		when (type) {
 			is EditUserPreferenceType.Language -> userPreferenceRepository.setLanguage(type.value)
 			is EditUserPreferenceType.SecureApp -> userPreferenceRepository.setSecureApp(type.value)
-			is EditUserPreferenceType.IsNotFirstInstall -> userPreferenceRepository.setIsNotFirstInstall(
-				type.value
-			)
+			is EditUserPreferenceType.IsNotFirstInstall -> userPreferenceRepository.setIsNotFirstInstall(type.value)
+			is EditUserPreferenceType.DefaultBalanceVisibility -> userPreferenceRepository.setDefaultBalanceVisibility(type.value)
 		}
 	}
 

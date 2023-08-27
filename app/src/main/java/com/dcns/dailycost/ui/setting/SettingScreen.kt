@@ -86,6 +86,28 @@ fun SettingScreen(
 			}
 
 			item {
+				SwitchPreference(
+					enabled = canAuth,
+					isChecked = state.defaultBalanceVisibility,
+					onCheckedChange = { checked ->
+						viewModel.onAction(SettingAction.UpdateDefaultBalanceVisibility(checked))
+					},
+					title = {
+						Text(stringResource(id = R.string.show_balance))
+					},
+					summary = {
+						Text(stringResource(id = R.string.visibility_of_balance_displayed_on_dashboard_card))
+					},
+					icon = {
+						Icon(
+							painter = painterResource(id = R.drawable.ic_eye),
+							contentDescription = null
+						)
+					}
+				)
+			}
+
+			item {
 				BasicPreference(
 					title = {
 						Text(stringResource(id = R.string.terms_of_use))
