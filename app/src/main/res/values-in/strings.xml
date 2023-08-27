@@ -126,4 +126,8 @@
     <string name="transaction">Transaksi</string>
     <string name="title_cant_be_empty">Judul tidak boleh kosong</string>
     <string name="add_category">Kategori baru</string>
+    <string name="category_name">Nama kategori</string>
+    <string name="name_cant_be_empty">Nama tidak boleh kosong</string>
+    <string name="my_category">Kategori saya</string>
+    <string name="category_saved">Kategori disimpan</string>
 </resources>

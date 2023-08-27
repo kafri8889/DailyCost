@@ -129,4 +129,8 @@
     <string name="transaction">Transaction</string>
     <string name="title_cant_be_empty">Title cannot be empty</string>
     <string name="add_category">Add category</string>
+    <string name="category_name">Category name</string>
+    <string name="name_cant_be_empty">Name cannot be empty</string>
+    <string name="my_category">My category</string>
+    <string name="category_saved">Category saved</string>
 </resources>

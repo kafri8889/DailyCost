@@ -4,5 +4,7 @@ import com.dcns.dailycost.data.CategoryIcon
 
 data class AddCategoryState(
 	val name: String = "",
-	val icon: CategoryIcon = CategoryIcon.Other
+	val icon: CategoryIcon = CategoryIcon.Other,
+
+	val nameError: Boolean = false
 )
