@@ -295,14 +295,7 @@ private fun PagerItem(
 							.fillMaxWidth()
 					) {
 						Text(
-							text = buildString {
-								if (showBalance) append(formattedAmount)
-								else {
-									var s = "Rp "
-									for (i in formattedAmount.indices) s += "•"
-									append(s)
-								}
-							},
+							text = if (showBalance) formattedAmount else "Rp ${formattedAmount.fold("") { a, _ -> "$a•" }}",
 							style = MaterialTheme.typography.titleLarge.copy(
 								fontWeight = FontWeight.SemiBold
 							),
