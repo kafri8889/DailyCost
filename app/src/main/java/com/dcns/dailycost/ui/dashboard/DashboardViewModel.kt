@@ -8,6 +8,7 @@ import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
+import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.SharedUiEvent
@@ -29,6 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
 	private val userCredentialUseCases: UserCredentialUseCases,
+	private val userPreferenceUseCases: UserPreferenceUseCases,
 	private val connectivityManager: ConnectivityManager,
 	private val expenseUseCases: ExpenseUseCases,
 	private val incomeUseCases: IncomeUseCases,
@@ -101,6 +103,16 @@ class DashboardViewModel @Inject constructor(
 				updateState {
 					copy(
 						credential = cred
+					)
+				}
+			}
+		}
+
+		viewModelScope.launch {
+			userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
+				updateState {
+					copy(
+						initialBalanceVisibility = pref.defaultBalanceVisibility
 					)
 				}
 			}

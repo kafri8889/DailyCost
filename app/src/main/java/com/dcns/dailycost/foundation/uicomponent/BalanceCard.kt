@@ -30,10 +30,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -64,6 +62,7 @@ private fun BalanceCardPreview() {
 			onTopUpClicked = {},
 			onAddWalletClicked = {},
 			onMoreClicked = {},
+			initialBalanceVisibility = true,
 			balance = UserBalance(
 				cash = 90_000.0,
 				eWallet = 0.0,
@@ -77,13 +76,20 @@ private fun BalanceCardPreview() {
 @Composable
 fun BalanceCard(
 	balance: UserBalance,
+	initialBalanceVisibility: Boolean,
 	modifier: Modifier = Modifier,
 	onTopUpClicked: () -> Unit,
 	onAddWalletClicked: () -> Unit,
 	onMoreClicked: () -> Unit
 ) {
 
-	val pagerState = rememberPagerState { 3 }
+	val pagerState = rememberPagerState { WalletType.entries.size }
+
+	val balanceVisibility = remember {
+		mutableStateListOf<Boolean>().apply {
+			for (i in WalletType.entries.indices) add(initialBalanceVisibility)
+		}
+	}
 
 	Card(
 		modifier = modifier,
@@ -102,7 +108,9 @@ fun BalanceCard(
 					PagerItem(
 						amount = balance.cash,
 						monthlyExpense = 0.0,
-						walletType = WalletType.Cash
+						walletType = WalletType.Cash,
+						showBalance = true,
+						onVisibilityChanged = {}
 					)
 				}
 			) { (_, height) ->
@@ -121,25 +129,20 @@ fun BalanceCard(
 								.clip(RoundedCornerShape(12))
 								.background(Color(0xff9747ff))
 						)
-						when (page) {
-							0 -> PagerItem(
-								amount = balance.cash,
-								monthlyExpense = 0.0,
-								walletType = WalletType.Cash
-							)
 
-							1 -> PagerItem(
-								amount = balance.eWallet,
-								monthlyExpense = 0.0,
-								walletType = WalletType.EWallet
-							)
-
-							2 -> PagerItem(
-								amount = balance.bankAccount,
-								monthlyExpense = 0.0,
-								walletType = WalletType.BankAccount
-							)
-						}
+						PagerItem(
+							amount = when (WalletType.entries[page]) {
+								WalletType.Cash -> balance.cash
+								WalletType.EWallet -> balance.eWallet
+								WalletType.BankAccount -> balance.bankAccount
+							},
+							monthlyExpense = 0.0,
+							walletType = WalletType.entries[page],
+							showBalance = balanceVisibility[page],
+							onVisibilityChanged = { visible ->
+								balanceVisibility[page] = visible
+							}
+						)
 					}
 				}
 			}
@@ -213,7 +216,9 @@ private fun PagerItem(
 	amount: Double,
 	monthlyExpense: Double,
 	walletType: WalletType,
-	modifier: Modifier = Modifier
+	showBalance: Boolean,
+	modifier: Modifier = Modifier,
+	onVisibilityChanged: (Boolean) -> Unit
 ) {
 	val currency = LocalCurrency.current
 
@@ -232,8 +237,6 @@ private fun PagerItem(
 			countryCode = currency.countryCode
 		)
 	}
-
-	var showBalance by remember { mutableStateOf(false) }
 
 	CompositionLocalProvider(
 		LocalContentColor provides MaterialTheme.colorScheme.onPrimary
@@ -310,7 +313,7 @@ private fun PagerItem(
 
 						IconButton(
 							onClick = {
-								showBalance = !showBalance
+								onVisibilityChanged(!showBalance)
 							}
 						) {
 							AnimatedContent(

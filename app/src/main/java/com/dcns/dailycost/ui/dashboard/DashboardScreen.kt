@@ -164,6 +164,7 @@ private fun DashboardScreenContent(
 			item {
 				BalanceCard(
 					balance = state.balance,
+					initialBalanceVisibility = state.initialBalanceVisibility,
 					onAddWalletClicked = {
 
 					},

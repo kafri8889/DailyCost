@@ -13,6 +13,7 @@ data class DashboardState(
 	val credential: UserCredential = ProtoUserCredential().toUserCredential(),
 	val balance: UserBalance = ProtoUserBalance().toUserBalance(),
 	val internetConnectionAvailable: Boolean = true,
+	val initialBalanceVisibility: Boolean = false,
 	val isRefreshing: Boolean = false,
 	val expenses: List<Expense> = emptyList(),
 	val incomes: List<Income> = emptyList(),
