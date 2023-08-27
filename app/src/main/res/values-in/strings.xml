@@ -123,4 +123,5 @@
     <string name="more">Lainnya</string>
     <string name="show_balance">Tampilkan saldo</string>
     <string name="visibility_of_balance_displayed_on_dashboard_card">Visibilitas saldo yang ditampilkan di kartu dashboard</string>
+    <string name="transaction">Transaksi</string>
 </resources>

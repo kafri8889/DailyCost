@@ -126,4 +126,5 @@
     <string name="more">More</string>
     <string name="show_balance">Show balance</string>
     <string name="visibility_of_balance_displayed_on_dashboard_card">Visibility of balance displayed on dashboard card</string>
+    <string name="transaction">Transaction</string>
 </resources>
