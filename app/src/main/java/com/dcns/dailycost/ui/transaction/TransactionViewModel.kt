@@ -82,7 +82,7 @@ class TransactionViewModel @Inject constructor(
 					updateState {
 						copy(
 							id = transaction?.id ?: id,
-							name = transaction?.name ?: name,
+							title = transaction?.name ?: title,
 							amount = transaction?.amount ?: amount,
 							payment = transaction?.payment ?: payment,
 							date = transaction?.date ?: date,
@@ -214,7 +214,8 @@ class TransactionViewModel @Inject constructor(
 				viewModelScope.launch {
 					updateState {
 						copy(
-							name = action.name
+							title = action.name,
+							titleError = action.name.isBlank()
 						)
 					}
 				}
@@ -258,6 +259,16 @@ class TransactionViewModel @Inject constructor(
 			TransactionAction.Save -> {
 				viewModelScope.launch(Dispatchers.IO) {
 					val mState = state.value
+
+					if (mState.title.isBlank()) {
+						updateState {
+							copy(
+								titleError = true
+							)
+						}
+						return@launch
+					}
+
 					// Cek koneksi internet
 					if (connectivityManager.isNetworkAvailable.value == false) {
 						sendEvent(TransactionUiEvent.NoInternetConnection())
@@ -274,7 +285,7 @@ class TransactionViewModel @Inject constructor(
 								TransactionType.Income -> Workers.postIncomeWorker(
 									AddIncomeRequestBody(
 										amount = mState.amount.toInt(),
-										name = mState.name,
+										name = mState.title,
 										payment = mState.payment.apiName,
 										category = mState.category.name,
 										date = CommonDateFormatter.api2.format(mState.date),
@@ -284,7 +295,7 @@ class TransactionViewModel @Inject constructor(
 								TransactionType.Expense -> Workers.postExpenseWorker(
 									AddExpenseRequestBody(
 										amount = mState.amount.toInt(),
-										name = mState.name,
+										name = mState.title,
 										payment = mState.payment.apiName,
 										category = mState.category.name,
 										date = CommonDateFormatter.api2.format(mState.date),

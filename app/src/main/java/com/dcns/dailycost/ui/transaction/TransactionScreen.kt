@@ -1,7 +1,10 @@
 package com.dcns.dailycost.ui.transaction
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
@@ -14,6 +17,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
@@ -288,9 +292,11 @@ private fun TransactionScreenContent(
 			TransactionTextField(
 				placeholder = stringResource(id = R.string.buy_food),
 				title = stringResource(id = R.string.title),
-				value = state.name,
+				value = state.title,
 				readOnly = state.transactionMode.isEdit(),
 				singleLine = true,
+				error = state.titleError,
+				errorText = stringResource(id = R.string.title_cant_be_empty),
 				onValueChange = onTitleChanged,
 				keyboardOptions = KeyboardOptions(
 					imeAction = ImeAction.Done,
@@ -436,6 +442,10 @@ private fun TransactionScreenContent(
 				HorizontalDivider(color = DailyCostTheme.colorScheme.outline)
 			}
 		}
+
+		item {
+			Spacer(modifier = Modifier.height(24.dp))
+		}
 	}
 }
 
@@ -450,6 +460,8 @@ private fun TransactionTextField(
 	trailingIcon: Painter? = null,
 	readOnly: Boolean = false,
 	singleLine: Boolean = false,
+	error: Boolean = false,
+	errorText: String = "",
 	keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 	keyboardActions: KeyboardActions = KeyboardActions.Default,
 	onTrailingIconClicked: () -> Unit = {},
@@ -528,6 +540,23 @@ private fun TransactionTextField(
 			}
 		}
 
-		HorizontalDivider(color = DailyCostTheme.colorScheme.outline)
+		HorizontalDivider(color = if (error) MaterialTheme.colorScheme.error else DailyCostTheme.colorScheme.outline)
+		
+		Spacer(modifier = Modifier.height(8.dp))
+
+		AnimatedVisibility(
+			visible = error,
+			enter = fadeIn(),
+			exit = fadeOut(),
+			modifier = Modifier
+				.align(Alignment.End)
+		) {
+			Text(
+				text = errorText,
+				style = MaterialTheme.typography.bodyMedium.copy(
+					color = MaterialTheme.colorScheme.error
+				)
+			)
+		}
 	}
 }
