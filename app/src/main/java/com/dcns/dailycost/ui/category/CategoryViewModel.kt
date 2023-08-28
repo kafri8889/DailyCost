@@ -9,6 +9,7 @@ import com.dcns.dailycost.domain.use_case.CategoryUseCases
 import com.dcns.dailycost.domain.util.GetCategoryBy
 import com.dcns.dailycost.domain.util.InputActionType
 import com.dcns.dailycost.foundation.base.BaseViewModel
+import com.dcns.dailycost.foundation.extension.uppercaseFirstLetterInWord
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -103,7 +104,7 @@ class CategoryViewModel @Inject constructor(
 						inputActionType = InputActionType.Insert,
 						Category(
 							id = Random.nextInt(),
-							name = mState.name,
+							name = mState.name.trim().uppercaseFirstLetterInWord(),
 							icon = mState.icon
 						)
 					)
