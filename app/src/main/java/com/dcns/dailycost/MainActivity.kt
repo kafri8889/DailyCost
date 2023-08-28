@@ -1,9 +1,13 @@
 package com.dcns.dailycost
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.biometric.BiometricPrompt
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -38,6 +42,7 @@ class MainActivity: LocalizedActivity() {
 
 	private lateinit var biometricManager: DailyCostBiometricManager
 
+	@OptIn(ExperimentalFoundationApi::class)
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
@@ -69,25 +74,30 @@ class MainActivity: LocalizedActivity() {
 
 		setListener(object: OnLocaleChangedListener {
 			override fun onChanged() {
+				// Send event to top level app
 				dailyCostAppViewModel.sendEvent(DailyCostAppUiEvent.LanguageChanged)
 			}
 		})
 
 		lifecycleScope.launch {
 			lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-				if (userCredentialUseCases.getUserCredentialUseCase()
-						.firstOrNull()?.isLoggedIn == true
-				) {
+				// If user has logged in, sync data
+				if (userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.isLoggedIn == true) {
 					Workers.syncWorker().enqueue(this@MainActivity)
 				}
 			}
 		}
 
 		setContent {
-			DailyCostApp(
-				viewModel = dailyCostAppViewModel,
-				biometricManager = biometricManager
-			)
+			CompositionLocalProvider(
+				LocalOverscrollConfiguration provides if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) null
+				else LocalOverscrollConfiguration.current
+			) {
+				DailyCostApp(
+					viewModel = dailyCostAppViewModel,
+					biometricManager = biometricManager
+				)
+			}
 		}
 	}
 
