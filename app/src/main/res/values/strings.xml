@@ -135,4 +135,5 @@
     <string name="category_saved">Category saved</string>
     <string name="edit_category">Edit category</string>
     <string name="view_category">View category</string>
+    <string name="select_category">Select category</string>
 </resources>

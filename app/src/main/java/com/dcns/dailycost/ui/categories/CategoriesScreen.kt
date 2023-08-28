@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.ActionMode
+import com.dcns.dailycost.data.CategoriesScreenMode
 import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestinations
@@ -30,6 +31,7 @@ import com.dcns.dailycost.data.model.Category
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.CategoryItem
+import com.dcns.dailycost.foundation.uicomponent.SelectableCategoryItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +47,14 @@ fun CategoriesScreen(
 		topBar = {
 			TopAppBar(
 				title = {
-					Text(stringResource(id = R.string.categories))
+					Text(
+						stringResource(
+							id = when (state.screenMode) {
+								CategoriesScreenMode.CategoryList -> R.string.categories
+								CategoriesScreenMode.SelectCategory -> R.string.select_category
+							}
+						)
+					)
 				},
 				navigationIcon = {
 					IconButton(onClick = navigationActions::popBackStack) {
@@ -54,34 +63,56 @@ fun CategoriesScreen(
 							contentDescription = null
 						)
 					}
+				},
+				actions = {
+					if (state.screenMode == CategoriesScreenMode.SelectCategory) {
+						IconButton(
+							onClick = {
+								viewModel.onAction(CategoriesAction.SendCategory)
+								navigationActions.popBackStack()
+							}
+						) {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_check),
+								contentDescription = stringResource(id = R.string.accessibility_save)
+							)
+						}
+					}
 				}
 			)
 		},
 		floatingActionButton = {
-			FloatingActionButton(
-				shape = CircleShape,
-				containerColor = DailyCostTheme.colorScheme.primary,
-				onClick = {
-					navigationActions.navigateTo(TopLevelDestinations.Home.category)
+			if (state.screenMode == CategoriesScreenMode.CategoryList) {
+				FloatingActionButton(
+					shape = CircleShape,
+					containerColor = DailyCostTheme.colorScheme.primary,
+					onClick = {
+						navigationActions.navigateTo(TopLevelDestinations.Home.category)
+					}
+				) {
+					Icon(
+						painter = painterResource(id = R.drawable.ic_add),
+						contentDescription = null,
+						tint = DailyCostTheme.colorScheme.onPrimary
+					)
 				}
-			) {
-				Icon(
-					painter = painterResource(id = R.drawable.ic_add),
-					contentDescription = null,
-					tint = DailyCostTheme.colorScheme.onPrimary
-				)
 			}
 		}
 	) { scaffoldPadding ->
 		CategoriesScreenContent(
 			state = state,
 			onCategoryClicked = { category ->
-				navigationActions.navigateTo(
-					TopLevelDestinations.Home.category.createRoute(
-						DestinationArgument.CATEGORY_ID to category.id,
-						DestinationArgument.ACTION_MODE to ActionMode.View
+				if (state.screenMode == CategoriesScreenMode.CategoryList) {
+					navigationActions.navigateTo(
+						TopLevelDestinations.Home.category.createRoute(
+							DestinationArgument.CATEGORY_ID to category.id,
+							DestinationArgument.ACTION_MODE to ActionMode.View
+						)
 					)
-				)
+					return@CategoriesScreenContent
+				}
+
+				viewModel.onAction(CategoriesAction.ChangeSelectedCategory(category))
 			},
 			modifier = Modifier
 				.fillMaxSize()
@@ -106,15 +137,28 @@ private fun CategoriesScreenContent(
 			items = state.categories,
 			key = { item -> item.id }
 		) { category ->
-			CategoryItem(
-				category = category,
-				onClick = {
-					onCategoryClicked(category)
-				},
-				modifier = Modifier
-					.fillMaxWidth()
-					.animateItemPlacement(tween(256))
-			)
+			if (state.screenMode == CategoriesScreenMode.CategoryList) {
+				CategoryItem(
+					category = category,
+					onClick = {
+						onCategoryClicked(category)
+					},
+					modifier = Modifier
+						.fillMaxWidth()
+						.animateItemPlacement(tween(256))
+				)
+			} else {
+				SelectableCategoryItem(
+					category = category,
+					selected = state.selectedCategory.id == category.id,
+					onClick = {
+						onCategoryClicked(category)
+					},
+					modifier = Modifier
+						.fillMaxWidth()
+						.animateItemPlacement(tween(256))
+				)
+			}
 		}
 	}
 }

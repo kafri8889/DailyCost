@@ -9,6 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.dcns.dailycost.R
 import com.dcns.dailycost.foundation.nav_type.ActionModeNavType
+import com.dcns.dailycost.foundation.nav_type.CategoriesScreenModeNavType
 import com.dcns.dailycost.foundation.nav_type.TransactionTypeNavType
 
 object DestinationRoute {
@@ -35,6 +36,7 @@ object DestinationArgument {
 	const val TRANSACTION_TYPE = "transaction_type"
 	const val CATEGORY_ID = "category_id"
 	const val ACTION_MODE = "transaction_mode"
+	const val CATEGORIES_SCREEN_MODE = "category_screen_mode"
 }
 
 data class TopLevelDestination(
@@ -57,7 +59,7 @@ data class TopLevelDestination(
 	}
 }
 
-class NavigationActions(private val navController: NavHostController) {
+class NavigationActions(val navController: NavHostController) {
 
 	fun popBackStack() = navController.popBackStack()
 
@@ -71,7 +73,7 @@ class NavigationActions(private val navController: NavHostController) {
 
 	fun popBackStack(
 		destinationId: Int,
-		inclusive: Boolean = false,
+		inclusive: Boolean = true,
 		saveState: Boolean = false
 	) = navController.popBackStack(
 		destinationId,
@@ -215,8 +217,27 @@ object TopLevelDestinations {
 			)
 		)
 
+		/**
+		 * Required argument:
+		 * - [DestinationArgument.CATEGORIES_SCREEN_MODE]
+		 *
+		 * If [DestinationArgument.CATEGORIES_SCREEN_MODE] is [CategoriesScreenMode.SelectCategory]:
+		 * - [DestinationArgument.CATEGORY_ID]
+		 */
 		val categories = TopLevelDestination(
-			route = DestinationRoute.CATEGORIES
+			route = "${DestinationRoute.CATEGORIES}?" +
+				"${DestinationArgument.CATEGORIES_SCREEN_MODE}={${DestinationArgument.CATEGORIES_SCREEN_MODE}}&" +
+				"${DestinationArgument.CATEGORY_ID}={${DestinationArgument.CATEGORY_ID}}",
+			arguments = listOf(
+				navArgument(DestinationArgument.CATEGORIES_SCREEN_MODE) {
+					type = NavType.CategoriesScreenModeNavType
+					defaultValue = CategoriesScreenMode.CategoryList
+				},
+				navArgument(DestinationArgument.CATEGORY_ID) {
+					type = NavType.IntType
+					defaultValue = -1
+				}
+			)
 		)
 
 		val dashboard = TopLevelDestination(

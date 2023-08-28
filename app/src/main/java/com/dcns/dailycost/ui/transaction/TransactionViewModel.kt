@@ -20,6 +20,7 @@ import com.dcns.dailycost.domain.util.GetTransactionBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.ConnectivityManager
+import com.dcns.dailycost.foundation.common.SharedData
 import com.dcns.dailycost.foundation.worker.Workers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -45,6 +46,7 @@ class TransactionViewModel @Inject constructor(
 	private val expenseUseCases: ExpenseUseCases,
 	private val incomeUseCases: IncomeUseCases,
 	private val workManager: WorkManager,
+	private val sharedData: SharedData,
 	savedStateHandle: SavedStateHandle
 ): BaseViewModel<TransactionState, TransactionAction>() {
 
@@ -91,6 +93,18 @@ class TransactionViewModel @Inject constructor(
 						)
 					}
 				}
+		}
+
+		viewModelScope.launch {
+			sharedData.category.filterNotNull().collect { category ->
+				updateState {
+					copy(
+						category = category.also {
+							sharedData.setCategory(null) // Reset category
+						}
+					)
+				}
+			}
 		}
 
 		viewModelScope.launch(Dispatchers.IO) {

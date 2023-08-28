@@ -60,8 +60,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.ActionMode
+import com.dcns.dailycost.data.CategoriesScreenMode
+import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestination
+import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
@@ -329,7 +332,12 @@ private fun TransactionScreenContent(
 				titleActionIcon = if (state.actionMode.isNew()) painterResource(id = R.drawable.ic_arrow_down) else null,
 				onValueChange = {},
 				onTitleActionClicked = {
-					// TODO: Navigate to category selector screen
+					onNavigateTo(
+						TopLevelDestinations.Home.categories.createRoute(
+							DestinationArgument.CATEGORIES_SCREEN_MODE to CategoriesScreenMode.SelectCategory,
+							DestinationArgument.CATEGORY_ID to state.category.id
+						)
+					)
 				},
 				modifier = Modifier
 					.fillMaxWidth(0.92f)
