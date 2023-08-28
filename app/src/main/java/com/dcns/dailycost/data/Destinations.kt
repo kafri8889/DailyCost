@@ -11,6 +11,7 @@ import com.dcns.dailycost.R
 import com.dcns.dailycost.foundation.nav_type.ActionModeNavType
 import com.dcns.dailycost.foundation.nav_type.CategoriesScreenModeNavType
 import com.dcns.dailycost.foundation.nav_type.TransactionTypeNavType
+import com.dcns.dailycost.foundation.nav_type.WalletsScreenModeNavType
 
 object DestinationRoute {
 	const val CHANGE_LANGUAGE = "change_language"
@@ -21,6 +22,7 @@ object DestinationRoute {
 	const val DASHBOARD = "dashboard"
 	const val REGISTER = "register"
 	const val CATEGORY = "category"
+	const val WALLETS = "wallets"
 	const val SETTING = "setting"
 	const val SPLASH = "splash"
 	const val LOGIN = "login"
@@ -35,8 +37,10 @@ object DestinationArgument {
 	const val TRANSACTION_ID = "transaction_id"
 	const val TRANSACTION_TYPE = "transaction_type"
 	const val CATEGORY_ID = "category_id"
+	const val WALLET_ID = "wallet_id"
 	const val ACTION_MODE = "transaction_mode"
 	const val CATEGORIES_SCREEN_MODE = "category_screen_mode"
+	const val WALLETS_SCREEN_MODE = "wallets_screen_mode"
 }
 
 data class TopLevelDestination(
@@ -236,6 +240,29 @@ object TopLevelDestinations {
 				navArgument(DestinationArgument.CATEGORY_ID) {
 					type = NavType.IntType
 					defaultValue = -1
+				}
+			)
+		)
+
+		/**
+		 * Required argument:
+		 * - [DestinationArgument.WALLETS_SCREEN_MODE]
+		 *
+		 * If [DestinationArgument.WALLETS_SCREEN_MODE] is [WalletsScreenMode.SelectWallet]:
+		 * - [DestinationArgument.WALLET_ID]
+		 */
+		val wallets = TopLevelDestination(
+			route = "${DestinationRoute.WALLETS}?" +
+				"${DestinationArgument.WALLETS_SCREEN_MODE}={${DestinationArgument.WALLETS_SCREEN_MODE}}&" +
+				"${DestinationArgument.WALLET_ID}={${DestinationArgument.WALLET_ID}}",
+			arguments = listOf(
+				navArgument(DestinationArgument.WALLETS_SCREEN_MODE) {
+					type = NavType.WalletsScreenModeNavType
+					defaultValue = WalletsScreenMode.WalletList
+				},
+				navArgument(DestinationArgument.WALLET_ID) {
+					type = NavType.IntType
+					defaultValue = WalletType.Cash.ordinal
 				}
 			)
 		)

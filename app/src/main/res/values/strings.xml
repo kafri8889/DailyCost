@@ -136,4 +136,6 @@
     <string name="edit_category">Edit category</string>
     <string name="view_category">View category</string>
     <string name="select_category">Select category</string>
+    <string name="wallets">Wallets</string>
+    <string name="select_wallet">Select wallet</string>
 </resources>

@@ -63,6 +63,7 @@ import com.dcns.dailycost.navigation.home.SettingNavigation
 import com.dcns.dailycost.navigation.home.SplashNavigation
 import com.dcns.dailycost.navigation.home.TransactionNavigation
 import com.dcns.dailycost.navigation.home.TransactionsNavigation
+import com.dcns.dailycost.navigation.home.WalletsNavigation
 import com.dcns.dailycost.navigation.login_register.LoginNavigation
 import com.dcns.dailycost.navigation.login_register.RegisterNavigation
 import com.dcns.dailycost.navigation.onboarding.OnboardingNavigation
@@ -288,6 +289,7 @@ private fun DailyCostNavHost(
 			CategoryNavigation(navActions)
 			TransactionNavigation(navActions)
 			CategoriesNavigation(navActions)
+			WalletsNavigation(navActions)
 			NoteNavigation(navActions)
 
 			DashboardNavigation(

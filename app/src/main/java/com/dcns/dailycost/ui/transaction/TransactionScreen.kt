@@ -66,6 +66,7 @@ import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.TransactionType
+import com.dcns.dailycost.data.WalletsScreenMode
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.LocalCurrency
@@ -316,7 +317,12 @@ private fun TransactionScreenContent(
 				titleActionIcon = if (state.actionMode.isNew()) painterResource(id = R.drawable.ic_arrow_down) else null,
 				onValueChange = {},
 				onTitleActionClicked = {
-					// TODO: Navigate to wallet selector screen
+					onNavigateTo(
+						TopLevelDestinations.Home.wallets.createRoute(
+							DestinationArgument.WALLETS_SCREEN_MODE to WalletsScreenMode.SelectWallet,
+							DestinationArgument.WALLET_ID to state.payment.ordinal
+						)
+					)
 				},
 				modifier = Modifier
 					.fillMaxWidth(0.92f)

@@ -107,6 +107,18 @@ class TransactionViewModel @Inject constructor(
 			}
 		}
 
+		viewModelScope.launch {
+			sharedData.wallet.filterNotNull().collect { wallet ->
+				updateState {
+					copy(
+						payment = wallet.walletType.also {
+							sharedData.setWallet(null) // Reset wallet
+						}
+					)
+				}
+			}
+		}
+
 		viewModelScope.launch(Dispatchers.IO) {
 			deliveredActionMode
 				.filterNotNull()
