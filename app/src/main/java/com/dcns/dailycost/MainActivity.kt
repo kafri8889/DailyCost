@@ -65,8 +65,6 @@ class MainActivity: LocalizedActivity() {
 			})
 		}
 
-		connectivityManager.initialize()
-
 		WindowCompat.setDecorFitsSystemWindows(window, false)
 
 		setListener(object: OnLocaleChangedListener {
