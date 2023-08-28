@@ -1,6 +1,7 @@
 package com.dcns.dailycost.foundation.base
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -11,7 +12,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.dcns.dailycost.foundation.base.UiEvent.DismissCurrentSnackbar.parse
 import com.dcns.dailycost.foundation.extension.toast
+import com.dcns.dailycost.foundation.uicomponent.bubble_bar.BubbleBar
+import com.dcns.dailycost.foundation.uicomponent.bubble_bar.BubbleBarHost
+import com.dcns.dailycost.foundation.uicomponent.bubble_bar.BubbleBarHostState
+import com.dcns.dailycost.foundation.uicomponent.bubble_bar.BubbleBarResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
@@ -35,19 +41,33 @@ fun <STATE, ACTION> BaseScreenWrapper(
 
 	val context = LocalContext.current
 
-	val hostState = remember {
-		SnackbarHostState()
-	}
+	val bubbleBarHostState = remember { BubbleBarHostState() }
+	val hostState = remember { SnackbarHostState() }
 
 	LaunchedEffect(Unit) {
 		viewModel.uiEvent.filterNotNull().collectLatest { event ->
 			withContext(Dispatchers.Main) { onEvent(event) }
 			when (event) {
 				is UiEvent.DismissCurrentSnackbar -> hostState.currentSnackbarData?.dismiss()
+				is UiEvent.ShowBubbleBar -> {
+					val result = bubbleBarHostState.showBubble(
+						message = event.message.parse(context),
+						actionLabel = event.actionLabel?.parse(context),
+						withDismissAction = event.withDismissAction,
+						duration = event.duration
+					)
+
+					viewModel.sendEventResult(
+						when (result) {
+							BubbleBarResult.Dismissed -> UiEventResult.Dismissed(event)
+							BubbleBarResult.ActionPerformed -> UiEventResult.ActionPerformed(event)
+						}
+					)
+				}
 				is UiEvent.ShowSnackbar -> {
 					val result = hostState.showSnackbar(
-						message = event.getMessage(context),
-						actionLabel = event.getActionLabel(context),
+						message = event.message.parse(context),
+						actionLabel = event.actionLabel?.parse(context),
 						withDismissAction = event.withDismissAction,
 						duration = event.duration
 					)
@@ -61,22 +81,33 @@ fun <STATE, ACTION> BaseScreenWrapper(
 				}
 
 				is UiEvent.ShowToast -> {
-					event.getMessage(context).toast(context, event.length)
+					event.message.parse(context).toast(context, event.length)
 				}
 			}
 		}
 	}
 
-	Scaffold(
-		topBar = topBar,
-		bottomBar = bottomBar,
-		floatingActionButton = floatingActionButton,
-		modifier = modifier,
-		snackbarHost = {
-			SnackbarHost(hostState = hostState)
+	BubbleBarHost(
+		hostState = bubbleBarHostState,
+		bubbleBar = { data ->
+			BubbleBar(
+				bubbleBarData = data,
+				modifier = Modifier
+					.statusBarsPadding()
+			)
 		}
-	) { scaffoldPadding ->
-		content(scaffoldPadding)
+	) {
+		Scaffold(
+			topBar = topBar,
+			bottomBar = bottomBar,
+			floatingActionButton = floatingActionButton,
+			modifier = modifier,
+			snackbarHost = {
+				SnackbarHost(hostState = hostState)
+			}
+		) { scaffoldPadding ->
+			content(scaffoldPadding)
+		}
 	}
 
 }

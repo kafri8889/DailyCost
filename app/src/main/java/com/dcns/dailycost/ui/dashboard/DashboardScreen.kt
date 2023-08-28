@@ -76,7 +76,6 @@ import com.dcns.dailycost.foundation.uicomponent.Measurer
 import com.dcns.dailycost.foundation.uicomponent.TransactionItem
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
 	viewModel: DashboardViewModel,
