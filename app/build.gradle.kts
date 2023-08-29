@@ -202,7 +202,7 @@ dependencies {
     implementation("com.maxkeppeler.sheets-compose-dialogs:state:1.2.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("com.tbuonomo:dotsindicator:5.0")
-    implementation("io.github.fornewid:material-motion-compose-navigation:1.0.4")
+    implementation("com.github.omercemcicekli:CardStack:0.0.6")
     implementation("com.intuit.ssp:ssp-android:1.1.0")
     implementation("com.intuit.sdp:sdp-android:1.1.0")
 
