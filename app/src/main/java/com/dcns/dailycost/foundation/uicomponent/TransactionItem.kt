@@ -98,7 +98,7 @@ fun TransactionItem(
 						modifier = Modifier
 							.weight(1f)
 							.dailyCostMarquee(
-								edgeWidth = 8.dp
+								edgeWidth = 0.dp
 							)
 					)
 
