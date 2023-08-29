@@ -5,8 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,13 +12,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.VerticalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -53,6 +49,14 @@ import com.dcns.dailycost.foundation.common.LocalCurrency
 import com.dcns.dailycost.foundation.common.primarySystemLocale
 import com.dcns.dailycost.foundation.extension.dailyCostMarquee
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
+import com.omercemcicekli.cardstack.CardStack
+import com.omercemcicekli.cardstack.Orientation
+
+private val defaultWalletColor = arrayOf(
+	Color(0xffFF6600),
+	Color(0xff9747FF),
+	Color(0xff014e60),
+)
 
 @Preview(showBackground = true)
 @Composable
@@ -72,7 +76,7 @@ private fun BalanceCardPreview() {
 	}
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BalanceCard(
 	balance: UserBalance,
@@ -82,9 +86,6 @@ fun BalanceCard(
 	onAddWalletClicked: () -> Unit,
 	onMoreClicked: () -> Unit
 ) {
-
-	val pagerState = rememberPagerState { WalletType.entries.size }
-
 	val balanceVisibility = remember {
 		mutableStateListOf<Boolean>().apply {
 			for (i in WalletType.entries.indices) add(initialBalanceVisibility)
@@ -102,51 +103,27 @@ fun BalanceCard(
 			modifier = Modifier
 				.padding(8.dp)
 		) {
-			Measurer(
-				contentToMeasure = {
-					// Ukur size untuk PagerItem
+			CardStack(
+				orientation = Orientation.Vertical(),
+				cardCount = WalletType.entries.size,
+				cardShape = RoundedCornerShape(10),
+				cardContent = { page ->
 					PagerItem(
-						amount = balance.cash,
+						amount = when (WalletType.entries[page]) {
+							WalletType.Cash -> balance.cash
+							WalletType.EWallet -> balance.eWallet
+							WalletType.BankAccount -> balance.bankAccount
+						},
 						monthlyExpense = 0.0,
-						walletType = WalletType.Cash,
-						showBalance = true,
-						onVisibilityChanged = {}
+						walletType = WalletType.entries[page],
+						showBalance = balanceVisibility[page],
+						containerColor = defaultWalletColor[page],
+						onVisibilityChanged = { visible ->
+							balanceVisibility[page] = visible
+						}
 					)
 				}
-			) { (_, height) ->
-				VerticalPager(
-					state = pagerState,
-					pageSpacing = 8.dp,
-					modifier = Modifier
-						// Set pager height sesuai ukuran dari [PagerItem]
-						.height(height + 8.dp)
-				) { page ->
-					Box {
-						Box(
-							modifier = Modifier
-								.fillMaxWidth()
-								.height(height + 8.dp)
-								.clip(RoundedCornerShape(12))
-								.background(Color(0xff9747ff))
-						)
-
-						PagerItem(
-							amount = when (WalletType.entries[page]) {
-								WalletType.Cash -> balance.cash
-								WalletType.EWallet -> balance.eWallet
-								WalletType.BankAccount -> balance.bankAccount
-							},
-							monthlyExpense = 0.0,
-							walletType = WalletType.entries[page],
-							showBalance = balanceVisibility[page],
-							onVisibilityChanged = { visible ->
-								balanceVisibility[page] = visible
-							}
-						)
-					}
-				}
-			}
-
+			)
 			Box(
 				modifier = Modifier
 					.fillMaxWidth()
@@ -217,6 +194,7 @@ private fun PagerItem(
 	monthlyExpense: Double,
 	walletType: WalletType,
 	showBalance: Boolean,
+	containerColor: Color,
 	modifier: Modifier = Modifier,
 	onVisibilityChanged: (Boolean) -> Unit
 ) {
@@ -244,7 +222,7 @@ private fun PagerItem(
 		Card(
 			modifier = modifier,
 			colors = CardDefaults.cardColors(
-				containerColor = Color(0xffFF6600)
+				containerColor = containerColor
 			)
 		) {
 			Box {
