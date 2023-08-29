@@ -3,6 +3,7 @@ package com.dcns.dailycost
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,6 +22,8 @@ class DailyCostApplication: Application(), Configuration.Provider {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //            NotificationUtil.createChannel(this)
 //        }
+
+		WorkManager.initialize(this, workManagerConfiguration)
 	}
 
 	override fun getWorkManagerConfiguration() =

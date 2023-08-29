@@ -22,6 +22,7 @@ class OnboardingViewModel @Inject constructor(
 					val titleText: Int
 					val primaryButtonText: Int
 					val secondaryButtonText: Int
+					val imageAssetPath: String
 
 					when (action.page) {
 						1 -> {
@@ -29,6 +30,7 @@ class OnboardingViewModel @Inject constructor(
 							titleText = R.string.its_easy_to_spot_the_categories
 							primaryButtonText = R.string.next
 							secondaryButtonText = R.string.skip
+							imageAssetPath = "wallet_with_cash.png"
 						}
 
 						2 -> {
@@ -36,6 +38,7 @@ class OnboardingViewModel @Inject constructor(
 							titleText = R.string.spending_plan_show_much_money
 							primaryButtonText = R.string.next
 							secondaryButtonText = R.string.skip
+							imageAssetPath = "coins.png"
 						}
 
 						3 -> {
@@ -43,6 +46,7 @@ class OnboardingViewModel @Inject constructor(
 							titleText = R.string.secure_synchronization_with_banks
 							primaryButtonText = R.string.next
 							secondaryButtonText = R.string.skip
+							imageAssetPath = "credit_card.png"
 						}
 
 						4 -> {
@@ -50,6 +54,7 @@ class OnboardingViewModel @Inject constructor(
 							titleText = R.string.your_bank_transaction_are_delivered_automatically
 							primaryButtonText = R.string.sign_in
 							secondaryButtonText = R.string.sign_up
+							imageAssetPath = "calculator.png"
 						}
 
 						else -> throw IllegalArgumentException("invalid page: page ${action.page}")
@@ -61,7 +66,8 @@ class OnboardingViewModel @Inject constructor(
 							bodyText = bodyText,
 							titleText = titleText,
 							primaryButtonText = primaryButtonText,
-							secondaryButtonText = secondaryButtonText
+							secondaryButtonText = secondaryButtonText,
+							imageAssetPath = imageAssetPath
 						)
 					}
 				}

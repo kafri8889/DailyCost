@@ -24,11 +24,13 @@ import com.dcns.dailycost.domain.use_case.depo.GetLocalBalanceUseCase
 import com.dcns.dailycost.domain.use_case.depo.GetRemoteBalanceUseCase
 import com.dcns.dailycost.domain.use_case.depo.UpdateLocalBalanceUseCase
 import com.dcns.dailycost.domain.use_case.expense.AddRemoteExpenseUseCase
+import com.dcns.dailycost.domain.use_case.expense.DeleteLocalExpenseUseCase
 import com.dcns.dailycost.domain.use_case.expense.DeleteRemoteExpenseUseCase
 import com.dcns.dailycost.domain.use_case.expense.GetLocalExpenseUseCase
 import com.dcns.dailycost.domain.use_case.expense.GetRemoteExpenseUseCase
 import com.dcns.dailycost.domain.use_case.expense.SyncLocalWithRemoteExpenseUseCase
 import com.dcns.dailycost.domain.use_case.income.AddRemoteIncomeUseCase
+import com.dcns.dailycost.domain.use_case.income.DeleteLocalIncomeUseCase
 import com.dcns.dailycost.domain.use_case.income.DeleteRemoteIncomeUseCase
 import com.dcns.dailycost.domain.use_case.income.GetLocalIncomeUseCase
 import com.dcns.dailycost.domain.use_case.income.GetRemoteIncomeUseCase
@@ -103,6 +105,7 @@ class DomainModule {
 	): ExpenseUseCases = ExpenseUseCases(
 		addRemoteExpenseUseCase = AddRemoteExpenseUseCase(expenseRepository),
 		deleteRemoteExpenseUseCase = DeleteRemoteExpenseUseCase(expenseRepository),
+		deleteLocalExpenseUseCase = DeleteLocalExpenseUseCase(expenseRepository),
 		getRemoteExpenseUseCase = GetRemoteExpenseUseCase(expenseRepository),
 		getLocalExpenseUseCase = GetLocalExpenseUseCase(expenseRepository),
 		syncLocalWithRemoteExpenseUseCase = SyncLocalWithRemoteExpenseUseCase(expenseRepository)
@@ -115,6 +118,7 @@ class DomainModule {
 	): IncomeUseCases = IncomeUseCases(
 		addRemoteIncomeUseCase = AddRemoteIncomeUseCase(incomeRepository),
 		deleteRemoteIncomeUseCase = DeleteRemoteIncomeUseCase(incomeRepository),
+		deleteLocalIncomeUseCase = DeleteLocalIncomeUseCase(incomeRepository),
 		getRemoteIncomeUseCase = GetRemoteIncomeUseCase(incomeRepository),
 		getLocalIncomeUseCase = GetLocalIncomeUseCase(incomeRepository),
 		syncLocalWithRemoteIncomeUseCase = SyncLocalWithRemoteIncomeUseCase(incomeRepository)

@@ -8,8 +8,10 @@ import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.dcns.dailycost.R
-import com.dcns.dailycost.foundation.nav_type.TransactionModeNavType
+import com.dcns.dailycost.foundation.nav_type.ActionModeNavType
+import com.dcns.dailycost.foundation.nav_type.CategoriesScreenModeNavType
 import com.dcns.dailycost.foundation.nav_type.TransactionTypeNavType
+import com.dcns.dailycost.foundation.nav_type.WalletsScreenModeNavType
 
 object DestinationRoute {
 	const val CHANGE_LANGUAGE = "change_language"
@@ -19,6 +21,8 @@ object DestinationRoute {
 	const val ONBOARDING = "onboarding"
 	const val DASHBOARD = "dashboard"
 	const val REGISTER = "register"
+	const val CATEGORY = "category"
+	const val WALLETS = "wallets"
 	const val SETTING = "setting"
 	const val SPLASH = "splash"
 	const val LOGIN = "login"
@@ -32,7 +36,11 @@ object DestinationRoute {
 object DestinationArgument {
 	const val TRANSACTION_ID = "transaction_id"
 	const val TRANSACTION_TYPE = "transaction_type"
-	const val TRANSACTION_MODE = "transaction_mode"
+	const val CATEGORY_ID = "category_id"
+	const val WALLET_ID = "wallet_id"
+	const val ACTION_MODE = "transaction_mode"
+	const val CATEGORIES_SCREEN_MODE = "category_screen_mode"
+	const val WALLETS_SCREEN_MODE = "wallets_screen_mode"
 }
 
 data class TopLevelDestination(
@@ -55,7 +63,7 @@ data class TopLevelDestination(
 	}
 }
 
-class NavigationActions(private val navController: NavHostController) {
+class NavigationActions(val navController: NavHostController) {
 
 	fun popBackStack() = navController.popBackStack()
 
@@ -69,7 +77,7 @@ class NavigationActions(private val navController: NavHostController) {
 
 	fun popBackStack(
 		destinationId: Int,
-		inclusive: Boolean = false,
+		inclusive: Boolean = true,
 		saveState: Boolean = false
 	) = navController.popBackStack(
 		destinationId,
@@ -165,23 +173,23 @@ object TopLevelDestinations {
 		/**
 		 * Required argument:
 		 * - [DestinationArgument.TRANSACTION_ID]
-		 * - [DestinationArgument.TRANSACTION_MODE]
+		 * - [DestinationArgument.ACTION_MODE]
 		 * - [DestinationArgument.TRANSACTION_TYPE]
 		 */
 		val transaction = TopLevelDestination(
 			route = "${DestinationRoute.TRANSACTION}?" +
-				"${DestinationArgument.TRANSACTION_ID}={${DestinationArgument.TRANSACTION_ID}}" +
-				"${DestinationArgument.TRANSACTION_MODE}={${DestinationArgument.TRANSACTION_MODE}}" +
+				"${DestinationArgument.TRANSACTION_ID}={${DestinationArgument.TRANSACTION_ID}}&" +
+				"${DestinationArgument.ACTION_MODE}={${DestinationArgument.ACTION_MODE}}&" +
 				"${DestinationArgument.TRANSACTION_TYPE}={${DestinationArgument.TRANSACTION_TYPE}}",
 			arguments = listOf(
 				navArgument(DestinationArgument.TRANSACTION_ID) {
 					type = NavType.IntType
 					defaultValue = -1
 				},
-				navArgument(DestinationArgument.TRANSACTION_MODE) {
-					type = NavType.TransactionModeNavType
+				navArgument(DestinationArgument.ACTION_MODE) {
+					type = NavType.ActionModeNavType
 					nullable = true
-					defaultValue = TransactionMode.New
+					defaultValue = ActionMode.New
 				},
 				navArgument(DestinationArgument.TRANSACTION_TYPE) {
 					type = NavType.TransactionTypeNavType
@@ -191,8 +199,72 @@ object TopLevelDestinations {
 			)
 		)
 
+		/**
+		 * Required argument:
+		 * - [DestinationArgument.CATEGORY_ID]
+		 * - [DestinationArgument.ACTION_MODE]
+		 */
+		val category = TopLevelDestination(
+			route = "${DestinationRoute.CATEGORY}?" +
+				"${DestinationArgument.CATEGORY_ID}={${DestinationArgument.CATEGORY_ID}}&" +
+				"${DestinationArgument.ACTION_MODE}={${DestinationArgument.ACTION_MODE}}",
+			arguments = listOf(
+				navArgument(DestinationArgument.CATEGORY_ID) {
+					type = NavType.IntType
+					defaultValue = -1
+				},
+				navArgument(DestinationArgument.ACTION_MODE) {
+					type = NavType.ActionModeNavType
+					nullable = true
+					defaultValue = ActionMode.New
+				}
+			)
+		)
+
+		/**
+		 * Required argument:
+		 * - [DestinationArgument.CATEGORIES_SCREEN_MODE]
+		 *
+		 * If [DestinationArgument.CATEGORIES_SCREEN_MODE] is [CategoriesScreenMode.SelectCategory]:
+		 * - [DestinationArgument.CATEGORY_ID]
+		 */
 		val categories = TopLevelDestination(
-			route = DestinationRoute.CATEGORIES
+			route = "${DestinationRoute.CATEGORIES}?" +
+				"${DestinationArgument.CATEGORIES_SCREEN_MODE}={${DestinationArgument.CATEGORIES_SCREEN_MODE}}&" +
+				"${DestinationArgument.CATEGORY_ID}={${DestinationArgument.CATEGORY_ID}}",
+			arguments = listOf(
+				navArgument(DestinationArgument.CATEGORIES_SCREEN_MODE) {
+					type = NavType.CategoriesScreenModeNavType
+					defaultValue = CategoriesScreenMode.CategoryList
+				},
+				navArgument(DestinationArgument.CATEGORY_ID) {
+					type = NavType.IntType
+					defaultValue = -1
+				}
+			)
+		)
+
+		/**
+		 * Required argument:
+		 * - [DestinationArgument.WALLETS_SCREEN_MODE]
+		 *
+		 * If [DestinationArgument.WALLETS_SCREEN_MODE] is [WalletsScreenMode.SelectWallet]:
+		 * - [DestinationArgument.WALLET_ID]
+		 */
+		val wallets = TopLevelDestination(
+			route = "${DestinationRoute.WALLETS}?" +
+				"${DestinationArgument.WALLETS_SCREEN_MODE}={${DestinationArgument.WALLETS_SCREEN_MODE}}&" +
+				"${DestinationArgument.WALLET_ID}={${DestinationArgument.WALLET_ID}}",
+			arguments = listOf(
+				navArgument(DestinationArgument.WALLETS_SCREEN_MODE) {
+					type = NavType.WalletsScreenModeNavType
+					defaultValue = WalletsScreenMode.WalletList
+				},
+				navArgument(DestinationArgument.WALLET_ID) {
+					type = NavType.IntType
+					defaultValue = WalletType.Cash.ordinal
+				}
+			)
 		)
 
 		val dashboard = TopLevelDestination(

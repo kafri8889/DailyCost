@@ -23,15 +23,15 @@ interface CategoryDao {
 	fun getCategoryByName(name: String): Flow<CategoryDb?>
 
 	@Delete
-	suspend fun deleteCategoryDb(vararg categoryDb: CategoryDb)
+	fun deleteCategoryDb(vararg categoryDb: CategoryDb)
 
 	@Update
-	suspend fun updateCategoryDb(vararg categoryDb: CategoryDb)
+	fun updateCategoryDb(vararg categoryDb: CategoryDb)
 
 	@Upsert
-	suspend fun upsertCategoryDb(vararg categoryDb: CategoryDb)
+	fun upsertCategoryDb(vararg categoryDb: CategoryDb)
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	suspend fun insertCategoryDb(vararg categoryDb: CategoryDb)
+	fun insertCategoryDb(vararg categoryDb: CategoryDb)
 
 }

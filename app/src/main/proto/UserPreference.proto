@@ -7,4 +7,5 @@ message ProtoUserPreference {
   int32 language = 1;
   bool secureApp = 2;
   bool isNotFirstInstall = 3;
+  bool defaultBalanceVisibility = 4;
 }

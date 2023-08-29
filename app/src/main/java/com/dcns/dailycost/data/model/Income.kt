@@ -2,6 +2,7 @@ package com.dcns.dailycost.data.model
 
 import android.os.Parcelable
 import com.dcns.dailycost.data.WalletType
+import com.dcns.dailycost.foundation.common.SortableByDate
 import com.dcns.dailycost.foundation.common.Transaction
 import kotlinx.parcelize.Parcelize
 
@@ -14,4 +15,4 @@ data class Income(
 	override val payment: WalletType,
 	override val date: Long,
 	override val category: Category
-): Transaction, Parcelable
+): Transaction, Parcelable, SortableByDate

@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -56,22 +57,27 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
+import com.dcns.dailycost.data.ActionMode
 import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.data.defaultNavOptionsBuilder
+import com.dcns.dailycost.data.model.Expense
+import com.dcns.dailycost.data.model.Income
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
+import com.dcns.dailycost.foundation.extension.toast
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.BalanceCard
+import com.dcns.dailycost.foundation.uicomponent.Measurer
 import com.dcns.dailycost.foundation.uicomponent.TransactionItem
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
 	viewModel: DashboardViewModel,
@@ -90,6 +96,10 @@ fun DashboardScreen(
 		floatingActionButton = {
 			DashboardFloatingActionButton(
 				navigateTo = { dest ->
+					if (dest.route == TopLevelDestinations.Home.note.route) {
+						"Fitur belom tersedia (>‿◠)✌".toast(context)
+						return@DashboardFloatingActionButton
+					}
 					navigationActions.navigateTo(
 						destination = dest,
 						builder = defaultNavOptionsBuilder(
@@ -134,6 +144,8 @@ private fun DashboardScreenContent(
 	onRefresh: () -> Unit
 ) {
 
+	val context = LocalContext.current
+
 	val pullRefreshState = rememberPullRefreshState(
 		refreshing = state.isRefreshing,
 		onRefresh = onRefresh
@@ -163,8 +175,15 @@ private fun DashboardScreenContent(
 			item {
 				BalanceCard(
 					balance = state.balance,
+					initialBalanceVisibility = state.initialBalanceVisibility,
+					onAddWalletClicked = {
+						"Fitur belom tersedia (>‿◠)✌".toast(context)
+					},
 					onTopUpClicked = {
-
+						"Fitur belom tersedia (>‿◠)✌".toast(context)
+					},
+					onMoreClicked = {
+						"Fitur belom tersedia (>‿◠)✌".toast(context)
 					},
 					modifier = Modifier
 						.fillMaxWidth(0.96f)
@@ -181,6 +200,50 @@ private fun DashboardScreenContent(
 						.fillMaxWidth()
 						.padding(horizontal = 16.dp)
 				)
+			}
+
+			items(
+				items = state.recentlyActivity
+			) { any ->
+				val anyModifier = Modifier
+					.fillMaxWidth()
+					.padding(horizontal = 16.dp)
+					.animateItemPlacement(tween(256))
+
+				when (any) {
+					is Expense -> {
+						TransactionItem(
+							transaction = any,
+							modifier = Modifier
+								.clickable {
+									onNavigateTo(
+										TopLevelDestinations.Home.transaction.createRoute(
+											DestinationArgument.TRANSACTION_ID to any.id,
+											DestinationArgument.TRANSACTION_TYPE to TransactionType.Expense,
+											DestinationArgument.ACTION_MODE to ActionMode.View,
+										)
+									)
+								}
+								.then(anyModifier)
+						)
+					}
+					is Income -> {
+						TransactionItem(
+							transaction = any,
+							modifier = Modifier
+								.clickable {
+									onNavigateTo(
+										TopLevelDestinations.Home.transaction.createRoute(
+											DestinationArgument.TRANSACTION_ID to any.id,
+											DestinationArgument.TRANSACTION_TYPE to TransactionType.Income,
+											DestinationArgument.ACTION_MODE to ActionMode.View,
+										)
+									)
+								}
+								.then(anyModifier)
+						)
+					}
+				}
 			}
 
 			item {
@@ -206,15 +269,15 @@ private fun DashboardScreenContent(
 				TransactionItem(
 					transaction = expense,
 					modifier = Modifier
-//						.clickable {
-//							onNavigateTo(
-//								TopLevelDestinations.Home.transaction.createRoute(
-//									DestinationArgument.TRANSACTION_ID to expense.id,
-//									DestinationArgument.TRANSACTION_TYPE to TransactionType.Expense,
-//									DestinationArgument.TRANSACTION_MODE to TransactionMode.Edit,
-//								)
-//							)
-//						}
+						.clickable {
+							onNavigateTo(
+								TopLevelDestinations.Home.transaction.createRoute(
+									DestinationArgument.TRANSACTION_ID to expense.id,
+									DestinationArgument.TRANSACTION_TYPE to TransactionType.Expense,
+									DestinationArgument.ACTION_MODE to ActionMode.View,
+								)
+							)
+						}
 						.fillMaxWidth()
 						.padding(horizontal = 16.dp)
 						.animateItemPlacement(tween(256))
@@ -244,15 +307,15 @@ private fun DashboardScreenContent(
 				TransactionItem(
 					transaction = income,
 					modifier = Modifier
-//						.clickable {
-//							onNavigateTo(
-//								TopLevelDestinations.Home.transaction.createRoute(
-//									DestinationArgument.TRANSACTION_ID to income.id,
-//									DestinationArgument.TRANSACTION_TYPE to TransactionType.Income,
-//									DestinationArgument.TRANSACTION_MODE to TransactionMode.Edit,
-//								)
-//							)
-//						}
+						.clickable {
+							onNavigateTo(
+								TopLevelDestinations.Home.transaction.createRoute(
+									DestinationArgument.TRANSACTION_ID to income.id,
+									DestinationArgument.TRANSACTION_TYPE to TransactionType.Income,
+									DestinationArgument.ACTION_MODE to ActionMode.View,
+								)
+							)
+						}
 						.fillMaxWidth()
 						.padding(horizontal = 16.dp)
 						.animateItemPlacement(tween(256))
@@ -303,14 +366,14 @@ private fun TitleSection(
 			Text(
 				text = stringResource(id = R.string.see_all),
 				style = MaterialTheme.typography.labelLarge.copy(
-					color = DailyCostTheme.colorScheme.labelText
+					color = DailyCostTheme.colorScheme.text
 				)
 			)
 
 			Icon(
 				painter = painterResource(id = R.drawable.ic_arrow_right_new),
 				contentDescription = null,
-				tint = DailyCostTheme.colorScheme.labelText,
+				tint = DailyCostTheme.colorScheme.text,
 				modifier = Modifier
 					.size(16.dp)
 			)
@@ -371,22 +434,37 @@ private fun DashboardFloatingActionButton(
 		verticalArrangement = Arrangement.spacedBy(8.dp),
 		modifier = modifier
 	) {
-		DashboardFloatingActionButtonItem(
-			icon = R.drawable.ic_book_closed,
-			text = stringResource(id = R.string.notes),
-			expanded = expanded
-		) {
-			expanded = false
-			navigateTo(TopLevelDestinations.Home.note)
-		}
+		Measurer(
+			contentToMeasure = {
+				DashboardFloatingActionButtonTooltip(
+					text = arrayOf(stringResource(id = R.string.note), stringResource(id = R.string.transaction)).maxBy { it.length },
+					tooltipWidth = Dp.Unspecified
+				)
+			}
+		) { (width, _) ->
+			Column(
+				verticalArrangement = Arrangement.spacedBy(8.dp),
+			) {
+				DashboardFloatingActionButtonItem(
+					icon = R.drawable.ic_book_closed,
+					text = stringResource(id = R.string.notes),
+					expanded = expanded,
+					tooltipWidth = width
+				) {
+					expanded = false
+					navigateTo(TopLevelDestinations.Home.note)
+				}
 
-		DashboardFloatingActionButtonItem(
-			icon = R.drawable.ic_book_closed,
-			text = stringResource(id = R.string.notes),
-			expanded = expanded
-		) {
-			expanded = false
-			navigateTo(TopLevelDestinations.Home.transaction)
+				DashboardFloatingActionButtonItem(
+					icon = R.drawable.ic_transaction,
+					text = stringResource(id = R.string.transaction),
+					expanded = expanded,
+					tooltipWidth = width
+				) {
+					expanded = false
+					navigateTo(TopLevelDestinations.Home.transaction)
+				}
+			}
 		}
 
 		FloatingActionButton(
@@ -417,10 +495,35 @@ private fun DashboardFloatingActionButton(
 }
 
 @Composable
+private fun DashboardFloatingActionButtonTooltip(
+	text: String,
+	tooltipWidth: Dp
+) {
+	Box(
+		contentAlignment = Alignment.Center,
+		modifier = Modifier
+			.width(tooltipWidth)
+			.clip(RoundedCornerShape(25))
+			.background(Color(0xff1A1A1A).copy(alpha = 0.75f))
+	) {
+		Text(
+			text = text,
+			style = MaterialTheme.typography.bodySmall.copy(
+				fontWeight = FontWeight.Medium,
+				color = DailyCostTheme.colorScheme.onPrimary
+			),
+			modifier = Modifier
+				.padding(10.dp)
+		)
+	}
+}
+
+@Composable
 private fun DashboardFloatingActionButtonItem(
 	icon: Int,
 	text: String,
 	expanded: Boolean,
+	tooltipWidth: Dp,
 	modifier: Modifier = Modifier,
 	onClick: () -> Unit
 ) {
@@ -434,22 +537,10 @@ private fun DashboardFloatingActionButtonItem(
 			enter = scaleIn(tween(512)),
 			exit = scaleOut(tween(512))
 		) {
-			Box(
-				contentAlignment = Alignment.Center,
-				modifier = Modifier
-					.clip(RoundedCornerShape(25))
-					.background(Color(0xff1A1A1A).copy(alpha = 0.75f))
-			) {
-				Text(
-					text = text,
-					style = MaterialTheme.typography.bodySmall.copy(
-						fontWeight = FontWeight.Medium,
-						color = DailyCostTheme.colorScheme.onPrimary
-					),
-					modifier = Modifier
-						.padding(10.dp)
-				)
-			}
+			DashboardFloatingActionButtonTooltip(
+				text = text,
+				tooltipWidth = tooltipWidth
+			)
 		}
 
 		AnimatedVisibility(

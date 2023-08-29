@@ -23,7 +23,6 @@
             android:exported="false"
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            android:multiprocess="true"
             tools:node="remove">
             <!-- If you are using androidx.startup to initialize other components -->
             <meta-data

@@ -11,5 +11,6 @@ interface IUserPreferenceRepository {
 	suspend fun setLanguage(language: Language)
 	suspend fun setSecureApp(secure: Boolean)
 	suspend fun setIsNotFirstInstall(notFirst: Boolean)
+	suspend fun setDefaultBalanceVisibility(visible: Boolean)
 
 }

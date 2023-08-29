@@ -43,6 +43,14 @@ class UserPreferenceRepository @Inject constructor(
 		}
 	}
 
+	override suspend fun setDefaultBalanceVisibility(visible: Boolean) {
+		userPreferenceDataStore.updateData {
+			it.copy(
+				defaultBalanceVisibility = visible
+			)
+		}
+	}
+
 	companion object {
 		val corruptionHandler = ReplaceFileCorruptionHandler(
 			produceNewData = { ProtoUserPreference() }

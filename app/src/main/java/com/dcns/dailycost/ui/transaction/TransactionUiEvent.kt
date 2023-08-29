@@ -23,6 +23,14 @@ sealed class TransactionUiEvent: UiEvent() {
 		override val data: Any? = null,
 	): ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
 
+	class FailedToSave(
+		override val message: String = asStringResource(R.string.failed_to_save),
+		override val actionLabel: String? = null,
+		override val withDismissAction: Boolean = true,
+		override val duration: SnackbarDuration = SnackbarDuration.Short,
+		override val data: Any? = null,
+	): ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
+
 	class Deleting(
 		override val message: String = asStringResource(R.string.deleteing),
 		override val actionLabel: String? = null,
@@ -31,8 +39,21 @@ sealed class TransactionUiEvent: UiEvent() {
 		override val data: Any? = null,
 	): ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
 
+	class Saving(
+		override val message: String = asStringResource(R.string.saving),
+		override val actionLabel: String? = null,
+		override val withDismissAction: Boolean = true,
+		override val duration: SnackbarDuration = SnackbarDuration.Indefinite,
+		override val data: Any? = null,
+	): ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
+
 	class TransactionDeleted(
 		override val message: String = asStringResource(R.string.transaction_deleted),
+		override val length: Int = Toast.LENGTH_SHORT
+	): ShowToast(message, length)
+
+	class TransactionSaved(
+		override val message: String = asStringResource(R.string.transaction_saved),
 		override val length: Int = Toast.LENGTH_SHORT
 	): ShowToast(message, length)
 

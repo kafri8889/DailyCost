@@ -9,7 +9,10 @@ import com.dcns.dailycost.ui.categories.CategoriesScreen
 import com.dcns.dailycost.ui.categories.CategoriesViewModel
 
 fun NavGraphBuilder.CategoriesNavigation(navActions: NavigationActions) {
-	composable(TopLevelDestinations.Home.categories.route) { backEntry ->
+	composable(
+		route = TopLevelDestinations.Home.categories.route,
+		arguments = TopLevelDestinations.Home.categories.arguments
+	) { backEntry ->
 		val viewModel = hiltViewModel<CategoriesViewModel>(backEntry)
 
 		CategoriesScreen(

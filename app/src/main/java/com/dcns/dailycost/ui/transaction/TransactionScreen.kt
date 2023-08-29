@@ -1,72 +1,79 @@
 package com.dcns.dailycost.ui.transaction
 
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Remove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
+import com.dcns.dailycost.data.ActionMode
+import com.dcns.dailycost.data.CategoriesScreenMode
+import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.NavigationActions
-import com.dcns.dailycost.data.TransactionMode
+import com.dcns.dailycost.data.TopLevelDestination
+import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.TransactionType
-import com.dcns.dailycost.data.WalletType
-import com.dcns.dailycost.data.model.Category
+import com.dcns.dailycost.data.WalletsScreenMode
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.LocalCurrency
-import com.dcns.dailycost.foundation.extension.dailyCostColor
 import com.dcns.dailycost.foundation.extension.primaryLocale
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
+import com.dcns.dailycost.foundation.uicomponent.DailyCostTextField
+import com.dcns.dailycost.foundation.uicomponent.TransactionSegmentedButton
 
 @Composable
 fun TransactionScreen(
@@ -80,7 +87,7 @@ fun TransactionScreen(
 		viewModel = viewModel,
 		onEvent = { event ->
 			when (event) {
-				is TransactionUiEvent.TransactionDeleted -> {
+				is TransactionUiEvent.TransactionDeleted, is TransactionUiEvent.TransactionSaved -> {
 					navigationActions.popBackStack()
 				}
 			}
@@ -89,6 +96,9 @@ fun TransactionScreen(
 		TransactionScreenContent(
 			state = state,
 			onNavigationIconClicked = navigationActions::popBackStack,
+			onNavigateTo = { destination ->
+				navigationActions.navigateTo(destination)
+			},
 			onSaveClicked = {
 				viewModel.onAction(TransactionAction.Save)
 			},
@@ -98,23 +108,14 @@ fun TransactionScreen(
 			onTransactionTypeChanged = { type ->
 				viewModel.onAction(TransactionAction.SetTransactionType(type))
 			},
-			onCategoryChanged = { category ->
-				viewModel.onAction(TransactionAction.SetCategory(category))
-			},
-			onUsernameChanged = { username ->
+			onTitleChanged = { username ->
 				viewModel.onAction(TransactionAction.SetName(username))
-			},
-			onPaymentChanged = { walletType ->
-				viewModel.onAction(TransactionAction.SetPayment(walletType))
 			},
 			onAmountChanged = { amount ->
 				viewModel.onAction(TransactionAction.SetAmount(amount))
 			},
 			onDateChanged = { date ->
 				viewModel.onAction(TransactionAction.SetDate(date))
-			},
-			onSave = {
-				viewModel.onAction(TransactionAction.Save)
 			},
 			modifier = Modifier
 				.systemBarsPadding()
@@ -123,7 +124,7 @@ fun TransactionScreen(
 	}
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TransactionScreenContent(
 	state: TransactionState,
@@ -131,24 +132,14 @@ private fun TransactionScreenContent(
 	onSaveClicked: () -> Unit,
 	onDeleteTransaction: () -> Unit,
 	onNavigationIconClicked: () -> Unit,
+	onNavigateTo: (TopLevelDestination) -> Unit,
 	onTransactionTypeChanged: (TransactionType) -> Unit,
-	onCategoryChanged: (Category) -> Unit,
-	onUsernameChanged: (String) -> Unit,
-	onPaymentChanged: (WalletType) -> Unit,
+	onTitleChanged: (String) -> Unit,
 	onAmountChanged: (Double) -> Unit,
-	onDateChanged: (Long) -> Unit,
-	onSave: () -> Unit
+	onDateChanged: (Long) -> Unit
 ) {
 
 	val focusManager = LocalFocusManager.current
-
-	val (
-		nameFocusRequester,
-		amountFocusRequester,
-		paymentFocusRequester,
-		dateFocusRequester,
-		categoryFocusRequester
-	) = remember { FocusRequester.createRefs() }
 
 	var showDatePickerDialog by remember { mutableStateOf(false) }
 	var showDeleteDialog by remember { mutableStateOf(false) }
@@ -228,7 +219,7 @@ private fun TransactionScreenContent(
 
 	LazyColumn(
 		horizontalAlignment = Alignment.CenterHorizontally,
-		verticalArrangement = Arrangement.spacedBy(8.dp),
+		verticalArrangement = Arrangement.spacedBy(16.dp),
 		modifier = modifier
 			.pointerInput(Unit) {
 				detectTapGestures {
@@ -238,7 +229,14 @@ private fun TransactionScreenContent(
 	) {
 		item {
 			TopAppBar(
-				title = {},
+				title = {
+					Text(
+						text = stringResource(
+							id = if (state.actionMode.isNew()) R.string.new_transaction else R.string.view_transaction
+						),
+						style = MaterialTheme.typography.titleMedium
+					)
+				},
 				navigationIcon = {
 					IconButton(onClick = onNavigationIconClicked) {
 						Icon(
@@ -248,7 +246,7 @@ private fun TransactionScreenContent(
 					}
 				},
 				actions = {
-					if (state.transactionMode == TransactionMode.Edit) {
+					if (state.actionMode == ActionMode.View) {
 						IconButton(
 							onClick = {
 								showDeleteDialog = true
@@ -256,290 +254,203 @@ private fun TransactionScreenContent(
 						) {
 							Icon(
 								painter = painterResource(id = R.drawable.ic_trash),
-								contentDescription = stringResource(id = R.string.accessibility_delete_transaction)
+								contentDescription = stringResource(id = R.string.accessibility_delete)
 							)
 						}
 					}
 
-					IconButton(onClick = onSave) {
-						Icon(
-							painter = painterResource(id = R.drawable.ic_check),
-							contentDescription = stringResource(id = R.string.accessibility_save)
-						)
+					if (state.actionMode == ActionMode.New) {
+						IconButton(onClick = onSaveClicked) {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_check),
+								contentDescription = stringResource(id = R.string.accessibility_save)
+							)
+						}
 					}
 				}
 			)
 		}
 
-		if (state.transactionMode.isNew()) {
+		if (state.actionMode.isNew()) {
 			item {
-				SingleChoiceSegmentedButtonRow(
+				TransactionSegmentedButton(
+					selectedTransactionType = state.transactionType,
+					onTransactionTypeChanged = onTransactionTypeChanged,
 					modifier = Modifier
 						.fillMaxWidth(0.92f)
-				) {
-					SegmentedButton(
-						shape = RoundedCornerShape(
-							topStartPercent = 100,
-							bottomStartPercent = 100
-						),
-						selected = state.transactionType.isIncome,
-						icon = {},
-						onClick = {
-							onTransactionTypeChanged(TransactionType.Income)
-						}
-					) {
-						Text(TransactionType.Income.name)
-					}
-
-					SegmentedButton(
-						shape = RoundedCornerShape(
-							topEndPercent = 100,
-							bottomEndPercent = 100
-						),
-						selected = state.transactionType.isExpense,
-						icon = {},
-						onClick = {
-							onTransactionTypeChanged(TransactionType.Expense)
-						}
-					) {
-						Text(TransactionType.Expense.name)
-					}
-				}
+						.clip(RoundedCornerShape(25))
+						.background(DailyCostTheme.colorScheme.primaryContainer.copy(alpha = 0.48f))
+				)
 			}
 		}
 
 		item {
-			OutlinedTextField(
-				value = state.name,
+			DailyCostTextField(
+				placeholder = stringResource(id = R.string.buy_food),
+				title = stringResource(id = R.string.title),
+				value = state.title,
+				readOnly = state.actionMode.isView(),
 				singleLine = true,
-				onValueChange = onUsernameChanged,
-				shape = RoundedCornerShape(20),
-				colors = OutlinedTextFieldDefaults.dailyCostColor(),
+				error = state.titleError,
+				errorText = stringResource(id = R.string.title_cant_be_empty),
+				onValueChange = onTitleChanged,
 				keyboardOptions = KeyboardOptions(
-					imeAction = ImeAction.Next,
+					imeAction = ImeAction.Done,
 					keyboardType = KeyboardType.Text
-				),
-				keyboardActions = KeyboardActions(
-					onNext = {
-						focusManager.moveFocus(FocusDirection.Next)
-					}
-				),
-				label = {
-					Text("Name")
-				},
-				modifier = Modifier
-					.fillMaxWidth(0.92f)
-					.focusRequester(nameFocusRequester)
-			)
-		}
-
-		item {
-			val currency = LocalCurrency.current
-
-			val amount = remember(state.amount) {
-				state.amount.toInt().toString()
-			}
-
-			OutlinedTextField(
-				value = amount,
-				singleLine = true,
-				shape = RoundedCornerShape(20),
-				colors = OutlinedTextFieldDefaults.dailyCostColor(),
-				keyboardOptions = KeyboardOptions(
-					keyboardType = KeyboardType.Number,
-					imeAction = ImeAction.Done
 				),
 				keyboardActions = KeyboardActions(
 					onDone = {
 						focusManager.clearFocus()
 					}
 				),
-				prefix = {
-					Text(currency.symbol)
-				},
-				label = {
-					Text(stringResource(id = R.string.amount))
-				},
-				onValueChange = { n ->
-					val updatedAmount = n
-						.ifEmpty { "0" }
-						.filter { it.isDigit() }
-						.toDouble()
-
-					onAmountChanged(updatedAmount)
-				},
 				modifier = Modifier
 					.fillMaxWidth(0.92f)
-					.focusRequester(amountFocusRequester)
 			)
 		}
 
 		item {
-			var expanded by remember { mutableStateOf(false) }
-
-			LaunchedEffect(expanded) {
-				if (!expanded) focusManager.clearFocus()
-			}
-
-			ExposedDropdownMenuBox(
-				expanded = expanded,
-				onExpandedChange = {
-					expanded = !expanded
-				}
-			) {
-				OutlinedTextField(
-					value = state.payment.name,
-					readOnly = true,
-					singleLine = true,
-					shape = RoundedCornerShape(20),
-					colors = OutlinedTextFieldDefaults.dailyCostColor(),
-					onValueChange = {},
-					label = {
-						Text("Payment")
-					},
-					trailingIcon = {
-						Icon(
-							imageVector = Icons.Rounded.ArrowDropDown,
-							contentDescription = stringResource(id = R.string.accessibility_expand_dropdown_menu),
-							modifier = Modifier
-								.composed {
-									val degree by animateFloatAsState(
-										label = "degree",
-										targetValue = if (expanded) 540f else 0f,
-										animationSpec = tween(256)
-									)
-
-									graphicsLayer {
-										rotationZ = degree
-									}
-								}
-						)
-					},
-					modifier = Modifier
-						.menuAnchor()
-						.fillMaxWidth(0.92f)
-						.focusRequester(paymentFocusRequester)
-				)
-
-				ExposedDropdownMenu(
-					expanded = expanded,
-					onDismissRequest = {
-						expanded = false
-					}
-				) {
-					for (type in WalletType.values()) {
-						DropdownMenuItem(
-							contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-							text = {
-								Text(type.localizedName)
-							},
-							onClick = {
-								onPaymentChanged(type)
-							}
-						)
-					}
-				}
-			}
-		}
-
-		item {
-			var expanded by remember { mutableStateOf(false) }
-
-			LaunchedEffect(expanded) {
-				if (!expanded) focusManager.clearFocus()
-			}
-
-			ExposedDropdownMenuBox(
-				expanded = expanded,
-				onExpandedChange = {
-					expanded = !expanded
-				}
-			) {
-				OutlinedTextField(
-					value = state.category.name,
-					readOnly = true,
-					singleLine = true,
-					shape = RoundedCornerShape(20),
-					colors = OutlinedTextFieldDefaults.dailyCostColor(),
-					onValueChange = {},
-					label = {
-						Text("Category")
-					},
-					trailingIcon = {
-						Icon(
-							imageVector = Icons.Rounded.ArrowDropDown,
-							contentDescription = stringResource(id = R.string.accessibility_expand_dropdown_menu),
-							modifier = Modifier
-								.composed {
-									val degree by animateFloatAsState(
-										label = "degree",
-										targetValue = if (expanded) 540f else 360f,
-										animationSpec = tween(256)
-									)
-
-									graphicsLayer {
-										rotationZ = degree
-									}
-								}
-						)
-					},
-					modifier = Modifier
-						.menuAnchor()
-						.fillMaxWidth(0.92f)
-						.focusRequester(categoryFocusRequester)
-				)
-
-				ExposedDropdownMenu(
-					expanded = expanded,
-					onDismissRequest = {
-						expanded = false
-					}
-				) {
-					for (category in state.availableCategory) {
-						DropdownMenuItem(
-							contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-							text = {
-								Text(category.name)
-							},
-							onClick = {
-								onCategoryChanged(category)
-							}
-						)
-					}
-				}
-			}
-		}
-
-		item {
-			OutlinedTextField(
-				value = CommonDateFormatter.edmy(LocalContext.current.primaryLocale)
-					.format(state.date),
+			DailyCostTextField(
+				title = stringResource(id = R.string.wallet),
+				value = state.payment.name,
 				readOnly = true,
 				singleLine = true,
-				shape = RoundedCornerShape(20),
-				colors = OutlinedTextFieldDefaults.dailyCostColor(),
+				titleActionIcon = if (state.actionMode.isNew()) painterResource(id = R.drawable.ic_arrow_down) else null,
 				onValueChange = {},
-				label = {
-					Text(stringResource(id = R.string.date))
+				onTitleActionClicked = {
+					onNavigateTo(
+						TopLevelDestinations.Home.wallets.createRoute(
+							DestinationArgument.WALLETS_SCREEN_MODE to WalletsScreenMode.SelectWallet,
+							DestinationArgument.WALLET_ID to state.payment.ordinal
+						)
+					)
 				},
 				modifier = Modifier
 					.fillMaxWidth(0.92f)
-					.focusRequester(dateFocusRequester)
 			)
 		}
 
 		item {
-			Button(
-				shape = RoundedCornerShape(25),
-				onClick = onSaveClicked,
-				colors = ButtonDefaults.buttonColors(
-					containerColor = DailyCostTheme.colorScheme.primary
-				),
+			DailyCostTextField(
+				title = stringResource(id = R.string.category),
+				value = state.category.name,
+				readOnly = true,
+				singleLine = true,
+				titleActionIcon = if (state.actionMode.isNew()) painterResource(id = R.drawable.ic_arrow_down) else null,
+				onValueChange = {},
+				onTitleActionClicked = {
+					onNavigateTo(
+						TopLevelDestinations.Home.categories.createRoute(
+							DestinationArgument.CATEGORIES_SCREEN_MODE to CategoriesScreenMode.SelectCategory,
+							DestinationArgument.CATEGORY_ID to state.category.id
+						)
+					)
+				},
+				modifier = Modifier
+					.fillMaxWidth(0.92f)
+			)
+		}
+
+		item {
+			DailyCostTextField(
+				title = stringResource(id = R.string.date),
+				value = CommonDateFormatter.edmy(LocalContext.current.primaryLocale).format(state.date),
+				readOnly = true,
+				singleLine = true,
+				trailingIcon = if (state.actionMode.isNew()) painterResource(id = R.drawable.ic_calendar) else null,
+				onValueChange = {},
+				onTrailingIconClicked = {
+					showDatePickerDialog = true
+				},
+				modifier = Modifier
+					.fillMaxWidth(0.92f)
+			)
+		}
+
+		item {
+			val amount = remember(state.amount) {
+				state.amount.toInt().toString().replace("(\\d)(?=(\\d{3})+\$)".toRegex(), "$1.")
+			}
+
+			Column(
+				verticalArrangement = Arrangement.spacedBy(8.dp),
 				modifier = Modifier
 					.fillMaxWidth(0.92f)
 			) {
-				Text(stringResource(R.string.save))
+				Text(
+					text = stringResource(id = R.string.amount),
+					style = MaterialTheme.typography.titleMedium.copy(
+						fontWeight = FontWeight.SemiBold
+					)
+				)
+
+				Row(
+					verticalAlignment = Alignment.Bottom,
+					modifier = Modifier
+						.fillMaxWidth()
+				) {
+					AnimatedContent(
+						label = "transaction icon",
+						targetState = state.transactionType,
+						transitionSpec = {
+							scaleIn(tween(256)) togetherWith scaleOut(tween(256))
+						}
+					) { type ->
+						Icon(
+							imageVector = if (type.isIncome) Icons.Rounded.Add else Icons.Rounded.Remove,
+							contentDescription = null,
+							modifier = Modifier
+								.size(32.dp)
+						)
+					}
+
+					BasicTextField(
+						value = amount,
+						readOnly = state.actionMode.isView(),
+						cursorBrush = Brush.horizontalGradient(
+							listOf(
+								DailyCostTheme.colorScheme.primary,
+								DailyCostTheme.colorScheme.primary
+							)
+						),
+						textStyle = MaterialTheme.typography.displaySmall.copy(
+							textAlign = TextAlign.End
+						),
+						keyboardOptions = KeyboardOptions(
+							keyboardType = KeyboardType.Number,
+							imeAction = ImeAction.Done
+						),
+						keyboardActions = KeyboardActions(
+							onDone = {
+								focusManager.clearFocus()
+							}
+						),
+						onValueChange = { n ->
+							val updatedAmount = n
+								.ifEmpty { "0" }
+								.filter { it.isDigit() }
+								.toDouble()
+								.coerceAtMost(1_000_000_000.0)
+
+							onAmountChanged(updatedAmount)
+						},
+						modifier = Modifier
+							.weight(1f)
+					)
+
+					Spacer(modifier = Modifier.width(4.dp))
+
+					Text(
+						text = LocalCurrency.current.countryCode,
+						style = MaterialTheme.typography.titleLarge
+					)
+				}
+
+				HorizontalDivider(color = DailyCostTheme.colorScheme.outline)
 			}
+		}
+
+		item {
+			Spacer(modifier = Modifier.height(24.dp))
 		}
 	}
 }

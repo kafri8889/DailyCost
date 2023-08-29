@@ -24,18 +24,18 @@ interface IncomeDao {
 	fun getIncomeById(id: Int): Flow<IncomeDbWithCategoryDb?>
 
 	@Query("DELETE FROM income_table WHERE id_income NOT IN (:ids)")
-	suspend fun deleteIncomeExcept(ids: List<Int>)
+	fun deleteIncomeExcept(ids: List<Int>)
 
 	@Update
-	suspend fun updateIncome(vararg income: IncomeDb)
+	fun updateIncome(vararg income: IncomeDb)
 
 	@Upsert
-	suspend fun upsertIncome(vararg income: IncomeDb)
+	fun upsertIncome(vararg income: IncomeDb)
 
 	@Delete
-	suspend fun deleteIncome(vararg income: IncomeDb)
+	fun deleteIncome(vararg income: IncomeDb)
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	suspend fun insertIncome(vararg income: IncomeDb)
+	fun insertIncome(vararg income: IncomeDb)
 
 }

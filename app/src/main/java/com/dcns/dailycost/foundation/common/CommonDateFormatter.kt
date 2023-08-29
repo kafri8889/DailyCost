@@ -12,6 +12,13 @@ object CommonDateFormatter {
 	val api = SimpleDateFormat("dd MMMM yyyy hh:mm:ss", Locale.US)
 
 	/**
+	 * Date format untuk format/parse tanggal dari local ke api atau sebaliknya
+	 *
+	 * format => yyyy-MM-dd
+	 */
+	val api2 = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+
+	/**
 	 * Date format dengan format "EEEE, dd MMM yyyy" dan locale US
 	 */
 	val edmy = SimpleDateFormat("EEEE, dd MMM yyyy", Locale.US)

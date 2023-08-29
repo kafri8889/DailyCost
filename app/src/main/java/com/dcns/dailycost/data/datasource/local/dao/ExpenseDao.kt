@@ -23,17 +23,17 @@ interface ExpenseDao {
 	fun getExpenseById(id: Int): Flow<ExpenseDbWithCategoryDb?>
 
 	@Query("DELETE FROM expense_table WHERE id_expense NOT IN (:ids)")
-	suspend fun deleteExpenseExcept(ids: List<Int>)
+	fun deleteExpenseExcept(ids: List<Int>)
 
 	@Update
-	suspend fun updateExpense(vararg expense: ExpenseDb)
+	fun updateExpense(vararg expense: ExpenseDb)
 
 	@Upsert
-	suspend fun upsertExpense(vararg expense: ExpenseDb)
+	fun upsertExpense(vararg expense: ExpenseDb)
 
 	@Delete
-	suspend fun deleteExpense(vararg expense: ExpenseDb)
+	fun deleteExpense(vararg expense: ExpenseDb)
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	suspend fun insertExpense(vararg expense: ExpenseDb)
+	fun insertExpense(vararg expense: ExpenseDb)
 }

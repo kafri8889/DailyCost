@@ -23,18 +23,18 @@ interface NoteDao {
 	fun getNoteByUserId(id: Int): Flow<List<NoteDb>>
 
 	@Query("DELETE FROM note_table WHERE id_note NOT IN (:ids)")
-	suspend fun deleteNoteExcept(ids: List<String>)
+	fun deleteNoteExcept(ids: List<String>)
 
 	@Update
-	suspend fun updateNote(vararg note: NoteDb)
+	fun updateNote(vararg note: NoteDb)
 
 	@Upsert
-	suspend fun upsertNote(vararg note: NoteDb)
+	fun upsertNote(vararg note: NoteDb)
 
 	@Delete
-	suspend fun deleteNote(vararg note: NoteDb)
+	fun deleteNote(vararg note: NoteDb)
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	suspend fun insertNote(vararg note: NoteDb)
+	fun insertNote(vararg note: NoteDb)
 
 }

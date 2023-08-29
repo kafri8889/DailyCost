@@ -8,15 +8,18 @@ import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
+import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.SharedUiEvent
+import com.dcns.dailycost.foundation.common.SortableByDate
 import com.dcns.dailycost.foundation.extension.enqueue
 import com.dcns.dailycost.foundation.worker.Workers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -29,6 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
 	private val userCredentialUseCases: UserCredentialUseCases,
+	private val userPreferenceUseCases: UserPreferenceUseCases,
 	private val connectivityManager: ConnectivityManager,
 	private val expenseUseCases: ExpenseUseCases,
 	private val incomeUseCases: IncomeUseCases,
@@ -101,6 +105,31 @@ class DashboardViewModel @Inject constructor(
 				updateState {
 					copy(
 						credential = cred
+					)
+				}
+			}
+		}
+
+		viewModelScope.launch {
+			userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
+				updateState {
+					copy(
+						initialBalanceVisibility = pref.defaultBalanceVisibility
+					)
+				}
+			}
+		}
+
+		viewModelScope.launch {
+			combine(
+				expenseUseCases.getLocalExpenseUseCase(),
+				incomeUseCases.getLocalIncomeUseCase(),
+			) { expenses, incomes ->
+				expenses + incomes
+			}.collect { list: List<SortableByDate> ->
+				updateState {
+					copy(
+						recentlyActivity = list.sortedByDescending { it.date }.take(5)
 					)
 				}
 			}

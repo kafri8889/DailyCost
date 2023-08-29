@@ -1,36 +1,57 @@
 package com.dcns.dailycost.foundation.uicomponent
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dcns.dailycost.data.WalletType
 import com.dcns.dailycost.data.model.Wallet
-import com.dcns.dailycost.foundation.common.CurrencyFormatter
-import com.dcns.dailycost.foundation.common.LocalCurrency
-import com.dcns.dailycost.foundation.common.primarySystemLocale
-import com.dcns.dailycost.foundation.extension.dailyCostMarquee
+import com.dcns.dailycost.foundation.theme.DailyCostTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun WalletItemPreview() {
+	DailyCostTheme {
+		WalletItem(
+			wallet = Wallet(WalletType.EWallet, 0.0),
+			onClick = {},
+			modifier = Modifier
+				.fillMaxWidth()
+		)
+	}
+}
+
+@Preview
+@Composable
+private fun SelectableWalletItemPreview() {
+	DailyCostTheme {
+		SelectableWalletItem(
+			selected = true,
+			wallet = Wallet(WalletType.EWallet, 0.0),
+			onClick = {},
+			modifier = Modifier
+				.fillMaxWidth()
+		)
+	}
+}
+
 @Composable
 fun SelectableWalletItem(
 	wallet: Wallet,
@@ -38,110 +59,64 @@ fun SelectableWalletItem(
 	modifier: Modifier = Modifier,
 	onClick: () -> Unit
 ) {
-
-	val scaleAnimatable = remember { Animatable(1f) }
-
-	LaunchedEffect(selected) {
-		if (selected) {
-			scaleAnimatable.animateTo(
-				targetValue = 0.88f,
-				animationSpec = spring(
-					dampingRatio = Spring.DampingRatioMediumBouncy
-				)
-			)
-
-			scaleAnimatable.animateTo(
-				targetValue = 1f,
-				animationSpec = spring(
-					dampingRatio = Spring.DampingRatioMediumBouncy
+	WalletItem(
+		wallet = wallet,
+		modifier = modifier,
+		onClick = onClick,
+		trailing = {
+			RadioButton(
+				selected = selected,
+				onClick = onClick,
+				colors = RadioButtonDefaults.colors(
+					selectedColor = DailyCostTheme.colorScheme.primary
 				)
 			)
 		}
-	}
-
-	Card(
-		onClick = onClick,
-		border = if (selected) BorderStroke(
-			width = 1.dp,
-			color = MaterialTheme.colorScheme.outline
-		) else null,
-		modifier = modifier
-			.graphicsLayer {
-				scaleX = scaleAnimatable.value
-				scaleY = scaleAnimatable.value
-			}
-	) {
-		WalletItemContent(
-			wallet = wallet,
-			trailingIcon = {
-				RadioButton(
-					selected = selected,
-					onClick = onClick
-				)
-			}
-		)
-	}
+	)
 }
 
 @Composable
 fun WalletItem(
 	wallet: Wallet,
-	modifier: Modifier = Modifier
+	modifier: Modifier = Modifier,
+	trailing: @Composable (() -> Unit)? = null,
+	onClick: () -> Unit
 ) {
 
-	Card(modifier = modifier) {
-		WalletItemContent(wallet = wallet)
-	}
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun WalletItemContent(
-	wallet: Wallet,
-	trailingIcon: @Composable () -> Unit = {}
-) {
-
-	val currency = LocalCurrency.current
-
-	val balance = remember(wallet.amount) {
-		CurrencyFormatter.format(
-			locale = primarySystemLocale,
-			amount = wallet.amount,
-			countryCode = currency.countryCode
-		)
-	}
-
-	Row(
-		verticalAlignment = Alignment.CenterVertically,
-		horizontalArrangement = Arrangement.spacedBy(16.dp),
+	Card(
+		colors = CardDefaults.cardColors(
+			containerColor = Color.Transparent
+		),
 		modifier = Modifier
-			.fillMaxWidth()
-			.padding(8.dp)
+			.clickable { onClick() }
+			.then(modifier)
 	) {
-		Icon(
-			painter = painterResource(wallet.walletType.icon),
-			contentDescription = null
-		)
-
-		Column(
-			verticalArrangement = Arrangement.spacedBy(8.dp),
+		Row(
+			verticalAlignment = Alignment.CenterVertically,
 			modifier = Modifier
-				.weight(1f)
+				.fillMaxWidth()
+				.padding(8.dp)
 		) {
+			Box(
+				contentAlignment = Alignment.Center,
+				modifier = Modifier
+					.size(48.dp)
+			) {
+				Icon(
+					painter = painterResource(wallet.walletType.icon),
+					contentDescription = null
+				)
+			}
+
 			Text(
 				text = wallet.walletType.localizedName,
-				style = MaterialTheme.typography.bodySmall
-			)
-
-			AnimatedTextByChar(
-				text = balance,
-				style = MaterialTheme.typography.titleMedium,
 				modifier = Modifier
-					.fillMaxWidth()
-					.dailyCostMarquee()
+					.weight(1f)
 			)
-		}
 
-		trailingIcon()
+			Spacer(modifier = Modifier.width(8.dp))
+
+			trailing?.invoke()
+		}
 	}
 }

@@ -11,5 +11,6 @@ data class SettingState(
 	/**
 	 * if secure app with biometric enabled
 	 */
-	val isSecureAppEnabled: Boolean = false
+	val isSecureAppEnabled: Boolean = false,
+	val defaultBalanceVisibility: Boolean = true,
 )

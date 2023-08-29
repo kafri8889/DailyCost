@@ -17,6 +17,6 @@ inline fun GetExpenseResponseResult.toExpense(
 		amount = amount.toDouble(),
 		payment = WalletType.parse(payment),
 		date = date(this.date),
-		category = category(this.category.uppercaseFirstLetterInWord()),
+		category = category(this.category.uppercaseFirstLetterInWord().trim()),
 	)
 }
