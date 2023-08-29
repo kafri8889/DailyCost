@@ -68,6 +68,8 @@ import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.data.defaultNavOptionsBuilder
+import com.dcns.dailycost.data.model.Expense
+import com.dcns.dailycost.data.model.Income
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.extension.toast
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
@@ -142,6 +144,8 @@ private fun DashboardScreenContent(
 	onRefresh: () -> Unit
 ) {
 
+	val context = LocalContext.current
+
 	val pullRefreshState = rememberPullRefreshState(
 		refreshing = state.isRefreshing,
 		onRefresh = onRefresh
@@ -173,13 +177,13 @@ private fun DashboardScreenContent(
 					balance = state.balance,
 					initialBalanceVisibility = state.initialBalanceVisibility,
 					onAddWalletClicked = {
-
+						"Fitur belom tersedia (>‿◠)✌".toast(context)
 					},
 					onTopUpClicked = {
-
+						"Fitur belom tersedia (>‿◠)✌".toast(context)
 					},
 					onMoreClicked = {
-
+						"Fitur belom tersedia (>‿◠)✌".toast(context)
 					},
 					modifier = Modifier
 						.fillMaxWidth(0.96f)
@@ -196,6 +200,50 @@ private fun DashboardScreenContent(
 						.fillMaxWidth()
 						.padding(horizontal = 16.dp)
 				)
+			}
+
+			items(
+				items = state.recentlyActivity
+			) { any ->
+				val anyModifier = Modifier
+					.fillMaxWidth()
+					.padding(horizontal = 16.dp)
+					.animateItemPlacement(tween(256))
+
+				when (any) {
+					is Expense -> {
+						TransactionItem(
+							transaction = any,
+							modifier = Modifier
+								.clickable {
+									onNavigateTo(
+										TopLevelDestinations.Home.transaction.createRoute(
+											DestinationArgument.TRANSACTION_ID to any.id,
+											DestinationArgument.TRANSACTION_TYPE to TransactionType.Expense,
+											DestinationArgument.ACTION_MODE to ActionMode.View,
+										)
+									)
+								}
+								.then(anyModifier)
+						)
+					}
+					is Income -> {
+						TransactionItem(
+							transaction = any,
+							modifier = Modifier
+								.clickable {
+									onNavigateTo(
+										TopLevelDestinations.Home.transaction.createRoute(
+											DestinationArgument.TRANSACTION_ID to any.id,
+											DestinationArgument.TRANSACTION_TYPE to TransactionType.Income,
+											DestinationArgument.ACTION_MODE to ActionMode.View,
+										)
+									)
+								}
+								.then(anyModifier)
+						)
+					}
+				}
 			}
 
 			item {
