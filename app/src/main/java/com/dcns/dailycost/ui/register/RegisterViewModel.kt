@@ -15,6 +15,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -100,6 +101,11 @@ class RegisterViewModel @Inject constructor(
 
 					val isValidEmail = EmailValidator.validate(mState.email)
 					val isValidPassword = PasswordValidator.validate(mState.password)
+					val isValidUsername = mState.username.length >= 3
+
+					val usernameErrorMessage = if (!isValidUsername) {
+						action.context.getString(R.string.username_min_length_exception_msg, "3")
+					} else null
 
 					val emailErrorMessage = if (isValidEmail.isFailure) {
 						when {
@@ -134,48 +140,63 @@ class RegisterViewModel @Inject constructor(
 					updateState {
 						copy(
 							emailError = emailErrorMessage,
-							passwordError = passwordErrorMessage
+							passwordError = passwordErrorMessage,
+							usernameError = usernameErrorMessage
 						)
 					}
 
-					// Jika emailErrorMessage dan passwordErrorMessage null
+					// Jika emailErrorMessage, passwordErrorMessage, dan usernameErrorMessage null
 					// Berarti tidak ada error, langsung login ke api
-					if (emailErrorMessage == null && passwordErrorMessage == null) {
+					if (emailErrorMessage == null && passwordErrorMessage == null && usernameErrorMessage == null) {
 						updateState {
 							copy(
 								resource = Resource.loading(null)
 							)
 						}
 
-						loginRegisterUseCases.userRegisterUseCase(
-							RegisterRequestBody(
-								name = mState.username,
-								email = mState.email,
-								password = mState.password
-							).toRequestBody()
-						).let { response ->
-							if (response.isSuccessful) {
-								updateState {
-									copy(
-										resource = Resource.success(response.body())
-									)
+						try {
+							loginRegisterUseCases.userRegisterUseCase(
+								RegisterRequestBody(
+									name = mState.username,
+									email = mState.email,
+									password = mState.password
+								).toRequestBody()
+							).let { response ->
+								if (response.isSuccessful) {
+									updateState {
+										copy(
+											resource = Resource.success(response.body())
+										)
+									}
+
+									return@launch
 								}
 
-								return@launch
+								// Response not success
+
+								val errorResponse = Gson().fromJson(
+									response.errorBody()?.charStream(),
+									ErrorResponse::class.java
+								)
+
+								updateState {
+									copy(
+										resource = Resource.error(
+											errorResponse.message,
+											errorResponse
+										)
+									)
+								}
 							}
-
-							// Response not success
-
-							val errorResponse = Gson().fromJson(
-								response.errorBody()?.charStream(),
-								ErrorResponse::class.java
-							)
-
+						} catch (e: SocketTimeoutException) {
+							Timber.e(e, "Socket time out")
 							updateState {
 								copy(
-									resource = Resource.error(errorResponse.message, errorResponse)
+									resource = Resource.error(action.context.getString(R.string.connection_time_out), null)
 								)
 							}
+						} catch (e: Exception) {
+							Timber.e(e)
 						}
 					}
 				}

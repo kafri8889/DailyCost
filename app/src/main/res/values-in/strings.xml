@@ -135,4 +135,6 @@
     <string name="select_category">Pilih kategori</string>
     <string name="wallets">Dompet</string>
     <string name="select_wallet">Pilih dompet</string>
+    <string name="username_min_length_exception_msg">Nama pengguna harus mengandung setidaknya %1$s karakter</string>
+    <string name="connection_time_out">Waktu koneksi telah habis</string>
 </resources>

@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -73,22 +74,28 @@ class DailyCostAppViewModel @Inject constructor(
 			)
 		}
 
-		depoUseCases.getRemoteBalanceUseCase(
-			token = credential.getAuthToken(),
-			userId = credential.id.toIntOrNull() ?: -1
-		).let { response ->
-			if (!response.isSuccessful && credential.allNotEmpty) {
-				sendEvent(DailyCostAppUiEvent.TokenExpired)
+		try {
+			depoUseCases.getRemoteBalanceUseCase(
+				token = credential.getAuthToken(),
+				userId = credential.id.toIntOrNull() ?: -1
+			).let { response ->
+				if (!response.isSuccessful && credential.allNotEmpty) {
+					sendEvent(DailyCostAppUiEvent.TokenExpired)
 
-				// Clear credential
-				with(userCredentialUseCases.editUserCredentialUseCase) {
-					invoke(EditUserCredentialType.ID(""))
-					invoke(EditUserCredentialType.Name(""))
-					invoke(EditUserCredentialType.Email(""))
-					invoke(EditUserCredentialType.Token(""))
-					invoke(EditUserCredentialType.Password(""))
+					// Clear credential
+					with(userCredentialUseCases.editUserCredentialUseCase) {
+						invoke(EditUserCredentialType.ID(""))
+						invoke(EditUserCredentialType.Name(""))
+						invoke(EditUserCredentialType.Email(""))
+						invoke(EditUserCredentialType.Token(""))
+						invoke(EditUserCredentialType.Password(""))
+					}
 				}
 			}
+		} catch (e: SocketTimeoutException) {
+			Timber.e(e, "Socket time out")
+		} catch (e: Exception) {
+			Timber.e(e)
 		}
 	}
 

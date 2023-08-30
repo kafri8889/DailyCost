@@ -5,6 +5,7 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.anafthdev.datemodule.extension.isToday
 import com.dcns.dailycost.data.ActionMode
 import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.TransactionType
@@ -34,6 +35,7 @@ import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.Calendar
 import java.util.UUID
 import javax.inject.Inject
 
@@ -305,6 +307,27 @@ class TransactionViewModel @Inject constructor(
 					sendEvent(TransactionUiEvent.Saving())
 
 					userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.let { credential ->
+						val date = when {
+							mState.date.isToday() -> System.currentTimeMillis()
+							mState.date > System.currentTimeMillis() -> {
+								Calendar.getInstance().apply {
+									timeInMillis = mState.date
+
+									set(Calendar.HOUR_OF_DAY, 0)
+									set(Calendar.MINUTE, 0)
+									set(Calendar.SECOND, 1)
+								}.timeInMillis
+							}
+							mState.date < System.currentTimeMillis() -> {
+								Calendar.getInstance().apply {
+									set(Calendar.HOUR_OF_DAY, 23)
+									set(Calendar.MINUTE, 59)
+									set(Calendar.SECOND, 59)
+								}.timeInMillis
+							}
+							else -> System.currentTimeMillis()
+						}
+
 						// Chain works: Post -> Sync
 						workManager.beginWith(
 							when (mState.transactionType) {
@@ -314,7 +337,7 @@ class TransactionViewModel @Inject constructor(
 										name = mState.title,
 										payment = mState.payment.apiName,
 										category = mState.category.name,
-										date = CommonDateFormatter.api2.format(mState.date),
+										date = CommonDateFormatter.api2.format(date),
 										userId = credential.id.toInt()
 									)
 								).also { _currentSaveWorkId.emit(it.id) }
@@ -324,7 +347,7 @@ class TransactionViewModel @Inject constructor(
 										name = mState.title,
 										payment = mState.payment.apiName,
 										category = mState.category.name,
-										date = CommonDateFormatter.api2.format(mState.date),
+										date = CommonDateFormatter.api2.format(date),
 										userId = credential.id.toInt()
 									)
 								).also { _currentSaveWorkId.emit(it.id) }
