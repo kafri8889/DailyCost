@@ -19,4 +19,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "DailyCost"
 include(":app")
- 
+include(":datemodule")
