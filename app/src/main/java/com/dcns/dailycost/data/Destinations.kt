@@ -15,11 +15,13 @@ import com.dcns.dailycost.foundation.nav_type.WalletsScreenModeNavType
 
 object DestinationRoute {
 	const val CHANGE_LANGUAGE = "change_language"
+	const val RECENT_ACTIVITY = "recent_activity"
 	const val TRANSACTIONS = "transactions"
 	const val TRANSACTION = "transaction"
 	const val CATEGORIES = "categories"
 	const val ONBOARDING = "onboarding"
 	const val DASHBOARD = "dashboard"
+	const val STATISTIC = "statistic"
 	const val REGISTER = "register"
 	const val CATEGORY = "category"
 	const val WALLETS = "wallets"
@@ -46,7 +48,8 @@ object DestinationArgument {
 data class TopLevelDestination(
 	val route: String,
 	val arguments: List<NamedNavArgument> = emptyList(),
-	@StringRes val name: Int? = null,
+	@StringRes val title: Int? = null,
+	@StringRes val subtitle: Int? = null,
 	@DrawableRes val icon: Int? = null
 ) {
 	/**
@@ -152,7 +155,9 @@ object TopLevelDestinations {
 		const val ROOT_ROUTE = "root_home"
 
 		val changeLanguage = TopLevelDestination(
-			route = DestinationRoute.CHANGE_LANGUAGE
+			route = DestinationRoute.CHANGE_LANGUAGE,
+			icon = R.drawable.ic_language,
+			title = R.string.language
 		)
 
 		/**
@@ -229,6 +234,9 @@ object TopLevelDestinations {
 		 * - [DestinationArgument.CATEGORY_ID]
 		 */
 		val categories = TopLevelDestination(
+			icon = R.drawable.ic_pie_chart,
+			title = R.string.categories,
+			subtitle = R.string.manage_categories_change_icon_color,
 			route = "${DestinationRoute.CATEGORIES}?" +
 				"${DestinationArgument.CATEGORIES_SCREEN_MODE}={${DestinationArgument.CATEGORIES_SCREEN_MODE}}&" +
 				"${DestinationArgument.CATEGORY_ID}={${DestinationArgument.CATEGORY_ID}}",
@@ -267,22 +275,38 @@ object TopLevelDestinations {
 			)
 		)
 
+		val statistic = TopLevelDestination(
+			route = DestinationRoute.STATISTIC,
+			icon = R.drawable.ic_diagram,
+			title = R.string.statistic,
+			subtitle = R.string.your_financial_activities_in_graphical
+		)
+
+		val recentActivity = TopLevelDestination(
+			route = DestinationRoute.RECENT_ACTIVITY,
+			icon = R.drawable.ic_recent_activity,
+			title = R.string.recent_activity,
+			subtitle = R.string.keep_track_of_all_your
+		)
+
 		val dashboard = TopLevelDestination(
 			route = DestinationRoute.DASHBOARD,
 			icon = R.drawable.ic_dashboard,
-			name = R.string.dashboard
+			title = R.string.dashboard
 		)
 
 		val setting = TopLevelDestination(
 			route = DestinationRoute.SETTING,
 			icon = R.drawable.ic_setting,
-			name = R.string.advance_setting
+			title = R.string.advance_setting,
+			subtitle = R.string.set_number_format_locale_and_app_security
 		)
 
 		val notes = TopLevelDestination(
 			route = DestinationRoute.NOTES,
 			icon = R.drawable.ic_notes,
-			name = R.string.notes
+			title = R.string.notes,
+			subtitle = R.string.record_all_your_financial
 		)
 
 		val note = TopLevelDestination(
@@ -297,7 +321,10 @@ object TopLevelDestinations {
 }
 
 val drawerDestinations = arrayOf(
-	TopLevelDestinations.Home.dashboard,
+	TopLevelDestinations.Home.recentActivity,
+	TopLevelDestinations.Home.statistic,
+	TopLevelDestinations.Home.categories,
 	TopLevelDestinations.Home.notes,
 	TopLevelDestinations.Home.setting,
+	TopLevelDestinations.Home.changeLanguage,
 )
