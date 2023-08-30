@@ -10,6 +10,7 @@ import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
+import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.SharedUiEvent
 import com.dcns.dailycost.foundation.common.SortableByDate
@@ -127,9 +128,13 @@ class DashboardViewModel @Inject constructor(
 			) { expenses, incomes ->
 				expenses + incomes
 			}.collect { list: List<SortableByDate> ->
+				val sorted = list.sortedByDescending { it.date }
+
+				Timber.i("sorted: ${sorted.map { CommonDateFormatter.api.format(it.date) }}")
+
 				updateState {
 					copy(
-						recentlyActivity = list.sortedByDescending { it.date }.take(5)
+						recentlyActivity = sorted.take(5)
 					)
 				}
 			}

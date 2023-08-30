@@ -107,6 +107,8 @@ dependencies {
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
+	implementation(project(mapOf("path" to ":datemodule")))
+
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 	kapt ("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.6.0")
 
