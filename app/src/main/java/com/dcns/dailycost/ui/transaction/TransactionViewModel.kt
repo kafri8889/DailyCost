@@ -91,7 +91,7 @@ class TransactionViewModel @Inject constructor(
 							payment = transaction?.payment ?: payment,
 							date = transaction?.date ?: date,
 							category = transaction?.category ?: category,
-							transactionType = type
+							selectedTransactionType = type
 						)
 					}
 				}
@@ -192,7 +192,7 @@ class TransactionViewModel @Inject constructor(
 				viewModelScope.launch {
 					updateState {
 						copy(
-							transactionType = action.type
+							selectedTransactionType = action.type
 						)
 					}
 				}
@@ -264,7 +264,7 @@ class TransactionViewModel @Inject constructor(
 					userCredentialUseCases.getUserCredentialUseCase().firstOrNull()
 						?.let { credential ->
 							workManager.beginWith(
-								when (state.value.transactionType) {
+								when (state.value.selectedTransactionType) {
 									TransactionType.Income -> Workers.deleteIncomeWorker(
 										DeleteIncomeRequestBody(
 											incomeId = state.value.id,
@@ -320,6 +320,8 @@ class TransactionViewModel @Inject constructor(
 							}
 							mState.date < System.currentTimeMillis() -> {
 								Calendar.getInstance().apply {
+									timeInMillis = mState.date
+
 									set(Calendar.HOUR_OF_DAY, 23)
 									set(Calendar.MINUTE, 59)
 									set(Calendar.SECOND, 59)
@@ -330,7 +332,7 @@ class TransactionViewModel @Inject constructor(
 
 						// Chain works: Post -> Sync
 						workManager.beginWith(
-							when (mState.transactionType) {
+							when (mState.selectedTransactionType) {
 								TransactionType.Income -> Workers.postIncomeWorker(
 									AddIncomeRequestBody(
 										amount = mState.amount.toInt(),

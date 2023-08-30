@@ -70,6 +70,7 @@ import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.data.defaultNavOptionsBuilder
 import com.dcns.dailycost.data.model.Expense
 import com.dcns.dailycost.data.model.Income
+import com.dcns.dailycost.data.model.Note
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.extension.toast
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
@@ -203,7 +204,15 @@ private fun DashboardScreenContent(
 			}
 
 			items(
-				items = state.recentlyActivity
+				items = state.recentlyActivity,
+				key = { item ->
+					when (item) {
+						is Income -> item.id + item.hashCode()
+						is Expense -> item.id + item.hashCode()
+						is Note -> item.id + item.hashCode()
+						else -> item.hashCode()
+					}
+				}
 			) { any ->
 				val anyModifier = Modifier
 					.fillMaxWidth()

@@ -20,7 +20,7 @@ data class TransactionState(
 	 */
 	val availableCategory: List<Category> = emptyList(),
 	val actionMode: ActionMode = ActionMode.New,
-	val transactionType: TransactionType = TransactionType.Income,
+	val selectedTransactionType: TransactionType = TransactionType.Income,
 
 	val titleError: Boolean = false
 )

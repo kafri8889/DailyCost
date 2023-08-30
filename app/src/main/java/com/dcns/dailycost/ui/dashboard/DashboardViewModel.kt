@@ -4,6 +4,9 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.anafthdev.datemodule.infix_function.inSameMonth
+import com.dcns.dailycost.data.WalletType
+import com.dcns.dailycost.data.model.Balance
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
@@ -72,36 +75,6 @@ class DashboardViewModel @Inject constructor(
 		}
 
 		viewModelScope.launch {
-			expenseUseCases.getLocalExpenseUseCase().collect { expenseList ->
-				updateState {
-					copy(
-						expenses = expenseList
-					)
-				}
-			}
-		}
-
-		viewModelScope.launch {
-			incomeUseCases.getLocalIncomeUseCase().collect { incomeList ->
-				updateState {
-					copy(
-						incomes = incomeList
-					)
-				}
-			}
-		}
-
-		viewModelScope.launch {
-			depoUseCases.getLocalBalanceUseCase().collect { balance ->
-				updateState {
-					copy(
-						balance = balance
-					)
-				}
-			}
-		}
-
-		viewModelScope.launch {
 			userCredentialUseCases.getUserCredentialUseCase().collect { cred ->
 				updateState {
 					copy(
@@ -123,18 +96,55 @@ class DashboardViewModel @Inject constructor(
 
 		viewModelScope.launch {
 			combine(
-				expenseUseCases.getLocalExpenseUseCase(),
+				depoUseCases.getLocalBalanceUseCase(),
 				incomeUseCases.getLocalIncomeUseCase(),
-			) { expenses, incomes ->
-				expenses + incomes
-			}.collect { list: List<SortableByDate> ->
-				val sorted = list.sortedByDescending { it.date }
+				expenseUseCases.getLocalExpenseUseCase(),
+			) { userBalance, incomes, expenses ->
+				Triple(userBalance, incomes, expenses)
+			}.collect { (userBalance, incomes, expenses) ->
+				val sorted = ((incomes as List<SortableByDate>) + (expenses as List<SortableByDate>)).sortedByDescending { it.date }
 
 				Timber.i("sorted: ${sorted.map { CommonDateFormatter.api.format(it.date) }}")
 
+				val cashMonthlyExpenses = expenses.asSequence() // Convert ke sequence
+					// Filter jika payment == cash dan tanggal berada di bulan yg sama
+					.filter { it.payment == WalletType.Cash && it.date inSameMonth System.currentTimeMillis() }
+					.sumOf { it.amount }
+
+				val ewalletMonthlyExpenses = expenses.asSequence() // Convert ke sequence
+					// Filter jika payment == e-wallet dan tanggal berada di bulan yg sama
+					.filter { it.payment == WalletType.EWallet && it.date inSameMonth System.currentTimeMillis() }
+					.sumOf { it.amount }
+
+				val bankAccountMonthlyExpenses = expenses.asSequence() // Convert ke sequence
+					// Filter jika payment == e-wallet dan tanggal berada di bulan yg sama
+					.filter { it.payment == WalletType.BankAccount && it.date inSameMonth System.currentTimeMillis() }
+					.sumOf { it.amount }
+
+				val balances = listOf(
+					Balance(
+						amount = userBalance.cash,
+						walletType = WalletType.Cash,
+						monthlyExpense = cashMonthlyExpenses
+					),
+					Balance(
+						amount = userBalance.eWallet,
+						walletType = WalletType.EWallet,
+						monthlyExpense = ewalletMonthlyExpenses
+					),
+					Balance(
+						amount = userBalance.bankAccount,
+						walletType = WalletType.BankAccount,
+						monthlyExpense = bankAccountMonthlyExpenses
+					)
+				)
+
 				updateState {
 					copy(
-						recentlyActivity = sorted.take(5)
+						recentlyActivity = sorted.take(5),
+						expenses = expenses,
+						balance = balances,
+						incomes = incomes
 					)
 				}
 			}

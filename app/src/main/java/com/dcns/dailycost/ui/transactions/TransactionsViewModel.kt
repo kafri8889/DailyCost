@@ -37,6 +37,7 @@ class TransactionsViewModel @Inject constructor(
 				Timber.i("Transaction type: $transactionType")
 				updateState {
 					copy(
+						selectedTransactionType = transactionType,
 						transactions = when (transactionType) {
 							TransactionType.Income -> incomes
 							TransactionType.Expense -> expenses
