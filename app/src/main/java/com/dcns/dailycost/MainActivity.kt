@@ -23,6 +23,7 @@ import com.dcns.dailycost.ui.app.DailyCostApp
 import com.dcns.dailycost.ui.app.DailyCostAppAction
 import com.dcns.dailycost.ui.app.DailyCostAppUiEvent
 import com.dcns.dailycost.ui.app.DailyCostAppViewModel
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -45,6 +46,9 @@ class MainActivity: LocalizedActivity() {
 	@OptIn(ExperimentalFoundationApi::class)
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+
+		// Disable crashlytics in debug mode
+		FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
 
 		biometricManager = DailyCostBiometricManager(this).apply {
 			setListener(object: DailyCostBiometricManager.BiometricListener {

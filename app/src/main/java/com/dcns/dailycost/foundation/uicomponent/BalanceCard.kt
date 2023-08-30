@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.WalletType
-import com.dcns.dailycost.data.model.UserBalance
+import com.dcns.dailycost.data.model.Balance
 import com.dcns.dailycost.foundation.common.CurrencyFormatter
 import com.dcns.dailycost.foundation.common.LocalCurrency
 import com.dcns.dailycost.foundation.common.primarySystemLocale
@@ -67,10 +67,22 @@ private fun BalanceCardPreview() {
 			onAddWalletClicked = {},
 			onMoreClicked = {},
 			initialBalanceVisibility = true,
-			balance = UserBalance(
-				cash = 90_000.0,
-				eWallet = 0.0,
-				bankAccount = 1_000_000_000_000_000_000_000_000.0
+			balance = listOf(
+				Balance(
+					amount = 90_000.0,
+					walletType = WalletType.Cash,
+					monthlyExpense = 0.0
+				),
+				Balance(
+					amount = 0.0,
+					walletType = WalletType.EWallet,
+					monthlyExpense = 0.0
+				),
+				Balance(
+					amount = 1_000_000_000_000_000_000_000_000.0,
+					walletType = WalletType.BankAccount,
+					monthlyExpense = 0.0
+				)
 			)
 		)
 	}
@@ -79,16 +91,17 @@ private fun BalanceCardPreview() {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BalanceCard(
-	balance: UserBalance,
+	balance: List<Balance>,
 	initialBalanceVisibility: Boolean,
 	modifier: Modifier = Modifier,
 	onTopUpClicked: () -> Unit,
 	onAddWalletClicked: () -> Unit,
 	onMoreClicked: () -> Unit
 ) {
-	val balanceVisibility = remember {
+	val balanceVisibility = remember(balance.size) {
 		mutableStateListOf<Boolean>().apply {
-			for (i in WalletType.entries.indices) add(initialBalanceVisibility)
+			clear()
+			for (i in balance.indices) add(initialBalanceVisibility)
 		}
 	}
 
@@ -109,17 +122,17 @@ fun BalanceCard(
 				cardShape = RoundedCornerShape(10),
 				cardContent = { page ->
 					PagerItem(
-						amount = when (WalletType.entries[page]) {
-							WalletType.Cash -> balance.cash
-							WalletType.EWallet -> balance.eWallet
-							WalletType.BankAccount -> balance.bankAccount
-						},
-						monthlyExpense = 0.0,
-						walletType = WalletType.entries[page],
-						showBalance = balanceVisibility[page],
+						amount = balance.getOrNull(page)?.amount ?: 0.0,
+						monthlyExpense = balance.getOrNull(page)?.monthlyExpense ?: 0.0,
+						walletType = balance.getOrNull(page)?.walletType ?: WalletType.Cash,
+						showBalance = balanceVisibility.getOrNull(page) ?: false,
 						containerColor = defaultWalletColor[page],
 						onVisibilityChanged = { visible ->
-							balanceVisibility[page] = visible
+							try {
+								balanceVisibility[page] = visible
+							} catch (e: IndexOutOfBoundsException) {
+								e.printStackTrace()
+							}
 						}
 					)
 				}
@@ -311,6 +324,7 @@ private fun PagerItem(
 							id = R.string.monthly_expenses_x,
 							formattedMonthlyExpense
 						),
+						style = MaterialTheme.typography.bodyMedium,
 						modifier = Modifier
 							.fillMaxWidth()
 							.dailyCostMarquee()
