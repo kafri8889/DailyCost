@@ -138,4 +138,5 @@
     <string name="select_category">Select category</string>
     <string name="wallets">Wallets</string>
     <string name="select_wallet">Select wallet</string>
+    <string name="username_min_length_exception_msg">Username must contain at least %1$s character</string>
 </resources>

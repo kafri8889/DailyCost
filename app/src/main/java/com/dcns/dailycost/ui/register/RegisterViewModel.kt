@@ -100,6 +100,11 @@ class RegisterViewModel @Inject constructor(
 
 					val isValidEmail = EmailValidator.validate(mState.email)
 					val isValidPassword = PasswordValidator.validate(mState.password)
+					val isValidUsername = mState.username.length >= 3
+
+					val usernameErrorMessage = if (!isValidUsername) {
+						action.context.getString(R.string.username_min_length_exception_msg, "3")
+					} else null
 
 					val emailErrorMessage = if (isValidEmail.isFailure) {
 						when {
@@ -134,13 +139,14 @@ class RegisterViewModel @Inject constructor(
 					updateState {
 						copy(
 							emailError = emailErrorMessage,
-							passwordError = passwordErrorMessage
+							passwordError = passwordErrorMessage,
+							usernameError = usernameErrorMessage
 						)
 					}
 
-					// Jika emailErrorMessage dan passwordErrorMessage null
+					// Jika emailErrorMessage, passwordErrorMessage, dan usernameErrorMessage null
 					// Berarti tidak ada error, langsung login ke api
-					if (emailErrorMessage == null && passwordErrorMessage == null) {
+					if (emailErrorMessage == null && passwordErrorMessage == null && usernameErrorMessage == null) {
 						updateState {
 							copy(
 								resource = Resource.loading(null)

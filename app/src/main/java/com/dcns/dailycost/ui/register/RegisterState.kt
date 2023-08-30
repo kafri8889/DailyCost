@@ -8,6 +8,7 @@ data class RegisterState(
 	val resource: Resource<IResponse?>? = null,
 	val showPassword: Boolean = false,
 	val passwordError: String? = null,
+	val usernameError: String? = null,
 	val emailError: String? = null,
 	val password: String = "",
 	val email: String = "",

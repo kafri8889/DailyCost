@@ -185,6 +185,9 @@ fun RegisterScreen(
 				onSignInClicked = {
 					navigationActions.navigateTo(TopLevelDestinations.LoginRegister.login)
 				},
+				onUsernameChanged = { s ->
+					viewModel.onAction(RegisterAction.UpdateUsername(s))
+				},
 				modifier = Modifier
 					.fillMaxWidth(0.92f)
 					.fillMaxHeight()
@@ -255,6 +258,7 @@ private fun RegisterScreenContent(
 			username = state.username,
 			emailError = state.emailError,
 			passwordError = state.passwordError,
+			usernameError = state.usernameError,
 			showPassword = state.showPassword,
 			onShowPasswordCheckedChanged = onShowPasswordCheckedChanged,
 			onEmailChanged = onEmailChanged,
@@ -308,6 +312,7 @@ private fun CenterContent(
 	username: String,
 	emailError: String?,
 	passwordError: String?,
+	usernameError: String?,
 	showPassword: Boolean,
 	modifier: Modifier = Modifier,
 	onShowPasswordCheckedChanged: (Boolean) -> Unit,
@@ -331,6 +336,7 @@ private fun CenterContent(
 		RegisterOutlinedTextField(
 			text = username,
 			label = stringResource(id = R.string.enter_name),
+			errorText = usernameError,
 			placeholderText = stringResource(id = R.string.username),
 			focusRequester = usernameFocusRequester,
 			onValueChanged = onUsernameChanged,
