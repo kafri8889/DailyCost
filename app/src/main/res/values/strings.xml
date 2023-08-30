@@ -139,4 +139,5 @@
     <string name="wallets">Wallets</string>
     <string name="select_wallet">Select wallet</string>
     <string name="username_min_length_exception_msg">Username must contain at least %1$s character</string>
+    <string name="connection_time_out">Connection time out</string>
 </resources>

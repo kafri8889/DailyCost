@@ -15,6 +15,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -153,35 +154,49 @@ class RegisterViewModel @Inject constructor(
 							)
 						}
 
-						loginRegisterUseCases.userRegisterUseCase(
-							RegisterRequestBody(
-								name = mState.username,
-								email = mState.email,
-								password = mState.password
-							).toRequestBody()
-						).let { response ->
-							if (response.isSuccessful) {
-								updateState {
-									copy(
-										resource = Resource.success(response.body())
-									)
+						try {
+							loginRegisterUseCases.userRegisterUseCase(
+								RegisterRequestBody(
+									name = mState.username,
+									email = mState.email,
+									password = mState.password
+								).toRequestBody()
+							).let { response ->
+								if (response.isSuccessful) {
+									updateState {
+										copy(
+											resource = Resource.success(response.body())
+										)
+									}
+
+									return@launch
 								}
 
-								return@launch
+								// Response not success
+
+								val errorResponse = Gson().fromJson(
+									response.errorBody()?.charStream(),
+									ErrorResponse::class.java
+								)
+
+								updateState {
+									copy(
+										resource = Resource.error(
+											errorResponse.message,
+											errorResponse
+										)
+									)
+								}
 							}
-
-							// Response not success
-
-							val errorResponse = Gson().fromJson(
-								response.errorBody()?.charStream(),
-								ErrorResponse::class.java
-							)
-
+						} catch (e: SocketTimeoutException) {
+							Timber.e(e, "Socket time out")
 							updateState {
 								copy(
-									resource = Resource.error(errorResponse.message, errorResponse)
+									resource = Resource.error(action.context.getString(R.string.connection_time_out), null)
 								)
 							}
+						} catch (e: Exception) {
+							Timber.e(e)
 						}
 					}
 				}

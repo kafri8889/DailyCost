@@ -27,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -200,57 +201,68 @@ class LoginViewModel @Inject constructor(
 							)
 						}
 
-						loginRegisterUseCases.userLoginUseCase(
-							LoginRequestBody(
-								email = mState.email,
-								password = mState.password
-							).toRequestBody()
-						).let { response ->
-							withContext(Dispatchers.Main) {
-								if (response.isSuccessful) {
-									val body = response.body() as LoginResponse
+						try {
+							loginRegisterUseCases.userLoginUseCase(
+								LoginRequestBody(
+									email = mState.email,
+									password = mState.password
+								).toRequestBody()
+							).let { response ->
+								withContext(Dispatchers.Main) {
+									if (response.isSuccessful) {
+										val body = response.body() as LoginResponse
 
-									if (mState.rememberMe) {
-										with(userCredentialUseCases.editUserCredentialUseCase) {
-											invoke(EditUserCredentialType.Name(body.data.name))
-											invoke(EditUserCredentialType.Email(mState.email))
-											invoke(EditUserCredentialType.Password(mState.password))
+										if (mState.rememberMe) {
+											with(userCredentialUseCases.editUserCredentialUseCase) {
+												invoke(EditUserCredentialType.Name(body.data.name))
+												invoke(EditUserCredentialType.Email(mState.email))
+												invoke(EditUserCredentialType.Password(mState.password))
+											}
 										}
+
+										with(userCredentialUseCases.editUserCredentialUseCase) {
+											invoke(EditUserCredentialType.ID(body.data.id.toString()))
+											invoke(EditUserCredentialType.Token(body.token))
+										}
+
+										userPreferenceUseCases.editUserPreferenceUseCase(
+											type = EditUserPreferenceType.IsNotFirstInstall(true)
+										)
+
+										updateState {
+											copy(
+												resource = Resource.success(body)
+											)
+										}
+
+										Workers.syncWorker().enqueue(action.context)
+
+										return@withContext
 									}
 
-									with(userCredentialUseCases.editUserCredentialUseCase) {
-										invoke(EditUserCredentialType.ID(body.data.id.toString()))
-										invoke(EditUserCredentialType.Token(body.token))
-									}
+									// Response not success
 
-									userPreferenceUseCases.editUserPreferenceUseCase(
-										type = EditUserPreferenceType.IsNotFirstInstall(true)
+									val errorResponse = Gson().fromJson(
+										response.errorBody()?.charStream(),
+										ErrorResponse::class.java
 									)
 
 									updateState {
 										copy(
-											resource = Resource.success(body)
+											resource = Resource.error(errorResponse.message, errorResponse)
 										)
 									}
-
-									Workers.syncWorker().enqueue(action.context)
-
-									return@withContext
-								}
-
-								// Response not success
-
-								val errorResponse = Gson().fromJson(
-									response.errorBody()?.charStream(),
-									ErrorResponse::class.java
-								)
-
-								updateState {
-									copy(
-										resource = Resource.error(errorResponse.message, errorResponse)
-									)
 								}
 							}
+						} catch (e: SocketTimeoutException) {
+							Timber.e(e, "Socket time out")
+							updateState {
+								copy(
+									resource = Resource.error(action.context.getString(R.string.connection_time_out), null)
+								)
+							}
+						} catch (e: Exception) {
+							Timber.e(e)
 						}
 					}
 				}

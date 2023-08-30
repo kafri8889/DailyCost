@@ -128,8 +128,6 @@ fun LoginScreen(
 	LaunchedEffect(state.resource) {
 		when (state.resource?.status) {
 			Status.Success -> {
-				Timber.i("Login success")
-
 				context.getString(R.string.login_success).toast(context)
 
 				useCaseState.hide()
@@ -140,6 +138,8 @@ fun LoginScreen(
 						popTo = TopLevelDestinations.Home.dashboard
 					)
 				)
+
+				Timber.i("Login success")
 			}
 
 			Status.Error -> {
