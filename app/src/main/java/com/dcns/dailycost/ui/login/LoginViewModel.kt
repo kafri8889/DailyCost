@@ -25,6 +25,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -205,48 +206,50 @@ class LoginViewModel @Inject constructor(
 								password = mState.password
 							).toRequestBody()
 						).let { response ->
-							if (response.isSuccessful) {
-								val body = response.body() as LoginResponse
+							withContext(Dispatchers.Main) {
+								if (response.isSuccessful) {
+									val body = response.body() as LoginResponse
 
-								if (mState.rememberMe) {
-									with(userCredentialUseCases.editUserCredentialUseCase) {
-										invoke(EditUserCredentialType.Name(body.data.name))
-										invoke(EditUserCredentialType.Email(mState.email))
-										invoke(EditUserCredentialType.Password(mState.password))
+									if (mState.rememberMe) {
+										with(userCredentialUseCases.editUserCredentialUseCase) {
+											invoke(EditUserCredentialType.Name(body.data.name))
+											invoke(EditUserCredentialType.Email(mState.email))
+											invoke(EditUserCredentialType.Password(mState.password))
+										}
 									}
+
+									with(userCredentialUseCases.editUserCredentialUseCase) {
+										invoke(EditUserCredentialType.ID(body.data.id.toString()))
+										invoke(EditUserCredentialType.Token(body.token))
+									}
+
+									userPreferenceUseCases.editUserPreferenceUseCase(
+										type = EditUserPreferenceType.IsNotFirstInstall(true)
+									)
+
+									updateState {
+										copy(
+											resource = Resource.success(body)
+										)
+									}
+
+									Workers.syncWorker().enqueue(action.context)
+
+									return@withContext
 								}
 
-								with(userCredentialUseCases.editUserCredentialUseCase) {
-									invoke(EditUserCredentialType.ID(body.data.id.toString()))
-									invoke(EditUserCredentialType.Token(body.token))
-								}
+								// Response not success
 
-								userPreferenceUseCases.editUserPreferenceUseCase(
-									type = EditUserPreferenceType.IsNotFirstInstall(true)
+								val errorResponse = Gson().fromJson(
+									response.errorBody()?.charStream(),
+									ErrorResponse::class.java
 								)
 
 								updateState {
 									copy(
-										resource = Resource.success(response.body())
+										resource = Resource.error(errorResponse.message, errorResponse)
 									)
 								}
-
-								Workers.syncWorker().enqueue(action.context)
-
-								return@launch
-							}
-
-							// Response not success
-
-							val errorResponse = Gson().fromJson(
-								response.errorBody()?.charStream(),
-								ErrorResponse::class.java
-							)
-
-							updateState {
-								copy(
-									resource = Resource.error(errorResponse.message, errorResponse)
-								)
 							}
 						}
 					}

@@ -9,6 +9,8 @@ plugins {
     id("com.squareup.wire")
     id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -179,6 +181,10 @@ dependencies {
     implementation("androidx.room:room-runtime:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
     kapt("androidx.room:room-compiler:2.5.2")
+
+	// Firebase
+	implementation("com.google.firebase:firebase-crashlytics-ktx:18.4.1")
+	implementation("com.google.firebase:firebase-analytics-ktx:21.3.0")
 
     // Accompanist
     implementation("com.google.accompanist:accompanist-pager:${extra["accompanist_version"]}")
