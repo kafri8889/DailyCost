@@ -320,6 +320,8 @@ class TransactionViewModel @Inject constructor(
 							}
 							mState.date < System.currentTimeMillis() -> {
 								Calendar.getInstance().apply {
+									timeInMillis = mState.date
+
 									set(Calendar.HOUR_OF_DAY, 23)
 									set(Calendar.MINUTE, 59)
 									set(Calendar.SECOND, 59)
