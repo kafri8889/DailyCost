@@ -274,7 +274,7 @@ private fun TransactionScreenContent(
 		if (state.actionMode.isNew()) {
 			item {
 				TransactionSegmentedButton(
-					selectedTransactionType = state.transactionType,
+					selectedTransactionType = state.selectedTransactionType,
 					onTransactionTypeChanged = onTransactionTypeChanged,
 					modifier = Modifier
 						.fillMaxWidth(0.92f)
@@ -390,7 +390,7 @@ private fun TransactionScreenContent(
 				) {
 					AnimatedContent(
 						label = "transaction icon",
-						targetState = state.transactionType,
+						targetState = state.selectedTransactionType,
 						transitionSpec = {
 							scaleIn(tween(256)) togetherWith scaleOut(tween(256))
 						}
