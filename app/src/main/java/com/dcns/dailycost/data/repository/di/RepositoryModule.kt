@@ -8,6 +8,7 @@ import com.dcns.dailycost.data.datasource.local.dao.CategoryDao
 import com.dcns.dailycost.data.datasource.local.dao.ExpenseDao
 import com.dcns.dailycost.data.datasource.local.dao.IncomeDao
 import com.dcns.dailycost.data.datasource.local.dao.NoteDao
+import com.dcns.dailycost.data.datasource.local.dao.NotificationDao
 import com.dcns.dailycost.data.datasource.remote.handlers.DepoHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.ExpenseHandler
 import com.dcns.dailycost.data.datasource.remote.handlers.IncomeHandler
@@ -20,6 +21,7 @@ import com.dcns.dailycost.data.repository.ExpenseRepository
 import com.dcns.dailycost.data.repository.IncomeRepository
 import com.dcns.dailycost.data.repository.LoginRegisterRepository
 import com.dcns.dailycost.data.repository.NoteRepository
+import com.dcns.dailycost.data.repository.NotificationRepository
 import com.dcns.dailycost.data.repository.UserCredentialRepository
 import com.dcns.dailycost.data.repository.UserPreferenceRepository
 import com.dcns.dailycost.domain.repository.IBalanceRepository
@@ -29,6 +31,7 @@ import com.dcns.dailycost.domain.repository.IExpenseRepository
 import com.dcns.dailycost.domain.repository.IIncomeRepository
 import com.dcns.dailycost.domain.repository.ILoginRegisterRepository
 import com.dcns.dailycost.domain.repository.INoteRepository
+import com.dcns.dailycost.domain.repository.INotificationRepository
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.repository.IUserPreferenceRepository
 import dagger.Module
@@ -119,6 +122,14 @@ class RepositoryModule {
 		categoryDao: CategoryDao
 	): ICategoryRepository = CategoryRepository(
 		categoryDao = categoryDao
+	)
+
+	@Provides
+	@Singleton
+	fun provideNotificationRepository(
+		notificationDao: NotificationDao
+	): INotificationRepository = NotificationRepository(
+		notificationDao = notificationDao
 	)
 
 }
