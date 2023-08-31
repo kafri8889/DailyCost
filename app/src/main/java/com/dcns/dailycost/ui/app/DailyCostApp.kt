@@ -51,7 +51,6 @@ import com.dcns.dailycost.data.defaultNavOptionsBuilder
 import com.dcns.dailycost.data.drawerDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
-import com.dcns.dailycost.foundation.extension.toast
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.DrawerItem
 import com.dcns.dailycost.navigation.HomeNavHost
@@ -63,8 +62,10 @@ import com.dcns.dailycost.navigation.home.ChangeLanguageNavigation
 import com.dcns.dailycost.navigation.home.DashboardNavigation
 import com.dcns.dailycost.navigation.home.NoteNavigation
 import com.dcns.dailycost.navigation.home.NotesNavigation
+import com.dcns.dailycost.navigation.home.RecentActivityNavigation
 import com.dcns.dailycost.navigation.home.SettingNavigation
 import com.dcns.dailycost.navigation.home.SplashNavigation
+import com.dcns.dailycost.navigation.home.StatisticNavigation
 import com.dcns.dailycost.navigation.home.TransactionNavigation
 import com.dcns.dailycost.navigation.home.TransactionsNavigation
 import com.dcns.dailycost.navigation.home.WalletsNavigation
@@ -208,16 +209,6 @@ fun DailyCostApp(
 					language = state.language,
 					onNavigationIconClicked = onNavigationIconClicked,
 					onNavigateTo = { destination ->
-						when (destination.route) {
-							TopLevelDestinations.Home.recentActivity.route,
-							TopLevelDestinations.Home.statistic.route,
-							TopLevelDestinations.Home.notes.route -> {
-								"Fitur belom tersedia (>‿◠)✌".toast(context)
-								closeDrawer()
-								return@DailyCostDrawer
-							}
-						}
-
 						navActions.navigateTo(
 							destination = destination,
 							builder = defaultNavOptionsBuilder(
@@ -289,8 +280,10 @@ private fun DailyCostNavHost(
 			ChangeLanguageNavigation(navActions)
 			TransactionsNavigation(navActions)
 			CategoryNavigation(navActions)
+			RecentActivityNavigation(navActions)
 			TransactionNavigation(navActions)
 			CategoriesNavigation(navActions)
+			StatisticNavigation(navActions)
 			WalletsNavigation(navActions)
 			NoteNavigation(navActions)
 
