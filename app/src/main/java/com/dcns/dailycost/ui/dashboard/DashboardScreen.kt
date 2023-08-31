@@ -167,6 +167,9 @@ private fun DashboardScreenContent(
 			item {
 				DashboardTopAppBar(
 					onNavigationIconClicked = onNavigationIconClicked,
+					onNotificationIconClicked = {
+						onNavigateTo(TopLevelDestinations.Home.notification)
+					},
 					modifier = Modifier
 						.fillMaxWidth()
 						.padding(horizontal = 16.dp)
@@ -394,7 +397,8 @@ private fun TitleSection(
 @Composable
 private fun DashboardTopAppBar(
 	modifier: Modifier = Modifier,
-	onNavigationIconClicked: () -> Unit
+	onNavigationIconClicked: () -> Unit,
+	onNotificationIconClicked: () -> Unit
 ) {
 
 	TopAppBar(
@@ -423,6 +427,33 @@ private fun DashboardTopAppBar(
 			) {
 				Icon(
 					painter = painterResource(id = R.drawable.ic_categories),
+					contentDescription = null
+				)
+			}
+		},
+		actions = {
+			Box(
+				contentAlignment = Alignment.Center,
+				modifier = Modifier
+					.minimumInteractiveComponentSize()
+					.size(40.dp)
+					.clip(RoundedCornerShape(40))
+					.border(
+						width = 1.dp,
+						color = MaterialTheme.colorScheme.outline,
+						shape = RoundedCornerShape(40)
+					)
+					.clickable(
+						onClick = onNotificationIconClicked,
+						role = Role.Button,
+						interactionSource = remember { MutableInteractionSource() },
+						indication = rememberRipple(
+							bounded = false
+						)
+					)
+			) {
+				Icon(
+					painter = painterResource(id = R.drawable.ic_notification_bell),
 					contentDescription = null
 				)
 			}

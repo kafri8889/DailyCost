@@ -16,6 +16,7 @@ import com.dcns.dailycost.foundation.nav_type.WalletsScreenModeNavType
 object DestinationRoute {
 	const val CHANGE_LANGUAGE = "change_language"
 	const val RECENT_ACTIVITY = "recent_activity"
+	const val NOTIFICATION = "notification"
 	const val TRANSACTIONS = "transactions"
 	const val TRANSACTION = "transaction"
 	const val CATEGORIES = "categories"
@@ -311,6 +312,10 @@ object TopLevelDestinations {
 
 		val note = TopLevelDestination(
 			route = DestinationRoute.NOTE
+		)
+
+		val notification = TopLevelDestination(
+			route = DestinationRoute.NOTIFICATION
 		)
 	}
 
