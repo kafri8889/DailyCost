@@ -3,6 +3,7 @@ package com.dcns.dailycost.foundation.common.di
 import android.content.Context
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.EncryptionManager
+import com.dcns.dailycost.foundation.common.NotificationManager
 import com.dcns.dailycost.foundation.common.SharedData
 import com.dcns.dailycost.foundation.common.SharedUiEvent
 import dagger.Module
@@ -21,6 +22,12 @@ class CommonModule {
 	fun provideConnectivityManager(
 		@ApplicationContext context: Context
 	): ConnectivityManager = ConnectivityManager(context)
+
+	@Provides
+	@Singleton
+	fun provideNotificationManager(
+		@ApplicationContext context: Context
+	): NotificationManager = NotificationManager(context)
 
 	@Provides
 	@Singleton
