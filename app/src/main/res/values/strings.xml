@@ -141,4 +141,9 @@
     <string name="username_min_length_exception_msg">Username must contain at least %1$s character</string>
     <string name="connection_time_out">Connection time out</string>
     <string name="transactions">Transactions</string>
+    <string name="record_all_your_financial">Record all your financial activities in a notepad</string>
+    <string name="statistic">Statistic</string>
+    <string name="recent_activity">Recent activity</string>
+    <string name="your_financial_activities_in_graphical">Your financial activities in graphical form to make it easier to read your finances well</string>
+    <string name="keep_track_of_all_your">Keep track of all your activities through recent activities</string>
 </resources>

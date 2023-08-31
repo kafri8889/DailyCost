@@ -138,4 +138,9 @@
     <string name="username_min_length_exception_msg">Nama pengguna harus mengandung setidaknya %1$s karakter</string>
     <string name="connection_time_out">Waktu koneksi telah habis</string>
     <string name="transactions">Transaksi</string>
+    <string name="record_all_your_financial">Catat semua aktivitas keuangan anda di buku catatan</string>
+    <string name="statistic">Statistik</string>
+    <string name="recent_activity">Aktivitas terbaru</string>
+    <string name="your_financial_activities_in_graphical">Aktivitas keuangan Anda dalam bentuk grafik untuk memudahkan membaca keuangan Anda dengan baik</string>
+    <string name="keep_track_of_all_your">Pantau semua aktivitas Anda melalui aktivitas terkini</string>
 </resources>

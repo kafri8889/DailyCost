@@ -195,7 +195,7 @@ private fun DashboardScreenContent(
 				TitleSection(
 					title = stringResource(id = R.string.recently_activity),
 					onSeeAllClick = {
-
+						onNavigateTo(TopLevelDestinations.Home.recentActivity)
 					},
 					modifier = Modifier
 						.fillMaxWidth()

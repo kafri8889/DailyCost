@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
@@ -44,8 +45,10 @@ import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.Language
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.defaultNavOptionsBuilder
+import com.dcns.dailycost.data.drawerDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
@@ -59,8 +62,10 @@ import com.dcns.dailycost.navigation.home.ChangeLanguageNavigation
 import com.dcns.dailycost.navigation.home.DashboardNavigation
 import com.dcns.dailycost.navigation.home.NoteNavigation
 import com.dcns.dailycost.navigation.home.NotesNavigation
+import com.dcns.dailycost.navigation.home.RecentActivityNavigation
 import com.dcns.dailycost.navigation.home.SettingNavigation
 import com.dcns.dailycost.navigation.home.SplashNavigation
+import com.dcns.dailycost.navigation.home.StatisticNavigation
 import com.dcns.dailycost.navigation.home.TransactionNavigation
 import com.dcns.dailycost.navigation.home.TransactionsNavigation
 import com.dcns.dailycost.navigation.home.WalletsNavigation
@@ -203,26 +208,14 @@ fun DailyCostApp(
 					email = state.userCredential?.email ?: "",
 					language = state.language,
 					onNavigationIconClicked = onNavigationIconClicked,
-					onCategoriesClicked = {
+					onNavigateTo = { destination ->
 						navActions.navigateTo(
-							destination = TopLevelDestinations.Home.categories,
+							destination = destination,
 							builder = defaultNavOptionsBuilder(
 								popTo = TopLevelDestinations.Home.dashboard
 							)
 						)
-						closeDrawer()
-					},
-					onSettingClicked = {
-						navActions.navigateTo(
-							destination = TopLevelDestinations.Home.setting,
-							builder = defaultNavOptionsBuilder(
-								popTo = TopLevelDestinations.Home.dashboard
-							)
-						)
-						closeDrawer()
-					},
-					onLanguageClicked = {
-						navActions.navigateTo(TopLevelDestinations.Home.changeLanguage)
+
 						closeDrawer()
 					},
 					onSignOutClicked = {
@@ -287,8 +280,10 @@ private fun DailyCostNavHost(
 			ChangeLanguageNavigation(navActions)
 			TransactionsNavigation(navActions)
 			CategoryNavigation(navActions)
+			RecentActivityNavigation(navActions)
 			TransactionNavigation(navActions)
 			CategoriesNavigation(navActions)
+			StatisticNavigation(navActions)
 			WalletsNavigation(navActions)
 			NoteNavigation(navActions)
 
@@ -332,10 +327,8 @@ private fun DailyCostDrawer(
 	email: String,
 	language: Language,
 	onNavigationIconClicked: () -> Unit,
-	onCategoriesClicked: () -> Unit,
-	onLanguageClicked: () -> Unit,
 	onSignOutClicked: () -> Unit,
-	onSettingClicked: () -> Unit,
+	onNavigateTo: (TopLevelDestination) -> Unit,
 	content: @Composable () -> Unit
 ) {
 	ModalNavigationDrawer(
@@ -346,11 +339,9 @@ private fun DailyCostDrawer(
 			DailyCostDrawerContent(
 				email = email,
 				language = language,
-				onCategoriesClicked = onCategoriesClicked,
 				onNavigationIconClicked = onNavigationIconClicked,
-				onSettingClicked = onSettingClicked,
-				onLanguageClicked = onLanguageClicked,
-				onSignOutClicked = onSignOutClicked
+				onSignOutClicked = onSignOutClicked,
+				onNavigateTo = onNavigateTo
 			)
 		}
 	)
@@ -361,10 +352,8 @@ private fun DailyCostDrawerContent(
 	email: String,
 	language: Language,
 	onNavigationIconClicked: () -> Unit,
-	onCategoriesClicked: () -> Unit,
-	onLanguageClicked: () -> Unit,
 	onSignOutClicked: () -> Unit,
-	onSettingClicked: () -> Unit
+	onNavigateTo: (TopLevelDestination) -> Unit
 ) {
 	val context = LocalContext.current
 
@@ -400,71 +389,30 @@ private fun DailyCostDrawerContent(
 				}
 			}
 
-			item {
+			items(
+				items = drawerDestinations
+			) { destination ->
 				Box(
 					modifier = Modifier
-						.clickable(onClick = onCategoriesClicked)
+						.clickable {
+							onNavigateTo(destination)
+						}
 				) {
 					DrawerItem(
 						title = {
-							Text(context.getString(R.string.categories))
+							Text(context.getString(destination.title!!))
 						},
 						summary = {
-							Text(context.getString(R.string.manage_categories_change_icon_color))
-						},
-						icon = {
-							Icon(
-								painter = painterResource(id = R.drawable.ic_pie_chart),
-								contentDescription = null
+							Text(
+								when (destination.route) {
+									TopLevelDestinations.Home.changeLanguage.route -> language.name
+									else -> context.getString(destination.subtitle!!)
+								}
 							)
 						},
-						modifier = Modifier
-							.fillMaxWidth()
-							.padding(start = 16.dp)
-					)
-				}
-			}
-
-			item {
-				Box(
-					modifier = Modifier
-						.clickable(onClick = onSettingClicked)
-				) {
-					DrawerItem(
-						title = {
-							Text(context.getString(R.string.advance_setting))
-						},
-						summary = {
-							Text(context.getString(R.string.set_number_format_locale_and_app_security))
-						},
 						icon = {
 							Icon(
-								painter = painterResource(id = R.drawable.ic_setting),
-								contentDescription = null
-							)
-						},
-						modifier = Modifier
-							.fillMaxWidth()
-							.padding(start = 16.dp)
-					)
-				}
-			}
-
-			item {
-				Box(
-					modifier = Modifier
-						.clickable(onClick = onLanguageClicked)
-				) {
-					DrawerItem(
-						title = {
-							Text(context.getString(R.string.language))
-						},
-						summary = {
-							Text(language.name)
-						},
-						icon = {
-							Icon(
-								painter = painterResource(id = R.drawable.ic_global),
+								painter = painterResource(id = destination.icon!!),
 								contentDescription = null
 							)
 						},
