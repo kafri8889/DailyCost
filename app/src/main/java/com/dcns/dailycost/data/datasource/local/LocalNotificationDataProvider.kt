@@ -12,7 +12,7 @@ object LocalNotificationDataProvider {
 	)
 
 	val notification2 = Notification(
-		id = 0,
+		id = 1,
 		title = "Release 1.0.0-alpha02",
 		body = "Aplikasi daily cost telah mengeluarkan fitur baru di preview alpha02",
 		hasBeenRead = false

@@ -102,6 +102,8 @@ fun DailyCostTheme(
 		outline = daily_cost_theme_light_outline,
 		expense = daily_cost_theme_light_expense,
 		income = daily_cost_theme_light_income,
+		wildSand = daily_cost_theme_light_wild_sand,
+		silverChalice = daily_cost_theme_light_silver_chalice
 	)
 
 	CompositionLocalProvider(

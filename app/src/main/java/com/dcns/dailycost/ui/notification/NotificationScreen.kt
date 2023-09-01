@@ -1,8 +1,13 @@
 package com.dcns.dailycost.ui.notification
 
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,7 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.model.Notification
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
+import com.dcns.dailycost.foundation.uicomponent.NotificationItem
 
 @Composable
 fun NotificationScreen(
@@ -34,17 +41,28 @@ fun NotificationScreen(
 		NotificationScreenContent(
 			state = state,
 			onNavigationIconClicked = navigationActions::popBackStack,
+			onNotificationClicked = { notification ->
+				viewModel.onAction(
+					NotificationAction.UpdateNotification(
+						notification.copy(
+							hasBeenRead = true
+						)
+					)
+				)
+			},
 			modifier = Modifier
+				.fillMaxSize()
 				.statusBarsPadding()
 		)
 	}
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 private fun NotificationScreenContent(
 	state: NotificationState,
 	modifier: Modifier = Modifier,
+	onNotificationClicked: (Notification) -> Unit,
 	onNavigationIconClicked: () -> Unit
 ) {
 
@@ -66,6 +84,21 @@ private fun NotificationScreenContent(
 						)
 					}
 				}
+			)
+		}
+
+		items(
+			items = state.notifications,
+			key = { item -> item.id }
+		) { notification ->
+			NotificationItem(
+				notification = notification,
+				onClick = {
+					onNotificationClicked(notification)
+				},
+				modifier = Modifier
+					.fillMaxWidth(0.92f)
+					.animateItemPlacement(tween(256))
 			)
 		}
 	}

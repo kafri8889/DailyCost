@@ -13,6 +13,8 @@ data class DailyCostColorScheme(
 	val outline: Color,
 	val expense: Color,
 	val income: Color,
+	val wildSand: Color,
+	val silverChalice: Color,
 )
 
 val LocalDailyCostColorScheme = staticCompositionLocalOf {
@@ -25,6 +27,8 @@ val LocalDailyCostColorScheme = staticCompositionLocalOf {
 		outline = Color.Unspecified,
 		expense = Color.Unspecified,
 		income = Color.Unspecified,
+		wildSand = Color.Unspecified,
+		silverChalice = Color.Unspecified,
 	)
 }
 

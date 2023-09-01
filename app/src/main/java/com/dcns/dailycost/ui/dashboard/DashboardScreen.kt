@@ -33,6 +33,8 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -166,6 +168,7 @@ private fun DashboardScreenContent(
 		) {
 			item {
 				DashboardTopAppBar(
+					unreadNotificationCount = state.unreadNotificationCount,
 					onNavigationIconClicked = onNavigationIconClicked,
 					onNotificationIconClicked = {
 						onNavigateTo(TopLevelDestinations.Home.notification)
@@ -396,6 +399,7 @@ private fun TitleSection(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DashboardTopAppBar(
+	unreadNotificationCount: Int,
 	modifier: Modifier = Modifier,
 	onNavigationIconClicked: () -> Unit,
 	onNotificationIconClicked: () -> Unit
@@ -432,30 +436,40 @@ private fun DashboardTopAppBar(
 			}
 		},
 		actions = {
-			Box(
-				contentAlignment = Alignment.Center,
-				modifier = Modifier
-					.minimumInteractiveComponentSize()
-					.size(40.dp)
-					.clip(RoundedCornerShape(40))
-					.border(
-						width = 1.dp,
-						color = MaterialTheme.colorScheme.outline,
-						shape = RoundedCornerShape(40)
-					)
-					.clickable(
-						onClick = onNotificationIconClicked,
-						role = Role.Button,
-						interactionSource = remember { MutableInteractionSource() },
-						indication = rememberRipple(
-							bounded = false
-						)
-					)
+			BadgedBox(
+				badge = {
+					if (unreadNotificationCount > 0) {
+						Badge {
+							Text(text = unreadNotificationCount.toString())
+						}
+					}
+				}
 			) {
-				Icon(
-					painter = painterResource(id = R.drawable.ic_notification_bell),
-					contentDescription = null
-				)
+				Box(
+					contentAlignment = Alignment.Center,
+					modifier = Modifier
+						.minimumInteractiveComponentSize()
+						.size(40.dp)
+						.clip(RoundedCornerShape(40))
+						.border(
+							width = 1.dp,
+							color = MaterialTheme.colorScheme.outline,
+							shape = RoundedCornerShape(40)
+						)
+						.clickable(
+							onClick = onNotificationIconClicked,
+							role = Role.Button,
+							interactionSource = remember { MutableInteractionSource() },
+							indication = rememberRipple(
+								bounded = false
+							)
+						)
+				) {
+					Icon(
+						painter = painterResource(id = R.drawable.ic_notification_bell),
+						contentDescription = null
+					)
+				}
 			}
 		}
 	)
