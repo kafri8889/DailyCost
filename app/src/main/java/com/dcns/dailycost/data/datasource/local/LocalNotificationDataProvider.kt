@@ -15,7 +15,7 @@ object LocalNotificationDataProvider {
 		id = 0,
 		title = "Release 1.0.0-alpha02",
 		body = "Aplikasi daily cost telah mengeluarkan fitur baru di preview alpha02",
-		hasBeenRead = true
+		hasBeenRead = false
 	)
 
 	val values = arrayOf(

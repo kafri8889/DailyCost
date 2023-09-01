@@ -14,6 +14,14 @@ class NotificationRepository @Inject constructor(
 		return notificationDao.getAllNotification()
 	}
 
+	override fun getUnreadNotification(): Flow<List<NotificationDb>> {
+		return notificationDao.getUnreadNotification()
+	}
+
+	override fun getReadNotification(): Flow<List<NotificationDb>> {
+		return notificationDao.getReadNotification()
+	}
+
 	override suspend fun updateNotification(vararg notificationDb: NotificationDb) {
 		notificationDao.updateNotification(*notificationDb)
 	}

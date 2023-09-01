@@ -20,6 +20,8 @@ class GetLocalNotificationUseCase(
 	): Flow<List<Notification>> {
 		val flow = when (getNotificationBy) {
 			GetNotificationBy.All -> notificationRepository.getAllNotification()
+			GetNotificationBy.Read -> notificationRepository.getReadNotification()
+			GetNotificationBy.Unread -> notificationRepository.getUnreadNotification()
 		}
 
 		return flow.filterNotNull()

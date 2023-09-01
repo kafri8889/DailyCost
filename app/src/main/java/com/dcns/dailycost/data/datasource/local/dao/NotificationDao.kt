@@ -14,6 +14,12 @@ interface NotificationDao {
 	@Query("SELECT * FROM notification_table")
 	fun getAllNotification(): Flow<List<NotificationDb>>
 
+	@Query("SELECT * FROM notification_table WHERE hasBeenRead_notification=0")
+	fun getUnreadNotification(): Flow<List<NotificationDb>>
+
+	@Query("SELECT * FROM notification_table WHERE hasBeenRead_notification=1")
+	fun getReadNotification(): Flow<List<NotificationDb>>
+
 	@Update
 	fun updateNotification(vararg notificationDb: NotificationDb)
 
