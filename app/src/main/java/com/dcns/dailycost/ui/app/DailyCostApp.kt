@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -50,6 +51,7 @@ import com.dcns.dailycost.data.Language
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
+import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.data.defaultNavOptionsBuilder
 import com.dcns.dailycost.data.drawerDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
@@ -211,8 +213,16 @@ fun DailyCostApp(
 					navActions.navigateTo(event.dest)
 				}
 				is DailyCostAppUiEvent.HandleDeepLink -> {
+					// Manipulasi uri
+					val uri = when {
+						event.uri.pathSegments.contains("pengeluaran") -> event.uri.toString().let { s ->
+							"$s/${TransactionType.Expense}".toUri()
+						}
+						else -> event.uri
+					}
+
 					navActions.navigateTo(
-						uri = event.uri,
+						uri = uri,
 						builder = defaultNavOptionsBuilder(
 							popTo = TopLevelDestinations.Home.dashboard,
 							inclusivePopUpTo = false

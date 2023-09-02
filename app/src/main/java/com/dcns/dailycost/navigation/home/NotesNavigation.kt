@@ -13,7 +13,8 @@ fun NavGraphBuilder.NotesNavigation(
 	onNavigationIconClicked: () -> Unit
 ) {
 	composable(
-		route = TopLevelDestinations.Home.notes.route
+		route = TopLevelDestinations.Home.notes.route,
+		deepLinks = TopLevelDestinations.Home.notes.deepLinks
 	) { backEntry ->
 		val mViewModel = hiltViewModel<NotesViewModel>(backEntry)
 

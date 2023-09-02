@@ -13,7 +13,8 @@ fun NavGraphBuilder.DashboardNavigation(
 	onNavigationIconClicked: () -> Unit
 ) {
 	composable(
-		route = TopLevelDestinations.Home.dashboard.route
+		route = TopLevelDestinations.Home.dashboard.route,
+		deepLinks = TopLevelDestinations.Home.dashboard.deepLinks
 	) { backEntry ->
 		val mViewModel = hiltViewModel<DashboardViewModel>(backEntry)
 

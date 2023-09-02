@@ -185,6 +185,12 @@ object TopLevelDestinations {
 					type = NavType.TransactionTypeNavType
 					nullable = true
 				}
+			),
+			deepLinks = listOf(
+				navDeepLink {
+					action = Intent.ACTION_VIEW
+					uriPattern = "${Constant.WEB_DEEP_LINK_SCHEME}://${Constant.WEB_DEEP_LINK_HOST}/pengeluaran/{${DestinationArgument.TRANSACTION_TYPE}}"
+				}
 			)
 		)
 
@@ -305,7 +311,13 @@ object TopLevelDestinations {
 		val dashboard = TopLevelDestination(
 			route = DestinationRoute.DASHBOARD,
 			icon = R.drawable.ic_dashboard,
-			title = R.string.dashboard
+			title = R.string.dashboard,
+			deepLinks = listOf(
+				navDeepLink {
+					action = Intent.ACTION_VIEW
+					uriPattern = "${Constant.WEB_DEEP_LINK_SCHEME}://${Constant.WEB_DEEP_LINK_HOST}/dashboard"
+				}
+			)
 		)
 
 		val setting = TopLevelDestination(
@@ -319,7 +331,13 @@ object TopLevelDestinations {
 			route = DestinationRoute.NOTES,
 			icon = R.drawable.ic_notes,
 			title = R.string.notes,
-			subtitle = R.string.record_all_your_financial
+			subtitle = R.string.record_all_your_financial,
+			deepLinks = listOf(
+				navDeepLink {
+					action = Intent.ACTION_VIEW
+					uriPattern = "${Constant.WEB_DEEP_LINK_SCHEME}://${Constant.WEB_DEEP_LINK_HOST}/catatan"
+				}
+			)
 		)
 
 		val note = TopLevelDestination(

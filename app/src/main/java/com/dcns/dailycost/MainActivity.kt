@@ -139,6 +139,9 @@ class MainActivity: LocalizedActivity() {
 		super.onStart()
 
 		connectivityManager.registerConnectionObserver(this)
+
+		// Handle cold start (app not running) deeplink
+		intent?.let { handleDeepLink(it) }
 	}
 
 	override fun onStop() {
