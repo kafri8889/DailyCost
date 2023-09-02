@@ -65,7 +65,6 @@ import com.dcns.dailycost.navigation.home.NotesNavigation
 import com.dcns.dailycost.navigation.home.NotificationNavigation
 import com.dcns.dailycost.navigation.home.RecentActivityNavigation
 import com.dcns.dailycost.navigation.home.SettingNavigation
-import com.dcns.dailycost.navigation.home.SplashNavigation
 import com.dcns.dailycost.navigation.home.StatisticNavigation
 import com.dcns.dailycost.navigation.home.TransactionNavigation
 import com.dcns.dailycost.navigation.home.TransactionsNavigation
@@ -285,8 +284,6 @@ private fun DailyCostNavHost(
 		navController = navController,
 		startDestination = TopLevelDestinations.Home.ROOT_ROUTE
 	) {
-		SplashNavigation()
-
 		// Nested navigasi untuk onboarding
 		OnboardingNavHost {
 			OnboardingNavigation(navActions)

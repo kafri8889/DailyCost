@@ -32,7 +32,6 @@ object DestinationRoute {
 	const val CATEGORY = "category"
 	const val WALLETS = "wallets"
 	const val SETTING = "setting"
-	const val SPLASH = "splash"
 	const val LOGIN = "login"
 	const val NOTES = "notes"
 	const val NOTE = "note"
@@ -337,10 +336,6 @@ object TopLevelDestinations {
 			)
 		)
 	}
-
-	val splash = TopLevelDestination(
-		route = DestinationRoute.SPLASH
-	)
 
 }
 
