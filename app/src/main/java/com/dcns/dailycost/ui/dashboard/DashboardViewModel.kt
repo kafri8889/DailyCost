@@ -10,8 +10,10 @@ import com.dcns.dailycost.data.model.Balance
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
+import com.dcns.dailycost.domain.use_case.NotificationUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
+import com.dcns.dailycost.domain.util.GetNotificationBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.ConnectivityManager
@@ -37,6 +39,7 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
 	private val userCredentialUseCases: UserCredentialUseCases,
 	private val userPreferenceUseCases: UserPreferenceUseCases,
+	private val notificationUseCases: NotificationUseCases,
 	private val connectivityManager: ConnectivityManager,
 	private val expenseUseCases: ExpenseUseCases,
 	private val incomeUseCases: IncomeUseCases,
@@ -94,6 +97,17 @@ class DashboardViewModel @Inject constructor(
 			}
 		}
 
+		viewModelScope.launch {
+			notificationUseCases.getLocalNotificationUseCase(GetNotificationBy.Unread).collect { notifications ->
+				updateState {
+					copy(
+						unreadNotificationCount = notifications.size
+					)
+				}
+			}
+		}
+
+		// TODO: Pindah proses pemfilteran ke use case
 		viewModelScope.launch {
 			combine(
 				depoUseCases.getLocalBalanceUseCase(),

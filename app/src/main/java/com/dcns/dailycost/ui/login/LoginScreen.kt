@@ -135,7 +135,8 @@ fun LoginScreen(
 				navigationActions.navigateTo(
 					destination = TopLevelDestinations.Home.dashboard,
 					builder = defaultNavOptionsBuilder(
-						popTo = TopLevelDestinations.Home.dashboard
+						popTo = TopLevelDestinations.LoginRegister.login,
+						inclusivePopUpTo = true
 					)
 				)
 

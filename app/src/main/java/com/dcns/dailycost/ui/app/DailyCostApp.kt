@@ -1,6 +1,9 @@
 package com.dcns.dailycost.ui.app
 
+import android.Manifest
+import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -62,9 +65,9 @@ import com.dcns.dailycost.navigation.home.ChangeLanguageNavigation
 import com.dcns.dailycost.navigation.home.DashboardNavigation
 import com.dcns.dailycost.navigation.home.NoteNavigation
 import com.dcns.dailycost.navigation.home.NotesNavigation
+import com.dcns.dailycost.navigation.home.NotificationNavigation
 import com.dcns.dailycost.navigation.home.RecentActivityNavigation
 import com.dcns.dailycost.navigation.home.SettingNavigation
-import com.dcns.dailycost.navigation.home.SplashNavigation
 import com.dcns.dailycost.navigation.home.StatisticNavigation
 import com.dcns.dailycost.navigation.home.TransactionNavigation
 import com.dcns.dailycost.navigation.home.TransactionsNavigation
@@ -75,6 +78,8 @@ import com.dcns.dailycost.navigation.onboarding.OnboardingNavigation
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
@@ -129,6 +134,10 @@ fun DailyCostApp(
 
 	val navBackStackEntry by navController.currentBackStackEntryAsState()
 
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+		RequestPostPermission()
+	}
+
 	// Update current destination
 	// digunakan di drawer
 	LaunchedEffect(navBackStackEntry) {
@@ -154,18 +163,32 @@ fun DailyCostApp(
 		} else viewModel.onAction(DailyCostAppAction.IsBiometricAuthenticated(true))
 	}
 
-	LaunchedEffect(state.userCredential, state.isFirstInstall, state.userFirstEnteredApp) {
+	// Navigasi otomatis
+	LaunchedEffect(
+		state.userCredential,
+		state.isFirstInstall,
+		state.userFirstEnteredApp,
+		state.canNavigate
+	) {
 		// Jika user pertama kali masuk ke aplikasi, dan
 		// first install tidak null (true atau false), dan
 		// user credential tidak null.
 		// Jika salah satunya null, maka user akan tetap berada di `SplashScreen`
-		if (state.userFirstEnteredApp && state.isFirstInstall != null && state.userCredential != null) {
+		if (
+			state.userFirstEnteredApp &&
+			state.isFirstInstall != null &&
+			state.userCredential != null &&
+			state.canNavigate
+		) {
+			// Jika user telah login, biarkan, karena start destination ke dashboard
+			if (state.userCredential!!.isLoggedIn) {
+				return@LaunchedEffect
+			}
+
 			val dest = when {
 				// Jika pertama kali install, ke onboarding
 				state.isFirstInstall == true -> TopLevelDestinations.Onboarding.onboarding
-				// Jika user sudah login, ke dashboard
-				state.userCredential!!.isLoggedIn -> TopLevelDestinations.Home.dashboard
-				// Jika tidak keduanya, ke login screen
+				// Jika tidak, ke login screen
 				else -> TopLevelDestinations.LoginRegister.login
 			}
 
@@ -184,9 +207,17 @@ fun DailyCostApp(
 						navActions.navigateTo(TopLevelDestinations.Home.dashboard)
 					}
 				}
-
 				is DailyCostAppUiEvent.NavigateTo -> {
 					navActions.navigateTo(event.dest)
+				}
+				is DailyCostAppUiEvent.HandleDeepLink -> {
+					navActions.navigateTo(
+						uri = event.uri,
+						builder = defaultNavOptionsBuilder(
+							popTo = TopLevelDestinations.Home.dashboard,
+							inclusivePopUpTo = false
+						)
+					)
 				}
 			}
 		}
@@ -260,10 +291,8 @@ private fun DailyCostNavHost(
 
 	NavHost(
 		navController = navController,
-		startDestination = TopLevelDestinations.splash.route
+		startDestination = TopLevelDestinations.Home.ROOT_ROUTE
 	) {
-		SplashNavigation()
-
 		// Nested navigasi untuk onboarding
 		OnboardingNavHost {
 			OnboardingNavigation(navActions)
@@ -286,6 +315,7 @@ private fun DailyCostNavHost(
 			StatisticNavigation(navActions)
 			WalletsNavigation(navActions)
 			NoteNavigation(navActions)
+			NotificationNavigation(navActions)
 
 			DashboardNavigation(
 				navigationActions = navActions,
@@ -448,5 +478,19 @@ private fun DailyCostDrawerContent(
 		}
 
 		Spacer(modifier = Modifier.height(16.dp))
+	}
+}
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+private fun RequestPostPermission() {
+
+	val permissionState = rememberPermissionState(
+		permission = Manifest.permission.POST_NOTIFICATIONS
+	)
+
+	LaunchedEffect(Unit) {
+		permissionState.launchPermissionRequest()
 	}
 }

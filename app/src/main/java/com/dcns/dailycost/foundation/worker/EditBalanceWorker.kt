@@ -44,7 +44,7 @@ class EditBalanceWorker @AssistedInject constructor(
 
 //    override suspend fun getForegroundInfo(): ForegroundInfo {
 //
-//        val notification = NotificationCompat.Builder(context, NotificationUtil.WORKER_CHANNEL_ID).apply {
+//        val notification = NotificationCompat.Builder(context, NotificationManager.WORKER_CHANNEL_ID).apply {
 //            setOngoing(true)
 //            setLocalOnly(true)
 //            setAutoCancel(true)

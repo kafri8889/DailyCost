@@ -7,6 +7,7 @@ import com.dcns.dailycost.domain.repository.IExpenseRepository
 import com.dcns.dailycost.domain.repository.IIncomeRepository
 import com.dcns.dailycost.domain.repository.ILoginRegisterRepository
 import com.dcns.dailycost.domain.repository.INoteRepository
+import com.dcns.dailycost.domain.repository.INotificationRepository
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.repository.IUserPreferenceRepository
 import com.dcns.dailycost.domain.use_case.CategoryUseCases
@@ -15,6 +16,7 @@ import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.NoteUseCases
+import com.dcns.dailycost.domain.use_case.NotificationUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.domain.use_case.category.GetLocalCategoryUseCase
@@ -42,6 +44,9 @@ import com.dcns.dailycost.domain.use_case.note.GetLocalNoteUseCase
 import com.dcns.dailycost.domain.use_case.note.GetRemoteNoteUseCase
 import com.dcns.dailycost.domain.use_case.note.SyncLocalWithRemoteNoteUseCase
 import com.dcns.dailycost.domain.use_case.note.UpsertLocalNoteUseCase
+import com.dcns.dailycost.domain.use_case.notification.GetLocalNotificationUseCase
+import com.dcns.dailycost.domain.use_case.notification.InsertLocalNotificationUseCase
+import com.dcns.dailycost.domain.use_case.notification.UpdateLocalNotificationUseCase
 import com.dcns.dailycost.domain.use_case.user_credential.EditUserCredentialUseCase
 import com.dcns.dailycost.domain.use_case.user_credential.GetUserCredentialUseCase
 import com.dcns.dailycost.domain.use_case.user_preference.EditUserPreferenceUseCase
@@ -140,6 +145,16 @@ class DomainModule {
 	): UserPreferenceUseCases = UserPreferenceUseCases(
 		editUserPreferenceUseCase = EditUserPreferenceUseCase(userPreferenceRepository),
 		getUserPreferenceUseCase = GetUserPreferenceUseCase(userPreferenceRepository)
+	)
+
+	@Provides
+	@Singleton
+	fun provideNotificationUseCases(
+		notificationRepository: INotificationRepository
+	): NotificationUseCases = NotificationUseCases(
+		getLocalNotificationUseCase = GetLocalNotificationUseCase(notificationRepository),
+		updateLocalNotificationUseCase = UpdateLocalNotificationUseCase(notificationRepository),
+		insertLocalNotificationUseCase = InsertLocalNotificationUseCase(notificationRepository)
 	)
 
 }

@@ -9,10 +9,12 @@ import com.dcns.dailycost.data.datasource.local.dao.CategoryDao
 import com.dcns.dailycost.data.datasource.local.dao.ExpenseDao
 import com.dcns.dailycost.data.datasource.local.dao.IncomeDao
 import com.dcns.dailycost.data.datasource.local.dao.NoteDao
+import com.dcns.dailycost.data.datasource.local.dao.NotificationDao
 import com.dcns.dailycost.data.model.local.CategoryDb
 import com.dcns.dailycost.data.model.local.ExpenseDb
 import com.dcns.dailycost.data.model.local.IncomeDb
 import com.dcns.dailycost.data.model.local.NoteDb
+import com.dcns.dailycost.data.model.local.NotificationDb
 
 /**
  * Database untuk aplikasi ini
@@ -22,9 +24,10 @@ import com.dcns.dailycost.data.model.local.NoteDb
 		NoteDb::class,
 		IncomeDb::class,
 		ExpenseDb::class,
-		CategoryDb::class
+		CategoryDb::class,
+		NotificationDb::class
 	],
-	version = 2,
+	version = 3,
 	exportSchema = false
 )
 @TypeConverters(DatabaseTypeConverter::class)
@@ -34,6 +37,7 @@ abstract class AppDatabase: RoomDatabase() {
 	abstract fun incomeDao(): IncomeDao
 	abstract fun expenseDao(): ExpenseDao
 	abstract fun categoryDao(): CategoryDao
+	abstract fun notificationDao(): NotificationDao
 
 	companion object {
 		private var INSTANCE: AppDatabase? = null

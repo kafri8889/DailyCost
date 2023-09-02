@@ -6,6 +6,7 @@ import com.dcns.dailycost.data.datasource.local.dao.CategoryDao
 import com.dcns.dailycost.data.datasource.local.dao.ExpenseDao
 import com.dcns.dailycost.data.datasource.local.dao.IncomeDao
 import com.dcns.dailycost.data.datasource.local.dao.NoteDao
+import com.dcns.dailycost.data.datasource.local.dao.NotificationDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -46,5 +47,11 @@ class LocalModule {
 	fun provideCategoryDao(
 		appDatabase: AppDatabase
 	): CategoryDao = appDatabase.categoryDao()
+
+	@Provides
+	@Singleton
+	fun provideNotificationDao(
+		appDatabase: AppDatabase
+	): NotificationDao = appDatabase.notificationDao()
 
 }

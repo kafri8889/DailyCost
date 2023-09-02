@@ -1,12 +1,17 @@
 package com.dcns.dailycost.data
 
+import android.content.Intent
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavDeepLink
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import androidx.navigation.navOptions
 import com.dcns.dailycost.R
 import com.dcns.dailycost.foundation.nav_type.ActionModeNavType
 import com.dcns.dailycost.foundation.nav_type.CategoriesScreenModeNavType
@@ -16,6 +21,7 @@ import com.dcns.dailycost.foundation.nav_type.WalletsScreenModeNavType
 object DestinationRoute {
 	const val CHANGE_LANGUAGE = "change_language"
 	const val RECENT_ACTIVITY = "recent_activity"
+	const val NOTIFICATION = "notification"
 	const val TRANSACTIONS = "transactions"
 	const val TRANSACTION = "transaction"
 	const val CATEGORIES = "categories"
@@ -26,7 +32,6 @@ object DestinationRoute {
 	const val CATEGORY = "category"
 	const val WALLETS = "wallets"
 	const val SETTING = "setting"
-	const val SPLASH = "splash"
 	const val LOGIN = "login"
 	const val NOTES = "notes"
 	const val NOTE = "note"
@@ -48,6 +53,7 @@ object DestinationArgument {
 data class TopLevelDestination(
 	val route: String,
 	val arguments: List<NamedNavArgument> = emptyList(),
+	val deepLinks: List<NavDeepLink> = emptyList(),
 	@StringRes val title: Int? = null,
 	@StringRes val subtitle: Int? = null,
 	@DrawableRes val icon: Int? = null
@@ -103,6 +109,13 @@ class NavigationActions(val navController: NavHostController) {
 		builder: NavOptionsBuilder.() -> Unit = defaultNavOptionsBuilder()
 	) {
 		navController.navigate(destination.route, builder)
+	}
+
+	fun navigateTo(
+		uri: Uri,
+		builder: NavOptionsBuilder.() -> Unit = defaultNavOptionsBuilder()
+	) {
+		navController.navigate(uri, navOptions(builder))
 	}
 }
 
@@ -312,11 +325,17 @@ object TopLevelDestinations {
 		val note = TopLevelDestination(
 			route = DestinationRoute.NOTE
 		)
-	}
 
-	val splash = TopLevelDestination(
-		route = DestinationRoute.SPLASH
-	)
+		val notification = TopLevelDestination(
+			route = DestinationRoute.NOTIFICATION,
+			deepLinks = listOf(
+				navDeepLink {
+					action = Intent.ACTION_VIEW
+					uriPattern = "${Constant.APP_DEEP_LINK_SCHEME}://${Constant.APP_DEEP_LINK_HOST}/${DestinationRoute.NOTIFICATION}"
+				}
+			)
+		)
+	}
 
 }
 

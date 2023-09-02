@@ -187,6 +187,7 @@ dependencies {
 	// Firebase
 	implementation("com.google.firebase:firebase-crashlytics-ktx:18.4.1")
 	implementation("com.google.firebase:firebase-analytics-ktx:21.3.0")
+	implementation("com.google.firebase:firebase-messaging-ktx:23.2.1")
 
     // Accompanist
     implementation("com.google.accompanist:accompanist-pager:${extra["accompanist_version"]}")
@@ -211,6 +212,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("com.tbuonomo:dotsindicator:5.0")
     implementation("com.github.omercemcicekli:CardStack:0.0.6")
+    implementation("com.github.marlonlom:timeago:4.0.3")
     implementation("com.intuit.ssp:ssp-android:1.1.0")
     implementation("com.intuit.sdp:sdp-android:1.1.0")
 
