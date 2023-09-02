@@ -1,6 +1,9 @@
 package com.dcns.dailycost.ui.app
 
+import android.Manifest
+import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -75,6 +78,8 @@ import com.dcns.dailycost.navigation.onboarding.OnboardingNavigation
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
@@ -128,6 +133,10 @@ fun DailyCostApp(
 	}
 
 	val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+		RequestPostPermission()
+	}
 
 	// Update current destination
 	// digunakan di drawer
@@ -469,5 +478,19 @@ private fun DailyCostDrawerContent(
 		}
 
 		Spacer(modifier = Modifier.height(16.dp))
+	}
+}
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+private fun RequestPostPermission() {
+
+	val permissionState = rememberPermissionState(
+		permission = Manifest.permission.POST_NOTIFICATIONS
+	)
+
+	LaunchedEffect(Unit) {
+		permissionState.launchPermissionRequest()
 	}
 }
