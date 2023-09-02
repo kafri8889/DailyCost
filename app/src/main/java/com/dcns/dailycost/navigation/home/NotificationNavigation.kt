@@ -10,7 +10,8 @@ import com.dcns.dailycost.ui.notification.NotificationViewModel
 
 fun NavGraphBuilder.NotificationNavigation(navigationActions: NavigationActions) {
 	composable(
-		route = TopLevelDestinations.Home.notification.route
+		route = TopLevelDestinations.Home.notification.route,
+		deepLinks = TopLevelDestinations.Home.notification.deepLinks
 	) { backEntry ->
 		val mViewModel = hiltViewModel<NotificationViewModel>(backEntry)
 

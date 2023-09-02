@@ -12,6 +12,12 @@ data class DailyCostAppState(
 	val currentDestinationRoute: String = "",
 	val language: Language = Language.English,
 	/**
+	 * Digunakan untuk menentukan apakah navController diizinkan untuk menavigasi (lihat dibagian "navigasi otomatis")
+	 *
+	 * Tujuan variable ini dibuat adalah untuk mencegah navController menavigasi saat user masuk melalui deeplink
+	 */
+	val canNavigate: Boolean = true,
+	/**
 	 * if secure app with biometric enabled
 	 */
 	val isSecureAppEnabled: Boolean = false,

@@ -112,7 +112,6 @@ class DailyCostAppViewModel @Inject constructor(
 					}
 				}
 			}
-
 			is DailyCostAppAction.IsBiometricAuthenticated -> {
 				viewModelScope.launch {
 					updateState {
@@ -122,12 +121,20 @@ class DailyCostAppViewModel @Inject constructor(
 					}
 				}
 			}
-
 			is DailyCostAppAction.UpdateUserFirstEnteredApp -> {
 				viewModelScope.launch {
 					updateState {
 						copy(
 							userFirstEnteredApp = action.first
+						)
+					}
+				}
+			}
+			is DailyCostAppAction.CanNavigate -> {
+				viewModelScope.launch {
+					updateState {
+						copy(
+							canNavigate = action.can
 						)
 					}
 				}

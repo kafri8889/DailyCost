@@ -1,5 +1,6 @@
 package com.dcns.dailycost
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -8,6 +9,8 @@ import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.core.util.Consumer
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -24,6 +27,7 @@ import com.dcns.dailycost.ui.app.DailyCostAppAction
 import com.dcns.dailycost.ui.app.DailyCostAppUiEvent
 import com.dcns.dailycost.ui.app.DailyCostAppViewModel
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -49,6 +53,12 @@ class MainActivity: LocalizedActivity() {
 
 		// Disable crashlytics in debug mode
 		FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
+		if (BuildConfig.DEBUG) {
+			FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+				val token = task.result
+				Timber.i("tongken: $token")
+			}
+		}
 
 		biometricManager = DailyCostBiometricManager(this).apply {
 			setListener(object: DailyCostBiometricManager.BiometricListener {
@@ -97,11 +107,31 @@ class MainActivity: LocalizedActivity() {
 				LocalOverscrollConfiguration provides if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) null
 				else LocalOverscrollConfiguration.current
 			) {
+				// Handle hot start (app running) deeplink
+				DisposableEffect(Unit) {
+					val listener = Consumer<Intent> { intent ->
+						handleDeepLink(intent)
+					}
+
+					addOnNewIntentListener(listener)
+					onDispose { removeOnNewIntentListener(listener) }
+				}
+
 				DailyCostApp(
 					viewModel = dailyCostAppViewModel,
 					biometricManager = biometricManager
 				)
 			}
+		}
+	}
+
+	/**
+	 * Function yg diggunakan untuk menghandle deeplink
+	 */
+	private fun handleDeepLink(intent: Intent) {
+		intent.data?.let { uri ->
+			dailyCostAppViewModel.sendEvent(DailyCostAppUiEvent.HandleDeepLink(uri))
+			dailyCostAppViewModel.onAction(DailyCostAppAction.CanNavigate(false))
 		}
 	}
 

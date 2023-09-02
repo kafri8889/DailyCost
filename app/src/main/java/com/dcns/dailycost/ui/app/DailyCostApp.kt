@@ -155,18 +155,32 @@ fun DailyCostApp(
 		} else viewModel.onAction(DailyCostAppAction.IsBiometricAuthenticated(true))
 	}
 
-	LaunchedEffect(state.userCredential, state.isFirstInstall, state.userFirstEnteredApp) {
+	// Navigasi otomatis
+	LaunchedEffect(
+		state.userCredential,
+		state.isFirstInstall,
+		state.userFirstEnteredApp,
+		state.canNavigate
+	) {
 		// Jika user pertama kali masuk ke aplikasi, dan
 		// first install tidak null (true atau false), dan
 		// user credential tidak null.
 		// Jika salah satunya null, maka user akan tetap berada di `SplashScreen`
-		if (state.userFirstEnteredApp && state.isFirstInstall != null && state.userCredential != null) {
+		if (
+			state.userFirstEnteredApp &&
+			state.isFirstInstall != null &&
+			state.userCredential != null &&
+			state.canNavigate
+		) {
+			// Jika user telah login, biarkan, karena start destination ke dashboard
+			if (state.userCredential!!.isLoggedIn) {
+				return@LaunchedEffect
+			}
+
 			val dest = when {
 				// Jika pertama kali install, ke onboarding
 				state.isFirstInstall == true -> TopLevelDestinations.Onboarding.onboarding
-				// Jika user sudah login, ke dashboard
-				state.userCredential!!.isLoggedIn -> TopLevelDestinations.Home.dashboard
-				// Jika tidak keduanya, ke login screen
+				// Jika tidak, ke login screen
 				else -> TopLevelDestinations.LoginRegister.login
 			}
 
@@ -185,9 +199,17 @@ fun DailyCostApp(
 						navActions.navigateTo(TopLevelDestinations.Home.dashboard)
 					}
 				}
-
 				is DailyCostAppUiEvent.NavigateTo -> {
 					navActions.navigateTo(event.dest)
+				}
+				is DailyCostAppUiEvent.HandleDeepLink -> {
+					navActions.navigateTo(
+						uri = event.uri,
+						builder = defaultNavOptionsBuilder(
+							popTo = TopLevelDestinations.Home.dashboard,
+							inclusivePopUpTo = false
+						)
+					)
 				}
 			}
 		}
@@ -261,7 +283,7 @@ private fun DailyCostNavHost(
 
 	NavHost(
 		navController = navController,
-		startDestination = TopLevelDestinations.splash.route
+		startDestination = TopLevelDestinations.Home.ROOT_ROUTE
 	) {
 		SplashNavigation()
 

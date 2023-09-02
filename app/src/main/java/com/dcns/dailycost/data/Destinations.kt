@@ -1,12 +1,17 @@
 package com.dcns.dailycost.data
 
+import android.content.Intent
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavDeepLink
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import androidx.navigation.navOptions
 import com.dcns.dailycost.R
 import com.dcns.dailycost.foundation.nav_type.ActionModeNavType
 import com.dcns.dailycost.foundation.nav_type.CategoriesScreenModeNavType
@@ -49,6 +54,7 @@ object DestinationArgument {
 data class TopLevelDestination(
 	val route: String,
 	val arguments: List<NamedNavArgument> = emptyList(),
+	val deepLinks: List<NavDeepLink> = emptyList(),
 	@StringRes val title: Int? = null,
 	@StringRes val subtitle: Int? = null,
 	@DrawableRes val icon: Int? = null
@@ -104,6 +110,13 @@ class NavigationActions(val navController: NavHostController) {
 		builder: NavOptionsBuilder.() -> Unit = defaultNavOptionsBuilder()
 	) {
 		navController.navigate(destination.route, builder)
+	}
+
+	fun navigateTo(
+		uri: Uri,
+		builder: NavOptionsBuilder.() -> Unit = defaultNavOptionsBuilder()
+	) {
+		navController.navigate(uri, navOptions(builder))
 	}
 }
 
@@ -315,7 +328,13 @@ object TopLevelDestinations {
 		)
 
 		val notification = TopLevelDestination(
-			route = DestinationRoute.NOTIFICATION
+			route = DestinationRoute.NOTIFICATION,
+			deepLinks = listOf(
+				navDeepLink {
+					action = Intent.ACTION_VIEW
+					uriPattern = "${Constant.APP_DEEP_LINK_SCHEME}://${Constant.APP_DEEP_LINK_HOST}/${DestinationRoute.NOTIFICATION}"
+				}
+			)
 		)
 	}
 
