@@ -10,7 +10,8 @@ import com.dcns.dailycost.ui.login.LoginViewModel
 
 fun NavGraphBuilder.LoginNavigation(navigationActions: NavigationActions) {
 	composable(
-		route = TopLevelDestinations.LoginRegister.login.route
+		route = TopLevelDestinations.LoginRegister.login.route,
+		deepLinks = TopLevelDestinations.LoginRegister.login.deepLinks
 	) { backEntry ->
 		val mViewModel = hiltViewModel<LoginViewModel>(backEntry)
 

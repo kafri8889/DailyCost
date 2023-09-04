@@ -128,10 +128,16 @@ class MainActivity: LocalizedActivity() {
 	/**
 	 * Function yg diggunakan untuk menghandle deeplink
 	 */
-	private fun handleDeepLink(intent: Intent) {
-		intent.data?.let { uri ->
-			dailyCostAppViewModel.sendEvent(DailyCostAppUiEvent.HandleDeepLink(uri))
-			dailyCostAppViewModel.onAction(DailyCostAppAction.CanNavigate(false))
+	private fun handleDeepLink(intent: Intent) = lifecycleScope.launch {
+		userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.isLoggedIn?.let { hasLogin ->
+			// Cek apakah user sudah login, jika belom jangan di handle
+			// nanti otomatis pindah ke login screen
+			if (hasLogin) {
+				intent.data?.let { uri ->
+					dailyCostAppViewModel.sendEvent(DailyCostAppUiEvent.HandleDeepLink(uri))
+					dailyCostAppViewModel.onAction(DailyCostAppAction.CanNavigate(false))
+				}
+			}
 		}
 	}
 

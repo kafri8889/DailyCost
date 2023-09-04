@@ -156,7 +156,13 @@ object TopLevelDestinations {
 		const val ROOT_ROUTE = "root_login_register"
 
 		val login = TopLevelDestination(
-			route = DestinationRoute.LOGIN
+			route = DestinationRoute.LOGIN,
+			deepLinks = listOf(
+				navDeepLink {
+					action = Intent.ACTION_VIEW
+					uriPattern = "${Constant.APP_DEEP_LINK_SCHEME}://${Constant.APP_DEEP_LINK_HOST}/${DestinationRoute.LOGIN}"
+				}
+			)
 		)
 
 		val register = TopLevelDestination(
