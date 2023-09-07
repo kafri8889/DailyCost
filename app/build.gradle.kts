@@ -1,3 +1,5 @@
+import com.google.devtools.ksp.gradle.KspTaskJvm
+
 plugins {
     id("idea")
     id("com.android.application")
@@ -92,6 +94,19 @@ android {
     }
 }
 
+androidComponents {
+	onVariants { variant ->
+		// https://github.com/square/wire/issues/2335
+		val buildType = variant.buildType.toString()
+		val flavor = variant.flavorName.toString()
+		tasks.withType<KspTaskJvm> {
+			if (name.contains(buildType, ignoreCase = true) && name.contains(flavor, ignoreCase = true)) {
+				dependsOn("generate${flavor.capitalize()}${buildType.capitalize()}Protos")
+			}
+		}
+	}
+}
+
 wire {
     kotlin {
         android = true
@@ -102,7 +117,7 @@ dependencies {
 
     val kotlin_version by extra("1.9.0")
     val compose_version by extra("1.5.0")
-    val lifecycle_version by extra("2.6.1")
+    val lifecycle_version by extra("2.6.2")
     val accompanist_version by extra("0.32.0")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
@@ -112,12 +127,12 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 	kapt ("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.6.0")
 
-    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.activity:activity-compose:1.7.2")
-    implementation("androidx.compose.runtime:runtime:1.5.0")
+    implementation("androidx.compose.runtime:runtime:1.5.1")
     implementation("androidx.compose.runtime:runtime-livedata:${extra["compose_version"]}")
-    implementation("androidx.navigation:navigation-compose:2.7.1")
+    implementation("androidx.navigation:navigation-compose:2.7.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     // Work Manager
@@ -147,9 +162,9 @@ dependencies {
 
     // Material Design
     implementation("com.google.android.material:material:1.9.0")
-    implementation("androidx.compose.material:material:1.5.0")
-    implementation("androidx.compose.material:material-icons-extended:1.5.0")
-    implementation("androidx.compose.material3:material3-android:1.2.0-alpha06")
+    implementation("androidx.compose.material:material:1.5.1")
+    implementation("androidx.compose.material:material-icons-extended:1.5.1")
+    implementation("androidx.compose.material3:material3-android:1.2.0-alpha07")
     implementation("androidx.compose.material3:material3-window-size-class:1.1.1")
 
     // Large screen support
@@ -168,21 +183,20 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:${extra["lifecycle_version"]}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${extra["lifecycle_version"]}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${extra["lifecycle_version"]}")
-	implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.1")
+	implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2")
 	implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("androidx.core:core-ktx:1.10.1")
     kapt("androidx.lifecycle:lifecycle-common-java8:${extra["lifecycle_version"]}")
 
     // Dependency Injection
-    implementation("com.google.dagger:hilt-android:2.47")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
-    kapt("com.google.dagger:hilt-compiler:2.47")
-    kapt("com.google.dagger:hilt-android-compiler:2.47")
+    implementation("com.google.dagger:hilt-android:2.48")
+    ksp("androidx.hilt:hilt-compiler:1.0.0")
+    ksp("com.google.dagger:hilt-compiler:2.48")
+    ksp("com.google.dagger:hilt-android-compiler:2.48")
 
     // Room
     implementation("androidx.room:room-runtime:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
-    kapt("androidx.room:room-compiler:2.5.2")
+    ksp("androidx.room:room-compiler:2.5.2")
 
 	// Firebase
 	implementation("com.google.firebase:firebase-crashlytics-ktx:18.4.1")
