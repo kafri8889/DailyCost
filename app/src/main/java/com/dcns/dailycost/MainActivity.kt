@@ -10,17 +10,15 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.util.Consumer
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
 import com.dcns.dailycost.foundation.extension.enqueue
 import com.dcns.dailycost.foundation.localized.LocalizedActivity
-import com.dcns.dailycost.foundation.localized.data.OnLocaleChangedListener
 import com.dcns.dailycost.foundation.worker.Workers
 import com.dcns.dailycost.ui.app.DailyCostApp
 import com.dcns.dailycost.ui.app.DailyCostAppAction
@@ -51,8 +49,14 @@ class MainActivity: LocalizedActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
+		// Install splash screen
+		installSplashScreen().apply {
+			setKeepOnScreenCondition { dailyCostAppViewModel.state.value.userCredential == null }
+		}
+
 		// Disable crashlytics in debug mode
 		FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
+
 		if (BuildConfig.DEBUG) {
 			FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
 				val token = task.result
@@ -85,22 +89,6 @@ class MainActivity: LocalizedActivity() {
 		}
 
 		WindowCompat.setDecorFitsSystemWindows(window, false)
-
-		setListener(object: OnLocaleChangedListener {
-			override fun onChanged() {
-				// Send event to top level app
-				dailyCostAppViewModel.sendEvent(DailyCostAppUiEvent.LanguageChanged)
-			}
-		})
-
-		lifecycleScope.launch {
-			lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-				// If user has logged in, sync data
-				if (userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.isLoggedIn == true) {
-					Workers.syncWorker().enqueue(this@MainActivity)
-				}
-			}
-		}
 
 		setContent {
 			CompositionLocalProvider(
@@ -141,6 +129,20 @@ class MainActivity: LocalizedActivity() {
 		}
 	}
 
+	override fun onRestart() {
+		super.onRestart()
+
+		// Send event to top level app
+		setOnLocaleChangedListener { dailyCostAppViewModel.sendEvent(DailyCostAppUiEvent.LanguageChanged) }
+
+		lifecycleScope.launch {
+			// If user has logged in, sync data
+			if (userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.isLoggedIn == true) {
+				Workers.syncWorker().enqueue(this@MainActivity)
+			}
+		}
+	}
+
 	override fun onStart() {
 		super.onStart()
 
@@ -153,6 +155,7 @@ class MainActivity: LocalizedActivity() {
 	override fun onStop() {
 		super.onStop()
 
+		removeOnLocaleChangedListener()
 		connectivityManager.unregisterConnectionObserver(this)
 	}
 }

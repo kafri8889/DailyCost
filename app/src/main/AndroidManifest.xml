@@ -18,7 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.DailyCost"
+        android:theme="@style/Theme.DailyCost.Starting"
         tools:targetApi="31">
 
         <provider
@@ -45,7 +45,7 @@
             android:name=".MainActivity"
             android:launchMode="singleTask"
             android:exported="true"
-            android:theme="@style/Theme.DailyCost">
+            android:theme="@style/Theme.DailyCost.Starting">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
