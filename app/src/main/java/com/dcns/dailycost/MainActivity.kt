@@ -13,7 +13,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.util.Consumer
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
@@ -90,6 +92,15 @@ class MainActivity: LocalizedActivity() {
 
 		WindowCompat.setDecorFitsSystemWindows(window, false)
 
+		lifecycleScope.launch {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
+				// If user has logged in, sync data
+				if (userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.isLoggedIn == true) {
+					Workers.syncWorker().enqueue(this@MainActivity)
+				}
+			}
+		}
+
 		setContent {
 			CompositionLocalProvider(
 				LocalOverscrollConfiguration provides if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) null
@@ -134,13 +145,6 @@ class MainActivity: LocalizedActivity() {
 
 		// Send event to top level app
 		setOnLocaleChangedListener { dailyCostAppViewModel.sendEvent(DailyCostAppUiEvent.LanguageChanged) }
-
-		lifecycleScope.launch {
-			// If user has logged in, sync data
-			if (userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.isLoggedIn == true) {
-				Workers.syncWorker().enqueue(this@MainActivity)
-			}
-		}
 	}
 
 	override fun onStart() {

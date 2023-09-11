@@ -124,6 +124,8 @@ dependencies {
 
 	implementation(project(mapOf("path" to ":datemodule")))
 
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 	kapt ("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.6.0")
 
@@ -133,11 +135,12 @@ dependencies {
     implementation("androidx.compose.runtime:runtime:1.5.1")
     implementation("androidx.compose.runtime:runtime-livedata:${extra["compose_version"]}")
     implementation("androidx.navigation:navigation-compose:2.7.2")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
 	implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Work Manager
-    implementation("androidx.hilt:hilt-work:1.0.0")
+    implementation("androidx.hilt:hilt-work:1.1.0-alpha01")
+    implementation("androidx.work:work-runtime:2.8.1")
     implementation("androidx.work:work-runtime-ktx:2.8.1")
     implementation("androidx.work:work-multiprocess:2.8.1")
 
@@ -190,14 +193,14 @@ dependencies {
 
     // Dependency Injection
     implementation("com.google.dagger:hilt-android:2.48")
-    ksp("androidx.hilt:hilt-compiler:1.0.0")
+    ksp("androidx.hilt:hilt-compiler:1.1.0-alpha01")
     ksp("com.google.dagger:hilt-compiler:2.48")
     ksp("com.google.dagger:hilt-android-compiler:2.48")
 
     // Room
     implementation("androidx.room:room-runtime:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
-    ksp("androidx.room:room-compiler:2.5.2")
+    kapt("androidx.room:room-compiler:2.5.2")
 
 	// Firebase
 	implementation("com.google.firebase:firebase-crashlytics-ktx:18.4.1")

@@ -14,7 +14,6 @@ import com.dcns.dailycost.domain.util.GetNotificationBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.SharedUiEvent
-import com.dcns.dailycost.foundation.extension.enqueue
 import com.dcns.dailycost.foundation.worker.Workers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -195,9 +194,11 @@ class DashboardViewModel @Inject constructor(
 					return@launch
 				}
 
-				Workers.syncWorker().also {
-					_currentSyncWorkId.emit(it.id)
-				}.enqueue(action.context)
+				workManager.enqueue(
+					Workers.syncWorker().also {
+						_currentSyncWorkId.emit(it.id)
+					}
+				)
 			}
 		}
 	}
