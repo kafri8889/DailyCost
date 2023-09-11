@@ -4,7 +4,6 @@ import android.app.Application
 import android.os.Build
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import androidx.work.WorkManager
 import com.dcns.dailycost.foundation.common.NotificationManager
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
@@ -22,13 +21,13 @@ class DailyCostApplication: Application(), Configuration.Provider {
 	override fun onCreate() {
 		super.onCreate()
 
-		if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+		if (BuildConfig.DEBUG) {
+			Timber.plant(Timber.DebugTree())
+		}
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.createChannel()
         }
-
-		WorkManager.initialize(this, workManagerConfiguration)
 	}
 
 	override fun getWorkManagerConfiguration() =
