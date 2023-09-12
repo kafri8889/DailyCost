@@ -5,7 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -23,7 +21,9 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Remove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -40,7 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -144,12 +144,19 @@ private fun TransactionScreenContent(
 		)
 
 		DatePickerDialog(
+			tonalElevation = 0.dp,
+			colors = DatePickerDefaults.colors(
+				containerColor = Color(0xffF4F4F4)
+			),
 			onDismissRequest = {
 				showDatePickerDialog = false
 			},
 			confirmButton = {
 				Button(
 					enabled = datePickerState.selectedDateMillis != null,
+					colors = ButtonDefaults.buttonColors(
+						containerColor = DailyCostTheme.colorScheme.primary
+					),
 					onClick = {
 						onDateChanged(datePickerState.selectedDateMillis!!)
 						showDatePickerDialog = false
@@ -160,6 +167,9 @@ private fun TransactionScreenContent(
 			},
 			dismissButton = {
 				TextButton(
+					colors = ButtonDefaults.textButtonColors(
+						contentColor = DailyCostTheme.colorScheme.primary
+					),
 					onClick = {
 						showDatePickerDialog = false
 					}
@@ -168,7 +178,15 @@ private fun TransactionScreenContent(
 				}
 			}
 		) {
-			DatePicker(state = datePickerState)
+			DatePicker(
+				state = datePickerState,
+				colors = DatePickerDefaults.colors(
+					selectedYearContainerColor = DailyCostTheme.colorScheme.primary,
+					selectedDayContainerColor = DailyCostTheme.colorScheme.primary,
+					todayDateBorderColor = DailyCostTheme.colorScheme.primary,
+					todayContentColor = DailyCostTheme.colorScheme.primary
+				)
+			)
 		}
 	}
 
@@ -272,8 +290,6 @@ private fun TransactionScreenContent(
 					onTransactionTypeChanged = onTransactionTypeChanged,
 					modifier = Modifier
 						.fillMaxWidth(0.92f)
-						.clip(RoundedCornerShape(25))
-						.background(DailyCostTheme.colorScheme.primaryContainer.copy(alpha = 0.48f))
 				)
 			}
 		}
