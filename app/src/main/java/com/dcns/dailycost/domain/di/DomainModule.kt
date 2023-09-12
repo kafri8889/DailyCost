@@ -11,7 +11,7 @@ import com.dcns.dailycost.domain.repository.INotificationRepository
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.repository.IUserPreferenceRepository
 import com.dcns.dailycost.domain.use_case.CategoryUseCases
-import com.dcns.dailycost.domain.use_case.CombinedUseCases
+import com.dcns.dailycost.domain.use_case.CommonUseCases
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
@@ -22,8 +22,9 @@ import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.domain.use_case.category.GetLocalCategoryUseCase
 import com.dcns.dailycost.domain.use_case.category.InputLocalCategoryUseCase
-import com.dcns.dailycost.domain.use_case.combined.GetBalanceUseCase
-import com.dcns.dailycost.domain.use_case.combined.GetRecentActivityUseCase
+import com.dcns.dailycost.domain.use_case.common.CheckTokenExpiredUseCase
+import com.dcns.dailycost.domain.use_case.common.GetBalanceUseCase
+import com.dcns.dailycost.domain.use_case.common.GetRecentActivityUseCase
 import com.dcns.dailycost.domain.use_case.depo.EditDepoUseCase
 import com.dcns.dailycost.domain.use_case.depo.GetLocalBalanceUseCase
 import com.dcns.dailycost.domain.use_case.depo.GetRemoteBalanceUseCase
@@ -163,11 +164,16 @@ class DomainModule {
 	@Provides
 	@Singleton
 	fun provideCombinedUseCases(
+		userCredentialRepository: IUserCredentialRepository,
 		balanceRepository: IBalanceRepository,
 		expenseRepository: IExpenseRepository,
 		incomeRepository: IIncomeRepository,
 		noteRepository: INoteRepository
-	): CombinedUseCases = CombinedUseCases(
+	): CommonUseCases = CommonUseCases(
+		checkTokenExpiredUseCase = CheckTokenExpiredUseCase(
+			credentialRepository = userCredentialRepository,
+			balanceRepository = balanceRepository
+		),
 		getRecentActivityUseCase = GetRecentActivityUseCase(
 			expenseRepository = expenseRepository,
 			incomeRepository = incomeRepository,

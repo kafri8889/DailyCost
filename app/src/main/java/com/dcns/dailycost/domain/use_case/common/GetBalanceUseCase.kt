@@ -1,4 +1,4 @@
-package com.dcns.dailycost.domain.use_case.combined
+package com.dcns.dailycost.domain.use_case.common
 
 import com.anafthdev.datemodule.infix_function.inSameMonth
 import com.dcns.dailycost.data.WalletType

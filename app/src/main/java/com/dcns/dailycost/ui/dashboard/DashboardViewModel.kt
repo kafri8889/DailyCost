@@ -4,7 +4,7 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.dcns.dailycost.domain.use_case.CombinedUseCases
+import com.dcns.dailycost.domain.use_case.CommonUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.NotificationUseCases
@@ -35,7 +35,7 @@ class DashboardViewModel @Inject constructor(
 	private val userPreferenceUseCases: UserPreferenceUseCases,
 	private val notificationUseCases: NotificationUseCases,
 	private val connectivityManager: ConnectivityManager,
-	private val combinedUseCases: CombinedUseCases,
+	private val commonUseCases: CommonUseCases,
 	private val expenseUseCases: ExpenseUseCases,
 	private val incomeUseCases: IncomeUseCases,
 	private val sharedUiEvent: SharedUiEvent,
@@ -102,7 +102,7 @@ class DashboardViewModel @Inject constructor(
 		}
 
 		viewModelScope.launch {
-			combinedUseCases.getBalanceUseCase().collectLatest { balances ->
+			commonUseCases.getBalanceUseCase().collectLatest { balances ->
 				updateState {
 					copy(
 						balances = balances
@@ -112,7 +112,7 @@ class DashboardViewModel @Inject constructor(
 		}
 
 		viewModelScope.launch {
-			combinedUseCases.getRecentActivityUseCase().collectLatest { list ->
+			commonUseCases.getRecentActivityUseCase().collectLatest { list ->
 				updateState {
 					copy(
 						recentActivity = list
