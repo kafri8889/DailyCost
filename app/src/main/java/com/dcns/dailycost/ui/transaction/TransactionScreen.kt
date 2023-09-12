@@ -8,18 +8,14 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -30,7 +26,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,13 +41,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -73,6 +66,7 @@ import com.dcns.dailycost.foundation.common.LocalCurrency
 import com.dcns.dailycost.foundation.extension.primaryLocale
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.DailyCostTextField
+import com.dcns.dailycost.foundation.uicomponent.DailyCostTextFieldDefaults
 import com.dcns.dailycost.foundation.uicomponent.TransactionSegmentedButton
 
 @Composable
@@ -356,11 +350,20 @@ private fun TransactionScreenContent(
 				value = CommonDateFormatter.edmy(LocalContext.current.primaryLocale).format(state.date),
 				readOnly = true,
 				singleLine = true,
-				trailingIcon = if (state.actionMode.isNew()) painterResource(id = R.drawable.ic_calendar) else null,
-				onValueChange = {},
-				onTrailingIconClicked = {
-					showDatePickerDialog = true
+				trailingIcon = {
+					val icon = if (state.actionMode.isNew()) painterResource(
+						id = R.drawable.ic_calendar
+					) else null
+
+					DailyCostTextFieldDefaults.IconButton(
+						enabled = icon != null,
+						painter = icon,
+						onClick = {
+							showDatePickerDialog = true
+						}
+					)
 				},
+				onValueChange = {},
 				modifier = Modifier
 					.fillMaxWidth(0.92f)
 			)
@@ -368,26 +371,28 @@ private fun TransactionScreenContent(
 
 		item {
 			val amount = remember(state.amount) {
+				// Menambahkan titik setiap 3 digit angka
 				state.amount.toInt().toString().replace("(\\d)(?=(\\d{3})+\$)".toRegex(), "$1.")
 			}
 
-			Column(
-				verticalArrangement = Arrangement.spacedBy(8.dp),
-				modifier = Modifier
-					.fillMaxWidth(0.92f)
-			) {
-				Text(
-					text = stringResource(id = R.string.amount),
-					style = MaterialTheme.typography.titleMedium.copy(
-						fontWeight = FontWeight.SemiBold
-					)
-				)
-
-				Row(
-					verticalAlignment = Alignment.Bottom,
-					modifier = Modifier
-						.fillMaxWidth()
-				) {
+			DailyCostTextField(
+				title = stringResource(id = R.string.amount),
+				value = amount,
+				readOnly = state.actionMode.isView(),
+				singleLine = true,
+				textStyle = MaterialTheme.typography.displaySmall.copy(
+					textAlign = TextAlign.End
+				),
+				keyboardOptions = KeyboardOptions(
+					keyboardType = KeyboardType.Number,
+					imeAction = ImeAction.Done
+				),
+				keyboardActions = KeyboardActions(
+					onDone = {
+						focusManager.clearFocus()
+					}
+				),
+				leadingIcon = {
 					AnimatedContent(
 						label = "transaction icon",
 						targetState = state.selectedTransactionType,
@@ -402,51 +407,27 @@ private fun TransactionScreenContent(
 								.size(32.dp)
 						)
 					}
-
-					BasicTextField(
-						value = amount,
-						readOnly = state.actionMode.isView(),
-						cursorBrush = Brush.horizontalGradient(
-							listOf(
-								DailyCostTheme.colorScheme.primary,
-								DailyCostTheme.colorScheme.primary
-							)
-						),
-						textStyle = MaterialTheme.typography.displaySmall.copy(
-							textAlign = TextAlign.End
-						),
-						keyboardOptions = KeyboardOptions(
-							keyboardType = KeyboardType.Number,
-							imeAction = ImeAction.Done
-						),
-						keyboardActions = KeyboardActions(
-							onDone = {
-								focusManager.clearFocus()
-							}
-						),
-						onValueChange = { n ->
-							val updatedAmount = n
-								.ifEmpty { "0" }
-								.filter { it.isDigit() }
-								.toDouble()
-								.coerceAtMost(1_000_000_000.0)
-
-							onAmountChanged(updatedAmount)
-						},
-						modifier = Modifier
-							.weight(1f)
-					)
-
-					Spacer(modifier = Modifier.width(4.dp))
-
+				},
+				trailingIcon = {
 					Text(
 						text = LocalCurrency.current.countryCode,
-						style = MaterialTheme.typography.titleLarge
+						style = MaterialTheme.typography.titleLarge,
+						modifier = Modifier
+							.align(Alignment.Bottom)
 					)
-				}
+				},
+				onValueChange = { n ->
+					val updatedAmount = n
+						.ifEmpty { "0" }
+						.filter { it.isDigit() }
+						.toDouble()
+						.coerceAtMost(1_000_000_000.0)
 
-				HorizontalDivider(color = DailyCostTheme.colorScheme.outline)
-			}
+					onAmountChanged(updatedAmount)
+				},
+				modifier = Modifier
+					.fillMaxWidth(0.92f)
+			)
 		}
 
 		item {
