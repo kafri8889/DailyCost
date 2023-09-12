@@ -10,6 +10,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.util.Consumer
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
@@ -20,7 +21,6 @@ import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.DailyCostBiometricManager
 import com.dcns.dailycost.foundation.extension.enqueue
 import com.dcns.dailycost.foundation.localized.LocalizedActivity
-import com.dcns.dailycost.foundation.localized.data.OnLocaleChangedListener
 import com.dcns.dailycost.foundation.worker.Workers
 import com.dcns.dailycost.ui.app.DailyCostApp
 import com.dcns.dailycost.ui.app.DailyCostAppAction
@@ -51,8 +51,14 @@ class MainActivity: LocalizedActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
+		// Install splash screen
+		installSplashScreen().apply {
+			setKeepOnScreenCondition { dailyCostAppViewModel.state.value.userCredential == null }
+		}
+
 		// Disable crashlytics in debug mode
 		FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
+
 		if (BuildConfig.DEBUG) {
 			FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
 				val token = task.result
@@ -86,15 +92,8 @@ class MainActivity: LocalizedActivity() {
 
 		WindowCompat.setDecorFitsSystemWindows(window, false)
 
-		setListener(object: OnLocaleChangedListener {
-			override fun onChanged() {
-				// Send event to top level app
-				dailyCostAppViewModel.sendEvent(DailyCostAppUiEvent.LanguageChanged)
-			}
-		})
-
 		lifecycleScope.launch {
-			lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+			repeatOnLifecycle(Lifecycle.State.STARTED) {
 				// If user has logged in, sync data
 				if (userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.isLoggedIn == true) {
 					Workers.syncWorker().enqueue(this@MainActivity)
@@ -128,22 +127,39 @@ class MainActivity: LocalizedActivity() {
 	/**
 	 * Function yg diggunakan untuk menghandle deeplink
 	 */
-	private fun handleDeepLink(intent: Intent) {
-		intent.data?.let { uri ->
-			dailyCostAppViewModel.sendEvent(DailyCostAppUiEvent.HandleDeepLink(uri))
-			dailyCostAppViewModel.onAction(DailyCostAppAction.CanNavigate(false))
+	private fun handleDeepLink(intent: Intent) = lifecycleScope.launch {
+		userCredentialUseCases.getUserCredentialUseCase().firstOrNull()?.isLoggedIn?.let { hasLogin ->
+			// Cek apakah user sudah login, jika belom jangan di handle
+			// nanti otomatis pindah ke login screen
+			if (hasLogin) {
+				intent.data?.let { uri ->
+					dailyCostAppViewModel.sendEvent(DailyCostAppUiEvent.HandleDeepLink(uri))
+					dailyCostAppViewModel.onAction(DailyCostAppAction.CanNavigate(false))
+				}
+			}
 		}
+	}
+
+	override fun onRestart() {
+		super.onRestart()
+
+		// Send event to top level app
+		setOnLocaleChangedListener { dailyCostAppViewModel.sendEvent(DailyCostAppUiEvent.LanguageChanged) }
 	}
 
 	override fun onStart() {
 		super.onStart()
 
 		connectivityManager.registerConnectionObserver(this)
+
+		// Handle cold start (app not running) deeplink
+		intent?.let { handleDeepLink(it) }
 	}
 
 	override fun onStop() {
 		super.onStop()
 
+		removeOnLocaleChangedListener()
 		connectivityManager.unregisterConnectionObserver(this)
 	}
 }

@@ -67,15 +67,15 @@ class NoteRepository @Inject constructor(
 		noteDao.deleteNoteExcept(ids)
 	}
 
-	override fun getAllNoteLocal(): Flow<List<NoteDb>> {
+	override fun getAllLocalNote(): Flow<List<NoteDb>> {
 		return noteDao.getAllNote()
 	}
 
-	override fun getNoteByIdLocal(id: Int): Flow<NoteDb?> {
+	override fun getLocalNoteById(id: Int): Flow<NoteDb?> {
 		return noteDao.getNoteById(id)
 	}
 
-	override fun getNoteByUserIdLocal(id: Int): Flow<List<NoteDb>> {
+	override fun getLocalNoteByUserId(id: Int): Flow<List<NoteDb>> {
 		return noteDao.getNoteByUserId(id)
 	}
 }

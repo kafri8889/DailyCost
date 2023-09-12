@@ -9,7 +9,7 @@ import com.dcns.dailycost.foundation.extension.toUserCredential
 
 data class DashboardState(
 	val credential: UserCredential = ProtoUserCredential().toUserCredential(),
-	val balance: List<Balance> = emptyList(),
+	val balances: List<Balance> = emptyList(),
 	val unreadNotificationCount: Int = 0,
 	val internetConnectionAvailable: Boolean = true,
 	val initialBalanceVisibility: Boolean = false,
@@ -19,7 +19,7 @@ data class DashboardState(
 	 * - [Expense]
 	 * - [Note]
 	 */
-	val recentlyActivity: List<Any> = emptyList(),
+	val recentActivity: List<Any> = emptyList(),
 	val expenses: List<Expense> = emptyList(),
 	val incomes: List<Income> = emptyList(),
 )

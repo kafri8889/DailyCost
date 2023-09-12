@@ -77,16 +77,16 @@ interface INoteRepository {
 	/**
 	 * Dapatkan semua catatan dari database lokal
 	 */
-	fun getAllNoteLocal(): Flow<List<NoteDb>>
+	fun getAllLocalNote(): Flow<List<NoteDb>>
 
 	/**
 	 * Dapatkan catatan by id dari database lokal
 	 */
-	fun getNoteByIdLocal(id: Int): Flow<NoteDb?>
+	fun getLocalNoteById(id: Int): Flow<NoteDb?>
 
 	/**
 	 * Dapatkan catatan by user id dari database lokal
 	 */
-	fun getNoteByUserIdLocal(id: Int): Flow<List<NoteDb>>
+	fun getLocalNoteByUserId(id: Int): Flow<List<NoteDb>>
 
 }

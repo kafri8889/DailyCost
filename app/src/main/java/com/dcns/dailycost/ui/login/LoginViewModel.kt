@@ -2,6 +2,7 @@ package com.dcns.dailycost.ui.login
 
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.Resource
 import com.dcns.dailycost.data.datasource.local.AppDatabase
@@ -9,7 +10,6 @@ import com.dcns.dailycost.data.model.remote.request_body.LoginRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.data.model.remote.response.LoginResponse
 import com.dcns.dailycost.domain.repository.IBalanceRepository
-import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
@@ -19,7 +19,6 @@ import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.EmailValidator
 import com.dcns.dailycost.foundation.common.PasswordValidator
-import com.dcns.dailycost.foundation.extension.enqueue
 import com.dcns.dailycost.foundation.worker.Workers
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,8 +36,8 @@ class LoginViewModel @Inject constructor(
 	private val userBalanceRepository: IBalanceRepository,
 	private val loginRegisterUseCases: LoginRegisterUseCases,
 	private val connectivityManager: ConnectivityManager,
-	private val depoUseCases: DepoUseCases,
-	private val appDatabase: AppDatabase
+	private val appDatabase: AppDatabase,
+	private val workManager: WorkManager
 ): BaseViewModel<LoginState, LoginAction>() {
 
 	init {
@@ -235,7 +234,7 @@ class LoginViewModel @Inject constructor(
 											)
 										}
 
-										Workers.syncWorker().enqueue(action.context)
+										workManager.enqueue(Workers.syncWorker())
 
 										return@withContext
 									}

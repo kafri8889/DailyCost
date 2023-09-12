@@ -11,6 +11,7 @@ import com.dcns.dailycost.domain.repository.INotificationRepository
 import com.dcns.dailycost.domain.repository.IUserCredentialRepository
 import com.dcns.dailycost.domain.repository.IUserPreferenceRepository
 import com.dcns.dailycost.domain.use_case.CategoryUseCases
+import com.dcns.dailycost.domain.use_case.CombinedUseCases
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
@@ -21,6 +22,8 @@ import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.domain.use_case.category.GetLocalCategoryUseCase
 import com.dcns.dailycost.domain.use_case.category.InputLocalCategoryUseCase
+import com.dcns.dailycost.domain.use_case.combined.GetBalanceUseCase
+import com.dcns.dailycost.domain.use_case.combined.GetRecentActivityUseCase
 import com.dcns.dailycost.domain.use_case.depo.EditDepoUseCase
 import com.dcns.dailycost.domain.use_case.depo.GetLocalBalanceUseCase
 import com.dcns.dailycost.domain.use_case.depo.GetRemoteBalanceUseCase
@@ -155,6 +158,25 @@ class DomainModule {
 		getLocalNotificationUseCase = GetLocalNotificationUseCase(notificationRepository),
 		updateLocalNotificationUseCase = UpdateLocalNotificationUseCase(notificationRepository),
 		insertLocalNotificationUseCase = InsertLocalNotificationUseCase(notificationRepository)
+	)
+
+	@Provides
+	@Singleton
+	fun provideCombinedUseCases(
+		balanceRepository: IBalanceRepository,
+		expenseRepository: IExpenseRepository,
+		incomeRepository: IIncomeRepository,
+		noteRepository: INoteRepository
+	): CombinedUseCases = CombinedUseCases(
+		getRecentActivityUseCase = GetRecentActivityUseCase(
+			expenseRepository = expenseRepository,
+			incomeRepository = incomeRepository,
+			noteRepository = noteRepository
+		),
+		getBalanceUseCase = GetBalanceUseCase(
+			expenseRepository = expenseRepository,
+			balanceRepository = balanceRepository
+		)
 	)
 
 }

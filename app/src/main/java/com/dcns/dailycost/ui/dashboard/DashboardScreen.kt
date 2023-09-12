@@ -181,7 +181,7 @@ private fun DashboardScreenContent(
 
 			item {
 				BalanceCard(
-					balance = state.balance,
+					balance = state.balances,
 					initialBalanceVisibility = state.initialBalanceVisibility,
 					onAddWalletClicked = {
 						"Fitur belom tersedia (>‿◠)✌".toast(context)
@@ -210,7 +210,7 @@ private fun DashboardScreenContent(
 			}
 
 			items(
-				items = state.recentlyActivity,
+				items = state.recentActivity,
 				key = { item ->
 					when (item) {
 						is Income -> item.id + item.hashCode()

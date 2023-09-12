@@ -4,10 +4,7 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.anafthdev.datemodule.infix_function.inSameMonth
-import com.dcns.dailycost.data.WalletType
-import com.dcns.dailycost.data.model.Balance
-import com.dcns.dailycost.domain.use_case.DepoUseCases
+import com.dcns.dailycost.domain.use_case.CombinedUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.NotificationUseCases
@@ -15,17 +12,14 @@ import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.domain.util.GetNotificationBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
-import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.SharedUiEvent
-import com.dcns.dailycost.foundation.common.SortableByDate
-import com.dcns.dailycost.foundation.extension.enqueue
 import com.dcns.dailycost.foundation.worker.Workers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -41,10 +35,10 @@ class DashboardViewModel @Inject constructor(
 	private val userPreferenceUseCases: UserPreferenceUseCases,
 	private val notificationUseCases: NotificationUseCases,
 	private val connectivityManager: ConnectivityManager,
+	private val combinedUseCases: CombinedUseCases,
 	private val expenseUseCases: ExpenseUseCases,
 	private val incomeUseCases: IncomeUseCases,
 	private val sharedUiEvent: SharedUiEvent,
-	private val depoUseCases: DepoUseCases,
 	private val workManager: WorkManager
 ): BaseViewModel<DashboardState, DashboardAction>() {
 
@@ -53,7 +47,7 @@ class DashboardViewModel @Inject constructor(
 
 	init {
 		viewModelScope.launch {
-			sharedUiEvent.uiEvent.filterNotNull().collect { event ->
+			sharedUiEvent.uiEvent.filterNotNull().collectLatest { event ->
 				when (event) {
 					is DashboardUiEvent.TopUpSuccess -> sendEvent(event)
 				}
@@ -61,7 +55,7 @@ class DashboardViewModel @Inject constructor(
 		}
 
 		viewModelScope.launch {
-			connectivityManager.isNetworkAvailable.asFlow().collect { have ->
+			connectivityManager.isNetworkAvailable.asFlow().collectLatest { have ->
 				Timber.i("have internet: $have")
 
 				updateState {
@@ -78,7 +72,7 @@ class DashboardViewModel @Inject constructor(
 		}
 
 		viewModelScope.launch {
-			userCredentialUseCases.getUserCredentialUseCase().collect { cred ->
+			userCredentialUseCases.getUserCredentialUseCase().collectLatest { cred ->
 				updateState {
 					copy(
 						credential = cred
@@ -88,7 +82,7 @@ class DashboardViewModel @Inject constructor(
 		}
 
 		viewModelScope.launch {
-			userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
+			userPreferenceUseCases.getUserPreferenceUseCase().collectLatest { pref ->
 				updateState {
 					copy(
 						initialBalanceVisibility = pref.defaultBalanceVisibility
@@ -98,7 +92,7 @@ class DashboardViewModel @Inject constructor(
 		}
 
 		viewModelScope.launch {
-			notificationUseCases.getLocalNotificationUseCase(GetNotificationBy.Unread).collect { notifications ->
+			notificationUseCases.getLocalNotificationUseCase(GetNotificationBy.Unread).collectLatest { notifications ->
 				updateState {
 					copy(
 						unreadNotificationCount = notifications.size
@@ -107,57 +101,40 @@ class DashboardViewModel @Inject constructor(
 			}
 		}
 
-		// TODO: Pindah proses pemfilteran ke use case
 		viewModelScope.launch {
-			combine(
-				depoUseCases.getLocalBalanceUseCase(),
-				incomeUseCases.getLocalIncomeUseCase(),
-				expenseUseCases.getLocalExpenseUseCase(),
-			) { userBalance, incomes, expenses ->
-				Triple(userBalance, incomes, expenses)
-			}.collect { (userBalance, incomes, expenses) ->
-				val sorted = ((incomes as List<SortableByDate>) + (expenses as List<SortableByDate>)).sortedByDescending { it.date }
-
-				Timber.i("sorted: ${sorted.map { CommonDateFormatter.api.format(it.date) }}")
-
-				val cashMonthlyExpenses = expenses.asSequence() // Convert ke sequence
-					// Filter jika payment == cash dan tanggal berada di bulan yg sama
-					.filter { it.payment == WalletType.Cash && it.date inSameMonth System.currentTimeMillis() }
-					.sumOf { it.amount }
-
-				val ewalletMonthlyExpenses = expenses.asSequence() // Convert ke sequence
-					// Filter jika payment == e-wallet dan tanggal berada di bulan yg sama
-					.filter { it.payment == WalletType.EWallet && it.date inSameMonth System.currentTimeMillis() }
-					.sumOf { it.amount }
-
-				val bankAccountMonthlyExpenses = expenses.asSequence() // Convert ke sequence
-					// Filter jika payment == e-wallet dan tanggal berada di bulan yg sama
-					.filter { it.payment == WalletType.BankAccount && it.date inSameMonth System.currentTimeMillis() }
-					.sumOf { it.amount }
-
-				val balances = listOf(
-					Balance(
-						amount = userBalance.cash,
-						walletType = WalletType.Cash,
-						monthlyExpense = cashMonthlyExpenses
-					),
-					Balance(
-						amount = userBalance.eWallet,
-						walletType = WalletType.EWallet,
-						monthlyExpense = ewalletMonthlyExpenses
-					),
-					Balance(
-						amount = userBalance.bankAccount,
-						walletType = WalletType.BankAccount,
-						monthlyExpense = bankAccountMonthlyExpenses
-					)
-				)
-
+			combinedUseCases.getBalanceUseCase().collectLatest { balances ->
 				updateState {
 					copy(
-						recentlyActivity = sorted.take(5),
-						expenses = expenses,
-						balance = balances,
+						balances = balances
+					)
+				}
+			}
+		}
+
+		viewModelScope.launch {
+			combinedUseCases.getRecentActivityUseCase().collectLatest { list ->
+				updateState {
+					copy(
+						recentActivity = list
+					)
+				}
+			}
+		}
+
+		viewModelScope.launch {
+			expenseUseCases.getLocalExpenseUseCase().collectLatest { expenses ->
+				updateState {
+					copy(
+						expenses = expenses
+					)
+				}
+			}
+		}
+
+		viewModelScope.launch {
+			incomeUseCases.getLocalIncomeUseCase().collectLatest { incomes ->
+				updateState {
+					copy(
 						incomes = incomes
 					)
 				}
@@ -169,7 +146,7 @@ class DashboardViewModel @Inject constructor(
 				if (uuid != null) {
 					workManager.getWorkInfoByIdLiveData(uuid).asFlow()
 				} else flowOf(null)
-			}.filterNotNull().collect { workInfo ->
+			}.filterNotNull().collectLatest { workInfo ->
 				when (workInfo.state) {
 					WorkInfo.State.ENQUEUED -> {
 						updateState {
@@ -217,9 +194,11 @@ class DashboardViewModel @Inject constructor(
 					return@launch
 				}
 
-				Workers.syncWorker().also {
-					_currentSyncWorkId.emit(it.id)
-				}.enqueue(action.context)
+				workManager.enqueue(
+					Workers.syncWorker().also {
+						_currentSyncWorkId.emit(it.id)
+					}
+				)
 			}
 		}
 	}

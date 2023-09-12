@@ -19,12 +19,12 @@ class GetLocalNoteUseCase(
 		getNoteBy: GetNoteBy = GetNoteBy.All
 	): Flow<List<Note>> {
 		val flow = when (getNoteBy) {
-			is GetNoteBy.UserID -> noteRepository.getNoteByUserIdLocal(getNoteBy.userId)
-			is GetNoteBy.ID -> noteRepository.getNoteByIdLocal(getNoteBy.id)
+			is GetNoteBy.UserID -> noteRepository.getLocalNoteByUserId(getNoteBy.userId)
+			is GetNoteBy.ID -> noteRepository.getLocalNoteById(getNoteBy.id)
 				.filterNotNull() // Filter value yg tidak null
 				.map { listOf(it) }
 
-			GetNoteBy.All -> noteRepository.getAllNoteLocal()
+			GetNoteBy.All -> noteRepository.getAllLocalNote()
 		}
 
 		return flow

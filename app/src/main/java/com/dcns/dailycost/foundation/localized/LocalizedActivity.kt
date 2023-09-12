@@ -82,8 +82,12 @@ abstract class LocalizedActivity: AppCompatActivity() {
 		return currentLocale!!
 	}
 
-	fun setListener(mListener: OnLocaleChangedListener) {
+	fun setOnLocaleChangedListener(mListener: OnLocaleChangedListener) {
 		this.listener = mListener
+	}
+
+	fun removeOnLocaleChangedListener() {
+		this.listener = null
 	}
 
 	fun setLanguage(language: Language) {

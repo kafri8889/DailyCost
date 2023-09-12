@@ -18,18 +18,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.DailyCost"
+        android:theme="@style/Theme.DailyCost.Starting"
         tools:targetApi="31">
 
         <provider
-            android:exported="false"
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove">
-            <!-- If you are using androidx.startup to initialize other components -->
             <meta-data
                 android:name="androidx.work.impl.WorkManagerInitializer"
-                android:value="${applicationId}.androidx.startup"
+                android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
 
@@ -45,7 +43,7 @@
             android:name=".MainActivity"
             android:launchMode="singleTask"
             android:exported="true"
-            android:theme="@style/Theme.DailyCost">
+            android:theme="@style/Theme.DailyCost.Starting">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -54,6 +52,16 @@
 
                 <data android:scheme="daco" />
                 <data android:host="screen_route" />
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="dailycost-fe-app.vercel.app" />
             </intent-filter>
 
             <intent-filter>
