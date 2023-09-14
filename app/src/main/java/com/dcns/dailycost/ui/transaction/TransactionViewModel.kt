@@ -22,7 +22,6 @@ import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.SharedData
-import com.dcns.dailycost.foundation.extension.toJson
 import com.dcns.dailycost.foundation.worker.Workers
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,7 +53,10 @@ class TransactionViewModel @Inject constructor(
 	private val workManager: WorkManager,
 	private val sharedData: SharedData,
 	private val savedStateHandle: SavedStateHandle
-): BaseViewModel<TransactionState, TransactionAction>() {
+): BaseViewModel<TransactionState, TransactionAction>(
+	savedStateHandle,
+	TransactionState()
+) {
 
 	private val KEY_STATE = "state"
 
@@ -70,12 +72,6 @@ class TransactionViewModel @Inject constructor(
 
 	private val _currentSaveWorkId = MutableStateFlow<UUID?>(null)
 	private val currentSaveWorkId: StateFlow<UUID?> = _currentSaveWorkId
-
-	override fun onStateChange(newState: TransactionState) {
-		super.onStateChange(newState)
-		// Save state ke savedStateHandle
-		savedStateHandle[KEY_STATE] = newState.toJson()
-	}
 
 	init {
 		// Restore state dari saved state handle
@@ -206,8 +202,6 @@ class TransactionViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): TransactionState = TransactionState()
 
 	override fun onAction(action: TransactionAction) {
 		when (action) {

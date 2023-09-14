@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.setting
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
@@ -11,9 +12,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
+	private val savedStateHandle: SavedStateHandle,
 	private val userCredentialUseCases: UserCredentialUseCases,
 	private val userPreferenceUseCases: UserPreferenceUseCases,
-): BaseViewModel<SettingState, SettingAction>() {
+): BaseViewModel<SettingState, SettingAction>(savedStateHandle, SettingState()) {
 
 	init {
 		viewModelScope.launch {
@@ -38,8 +40,6 @@ class SettingViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): SettingState = SettingState()
 
 	override fun onAction(action: SettingAction) {
 		when (action) {

@@ -153,7 +153,9 @@ fun DailyCostApp(
 	// Dan direstore ketika user kembali ke aplikasi
 	LaunchedEffect(state.currentDestinationRoute) {
 		navBackStackEntry?.destination?.route?.let { currentRoute ->
-			if (state.currentDestinationRoute != currentRoute) navController.navigate(state.currentDestinationRoute)
+			if (state.currentDestinationRoute != currentRoute && state.currentDestinationRoute.isNotBlank()) {
+				navController.navigate(state.currentDestinationRoute)
+			}
 		}
 	}
 

@@ -1,5 +1,6 @@
 package com.dcns.dailycost.foundation.localized
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.domain.util.EditUserPreferenceType
@@ -10,8 +11,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LocalizedViewModel @Inject constructor(
-	private val userPreferenceUseCases: UserPreferenceUseCases
-): BaseViewModel<LocalizedState, LocalizedAction>() {
+	private val userPreferenceUseCases: UserPreferenceUseCases,
+	savedStateHandle: SavedStateHandle
+): BaseViewModel<LocalizedState, LocalizedAction>(savedStateHandle, LocalizedState()) {
 
 	init {
 		viewModelScope.launch {
@@ -26,8 +28,6 @@ class LocalizedViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): LocalizedState = LocalizedState()
 
 	override fun onAction(action: LocalizedAction) {
 		when (action) {

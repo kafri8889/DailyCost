@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.login
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
@@ -31,6 +32,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+	private val savedStateHandle: SavedStateHandle,
 	private val userPreferenceUseCases: UserPreferenceUseCases,
 	private val userCredentialUseCases: UserCredentialUseCases,
 	private val userBalanceRepository: IBalanceRepository,
@@ -38,7 +40,7 @@ class LoginViewModel @Inject constructor(
 	private val connectivityManager: ConnectivityManager,
 	private val appDatabase: AppDatabase,
 	private val workManager: WorkManager
-): BaseViewModel<LoginState, LoginAction>() {
+): BaseViewModel<LoginState, LoginAction>(savedStateHandle, LoginState()) {
 
 	init {
 		viewModelScope.launch {
@@ -68,8 +70,6 @@ class LoginViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): LoginState = LoginState()
 
 	override fun onAction(action: LoginAction) {
 		when (action) {

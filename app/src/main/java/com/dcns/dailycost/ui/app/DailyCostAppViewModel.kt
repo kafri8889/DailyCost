@@ -26,7 +26,7 @@ class DailyCostAppViewModel @Inject constructor(
 	private val depoUseCases: DepoUseCases,
 	private val connectivityManager: ConnectivityManager,
 	private val savedStateHandle: SavedStateHandle
-): BaseViewModel<DailyCostAppState, DailyCostAppAction>() {
+): BaseViewModel<DailyCostAppState, DailyCostAppAction>(savedStateHandle, DailyCostAppState()) {
 
 	private val KEY_CURRENT_ROUTE = "current_route"
 
@@ -103,8 +103,6 @@ class DailyCostAppViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): DailyCostAppState = DailyCostAppState()
 
 	override fun onAction(action: DailyCostAppAction) {
 		when (action) {

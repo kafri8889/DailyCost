@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.register
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.R
@@ -20,9 +21,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
+	private val savedStateHandle: SavedStateHandle,
 	private val loginRegisterUseCases: LoginRegisterUseCases,
 	private val connectivityManager: ConnectivityManager,
-): BaseViewModel<RegisterState, RegisterAction>() {
+): BaseViewModel<RegisterState, RegisterAction>(savedStateHandle, RegisterState()) {
 
 	init {
 		viewModelScope.launch {
@@ -42,8 +44,6 @@ class RegisterViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): RegisterState = RegisterState()
 
 	override fun onAction(action: RegisterAction) {
 		when (action) {

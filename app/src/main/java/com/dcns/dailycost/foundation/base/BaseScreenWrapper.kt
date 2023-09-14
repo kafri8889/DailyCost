@@ -29,7 +29,7 @@ import kotlinx.coroutines.withContext
  * @author kafri8889
  */
 @Composable
-fun <STATE, ACTION> BaseScreenWrapper(
+fun <STATE: Any, ACTION> BaseScreenWrapper(
 	viewModel: BaseViewModel<STATE, ACTION>,
 	modifier: Modifier = Modifier,
 	onEvent: (UiEvent) -> Unit = {},
