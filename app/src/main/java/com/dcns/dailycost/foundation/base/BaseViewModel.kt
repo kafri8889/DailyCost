@@ -10,6 +10,10 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+interface OnStateChange<STATE> {
+	fun onStateChange(newState: STATE) {}
+}
+
 /**
  *  kelas dasar (base class) untuk view model.
  *  Ini berarti kelas ini memberikan kerangka dasar untuk view model
@@ -17,7 +21,7 @@ import kotlinx.coroutines.launch
  *
  *  @author kafri8889
  */
-abstract class BaseViewModel<STATE, ACTION>: ViewModel() {
+abstract class BaseViewModel<STATE, ACTION>: ViewModel(), OnStateChange<STATE> {
 
 	private val _state = MutableStateFlow(this.defaultState())
 	val state: StateFlow<STATE> = _state
@@ -33,7 +37,7 @@ abstract class BaseViewModel<STATE, ACTION>: ViewModel() {
 	abstract fun onAction(action: ACTION)
 
 	protected fun updateState(newState: STATE.() -> STATE) {
-		_state.update(newState)
+		_state.update { newState(it).also(::onStateChange) }
 	}
 
 	fun resetEvent() {

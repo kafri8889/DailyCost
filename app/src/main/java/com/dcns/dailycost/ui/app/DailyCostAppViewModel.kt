@@ -1,7 +1,9 @@
 package com.dcns.dailycost.ui.app
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.model.UserCredential
 import com.dcns.dailycost.domain.use_case.CommonUseCases
 import com.dcns.dailycost.domain.use_case.DepoUseCases
@@ -22,10 +24,23 @@ class DailyCostAppViewModel @Inject constructor(
 	private val userCredentialUseCases: UserCredentialUseCases,
 	private val commonUseCases: CommonUseCases,
 	private val depoUseCases: DepoUseCases,
-	private val connectivityManager: ConnectivityManager
+	private val connectivityManager: ConnectivityManager,
+	private val savedStateHandle: SavedStateHandle
 ): BaseViewModel<DailyCostAppState, DailyCostAppAction>() {
 
+	private val KEY_CURRENT_ROUTE = "current_route"
+
 	init {
+		viewModelScope.launch {
+			savedStateHandle.getStateFlow(KEY_CURRENT_ROUTE, TopLevelDestinations.Home.dashboard.route).collect { route ->
+				updateState {
+					copy(
+						currentDestinationRoute = route
+					)
+				}
+			}
+		}
+
 		viewModelScope.launch {
 			userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
 				updateState {
@@ -94,13 +109,8 @@ class DailyCostAppViewModel @Inject constructor(
 	override fun onAction(action: DailyCostAppAction) {
 		when (action) {
 			is DailyCostAppAction.UpdateCurrentDestinationRoute -> {
-				viewModelScope.launch {
-					updateState {
-						copy(
-							currentDestinationRoute = action.route
-						)
-					}
-				}
+				// Save the current route to saveStateHandle so it can survive system process death
+				savedStateHandle[KEY_CURRENT_ROUTE] = action.route
 			}
 			is DailyCostAppAction.IsBiometricAuthenticated -> {
 				viewModelScope.launch {

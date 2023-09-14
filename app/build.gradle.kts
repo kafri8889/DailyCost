@@ -187,7 +187,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:${extra["lifecycle_version"]}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${extra["lifecycle_version"]}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${extra["lifecycle_version"]}")
-	implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2")
+	implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:${extra["lifecycle_version"]}")
+	implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${extra["lifecycle_version"]}")
 	implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     kapt("androidx.lifecycle:lifecycle-common-java8:${extra["lifecycle_version"]}")
 
