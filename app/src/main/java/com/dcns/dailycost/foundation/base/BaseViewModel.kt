@@ -10,10 +10,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  *  kelas dasar (base class) untuk view model.
@@ -42,11 +43,14 @@ abstract class BaseViewModel<STATE: Any, ACTION>(
 	private val _state = MutableStateFlow(defaultState)
 	val state: StateFlow<STATE> = _state
 
+	private var lastState = toJson(defaultState)
+
 	init {
 	    viewModelScope.launch {
 			savedStateHandle.getStateFlow(KEY_STATE, "")
-				.filterNot { it.isBlank() }
+				.filter { it.isNotBlank() && it != lastState }
 				.collectLatest { json ->
+					Timber.i("update state (${json == lastState}): ${defaultState::class.java.simpleName} | $json <-----> $lastState")
 					_state.update { fromJson(json) }
 				}
 		}
@@ -63,6 +67,7 @@ abstract class BaseViewModel<STATE: Any, ACTION>(
 	protected fun updateState(newState: STATE.() -> STATE) {
 		savedStateHandle.get<String>(KEY_STATE)?.let { json ->
 			val mJson = json.ifBlank { toJson(defaultState) }
+			lastState = mJson
 			savedStateHandle[KEY_STATE] = toJson(newState(fromJson(mJson)))
 		}
 	}
