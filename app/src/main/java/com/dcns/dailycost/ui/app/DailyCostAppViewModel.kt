@@ -54,16 +54,6 @@ class DailyCostAppViewModel @Inject constructor(
 		}
 
 		viewModelScope.launch {
-			depoUseCases.getLocalBalanceUseCase().collect { balance ->
-				updateState {
-					copy(
-						userBalance = balance
-					)
-				}
-			}
-		}
-
-		viewModelScope.launch {
 			userCredentialUseCases.getUserCredentialUseCase().combine(
 				connectivityManager.isNetworkAvailable.asFlow()
 			) { cred, have ->

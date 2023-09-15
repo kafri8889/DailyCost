@@ -1,6 +1,8 @@
 package com.dcns.dailycost.data.model
 
+import android.os.Parcelable
 import com.dcns.dailycost.data.WalletType
+import kotlinx.parcelize.Parcelize
 
 /**
  * Class ini berisi
@@ -8,6 +10,7 @@ import com.dcns.dailycost.data.WalletType
  * - saldo
  * - pengeluaran bulanan
  */
+@Parcelize
 data class Balance(
 	val amount: Double,
 	val walletType: WalletType,
@@ -15,4 +18,4 @@ data class Balance(
 	 * Pengeluaran bulan ini
 	 */
 	val monthlyExpense: Double,
-)
+): Parcelable

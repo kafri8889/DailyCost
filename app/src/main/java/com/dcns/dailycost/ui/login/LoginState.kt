@@ -1,5 +1,9 @@
 package com.dcns.dailycost.ui.login
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class LoginState(
 	val internetConnectionAvailable: Boolean = true,
 	/**
@@ -17,4 +21,4 @@ data class LoginState(
 	val emailError: String? = null,
 	val password: String = "",
 	val email: String = "",
-)
+): Parcelable

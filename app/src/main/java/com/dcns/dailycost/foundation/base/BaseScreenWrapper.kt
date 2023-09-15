@@ -1,5 +1,6 @@
 package com.dcns.dailycost.foundation.base
 
+import android.os.Parcelable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Scaffold
@@ -29,7 +30,7 @@ import kotlinx.coroutines.withContext
  * @author kafri8889
  */
 @Composable
-fun <STATE: Any, ACTION> BaseScreenWrapper(
+fun <STATE: Parcelable, ACTION> BaseScreenWrapper(
 	viewModel: BaseViewModel<STATE, ACTION>,
 	modifier: Modifier = Modifier,
 	onEvent: (UiEvent) -> Unit = {},

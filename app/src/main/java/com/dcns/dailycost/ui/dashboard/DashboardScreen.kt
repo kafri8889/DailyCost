@@ -220,6 +220,7 @@ private fun DashboardScreenContent(
 					}
 				}
 			) { any ->
+				Timber.i("perin: ${any}")
 				val anyModifier = Modifier
 					.fillMaxWidth()
 					.padding(horizontal = 16.dp)

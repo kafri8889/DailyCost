@@ -1,20 +1,18 @@
 package com.dcns.dailycost.foundation.base
 
+import android.os.Parcelable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 /**
  *  kelas dasar (base class) untuk view model.
@@ -26,7 +24,7 @@ import timber.log.Timber
  *
  *  @author kafri8889
  */
-abstract class BaseViewModel<STATE: Any, ACTION>(
+abstract class BaseViewModel<STATE: Parcelable, ACTION>(
 	private val savedStateHandle: SavedStateHandle,
 	private val defaultState: STATE
 ): ViewModel() {
@@ -43,32 +41,20 @@ abstract class BaseViewModel<STATE: Any, ACTION>(
 	private val _state = MutableStateFlow(defaultState)
 	val state: StateFlow<STATE> = _state
 
-	private var lastState = toJson(defaultState)
-
 	init {
-	    viewModelScope.launch {
-			savedStateHandle.getStateFlow(KEY_STATE, "")
-				.filter { it.isNotBlank() && it != lastState }
-				.collectLatest { json ->
-					Timber.i("update state (${json == lastState}): ${defaultState::class.java.simpleName} | $json <-----> $lastState")
-					_state.update { fromJson(json) }
+		viewModelScope.launch {
+			savedStateHandle.getStateFlow(KEY_STATE, defaultState)
+				.collectLatest { state ->
+					_state.update { state }
 				}
 		}
 	}
 
-	private fun fromJson(json: String): STATE {
-		return Gson().fromJson(json, defaultState::class.java)
-	}
-
-	private fun <STATE> toJson(state: STATE): String = Gson().toJson(state)
-
 	abstract fun onAction(action: ACTION)
 
 	protected fun updateState(newState: STATE.() -> STATE) {
-		savedStateHandle.get<String>(KEY_STATE)?.let { json ->
-			val mJson = json.ifBlank { toJson(defaultState) }
-			lastState = mJson
-			savedStateHandle[KEY_STATE] = toJson(newState(fromJson(mJson)))
+		savedStateHandle.get<STATE>(KEY_STATE)?.let { state ->
+			savedStateHandle[KEY_STATE] = newState(state)
 		}
 	}
 
