@@ -1,6 +1,5 @@
 package com.dcns.dailycost.ui.login
 
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -70,7 +69,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
-import com.dcns.dailycost.data.Status
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.defaultNavOptionsBuilder
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
@@ -82,7 +80,6 @@ import com.maxkeppeler.sheets.state.StateDialog
 import com.maxkeppeler.sheets.state.models.ProgressIndicator
 import com.maxkeppeler.sheets.state.models.State
 import com.maxkeppeler.sheets.state.models.StateConfig
-import timber.log.Timber
 
 @Preview(showSystemUi = true)
 @Composable
@@ -125,37 +122,18 @@ fun LoginScreen(
 		viewModel.onAction(LoginAction.ClearData(context))
 	}
 
-	LaunchedEffect(state.resource) {
-		when (state.resource?.status) {
-			Status.Success -> {
-				context.getString(R.string.login_success).toast(context)
+	LaunchedEffect(state.isSuccess, state.isLoading) {
+		if (state.isLoading) useCaseState.show() else useCaseState.hide()
+		if (state.isSuccess) {
+			context.getString(R.string.login_success).toast(context)
 
-				useCaseState.hide()
-
-				navigationActions.navigateTo(
-					destination = TopLevelDestinations.Home.dashboard,
-					builder = defaultNavOptionsBuilder(
-						popTo = TopLevelDestinations.LoginRegister.login,
-						inclusivePopUpTo = true
-					)
+			navigationActions.navigateTo(
+				destination = TopLevelDestinations.Home.dashboard,
+				builder = defaultNavOptionsBuilder(
+					popTo = TopLevelDestinations.LoginRegister.login,
+					inclusivePopUpTo = true
 				)
-
-				Timber.i("Login success")
-			}
-
-			Status.Error -> {
-				Timber.i("Login error: ${state.resource?.message}")
-
-				state.resource?.message.toast(context, Toast.LENGTH_LONG)
-
-				useCaseState.hide()
-			}
-
-			Status.Loading -> {
-				useCaseState.show()
-			}
-
-			else -> {}
+			)
 		}
 	}
 

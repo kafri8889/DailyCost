@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.register
 
+import android.widget.Toast
 import androidx.compose.material3.SnackbarDuration
 import com.dcns.dailycost.R
 import com.dcns.dailycost.foundation.base.UiEvent
@@ -13,5 +14,10 @@ sealed class RegisterUiEvent: UiEvent() {
 		override val duration: SnackbarDuration = SnackbarDuration.Short,
 		override val data: Any? = null,
 	): ShowSnackbar(message, actionLabel, withDismissAction, duration, data)
+
+	class Error(
+		override val message: String,
+		override val length: Int = Toast.LENGTH_LONG
+	): ShowToast(message, length)
 
 }
