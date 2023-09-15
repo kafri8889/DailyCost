@@ -1,10 +1,10 @@
 package com.dcns.dailycost.ui.login
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
 import com.dcns.dailycost.R
-import com.dcns.dailycost.data.Resource
 import com.dcns.dailycost.data.datasource.local.AppDatabase
 import com.dcns.dailycost.data.model.remote.request_body.LoginRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
@@ -16,6 +16,7 @@ import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.domain.util.EditUserCredentialType
 import com.dcns.dailycost.domain.util.EditUserPreferenceType
 import com.dcns.dailycost.foundation.base.BaseViewModel
+import com.dcns.dailycost.foundation.base.UiEvent
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.EmailValidator
 import com.dcns.dailycost.foundation.common.PasswordValidator
@@ -31,6 +32,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+	private val savedStateHandle: SavedStateHandle,
 	private val userPreferenceUseCases: UserPreferenceUseCases,
 	private val userCredentialUseCases: UserCredentialUseCases,
 	private val userBalanceRepository: IBalanceRepository,
@@ -38,7 +40,7 @@ class LoginViewModel @Inject constructor(
 	private val connectivityManager: ConnectivityManager,
 	private val appDatabase: AppDatabase,
 	private val workManager: WorkManager
-): BaseViewModel<LoginState, LoginAction>() {
+): BaseViewModel<LoginState, LoginAction>(savedStateHandle, LoginState()) {
 
 	init {
 		viewModelScope.launch {
@@ -68,8 +70,6 @@ class LoginViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): LoginState = LoginState()
 
 	override fun onAction(action: LoginAction) {
 		when (action) {
@@ -196,7 +196,7 @@ class LoginViewModel @Inject constructor(
 					if (emailErrorMessage == null && passwordErrorMessage == null) {
 						updateState {
 							copy(
-								resource = Resource.loading(null)
+								isLoading = true
 							)
 						}
 
@@ -230,7 +230,8 @@ class LoginViewModel @Inject constructor(
 
 										updateState {
 											copy(
-												resource = Resource.success(body)
+												isSuccess = true,
+												isLoading = false
 											)
 										}
 
@@ -246,18 +247,22 @@ class LoginViewModel @Inject constructor(
 										ErrorResponse::class.java
 									)
 
+									sendEvent(LoginUiEvent.Error(errorResponse.message))
 									updateState {
 										copy(
-											resource = Resource.error(errorResponse.message, errorResponse)
+											isSuccess = false,
+											isLoading = false
 										)
 									}
 								}
 							}
 						} catch (e: SocketTimeoutException) {
 							Timber.e(e, "Socket time out")
+							sendEvent(LoginUiEvent.Error(UiEvent.asStringResource(R.string.connection_time_out)))
 							updateState {
 								copy(
-									resource = Resource.error(action.context.getString(R.string.connection_time_out), null)
+									isSuccess = false,
+									isLoading = false
 								)
 							}
 						} catch (e: Exception) {

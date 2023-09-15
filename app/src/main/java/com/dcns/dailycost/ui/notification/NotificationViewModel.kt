@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.notification
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.domain.use_case.NotificationUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
@@ -10,8 +11,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
+	private val savedStateHandle: SavedStateHandle,
 	private val notificationUseCases: NotificationUseCases
-): BaseViewModel<NotificationState, NotificationAction>() {
+): BaseViewModel<NotificationState, NotificationAction>(savedStateHandle, NotificationState()) {
 
 	init {
 	    viewModelScope.launch {
@@ -24,8 +26,6 @@ class NotificationViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): NotificationState = NotificationState()
 
 	override fun onAction(action: NotificationAction) {
 		when (action) {

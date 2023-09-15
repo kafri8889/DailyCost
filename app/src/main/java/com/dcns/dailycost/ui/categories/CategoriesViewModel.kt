@@ -24,7 +24,7 @@ class CategoriesViewModel @Inject constructor(
 	private val categoryUseCases: CategoryUseCases,
 	private val sharedData: SharedData,
 	savedStateHandle: SavedStateHandle
-): BaseViewModel<CategoriesState, CategoriesAction>() {
+): BaseViewModel<CategoriesState, CategoriesAction>(savedStateHandle, CategoriesState()) {
 
 	private val deliveredCategoriesScreenMode =
 		savedStateHandle.getStateFlow<CategoriesScreenMode?>(DestinationArgument.CATEGORIES_SCREEN_MODE, null)
@@ -66,8 +66,6 @@ class CategoriesViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): CategoriesState = CategoriesState()
 
 	override fun onAction(action: CategoriesAction) {
 		when (action) {

@@ -148,6 +148,17 @@ fun DailyCostApp(
 		}
 	}
 
+	// Digunakan untuk menavigasi ke route yang disimpan di savedStateHandle.
+	// Ketika aplikasi dikill oleh sistem, currentRoute akan disimpan di savedStateHandle
+	// Dan direstore ketika user kembali ke aplikasi
+	LaunchedEffect(state.currentDestinationRoute) {
+		navBackStackEntry?.destination?.route?.let { currentRoute ->
+			if (state.currentDestinationRoute != currentRoute && state.currentDestinationRoute.isNotBlank()) {
+				navController.navigate(state.currentDestinationRoute)
+			}
+		}
+	}
+
 	LaunchedEffect(state.isSecureAppEnabled, state.isBiometricAuthenticated) {
 		val canAuth = DailyCostBiometricManager.canAuthenticateWithAuthenticators(context)
 

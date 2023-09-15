@@ -1,11 +1,19 @@
 package com.dcns.dailycost.ui.login
 
-import com.dcns.dailycost.data.Resource
-import com.dcns.dailycost.foundation.common.IResponse
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class LoginState(
 	val internetConnectionAvailable: Boolean = true,
-	val resource: Resource<IResponse?>? = null,
+	/**
+	 * Ketika user menekan tombol login dan sedang menunggu respone API
+	 */
+	val isLoading: Boolean = false,
+	/**
+	 * `true` jika login berhasil, false otherwise
+	 */
+	val isSuccess: Boolean = false,
 	val isFirstInstall: Boolean = false,
 	val showPassword: Boolean = false,
 	val rememberMe: Boolean = false,
@@ -13,4 +21,4 @@ data class LoginState(
 	val emailError: String? = null,
 	val password: String = "",
 	val email: String = "",
-)
+): Parcelable

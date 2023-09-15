@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.onboarding
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.R
 import com.dcns.dailycost.foundation.base.BaseViewModel
@@ -9,10 +10,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
-
-): BaseViewModel<OnboardingState, OnboardingAction>() {
-
-	override fun defaultState(): OnboardingState = OnboardingState()
+	private val savedStateHandle: SavedStateHandle
+): BaseViewModel<OnboardingState, OnboardingAction>(savedStateHandle, OnboardingState()) {
 
 	override fun onAction(action: OnboardingAction) {
 		when (action) {

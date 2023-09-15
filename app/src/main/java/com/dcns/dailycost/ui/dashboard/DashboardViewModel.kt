@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.dashboard
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
@@ -31,6 +32,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
+	private val savedStateHandle: SavedStateHandle,
 	private val userCredentialUseCases: UserCredentialUseCases,
 	private val userPreferenceUseCases: UserPreferenceUseCases,
 	private val notificationUseCases: NotificationUseCases,
@@ -40,7 +42,7 @@ class DashboardViewModel @Inject constructor(
 	private val incomeUseCases: IncomeUseCases,
 	private val sharedUiEvent: SharedUiEvent,
 	private val workManager: WorkManager
-): BaseViewModel<DashboardState, DashboardAction>() {
+): BaseViewModel<DashboardState, DashboardAction>(savedStateHandle, DashboardState()) {
 
 	private val _currentSyncWorkId = MutableStateFlow<UUID?>(null)
 	private val currentSyncWorkId: StateFlow<UUID?> = _currentSyncWorkId
@@ -182,8 +184,6 @@ class DashboardViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): DashboardState = DashboardState()
 
 	override fun onAction(action: DashboardAction) {
 		when (action) {

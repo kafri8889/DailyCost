@@ -5,7 +5,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 
-abstract class RetrofitRequestBody: Jsonable() {
+abstract class RetrofitRequestBody {
 
 	abstract fun getBody(): Map<String, Any>
 

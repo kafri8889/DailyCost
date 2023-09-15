@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.change_language
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
 import com.dcns.dailycost.domain.util.EditUserPreferenceType
@@ -10,8 +11,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChangeLanguageViewModel @Inject constructor(
-	private val userPreferenceUseCases: UserPreferenceUseCases
-): BaseViewModel<ChangeLanguageState, ChangeLanguageAction>() {
+	private val userPreferenceUseCases: UserPreferenceUseCases,
+	savedStateHandle: SavedStateHandle
+): BaseViewModel<ChangeLanguageState, ChangeLanguageAction>(savedStateHandle, ChangeLanguageState()) {
 
 	init {
 		viewModelScope.launch {
@@ -24,8 +26,6 @@ class ChangeLanguageViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): ChangeLanguageState = ChangeLanguageState()
 
 	override fun onAction(action: ChangeLanguageAction) {
 		when (action) {
