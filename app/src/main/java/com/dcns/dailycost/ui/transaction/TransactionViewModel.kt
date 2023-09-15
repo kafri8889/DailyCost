@@ -23,15 +23,12 @@ import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.SharedData
 import com.dcns.dailycost.foundation.worker.Workers
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapMerge
@@ -57,9 +54,6 @@ class TransactionViewModel @Inject constructor(
 	savedStateHandle,
 	TransactionState()
 ) {
-
-	private val KEY_STATE = "state"
-
 	private val deliveredTransactionId =
 		savedStateHandle.getStateFlow<Int?>(DestinationArgument.TRANSACTION_ID, null)
 	private val deliveredActionMode =
@@ -74,17 +68,6 @@ class TransactionViewModel @Inject constructor(
 	private val currentSaveWorkId: StateFlow<UUID?> = _currentSaveWorkId
 
 	init {
-		// Restore state dari saved state handle
-		viewModelScope.launch {
-			savedStateHandle.getStateFlow(KEY_STATE, "")
-				.filterNot { it.isBlank() }
-				.collectLatest { mState ->
-					Gson().fromJson(mState, TransactionState::class.java)?.let { newState ->
-						if (newState != state.value) updateState { newState }
-					}
-				}
-		}
-
 		viewModelScope.launch(Dispatchers.IO) {
 			deliveredTransactionId
 				.filterNotNull()

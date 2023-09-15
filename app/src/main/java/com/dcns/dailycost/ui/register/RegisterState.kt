@@ -1,5 +1,9 @@
 package com.dcns.dailycost.ui.register
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class RegisterState(
 	val internetConnectionAvailable: Boolean = true,
 	/**
@@ -17,4 +21,4 @@ data class RegisterState(
 	val password: String = "",
 	val email: String = "",
 	val username: String = "",
-)
+): Parcelable
