@@ -1,8 +1,11 @@
 package com.dcns.dailycost.ui.app
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.model.UserCredential
+import com.dcns.dailycost.domain.use_case.CommonUseCases
 import com.dcns.dailycost.domain.use_case.DepoUseCases
 import com.dcns.dailycost.domain.use_case.UserCredentialUseCases
 import com.dcns.dailycost.domain.use_case.UserPreferenceUseCases
@@ -13,18 +16,31 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 @HiltViewModel
 class DailyCostAppViewModel @Inject constructor(
 	private val userPreferenceUseCases: UserPreferenceUseCases,
 	private val userCredentialUseCases: UserCredentialUseCases,
+	private val commonUseCases: CommonUseCases,
+	private val depoUseCases: DepoUseCases,
 	private val connectivityManager: ConnectivityManager,
-	private val depoUseCases: DepoUseCases
-): BaseViewModel<DailyCostAppState, DailyCostAppAction>() {
+	private val savedStateHandle: SavedStateHandle
+): BaseViewModel<DailyCostAppState, DailyCostAppAction>(savedStateHandle, DailyCostAppState()) {
+
+	private val KEY_CURRENT_ROUTE = "current_route"
 
 	init {
+		viewModelScope.launch {
+			savedStateHandle.getStateFlow(KEY_CURRENT_ROUTE, TopLevelDestinations.Home.dashboard.route).collect { route ->
+				updateState {
+					copy(
+						currentDestinationRoute = route
+					)
+				}
+			}
+		}
+
 		viewModelScope.launch {
 			userPreferenceUseCases.getUserPreferenceUseCase().collect { pref ->
 				updateState {
@@ -32,16 +48,6 @@ class DailyCostAppViewModel @Inject constructor(
 						isSecureAppEnabled = pref.secureApp,
 						isFirstInstall = !pref.isNotFirstInstall,
 						language = pref.language
-					)
-				}
-			}
-		}
-
-		viewModelScope.launch {
-			depoUseCases.getLocalBalanceUseCase().collect { balance ->
-				updateState {
-					copy(
-						userBalance = balance
 					)
 				}
 			}
@@ -74,43 +80,25 @@ class DailyCostAppViewModel @Inject constructor(
 			)
 		}
 
-		try {
-			depoUseCases.getRemoteBalanceUseCase(
-				token = credential.getAuthToken(),
-				userId = credential.id.toIntOrNull() ?: -1
-			).let { response ->
-				if (!response.isSuccessful && credential.allNotEmpty) {
-					sendEvent(DailyCostAppUiEvent.TokenExpired)
+		if (commonUseCases.checkTokenExpiredUseCase()) {
+			sendEvent(DailyCostAppUiEvent.TokenExpired)
 
-					// Clear credential
-					with(userCredentialUseCases.editUserCredentialUseCase) {
-						invoke(EditUserCredentialType.ID(""))
-						invoke(EditUserCredentialType.Name(""))
-						invoke(EditUserCredentialType.Email(""))
-						invoke(EditUserCredentialType.Token(""))
-						invoke(EditUserCredentialType.Password(""))
-					}
-				}
+			// Clear credential
+			with(userCredentialUseCases.editUserCredentialUseCase) {
+				invoke(EditUserCredentialType.ID(""))
+				invoke(EditUserCredentialType.Name(""))
+				invoke(EditUserCredentialType.Email(""))
+				invoke(EditUserCredentialType.Token(""))
+				invoke(EditUserCredentialType.Password(""))
 			}
-		} catch (e: SocketTimeoutException) {
-			Timber.e(e, "Socket time out")
-		} catch (e: Exception) {
-			Timber.e(e)
 		}
 	}
-
-	override fun defaultState(): DailyCostAppState = DailyCostAppState()
 
 	override fun onAction(action: DailyCostAppAction) {
 		when (action) {
 			is DailyCostAppAction.UpdateCurrentDestinationRoute -> {
-				viewModelScope.launch {
-					updateState {
-						copy(
-							currentDestinationRoute = action.route
-						)
-					}
-				}
+				// Save the current route to saveStateHandle so it can survive system process death
+				savedStateHandle[KEY_CURRENT_ROUTE] = action.route
 			}
 			is DailyCostAppAction.IsBiometricAuthenticated -> {
 				viewModelScope.launch {

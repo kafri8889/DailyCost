@@ -1,11 +1,15 @@
 package com.dcns.dailycost.foundation.base
 
+import android.os.Parcelable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -15,12 +19,18 @@ import kotlinx.coroutines.launch
  *  Ini berarti kelas ini memberikan kerangka dasar untuk view model
  *  yang akan diturunkan (derived) oleh kelas-kelas lain.
  *
+ *  @param savedStateHandle savedStateHandle yang digunakan untuk menyimpan state
+ *  @param defaultState default state
+ *
  *  @author kafri8889
  */
-abstract class BaseViewModel<STATE, ACTION>: ViewModel() {
+abstract class BaseViewModel<STATE: Parcelable, ACTION>(
+	private val savedStateHandle: SavedStateHandle,
+	private val defaultState: STATE
+): ViewModel() {
 
-	private val _state = MutableStateFlow(this.defaultState())
-	val state: StateFlow<STATE> = _state
+	private val KEY_STATE = "state"
+	private val typeToken = object : TypeToken<STATE>() {}
 
 	private val _uiEvent = Channel<UiEvent?>()
 	val uiEvent: Flow<UiEvent?> = _uiEvent.receiveAsFlow()
@@ -28,12 +38,24 @@ abstract class BaseViewModel<STATE, ACTION>: ViewModel() {
 	private val _uiEventResult = Channel<UiEventResult?>()
 	val uiEventResult: Flow<UiEventResult?> = _uiEventResult.receiveAsFlow()
 
-	protected abstract fun defaultState(): STATE
+	private val _state = MutableStateFlow(defaultState)
+	val state: StateFlow<STATE> = _state
+
+	init {
+		viewModelScope.launch {
+			savedStateHandle.getStateFlow(KEY_STATE, defaultState)
+				.collectLatest { state ->
+					_state.update { state }
+				}
+		}
+	}
 
 	abstract fun onAction(action: ACTION)
 
 	protected fun updateState(newState: STATE.() -> STATE) {
-		_state.update(newState)
+		savedStateHandle.get<STATE>(KEY_STATE)?.let { state ->
+			savedStateHandle[KEY_STATE] = newState(state)
+		}
 	}
 
 	fun resetEvent() {

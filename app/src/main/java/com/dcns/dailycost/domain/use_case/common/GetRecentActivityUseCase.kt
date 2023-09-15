@@ -1,4 +1,4 @@
-package com.dcns.dailycost.domain.use_case.combined
+package com.dcns.dailycost.domain.use_case.common
 
 import com.dcns.dailycost.data.model.Expense
 import com.dcns.dailycost.data.model.Income

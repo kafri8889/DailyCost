@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.note
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.data.model.Note
 import com.dcns.dailycost.domain.use_case.NoteUseCases
@@ -13,14 +14,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NoteViewModel @Inject constructor(
+	private val savedStateHandle: SavedStateHandle,
 	private val userCredentialUseCases: UserCredentialUseCases,
 	private val noteUseCases: NoteUseCases
-): BaseViewModel<NoteState, NoteAction>() {
-
-	init {
-	}
-
-	override fun defaultState(): NoteState = NoteState()
+): BaseViewModel<NoteState, NoteAction>(savedStateHandle, NoteState()) {
 
 	override fun onAction(action: NoteAction) {
 		when (action) {

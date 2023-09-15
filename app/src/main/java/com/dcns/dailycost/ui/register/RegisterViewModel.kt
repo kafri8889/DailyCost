@@ -1,16 +1,18 @@
 package com.dcns.dailycost.ui.register
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.dcns.dailycost.R
-import com.dcns.dailycost.data.Resource
 import com.dcns.dailycost.data.model.remote.request_body.RegisterRequestBody
 import com.dcns.dailycost.data.model.remote.response.ErrorResponse
 import com.dcns.dailycost.domain.use_case.LoginRegisterUseCases
 import com.dcns.dailycost.foundation.base.BaseViewModel
+import com.dcns.dailycost.foundation.base.UiEvent
 import com.dcns.dailycost.foundation.common.ConnectivityManager
 import com.dcns.dailycost.foundation.common.EmailValidator
 import com.dcns.dailycost.foundation.common.PasswordValidator
+import com.dcns.dailycost.ui.login.LoginUiEvent
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,9 +22,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
+	private val savedStateHandle: SavedStateHandle,
 	private val loginRegisterUseCases: LoginRegisterUseCases,
 	private val connectivityManager: ConnectivityManager,
-): BaseViewModel<RegisterState, RegisterAction>() {
+): BaseViewModel<RegisterState, RegisterAction>(savedStateHandle, RegisterState()) {
 
 	init {
 		viewModelScope.launch {
@@ -42,8 +45,6 @@ class RegisterViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): RegisterState = RegisterState()
 
 	override fun onAction(action: RegisterAction) {
 		when (action) {
@@ -150,7 +151,7 @@ class RegisterViewModel @Inject constructor(
 					if (emailErrorMessage == null && passwordErrorMessage == null && usernameErrorMessage == null) {
 						updateState {
 							copy(
-								resource = Resource.loading(null)
+								isLoading = true
 							)
 						}
 
@@ -165,7 +166,8 @@ class RegisterViewModel @Inject constructor(
 								if (response.isSuccessful) {
 									updateState {
 										copy(
-											resource = Resource.success(response.body())
+											isSuccess = true,
+											isLoading = false
 										)
 									}
 
@@ -179,20 +181,21 @@ class RegisterViewModel @Inject constructor(
 									ErrorResponse::class.java
 								)
 
+								sendEvent(LoginUiEvent.Error(errorResponse.message))
 								updateState {
 									copy(
-										resource = Resource.error(
-											errorResponse.message,
-											errorResponse
-										)
+										isSuccess = false,
+										isLoading = false
 									)
 								}
 							}
 						} catch (e: SocketTimeoutException) {
 							Timber.e(e, "Socket time out")
+							sendEvent(LoginUiEvent.Error(UiEvent.asStringResource(R.string.connection_time_out)))
 							updateState {
 								copy(
-									resource = Resource.error(action.context.getString(R.string.connection_time_out), null)
+									isSuccess = false,
+									isLoading = false
 								)
 							}
 						} catch (e: Exception) {

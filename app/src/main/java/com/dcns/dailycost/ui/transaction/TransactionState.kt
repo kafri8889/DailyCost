@@ -1,11 +1,14 @@
 package com.dcns.dailycost.ui.transaction
 
+import android.os.Parcelable
 import com.dcns.dailycost.data.ActionMode
 import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.data.WalletType
 import com.dcns.dailycost.data.datasource.local.LocalCategoryDataProvider
 import com.dcns.dailycost.data.model.Category
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class TransactionState(
 	// Transaction part
 	val id: Int = -1,
@@ -23,4 +26,4 @@ data class TransactionState(
 	val selectedTransactionType: TransactionType = TransactionType.Income,
 
 	val titleError: Boolean = false
-)
+): Parcelable

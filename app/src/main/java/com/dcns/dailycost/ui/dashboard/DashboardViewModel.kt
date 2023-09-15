@@ -1,10 +1,11 @@
 package com.dcns.dailycost.ui.dashboard
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.dcns.dailycost.domain.use_case.CombinedUseCases
+import com.dcns.dailycost.domain.use_case.CommonUseCases
 import com.dcns.dailycost.domain.use_case.ExpenseUseCases
 import com.dcns.dailycost.domain.use_case.IncomeUseCases
 import com.dcns.dailycost.domain.use_case.NotificationUseCases
@@ -31,16 +32,17 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
+	private val savedStateHandle: SavedStateHandle,
 	private val userCredentialUseCases: UserCredentialUseCases,
 	private val userPreferenceUseCases: UserPreferenceUseCases,
 	private val notificationUseCases: NotificationUseCases,
 	private val connectivityManager: ConnectivityManager,
-	private val combinedUseCases: CombinedUseCases,
+	private val commonUseCases: CommonUseCases,
 	private val expenseUseCases: ExpenseUseCases,
 	private val incomeUseCases: IncomeUseCases,
 	private val sharedUiEvent: SharedUiEvent,
 	private val workManager: WorkManager
-): BaseViewModel<DashboardState, DashboardAction>() {
+): BaseViewModel<DashboardState, DashboardAction>(savedStateHandle, DashboardState()) {
 
 	private val _currentSyncWorkId = MutableStateFlow<UUID?>(null)
 	private val currentSyncWorkId: StateFlow<UUID?> = _currentSyncWorkId
@@ -102,7 +104,7 @@ class DashboardViewModel @Inject constructor(
 		}
 
 		viewModelScope.launch {
-			combinedUseCases.getBalanceUseCase().collectLatest { balances ->
+			commonUseCases.getBalanceUseCase().collectLatest { balances ->
 				updateState {
 					copy(
 						balances = balances
@@ -112,7 +114,7 @@ class DashboardViewModel @Inject constructor(
 		}
 
 		viewModelScope.launch {
-			combinedUseCases.getRecentActivityUseCase().collectLatest { list ->
+			commonUseCases.getRecentActivityUseCase().collectLatest { list ->
 				updateState {
 					copy(
 						recentActivity = list
@@ -182,8 +184,6 @@ class DashboardViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): DashboardState = DashboardState()
 
 	override fun onAction(action: DashboardAction) {
 		when (action) {

@@ -49,9 +49,11 @@ class TransactionViewModel @Inject constructor(
 	private val incomeUseCases: IncomeUseCases,
 	private val workManager: WorkManager,
 	private val sharedData: SharedData,
-	savedStateHandle: SavedStateHandle
-): BaseViewModel<TransactionState, TransactionAction>() {
-
+	private val savedStateHandle: SavedStateHandle
+): BaseViewModel<TransactionState, TransactionAction>(
+	savedStateHandle,
+	TransactionState()
+) {
 	private val deliveredTransactionId =
 		savedStateHandle.getStateFlow<Int?>(DestinationArgument.TRANSACTION_ID, null)
 	private val deliveredActionMode =
@@ -183,8 +185,6 @@ class TransactionViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): TransactionState = TransactionState()
 
 	override fun onAction(action: TransactionAction) {
 		when (action) {

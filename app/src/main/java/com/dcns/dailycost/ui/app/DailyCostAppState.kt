@@ -1,13 +1,12 @@
 package com.dcns.dailycost.ui.app
 
-import com.dcns.dailycost.ProtoUserBalance
+import android.os.Parcelable
 import com.dcns.dailycost.data.Language
-import com.dcns.dailycost.data.model.UserBalance
 import com.dcns.dailycost.data.model.UserCredential
-import com.dcns.dailycost.foundation.extension.toUserBalance
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class DailyCostAppState(
-	val userBalance: UserBalance = ProtoUserBalance().toUserBalance(),
 	val userCredential: UserCredential? = null,
 	val currentDestinationRoute: String = "",
 	val language: Language = Language.English,
@@ -24,4 +23,4 @@ data class DailyCostAppState(
 	val isBiometricAuthenticated: Boolean = false,
 	val userFirstEnteredApp: Boolean = true,
 	val isFirstInstall: Boolean? = null,
-)
+): Parcelable

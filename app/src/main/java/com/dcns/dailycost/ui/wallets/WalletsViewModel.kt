@@ -16,7 +16,7 @@ import javax.inject.Inject
 class WalletsViewModel @Inject constructor(
 	private val sharedData: SharedData,
 	savedStateHandle: SavedStateHandle
-): BaseViewModel<WalletsState, WalletsAction>() {
+): BaseViewModel<WalletsState, WalletsAction>(savedStateHandle, WalletsState()) {
 
 	private val deliveredWalletsScreenMode =
 		savedStateHandle.getStateFlow(DestinationArgument.WALLETS_SCREEN_MODE, WalletsScreenMode.WalletList)
@@ -45,8 +45,6 @@ class WalletsViewModel @Inject constructor(
 			}
 		}
 	}
-
-	override fun defaultState(): WalletsState = WalletsState()
 
 	override fun onAction(action: WalletsAction) {
 		when (action) {

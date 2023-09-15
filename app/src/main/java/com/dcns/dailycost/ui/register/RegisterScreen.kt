@@ -1,6 +1,5 @@
 package com.dcns.dailycost.ui.register
 
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -60,7 +59,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.Constant
 import com.dcns.dailycost.data.NavigationActions
-import com.dcns.dailycost.data.Status
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.extension.dailyCostColor
@@ -71,7 +69,6 @@ import com.maxkeppeler.sheets.state.StateDialog
 import com.maxkeppeler.sheets.state.models.ProgressIndicator
 import com.maxkeppeler.sheets.state.models.State
 import com.maxkeppeler.sheets.state.models.StateConfig
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,31 +98,11 @@ fun RegisterScreen(
 		}
 	)
 
-	LaunchedEffect(state.resource) {
-		when (state.resource?.status) {
-			Status.Success -> {
-				Timber.i("register success")
-
-				context.getString(R.string.registration_success).toast(context)
-
-				useCaseState.hide()
-
-				navigationActions.navigateTo(TopLevelDestinations.LoginRegister.login)
-			}
-
-			Status.Error -> {
-				Timber.i("Register error: ${state.resource?.message}")
-
-				state.resource?.message.toast(context, Toast.LENGTH_LONG)
-
-				useCaseState.hide()
-			}
-
-			Status.Loading -> {
-				useCaseState.show()
-			}
-
-			else -> {}
+	LaunchedEffect(state.isSuccess, state.isLoading) {
+		if (state.isLoading) useCaseState.show() else useCaseState.hide()
+		if (state.isSuccess) {
+			context.getString(R.string.registration_success).toast(context)
+			navigationActions.navigateTo(TopLevelDestinations.LoginRegister.login)
 		}
 	}
 

@@ -26,7 +26,7 @@ import kotlin.random.Random
 class CategoryViewModel @Inject constructor(
 	private val categoryUseCases: CategoryUseCases,
 	savedStateHandle: SavedStateHandle
-): BaseViewModel<CategoryState, CategoryAction>() {
+): BaseViewModel<CategoryState, CategoryAction>(savedStateHandle, CategoryState()) {
 
 	private val deliveredCategoryId =
 		savedStateHandle.getStateFlow<Int?>(DestinationArgument.CATEGORY_ID, null)
@@ -64,8 +64,6 @@ class CategoryViewModel @Inject constructor(
 				}
 		}
 	}
-
-	override fun defaultState(): CategoryState = CategoryState()
 
 	override fun onAction(action: CategoryAction) {
 		when (action) {

@@ -1,7 +1,10 @@
 package com.dcns.dailycost.ui.onboarding
 
+import android.os.Parcelable
 import com.dcns.dailycost.R
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class OnboardingState(
 	val currentPage: Int = 1,
 	val pageCount: Int = 4,
@@ -10,4 +13,4 @@ data class OnboardingState(
 	val primaryButtonText: Int = R.string.next,
 	val secondaryButtonText: Int = R.string.skip,
 	val imageAssetPath: String = "wallet_with_cash.png"
-)
+): Parcelable
