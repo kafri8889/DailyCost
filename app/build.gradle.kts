@@ -253,6 +253,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:${extra["compose_version"]}")
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.44.2")
+//	debugImplementation("com.squareup.leakcanary:leakcanary-android:2.12") // Memory leak checker library
     debugImplementation("androidx.compose.ui:ui-tooling:${extra["compose_version"]}")
     debugImplementation("androidx.compose.ui:ui-test-manifest:${extra["compose_version"]}")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44.2")
