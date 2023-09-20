@@ -147,4 +147,5 @@
     <string name="your_financial_activities_in_graphical">Your financial activities in graphical form to make it easier to read your finances well</string>
     <string name="keep_track_of_all_your">Keep track of all your activities through recent activities</string>
     <string name="notification">Notification</string>
+    <string name="color">Color</string>
 </resources>

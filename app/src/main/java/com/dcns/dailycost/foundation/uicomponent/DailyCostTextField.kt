@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -60,6 +61,80 @@ object DailyCostTextFieldDefaults {
 		}
 	}
 
+}
+
+@Composable
+fun DailyCostTextField(
+	modifier: Modifier = Modifier,
+	focused: Boolean = false,
+	textStyle: TextStyle = LocalTextStyle.current,
+	error: Boolean = false,
+	errorText: String = "",
+	title: @Composable () -> Unit,
+	content: @Composable () -> Unit,
+	titleActionIcon: @Composable () -> Unit,
+	leadingIcon: @Composable (RowScope.() -> Unit)? = null,
+	trailingIcon: @Composable RowScope.() -> Unit = {
+		DailyCostTextFieldDefaults.IconButton(
+			enabled = false,
+			onClick = {},
+			painter = null,
+		)
+	}
+) {
+	Column(modifier = modifier) {
+		Row(verticalAlignment = Alignment.CenterVertically) {
+			ProvideTextStyle(
+				content = title,
+				value = MaterialTheme.typography.titleMedium.copy(
+					fontWeight = FontWeight.SemiBold
+				)
+			)
+
+			Spacer(modifier = Modifier.weight(1f))
+
+			titleActionIcon()
+		}
+
+		Row(
+			verticalAlignment = Alignment.CenterVertically,
+			horizontalArrangement = Arrangement.spacedBy(8.dp)
+		) {
+			leadingIcon?.invoke(this)
+
+			ProvideTextStyle(
+				content = content,
+				value = textStyle
+			)
+
+			trailingIcon()
+		}
+
+		HorizontalDivider(
+			color = when {
+				error -> MaterialTheme.colorScheme.error
+				focused -> DailyCostTheme.colorScheme.primary
+				else -> DailyCostTheme.colorScheme.outline
+			}
+		)
+
+		Spacer(modifier = Modifier.height(8.dp))
+
+		AnimatedVisibility(
+			visible = error,
+			enter = fadeIn(),
+			exit = fadeOut(),
+			modifier = Modifier
+				.align(Alignment.End)
+		) {
+			Text(
+				text = errorText,
+				style = MaterialTheme.typography.bodyMedium.copy(
+					color = MaterialTheme.colorScheme.error
+				)
+			)
+		}
+	}
 }
 
 @OptIn(ExperimentalLayoutApi::class)

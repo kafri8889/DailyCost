@@ -43,10 +43,7 @@ class CategoryViewModel @Inject constructor(
 					Timber.i("Received category: $category")
 					updateState {
 						copy(
-							id = category.id,
-							name = category.name,
-							icon = category.icon,
-							default = category.defaultCategory
+							category = category
 						)
 					}
 				}
@@ -71,7 +68,9 @@ class CategoryViewModel @Inject constructor(
 				viewModelScope.launch {
 					updateState {
 						copy(
-							icon = action.icon
+							category = category.copy(
+								icon = action.icon
+							)
 						)
 					}
 				}
@@ -79,8 +78,10 @@ class CategoryViewModel @Inject constructor(
 			is CategoryAction.SetName -> viewModelScope.launch {
 				updateState {
 					copy(
-						name = action.name,
-						nameError = action.name.isBlank()
+						nameError = action.name.isBlank(),
+						category = category.copy(
+							name = action.name
+						)
 					)
 				}
 			}
@@ -88,7 +89,7 @@ class CategoryViewModel @Inject constructor(
 				viewModelScope.launch(Dispatchers.IO) {
 					val mState = state.value
 
-					if (mState.name.isBlank()) {
+					if (mState.category.name.isBlank()) {
 						updateState {
 							copy(
 								nameError = true
@@ -102,8 +103,8 @@ class CategoryViewModel @Inject constructor(
 						inputActionType = InputActionType.Insert,
 						Category(
 							id = Random.nextInt(),
-							name = mState.name.trim().uppercaseFirstLetterInWord(),
-							icon = mState.icon
+							name = mState.category.name.trim().uppercaseFirstLetterInWord(),
+							icon = mState.category.icon
 						)
 					)
 

@@ -8,6 +8,13 @@ import com.dcns.dailycost.data.model.Category
  */
 object LocalCategoryDataProvider {
 
+	val Unspecified = Category(
+		id = -1,
+		name = "",
+		icon = CategoryIcon.Other,
+		defaultCategory = false
+	)
+
 	val other = Category(
 		id = 8,
 		name = "Other",

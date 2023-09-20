@@ -27,7 +27,7 @@ import com.dcns.dailycost.data.model.local.NotificationDb
 		CategoryDb::class,
 		NotificationDb::class
 	],
-	version = 3,
+	version = 4,
 	exportSchema = false
 )
 @TypeConverters(DatabaseTypeConverter::class)
@@ -45,11 +45,9 @@ abstract class AppDatabase: RoomDatabase() {
 		fun getInstance(context: Context): AppDatabase {
 			if (INSTANCE == null) {
 				synchronized(AppDatabase::class) {
-					INSTANCE = Room.databaseBuilder(
-						context,
-						AppDatabase::class.java,
-						"app.db"
-					).build()
+					INSTANCE = Room.databaseBuilder(context, AppDatabase::class.java, "app.db")
+						.fallbackToDestructiveMigration()
+						.build()
 				}
 			}
 

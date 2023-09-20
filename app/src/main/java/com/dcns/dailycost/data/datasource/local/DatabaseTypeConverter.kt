@@ -21,7 +21,7 @@ object DatabaseTypeConverter {
 	 */
 	@TypeConverter
 	@JvmStatic
-	fun categoryIconFromOrdinal(ordinal: Int): CategoryIcon = CategoryIcon.values()[ordinal]
+	fun categoryIconFromOrdinal(ordinal: Int): CategoryIcon = CategoryIcon.entries[ordinal]
 
 	/**
 	 * Convert wallet type ke ordinal (enum index)
@@ -35,6 +35,6 @@ object DatabaseTypeConverter {
 	 */
 	@TypeConverter
 	@JvmStatic
-	fun walletTypeFromOrdinal(ordinal: Int): WalletType = WalletType.values()[ordinal]
+	fun walletTypeFromOrdinal(ordinal: Int): WalletType = WalletType.entries[ordinal]
 
 }

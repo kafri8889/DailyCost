@@ -2,18 +2,21 @@ package com.dcns.dailycost.data.model
 
 import android.os.Parcelable
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.CategoryIcon
 import com.dcns.dailycost.data.datasource.local.LocalCategoryDataProvider
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 @Parcelize
 data class Category(
 	val id: Int,
-	var name: String,
-	var icon: CategoryIcon,
-	var defaultCategory: Boolean = false
+	val name: String,
+	val icon: CategoryIcon,
+	val color: @RawValue Color = Color.Unspecified,
+	val defaultCategory: Boolean = false
 ): Parcelable {
 
 	/**
