@@ -31,6 +31,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.ActionMode
 import com.dcns.dailycost.data.NavigationActions
+import com.dcns.dailycost.data.TopLevelDestination
+import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.uicomponent.DailyCostTextField
 import com.dcns.dailycost.foundation.uicomponent.DailyCostTextFieldDefaults
@@ -107,6 +109,9 @@ fun CategoryScreen(
 			onNameChanged = { name ->
 				viewModel.onAction(CategoryAction.SetName(name))
 			},
+			onNavigateTo = { dest ->
+				navigationActions.navigateTo(dest)
+			},
 			modifier = Modifier
 				.fillMaxSize()
 				.padding(scaffoldPadding)
@@ -118,7 +123,8 @@ fun CategoryScreen(
 private fun AddCategoryScreenContent(
 	state: CategoryState,
 	modifier: Modifier = Modifier,
-	onNameChanged: (String) -> Unit
+	onNameChanged: (String) -> Unit,
+	onNavigateTo: (TopLevelDestination) -> Unit
 ) {
 
 	val constraintSet = ConstraintSet {
@@ -222,7 +228,7 @@ private fun AddCategoryScreenContent(
 				DailyCostTextFieldDefaults.IconButton(
 					painter = painterResource(id = R.drawable.ic_arrow_down),
 					onClick = {
-
+						onNavigateTo(TopLevelDestinations.Home.colorPicker)
 					},
 				)
 			},

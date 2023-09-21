@@ -13,6 +13,7 @@ import com.dcns.dailycost.foundation.extension.uppercaseFirstLetterInWord
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -39,7 +40,7 @@ class CategoryViewModel @Inject constructor(
 				categoryUseCases.getLocalCategoryUseCase(
 					getCategoryBy = GetCategoryBy.ID(id)
 				).map { it.getOrNull(0) }
-			}.filterNotNull().collect { category ->
+			}.filterNotNull().collectLatest { category ->
 					Timber.i("Received category: $category")
 					updateState {
 						copy(
@@ -52,7 +53,7 @@ class CategoryViewModel @Inject constructor(
 		viewModelScope.launch(Dispatchers.IO) {
 			deliveredActionMode
 				.filterNotNull()
-				.collect { mode ->
+				.collectLatest { mode ->
 					updateState {
 						copy(
 							actionMode = mode

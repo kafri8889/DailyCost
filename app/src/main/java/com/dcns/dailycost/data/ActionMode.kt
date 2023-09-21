@@ -1,6 +1,10 @@
 package com.dcns.dailycost.data
 
-enum class ActionMode {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+enum class ActionMode: Parcelable {
 	New,
 	Edit,
 	View;

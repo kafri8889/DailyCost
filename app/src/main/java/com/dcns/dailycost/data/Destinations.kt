@@ -21,6 +21,7 @@ import com.dcns.dailycost.foundation.nav_type.WalletsScreenModeNavType
 object DestinationRoute {
 	const val CHANGE_LANGUAGE = "change_language"
 	const val RECENT_ACTIVITY = "recent_activity"
+	const val COLOR_PICKER = "color_picker"
 	const val NOTIFICATION = "notification"
 	const val TRANSACTIONS = "transactions"
 	const val TRANSACTION = "transaction"
@@ -45,7 +46,7 @@ object DestinationArgument {
 	const val TRANSACTION_TYPE = "transaction_type"
 	const val CATEGORY_ID = "category_id"
 	const val WALLET_ID = "wallet_id"
-	const val ACTION_MODE = "transaction_mode"
+	const val ACTION_MODE = "action_mode"
 	const val CATEGORIES_SCREEN_MODE = "category_screen_mode"
 	const val WALLETS_SCREEN_MODE = "wallets_screen_mode"
 }
@@ -358,6 +359,10 @@ object TopLevelDestinations {
 					uriPattern = "${Constant.APP_DEEP_LINK_SCHEME}://${Constant.APP_DEEP_LINK_HOST}/${DestinationRoute.NOTIFICATION}"
 				}
 			)
+		)
+
+		val colorPicker = TopLevelDestination(
+			route = DestinationRoute.COLOR_PICKER
 		)
 	}
 

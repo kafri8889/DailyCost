@@ -1,6 +1,10 @@
 package com.dcns.dailycost.data
 
-enum class TransactionType {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+enum class TransactionType: Parcelable {
 	Income,
 	Expense;
 

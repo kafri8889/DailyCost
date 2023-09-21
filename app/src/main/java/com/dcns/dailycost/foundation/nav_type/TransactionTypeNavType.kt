@@ -1,8 +1,10 @@
 package com.dcns.dailycost.foundation.nav_type
 
+import android.os.Build
 import android.os.Bundle
 import androidx.navigation.NavType
 import com.dcns.dailycost.data.TransactionType
+import com.google.gson.Gson
 import timber.log.Timber
 
 val NavType.Companion.TransactionTypeNavType: NavType<TransactionType>
@@ -11,18 +13,17 @@ val NavType.Companion.TransactionTypeNavType: NavType<TransactionType>
 			get() = "transaction_type"
 
 		override fun get(bundle: Bundle, key: String): TransactionType? {
-			val value = bundle.getString(key)
-			Timber.i("transaction get: $value")
-			return if (value != null) TransactionType.valueOf(value) else null
+			return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) bundle.getParcelable(key, TransactionType::class.java)
+			else bundle.getParcelable(key)
 		}
 
 		override fun parseValue(value: String): TransactionType {
 			Timber.i("transaction parse: $value")
-			return TransactionType.valueOf(value)
+			return Gson().fromJson(value, TransactionType::class.java)
 		}
 
 		override fun put(bundle: Bundle, key: String, value: TransactionType) {
 			Timber.i("transaction put: $value")
-			bundle.putSerializable(key, value)
+			bundle.putParcelable(key, value)
 		}
 	}
