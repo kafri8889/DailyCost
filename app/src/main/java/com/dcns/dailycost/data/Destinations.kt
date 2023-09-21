@@ -255,25 +255,17 @@ object TopLevelDestinations {
 		/**
 		 * Required argument:
 		 * - [DestinationArgument.CATEGORIES_SCREEN_MODE]
-		 *
-		 * If [DestinationArgument.CATEGORIES_SCREEN_MODE] is [CategoriesScreenMode.SelectCategory]:
-		 * - [DestinationArgument.CATEGORY_ID]
 		 */
 		val categories = TopLevelDestination(
 			icon = R.drawable.ic_pie_chart,
 			title = R.string.categories,
 			subtitle = R.string.manage_categories_change_icon_color,
 			route = "${DestinationRoute.CATEGORIES}?" +
-				"${DestinationArgument.CATEGORIES_SCREEN_MODE}={${DestinationArgument.CATEGORIES_SCREEN_MODE}}&" +
-				"${DestinationArgument.CATEGORY_ID}={${DestinationArgument.CATEGORY_ID}}",
+				"${DestinationArgument.CATEGORIES_SCREEN_MODE}={${DestinationArgument.CATEGORIES_SCREEN_MODE}}",
 			arguments = listOf(
 				navArgument(DestinationArgument.CATEGORIES_SCREEN_MODE) {
 					type = NavType.CategoriesScreenModeNavType
 					defaultValue = CategoriesScreenMode.CategoryList
-				},
-				navArgument(DestinationArgument.CATEGORY_ID) {
-					type = NavType.IntType
-					defaultValue = -1
 				}
 			)
 		)
@@ -281,22 +273,14 @@ object TopLevelDestinations {
 		/**
 		 * Required argument:
 		 * - [DestinationArgument.WALLETS_SCREEN_MODE]
-		 *
-		 * If [DestinationArgument.WALLETS_SCREEN_MODE] is [WalletsScreenMode.SelectWallet]:
-		 * - [DestinationArgument.WALLET_ID]
 		 */
 		val wallets = TopLevelDestination(
 			route = "${DestinationRoute.WALLETS}?" +
-				"${DestinationArgument.WALLETS_SCREEN_MODE}={${DestinationArgument.WALLETS_SCREEN_MODE}}&" +
-				"${DestinationArgument.WALLET_ID}={${DestinationArgument.WALLET_ID}}",
+				"${DestinationArgument.WALLETS_SCREEN_MODE}={${DestinationArgument.WALLETS_SCREEN_MODE}}",
 			arguments = listOf(
 				navArgument(DestinationArgument.WALLETS_SCREEN_MODE) {
 					type = NavType.WalletsScreenModeNavType
 					defaultValue = WalletsScreenMode.WalletList
-				},
-				navArgument(DestinationArgument.WALLET_ID) {
-					type = NavType.IntType
-					defaultValue = WalletType.Cash.ordinal
 				}
 			)
 		)

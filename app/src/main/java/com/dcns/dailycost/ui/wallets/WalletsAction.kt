@@ -1,10 +1,9 @@
 package com.dcns.dailycost.ui.wallets
 
-import com.dcns.dailycost.data.model.Wallet
+import com.dcns.dailycost.data.WalletType
 
 sealed interface WalletsAction {
 
-	data class ChangeSelectedWallet(val wallet: Wallet): WalletsAction
-	data object SendWallet: WalletsAction
+	data class ChangeSelectedWalletType(val walletType: WalletType): WalletsAction
 
 }

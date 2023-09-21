@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeSharedViewModel @Inject constructor(
-	private val savedStateHandle: SavedStateHandle
+	savedStateHandle: SavedStateHandle
 ): BaseViewModel<HomeSharedState, HomeSharedAction>(savedStateHandle, HomeSharedState()) {
 
 	override fun onAction(action: HomeSharedAction) {
@@ -20,6 +20,24 @@ class HomeSharedViewModel @Inject constructor(
 					updateState {
 						copy(
 							selectedArgbColor = action.argb
+						)
+					}
+				}
+			}
+			is HomeSharedAction.UpdateSelectedCategory -> {
+				viewModelScope.launch(Dispatchers.IO) {
+					updateState {
+						copy(
+							selectedCategory = action.category
+						)
+					}
+				}
+			}
+			is HomeSharedAction.UpdateSelectedWalletType -> {
+				viewModelScope.launch(Dispatchers.IO) {
+					updateState {
+						copy(
+							selectedWalletType = action.walletType
 						)
 					}
 				}

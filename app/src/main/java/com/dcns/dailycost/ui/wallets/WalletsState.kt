@@ -13,5 +13,5 @@ data class WalletsState(
 	val screenMode: WalletsScreenMode = WalletsScreenMode.WalletList,
 
 	// For [WalletsScreenMode.SelectWallet]
-	val selectedWallet: Wallet = WalletType.Cash.toWallet(0.0)
+	val selectedWalletType: WalletType = WalletType.Cash
 ): Parcelable

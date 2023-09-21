@@ -32,15 +32,19 @@ import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.CategoryItem
 import com.dcns.dailycost.foundation.uicomponent.SelectableCategoryItem
+import com.dcns.dailycost.navigation.home.shared.HomeSharedAction
+import com.dcns.dailycost.navigation.home.shared.HomeSharedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesScreen(
 	viewModel: CategoriesViewModel,
+	sharedViewModel: HomeSharedViewModel,
 	navigationActions: NavigationActions
 ) {
 
 	val state by viewModel.state.collectAsStateWithLifecycle()
+	val sharedState by sharedViewModel.state.collectAsStateWithLifecycle()
 
 	BaseScreenWrapper(
 		viewModel = viewModel,
@@ -68,7 +72,7 @@ fun CategoriesScreen(
 					if (state.screenMode == CategoriesScreenMode.SelectCategory) {
 						IconButton(
 							onClick = {
-								viewModel.onAction(CategoriesAction.SendCategory)
+								sharedViewModel.onAction(HomeSharedAction.UpdateSelectedCategory(state.selectedCategory))
 								navigationActions.popBackStack()
 							}
 						) {

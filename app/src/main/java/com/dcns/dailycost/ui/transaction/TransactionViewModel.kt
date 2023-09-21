@@ -21,7 +21,6 @@ import com.dcns.dailycost.domain.util.GetTransactionBy
 import com.dcns.dailycost.foundation.base.BaseViewModel
 import com.dcns.dailycost.foundation.common.CommonDateFormatter
 import com.dcns.dailycost.foundation.common.ConnectivityManager
-import com.dcns.dailycost.foundation.common.SharedData
 import com.dcns.dailycost.foundation.worker.Workers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -48,7 +47,6 @@ class TransactionViewModel @Inject constructor(
 	private val expenseUseCases: ExpenseUseCases,
 	private val incomeUseCases: IncomeUseCases,
 	private val workManager: WorkManager,
-	private val sharedData: SharedData,
 	private val savedStateHandle: SavedStateHandle
 ): BaseViewModel<TransactionState, TransactionAction>(
 	savedStateHandle,
@@ -97,30 +95,6 @@ class TransactionViewModel @Inject constructor(
 						)
 					}
 				}
-		}
-
-		viewModelScope.launch {
-			sharedData.category.filterNotNull().collect { category ->
-				updateState {
-					copy(
-						category = category.also {
-							sharedData.setCategory(null) // Reset category
-						}
-					)
-				}
-			}
-		}
-
-		viewModelScope.launch {
-			sharedData.wallet.filterNotNull().collect { wallet ->
-				updateState {
-					copy(
-						payment = wallet.walletType.also {
-							sharedData.setWallet(null) // Reset wallet
-						}
-					)
-				}
-			}
 		}
 
 		viewModelScope.launch(Dispatchers.IO) {
@@ -207,7 +181,6 @@ class TransactionViewModel @Inject constructor(
 					}
 				}
 			}
-
 			is TransactionAction.SetCategory -> {
 				viewModelScope.launch {
 					updateState {
@@ -217,7 +190,6 @@ class TransactionViewModel @Inject constructor(
 					}
 				}
 			}
-
 			is TransactionAction.SetDate -> {
 				viewModelScope.launch {
 					updateState {
@@ -227,7 +199,6 @@ class TransactionViewModel @Inject constructor(
 					}
 				}
 			}
-
 			is TransactionAction.SetPayment -> {
 				viewModelScope.launch {
 					updateState {
@@ -283,7 +254,6 @@ class TransactionViewModel @Inject constructor(
 						}
 				}
 			}
-
 			TransactionAction.Save -> {
 				viewModelScope.launch(Dispatchers.IO) {
 					val mState = state.value

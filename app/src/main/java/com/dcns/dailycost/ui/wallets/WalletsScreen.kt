@@ -13,6 +13,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,15 +27,25 @@ import com.dcns.dailycost.data.model.Wallet
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.uicomponent.SelectableWalletItem
 import com.dcns.dailycost.foundation.uicomponent.WalletItem
+import com.dcns.dailycost.navigation.home.shared.HomeSharedAction
+import com.dcns.dailycost.navigation.home.shared.HomeSharedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletsScreen(
 	viewModel: WalletsViewModel,
+	homeSharedViewModel: HomeSharedViewModel,
 	navigationActions: NavigationActions
 ) {
 
 	val state by viewModel.state.collectAsStateWithLifecycle()
+	val sharedState by homeSharedViewModel.state.collectAsStateWithLifecycle()
+
+	if (sharedState.selectedWalletType != null) {
+		LaunchedEffect(sharedState.selectedWalletType) {
+			viewModel.onAction(WalletsAction.ChangeSelectedWalletType(sharedState.selectedWalletType!!))
+		}
+	}
 
 	BaseScreenWrapper(
 		viewModel = viewModel,
@@ -62,7 +73,7 @@ fun WalletsScreen(
 					if (state.screenMode == WalletsScreenMode.SelectWallet) {
 						IconButton(
 							onClick = {
-								viewModel.onAction(WalletsAction.SendWallet)
+								homeSharedViewModel.onAction(HomeSharedAction.UpdateSelectedWalletType(state.selectedWalletType))
 								navigationActions.popBackStack()
 							}
 						) {
@@ -80,7 +91,7 @@ fun WalletsScreen(
 			state = state,
 			onWalletClicked = { wallet ->
 				if (state.screenMode == WalletsScreenMode.SelectWallet) {
-					viewModel.onAction(WalletsAction.ChangeSelectedWallet(wallet))
+					viewModel.onAction(WalletsAction.ChangeSelectedWalletType(wallet.walletType))
 					return@WalletsScreenContent
 				}
 			},
@@ -120,7 +131,7 @@ private fun WalletsScreenContent(
 			} else {
 				SelectableWalletItem(
 					wallet = wallet,
-					selected = state.selectedWallet == wallet,
+					selected = state.selectedWalletType == wallet.walletType,
 					onClick = {
 						onWalletClicked(wallet)
 					},

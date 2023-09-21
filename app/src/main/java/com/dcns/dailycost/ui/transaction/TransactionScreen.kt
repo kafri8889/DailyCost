@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.transaction
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
@@ -34,6 +35,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,7 +58,6 @@ import com.dcns.dailycost.data.ActionMode
 import com.dcns.dailycost.data.CategoriesScreenMode
 import com.dcns.dailycost.data.DestinationArgument
 import com.dcns.dailycost.data.NavigationActions
-import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.data.TransactionType
 import com.dcns.dailycost.data.WalletsScreenMode
@@ -68,14 +69,36 @@ import com.dcns.dailycost.foundation.theme.DailyCostTheme
 import com.dcns.dailycost.foundation.uicomponent.DailyCostTextField
 import com.dcns.dailycost.foundation.uicomponent.DailyCostTextFieldDefaults
 import com.dcns.dailycost.foundation.uicomponent.TransactionSegmentedButton
+import com.dcns.dailycost.navigation.home.shared.HomeSharedAction
+import com.dcns.dailycost.navigation.home.shared.HomeSharedViewModel
 
 @Composable
 fun TransactionScreen(
 	viewModel: TransactionViewModel,
+	sharedViewModel: HomeSharedViewModel,
 	navigationActions: NavigationActions,
 ) {
 
 	val state by viewModel.state.collectAsStateWithLifecycle()
+	val sharedState by sharedViewModel.state.collectAsStateWithLifecycle()
+
+	LaunchedEffect(sharedState.selectedWalletType) {
+		sharedState.selectedWalletType?.let {
+			viewModel.onAction(TransactionAction.SetPayment(it))
+		}
+	}
+
+	LaunchedEffect(sharedState.selectedCategory) {
+		sharedState.selectedCategory?.let {
+			viewModel.onAction(TransactionAction.SetCategory(it))
+		}
+	}
+
+	BackHandler {
+		sharedViewModel.onAction(HomeSharedAction.UpdateSelectedCategory(null))
+		sharedViewModel.onAction(HomeSharedAction.UpdateSelectedWalletType(null))
+		navigationActions.popBackStack()
+	}
 
 	BaseScreenWrapper(
 		viewModel = viewModel,
@@ -90,11 +113,26 @@ fun TransactionScreen(
 		TransactionScreenContent(
 			state = state,
 			onNavigationIconClicked = navigationActions::popBackStack,
-			onNavigateTo = { destination ->
-				navigationActions.navigateTo(destination)
+			onSelectCategory = {
+				sharedViewModel.onAction(HomeSharedAction.UpdateSelectedCategory(state.category))
+				navigationActions.navigateTo(
+					TopLevelDestinations.Home.categories.createRoute(
+						DestinationArgument.CATEGORIES_SCREEN_MODE to CategoriesScreenMode.SelectCategory
+					)
+				)
+			},
+			onSelectWallet = {
+				sharedViewModel.onAction(HomeSharedAction.UpdateSelectedWalletType(state.payment))
+				navigationActions.navigateTo(
+					TopLevelDestinations.Home.wallets.createRoute(
+						DestinationArgument.WALLETS_SCREEN_MODE to WalletsScreenMode.SelectWallet
+					)
+				)
 			},
 			onSaveClicked = {
 				viewModel.onAction(TransactionAction.Save)
+				sharedViewModel.onAction(HomeSharedAction.UpdateSelectedCategory(null))
+				sharedViewModel.onAction(HomeSharedAction.UpdateSelectedWalletType(null))
 			},
 			onDeleteTransaction = {
 				viewModel.onAction(TransactionAction.Delete)
@@ -124,9 +162,10 @@ private fun TransactionScreenContent(
 	state: TransactionState,
 	modifier: Modifier = Modifier,
 	onSaveClicked: () -> Unit,
+	onSelectWallet: () -> Unit,
+	onSelectCategory: () -> Unit,
 	onDeleteTransaction: () -> Unit,
 	onNavigationIconClicked: () -> Unit,
-	onNavigateTo: (TopLevelDestination) -> Unit,
 	onTransactionTypeChanged: (TransactionType) -> Unit,
 	onTitleChanged: (String) -> Unit,
 	onAmountChanged: (Double) -> Unit,
@@ -326,14 +365,7 @@ private fun TransactionScreenContent(
 				singleLine = true,
 				titleActionIcon = if (state.actionMode.isNew()) painterResource(id = R.drawable.ic_arrow_down) else null,
 				onValueChange = {},
-				onTitleActionClicked = {
-					onNavigateTo(
-						TopLevelDestinations.Home.wallets.createRoute(
-							DestinationArgument.WALLETS_SCREEN_MODE to WalletsScreenMode.SelectWallet,
-							DestinationArgument.WALLET_ID to state.payment.ordinal
-						)
-					)
-				},
+				onTitleActionClicked = onSelectWallet,
 				modifier = Modifier
 					.fillMaxWidth(0.92f)
 			)
@@ -347,14 +379,7 @@ private fun TransactionScreenContent(
 				singleLine = true,
 				titleActionIcon = if (state.actionMode.isNew()) painterResource(id = R.drawable.ic_arrow_down) else null,
 				onValueChange = {},
-				onTitleActionClicked = {
-					onNavigateTo(
-						TopLevelDestinations.Home.categories.createRoute(
-							DestinationArgument.CATEGORIES_SCREEN_MODE to CategoriesScreenMode.SelectCategory,
-							DestinationArgument.CATEGORY_ID to state.category.id
-						)
-					)
-				},
+				onTitleActionClicked = onSelectCategory,
 				modifier = Modifier
 					.fillMaxWidth(0.92f)
 			)
