@@ -30,11 +30,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.foundation.theme.DailyCostTheme
+import com.dcns.dailycost.navigation.home.shared.HomeSharedAction
+import com.dcns.dailycost.navigation.home.shared.HomeSharedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ColorPickerScreen(
 	viewModel: ColorPickerViewModel,
+	sharedViewModel: HomeSharedViewModel,
 	navigationActions: NavigationActions
 ) {
 
@@ -67,7 +70,8 @@ fun ColorPickerScreen(
 								.height(36.dp)
 								.background(Color(argb))
 								.clickable {
-
+									sharedViewModel.onAction(HomeSharedAction.UpdateSelectedArgbColor(argb))
+									navigationActions.popBackStack()
 								}
 						)
 					}

@@ -36,14 +36,18 @@ import com.dcns.dailycost.data.TopLevelDestinations
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.uicomponent.DailyCostTextField
 import com.dcns.dailycost.foundation.uicomponent.DailyCostTextFieldDefaults
+import com.dcns.dailycost.navigation.home.shared.HomeSharedState
+import com.dcns.dailycost.navigation.home.shared.HomeSharedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryScreen(
 	viewModel: CategoryViewModel,
+	sharedViewModel: HomeSharedViewModel,
 	navigationActions: NavigationActions
 ) {
 	val state by viewModel.state.collectAsStateWithLifecycle()
+	val sharedState by sharedViewModel.state.collectAsStateWithLifecycle()
 
 	BaseScreenWrapper(
 		viewModel = viewModel,
@@ -106,6 +110,7 @@ fun CategoryScreen(
 	) { scaffoldPadding ->
 		AddCategoryScreenContent(
 			state = state,
+			sharedState = sharedState,
 			onNameChanged = { name ->
 				viewModel.onAction(CategoryAction.SetName(name))
 			},
@@ -122,6 +127,7 @@ fun CategoryScreen(
 @Composable
 private fun AddCategoryScreenContent(
 	state: CategoryState,
+	sharedState: HomeSharedState,
 	modifier: Modifier = Modifier,
 	onNameChanged: (String) -> Unit,
 	onNavigateTo: (TopLevelDestination) -> Unit
@@ -221,7 +227,7 @@ private fun AddCategoryScreenContent(
 					modifier = Modifier
 						.fillMaxWidth()
 						.height(24.dp)
-						.background(Color.Yellow)
+						.background(Color(sharedState.selectedArgbColor))
 				)
 			},
 			titleActionIcon = {
