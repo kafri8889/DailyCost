@@ -148,4 +148,6 @@
     <string name="keep_track_of_all_your">Keep track of all your activities through recent activities</string>
     <string name="notification">Notification</string>
     <string name="color">Color</string>
+    <string name="choose_color">Choose color</string>
+    <string name="choose_icon">Choose icon</string>
 </resources>

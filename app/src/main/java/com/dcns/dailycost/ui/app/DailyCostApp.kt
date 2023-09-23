@@ -67,6 +67,7 @@ import com.dcns.dailycost.navigation.home.CategoryNavigation
 import com.dcns.dailycost.navigation.home.ChangeLanguageNavigation
 import com.dcns.dailycost.navigation.home.ColorPickerNavigation
 import com.dcns.dailycost.navigation.home.DashboardNavigation
+import com.dcns.dailycost.navigation.home.IconPickerNavigation
 import com.dcns.dailycost.navigation.home.NoteNavigation
 import com.dcns.dailycost.navigation.home.NotesNavigation
 import com.dcns.dailycost.navigation.home.NotificationNavigation
@@ -355,6 +356,7 @@ private fun DailyCostNavHost(
 			NoteNavigation(navActions)
 			NotificationNavigation(navActions)
 			ColorPickerNavigation(navActions)
+			IconPickerNavigation(navActions)
 
 			DashboardNavigation(
 				navigationActions = navActions,

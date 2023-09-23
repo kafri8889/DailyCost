@@ -33,7 +33,7 @@ object LocalCategoryDataProvider {
 		val shopping = Category(
 			id = 2,
 			name = "Shopping",
-			icon = CategoryIcon.ShoppingCart,
+			icon = CategoryIcon.ShoppingCartSimple,
 			defaultCategory = true
 		)
 
@@ -47,28 +47,21 @@ object LocalCategoryDataProvider {
 		val electronic = Category(
 			id = 4,
 			name = "Electronic",
-			icon = CategoryIcon.Electronic,
-			defaultCategory = true
-		)
-
-		val bill = Category(
-			id = 5,
-			name = "Bill",
-			icon = CategoryIcon.Bill,
+			icon = CategoryIcon.Flash,
 			defaultCategory = true
 		)
 
 		val entertainment = Category(
-			id = 6,
+			id = 5,
 			name = "Entertainment",
-			icon = CategoryIcon.Entertainment,
+			icon = CategoryIcon.Ticket,
 			defaultCategory = true
 		)
 
 		val gadget = Category(
-			id = 7,
+			id = 6,
 			name = "Gadget",
-			icon = CategoryIcon.MonitorMobile,
+			icon = CategoryIcon.DesktopTower,
 			defaultCategory = true
 		)
 
@@ -77,7 +70,6 @@ object LocalCategoryDataProvider {
 			shopping,
 			transport,
 			electronic,
-			bill,
 			entertainment,
 			gadget,
 			other
@@ -89,14 +81,14 @@ object LocalCategoryDataProvider {
 		val salary = Category(
 			id = 999,
 			name = "Salary",
-			icon = CategoryIcon.Salary,
+			icon = CategoryIcon.Money,
 			defaultCategory = true
 		)
 
 		val investment = Category(
 			id = 998,
 			name = "Investment",
-			icon = CategoryIcon.Investment,
+			icon = CategoryIcon.ChartLineUp,
 			defaultCategory = true
 		)
 
@@ -110,7 +102,7 @@ object LocalCategoryDataProvider {
 		val award = Category(
 			id = 996,
 			name = "Award",
-			icon = CategoryIcon.Award,
+			icon = CategoryIcon.Trophy,
 			defaultCategory = true
 		)
 

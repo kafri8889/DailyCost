@@ -235,7 +235,7 @@ private fun CreateEditNoteForm(
 						}
 					) {
 						Icon(
-							painter = painterResource(R.drawable.ic_calendar_month),
+							painter = painterResource(R.drawable.ic_calendar),
 							contentDescription = null
 						)
 					}

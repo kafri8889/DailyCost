@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -157,7 +158,7 @@ private fun AddCategoryScreenContent(
 		constrain(nameTextField) {
 			centerHorizontallyTo(parent)
 			top.linkTo(iconBox.bottom)
-			bottom.linkTo(colorTextField.top) //
+			bottom.linkTo(colorTextField.top)
 		}
 
 		constrain(colorTextField) {
@@ -179,22 +180,25 @@ private fun AddCategoryScreenContent(
 		Box(
 			contentAlignment = Alignment.Center,
 			modifier = Modifier
-				.widthIn(max = 384.dp)
+				.widthIn(max = 360.dp)
 				.fillMaxWidth(0.32f)
 				.aspectRatio(1f)
 				.clip(CircleShape)
-				.background(Color.Yellow)
+				.background(Color(sharedState.selectedArgbColor))
 				.layoutId("iconBox")
 		) {
 			Icon(
-				painter = painterResource(id = state.category.icon.iconResId),
-				contentDescription = null
+				painter = painterResource(id = sharedState.selectedCategoryIcon.iconResId),
+				contentDescription = null,
+				tint = MaterialTheme.colorScheme.onPrimary,
+				modifier = Modifier
+					.size(32.dp)
 			)
 		}
 
 		IconButton(
 			onClick = {
-
+				onNavigateTo(TopLevelDestinations.Home.iconPicker)
 			},
 			modifier = Modifier
 				.layoutId("editIconButton")

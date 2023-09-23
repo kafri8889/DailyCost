@@ -145,4 +145,6 @@
     <string name="keep_track_of_all_your">Pantau semua aktivitas Anda melalui aktivitas terkini</string>
     <string name="notification">Notifikasi</string>
     <string name="color">Warna</string>
+    <string name="choose_color">Pilih warna</string>
+    <string name="choose_icon">Pilih ikon</string>
 </resources>

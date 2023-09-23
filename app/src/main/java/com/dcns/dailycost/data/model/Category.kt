@@ -33,7 +33,6 @@ data class Category(
 			LocalCategoryDataProvider.Expense.shopping.id -> stringResource(id = R.string.shopping)
 			LocalCategoryDataProvider.Expense.transport.id -> stringResource(id = R.string.transport)
 			LocalCategoryDataProvider.Expense.electronic.id -> stringResource(id = R.string.electronic)
-			LocalCategoryDataProvider.Expense.bill.id -> stringResource(id = R.string.bill)
 			LocalCategoryDataProvider.Expense.entertainment.id -> stringResource(id = R.string.entertainment)
 			LocalCategoryDataProvider.Expense.gadget.id -> stringResource(id = R.string.gadget)
 			LocalCategoryDataProvider.other.id -> stringResource(id = R.string.other)

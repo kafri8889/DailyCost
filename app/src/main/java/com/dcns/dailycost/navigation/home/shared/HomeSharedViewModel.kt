@@ -42,6 +42,15 @@ class HomeSharedViewModel @Inject constructor(
 					}
 				}
 			}
+			is HomeSharedAction.UpdateSelectedCategoryIcon -> {
+				viewModelScope.launch(Dispatchers.IO) {
+					updateState {
+						copy(
+							selectedCategoryIcon = action.categoryIcon
+						)
+					}
+				}
+			}
 		}
 	}
 }

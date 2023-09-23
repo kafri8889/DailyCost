@@ -46,7 +46,9 @@ fun ColorPickerScreen(
 	AlertDialog(onDismissRequest = navigationActions::popBackStack) {
 		Surface(
 			color = DailyCostTheme.colorScheme.wildSand,
-			shape = RoundedCornerShape(8)
+			shape = RoundedCornerShape(8),
+			modifier = Modifier
+				.padding(vertical = 16.dp)
 		) {
 			Column(
 				verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -54,14 +56,16 @@ fun ColorPickerScreen(
 					.padding(16.dp)
 			) {
 				Text(
-					text = "Choose color",
+					text = stringResource(id = R.string.choose_color),
 					style = MaterialTheme.typography.titleMedium.copy(
 						fontWeight = FontWeight.SemiBold
 					)
 				)
 
 				LazyColumn(
-					verticalArrangement = Arrangement.spacedBy(12.dp)
+					verticalArrangement = Arrangement.spacedBy(12.dp),
+					modifier = Modifier
+						.weight(1f, false)
 				) {
 					items(state.argbColors) { argb ->
 						Box(

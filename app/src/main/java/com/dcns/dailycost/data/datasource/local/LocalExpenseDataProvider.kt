@@ -25,7 +25,7 @@ object LocalExpenseDataProvider {
 		amount = 1_000_000.0,
 		payment = WalletType.EWallet,
 		date = System.currentTimeMillis(),
-		category = LocalCategoryDataProvider.Expense.bill
+		category = LocalCategoryDataProvider.Expense.electronic
 	)
 
 	val values = arrayOf(

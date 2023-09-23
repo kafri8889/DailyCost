@@ -95,6 +95,7 @@ fun TransactionScreen(
 	}
 
 	BackHandler {
+		// Reset sharedState.selectedIcon before navigating
 		sharedViewModel.onAction(HomeSharedAction.UpdateSelectedCategory(null))
 		sharedViewModel.onAction(HomeSharedAction.UpdateSelectedWalletType(null))
 		navigationActions.popBackStack()

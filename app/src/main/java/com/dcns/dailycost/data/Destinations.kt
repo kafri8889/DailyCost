@@ -24,6 +24,7 @@ object DestinationRoute {
 	const val COLOR_PICKER = "color_picker"
 	const val NOTIFICATION = "notification"
 	const val TRANSACTIONS = "transactions"
+	const val ICON_PICKER = "icon_picker"
 	const val TRANSACTION = "transaction"
 	const val CATEGORIES = "categories"
 	const val ONBOARDING = "onboarding"
@@ -347,6 +348,10 @@ object TopLevelDestinations {
 
 		val colorPicker = TopLevelDestination(
 			route = DestinationRoute.COLOR_PICKER
+		)
+
+		val iconPicker = TopLevelDestination(
+			route = DestinationRoute.ICON_PICKER
 		)
 	}
 
