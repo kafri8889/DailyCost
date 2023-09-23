@@ -44,7 +44,6 @@ fun CategoriesScreen(
 ) {
 
 	val state by viewModel.state.collectAsStateWithLifecycle()
-	val sharedState by sharedViewModel.state.collectAsStateWithLifecycle()
 
 	BaseScreenWrapper(
 		viewModel = viewModel,

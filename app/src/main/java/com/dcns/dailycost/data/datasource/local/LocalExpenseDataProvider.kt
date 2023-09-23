@@ -15,7 +15,7 @@ object LocalExpenseDataProvider {
 		amount = 0.0,
 		payment = WalletType.Cash,
 		date = System.currentTimeMillis(),
-		category = LocalCategoryDataProvider.other
+		category = LocalCategoryDataProvider.Expense.entertainment
 	)
 
 	val expense2 = Expense(

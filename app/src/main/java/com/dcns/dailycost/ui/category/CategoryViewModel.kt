@@ -86,6 +86,15 @@ class CategoryViewModel @Inject constructor(
 					)
 				}
 			}
+			is CategoryAction.SetColor -> viewModelScope.launch {
+				updateState {
+					copy(
+						category = category.copy(
+							colorArgb = action.argb
+						)
+					)
+				}
+			}
 			CategoryAction.Save -> {
 				viewModelScope.launch(Dispatchers.IO) {
 					val mState = state.value
@@ -105,7 +114,8 @@ class CategoryViewModel @Inject constructor(
 						Category(
 							id = Random.nextInt(),
 							name = mState.category.name.trim().uppercaseFirstLetterInWord(),
-							icon = mState.category.icon
+							icon = mState.category.icon,
+							colorArgb = mState.category.colorArgb
 						)
 					)
 

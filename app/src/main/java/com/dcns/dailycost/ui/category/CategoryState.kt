@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CategoryState(
-	val category: Category = LocalCategoryDataProvider.other,
+	val category: Category = LocalCategoryDataProvider.Unspecified,
 
 	val actionMode: ActionMode = ActionMode.New,
 	val nameError: Boolean = false

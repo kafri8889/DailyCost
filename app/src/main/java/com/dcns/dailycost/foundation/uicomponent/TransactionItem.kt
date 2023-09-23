@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -71,12 +72,19 @@ fun TransactionItem(
 					vertical = 8.dp
 				)
 		) {
-			Icon(
-				painter = painterResource(id = transaction.category.icon.iconResId),
-				contentDescription = null,
+			Box(
+				contentAlignment = Alignment.Center,
 				modifier = Modifier
 					.clip(CircleShape)
-			)
+					.size(36.dp)
+					.background(Color(transaction.category.colorArgb))
+			) {
+				Icon(
+					painter = painterResource(id = transaction.category.icon.iconResId),
+					contentDescription = null,
+					tint = MaterialTheme.colorScheme.onPrimary
+				)
+			}
 
 			Column(
 				verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -196,9 +204,7 @@ fun DismissableTransactionItem(
 private fun TransactionCardPreview() {
 	DailyCostTheme {
 		TransactionItem(
-			transaction = LocalExpenseDataProvider.expense1.copy(
-				name = "Loooooooooooooooooonnnnnnnnnnnnnnnggggggggggg tttteeeeeeekkkkkk"
-			)
+			transaction = LocalExpenseDataProvider.expense1
 		)
 	}
 }

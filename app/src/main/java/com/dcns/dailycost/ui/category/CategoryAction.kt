@@ -6,6 +6,7 @@ sealed interface CategoryAction {
 
 	data class SetName(val name: String): CategoryAction
 	data class SetIcon(val icon: CategoryIcon): CategoryAction
+	data class SetColor(val argb: Int): CategoryAction
 
 	data object Save: CategoryAction
 

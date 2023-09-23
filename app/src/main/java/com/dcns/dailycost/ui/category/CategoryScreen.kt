@@ -1,5 +1,6 @@
 package com.dcns.dailycost.ui.category
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -17,11 +18,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,12 +34,16 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dcns.dailycost.R
 import com.dcns.dailycost.data.ActionMode
+import com.dcns.dailycost.data.CategoryIcon
+import com.dcns.dailycost.data.DailyCostColorPalette
 import com.dcns.dailycost.data.NavigationActions
 import com.dcns.dailycost.data.TopLevelDestination
 import com.dcns.dailycost.data.TopLevelDestinations
+import com.dcns.dailycost.data.datasource.local.LocalCategoryDataProvider
 import com.dcns.dailycost.foundation.base.BaseScreenWrapper
 import com.dcns.dailycost.foundation.uicomponent.DailyCostTextField
 import com.dcns.dailycost.foundation.uicomponent.DailyCostTextFieldDefaults
+import com.dcns.dailycost.navigation.home.shared.HomeSharedAction
 import com.dcns.dailycost.navigation.home.shared.HomeSharedState
 import com.dcns.dailycost.navigation.home.shared.HomeSharedViewModel
 
@@ -49,6 +56,22 @@ fun CategoryScreen(
 ) {
 	val state by viewModel.state.collectAsStateWithLifecycle()
 	val sharedState by sharedViewModel.state.collectAsStateWithLifecycle()
+
+	LaunchedEffect(sharedState.selectedArgbColor, sharedState.selectedCategoryIcon) {
+		if (sharedState.selectedArgbColor != LocalCategoryDataProvider.other.colorArgb) {
+			viewModel.onAction(CategoryAction.SetColor(sharedState.selectedArgbColor))
+		}
+
+		if (sharedState.selectedCategoryIcon != LocalCategoryDataProvider.other.icon) {
+			viewModel.onAction(CategoryAction.SetIcon(sharedState.selectedCategoryIcon))
+		}
+	}
+
+	BackHandler {
+		sharedViewModel.onAction(HomeSharedAction.UpdateSelectedCategoryIcon(CategoryIcon.Other))
+		sharedViewModel.onAction(HomeSharedAction.UpdateSelectedArgbColor(DailyCostColorPalette.values[0].toArgb()))
+		navigationActions.popBackStack()
+	}
 
 	BaseScreenWrapper(
 		viewModel = viewModel,
@@ -184,7 +207,7 @@ private fun AddCategoryScreenContent(
 				.fillMaxWidth(0.32f)
 				.aspectRatio(1f)
 				.clip(CircleShape)
-				.background(Color(sharedState.selectedArgbColor))
+				.background(Color(state.category.colorArgb))
 				.layoutId("iconBox")
 		) {
 			Icon(
@@ -196,17 +219,19 @@ private fun AddCategoryScreenContent(
 			)
 		}
 
-		IconButton(
-			onClick = {
-				onNavigateTo(TopLevelDestinations.Home.iconPicker)
-			},
-			modifier = Modifier
-				.layoutId("editIconButton")
-		) {
-			Icon(
-				painter = painterResource(id = R.drawable.ic_edit_with_underline),
-				contentDescription = null
-			)
+		if (state.actionMode == ActionMode.New) {
+			IconButton(
+				onClick = {
+					onNavigateTo(TopLevelDestinations.Home.iconPicker)
+				},
+				modifier = Modifier
+					.layoutId("editIconButton")
+			) {
+				Icon(
+					painter = painterResource(id = R.drawable.ic_edit_with_underline),
+					contentDescription = null
+				)
+			}
 		}
 
 		DailyCostTextField(
@@ -231,7 +256,7 @@ private fun AddCategoryScreenContent(
 					modifier = Modifier
 						.fillMaxWidth()
 						.height(24.dp)
-						.background(Color(sharedState.selectedArgbColor))
+						.background(Color(state.category.colorArgb))
 				)
 			},
 			titleActionIcon = {
