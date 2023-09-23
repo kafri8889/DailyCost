@@ -91,7 +91,7 @@ class TransactionViewModel @Inject constructor(
 							payment = transaction?.payment ?: payment,
 							date = transaction?.date ?: date,
 							category = transaction?.category ?: category,
-							selectedTransactionType = type
+							selectedTransactionType = if (actionMode == ActionMode.New) selectedTransactionType else type
 						)
 					}
 				}

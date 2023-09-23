@@ -71,6 +71,30 @@ class LoginViewModel @Inject constructor(
 		}
 	}
 
+	/**
+	 * For testing purposes.
+	 *
+	 * Mensimulasikan login
+	 */
+	private fun performLogin() {
+		viewModelScope.launch {
+			with(userCredentialUseCases.editUserCredentialUseCase) {
+				invoke(EditUserCredentialType.Name("Guest"))
+				invoke(EditUserCredentialType.Email("guest@example.com"))
+				invoke(EditUserCredentialType.Password("Guest123"))
+				invoke(EditUserCredentialType.ID("-1"))
+				invoke(EditUserCredentialType.Token("token"))
+			}
+
+			updateState {
+				copy(
+					isSuccess = true,
+					isLoading = false
+				)
+			}
+		}
+	}
+
 	override fun onAction(action: LoginAction) {
 		when (action) {
 			is LoginAction.UpdateEmail -> {

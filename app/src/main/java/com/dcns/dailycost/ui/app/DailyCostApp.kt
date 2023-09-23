@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -44,7 +45,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dcns.dailycost.MainActivity
 import com.dcns.dailycost.R
@@ -86,6 +86,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterialNavigationApi::class, ExperimentalMaterialApi::class)
 @Composable
@@ -140,11 +141,23 @@ fun DailyCostApp(
 		RequestPostPermission()
 	}
 
+	DisposableEffect(navController) {
+		val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
+			destination.route?.let {
+				viewModel.onAction(DailyCostAppAction.UpdateCurrentDestinationRoute(it))
+			}
+		}
+
+		navController.addOnDestinationChangedListener(listener)
+		onDispose {
+			navController.removeOnDestinationChangedListener(listener)
+		}
+	}
+
 	Observe(
 		state = state,
 		viewModel = viewModel,
 		navActions = navActions,
-		navController = navController,
 		biometricManager = biometricManager
 	)
 
@@ -214,33 +227,11 @@ fun DailyCostApp(
 private fun Observe(
 	viewModel: DailyCostAppViewModel,
 	state: DailyCostAppState,
-	navController: NavController,
 	biometricManager: DailyCostBiometricManager,
 	navActions: NavigationActions
 ) {
 
 	val context = LocalContext.current
-
-	val navBackStackEntry by navController.currentBackStackEntryAsState()
-
-	// Update current destination
-	// digunakan di drawer
-	LaunchedEffect(navBackStackEntry) {
-		navBackStackEntry?.destination?.route?.let { route ->
-			viewModel.onAction(DailyCostAppAction.UpdateCurrentDestinationRoute(route))
-		}
-	}
-
-	// Digunakan untuk menavigasi ke route yang disimpan di savedStateHandle.
-	// Ketika aplikasi dikill oleh sistem, currentRoute akan disimpan di savedStateHandle
-	// Dan direstore ketika user kembali ke aplikasi
-	LaunchedEffect(state.currentDestinationRoute) {
-		navBackStackEntry?.destination?.route?.let { currentRoute ->
-			if (state.currentDestinationRoute != currentRoute && state.currentDestinationRoute.isNotBlank()) {
-				navController.navigate(state.currentDestinationRoute)
-			}
-		}
-	}
 
 	LaunchedEffect(state.isSecureAppEnabled, state.isBiometricAuthenticated) {
 		val canAuth = DailyCostBiometricManager.canAuthenticateWithAuthenticators(context)
@@ -280,6 +271,8 @@ private fun Observe(
 			if (state.userCredential.isLoggedIn) {
 				return@LaunchedEffect
 			}
+
+			Timber.i("ruwt: user not logged in")
 
 			val dest = when {
 				// Jika pertama kali install, ke onboarding
